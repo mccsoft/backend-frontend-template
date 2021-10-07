@@ -1,0 +1,42 @@
+$primary: #0e4195;
+$primary-light: rgba($primary, 0.8);
+$primary-disabled: rgba($primary, 0.5);
+$primary-background: rgba($primary, 0.05);
+$primary-link-hover: #00173d;
+$secondary: #39bdbc;
+$secondary-light: rgba($secondary, 0.5);
+$secondary-background: rgba($secondary, 0.05);
+$secondary-link-hover: #32afae;
+$normal: #4f4f4f;
+$danger: #eb5757;
+$danger-light: rgba($danger, 0.5);
+$danger-background: rgba($danger, 0.05);
+$danger-link-hover: #a53d3d;
+$border-input: #d3dcea;
+$border-disabled: #e9edf4;
+$border-focused: $primary;
+$default-hover: #9cb1d3;
+$background-input-hover: #f6f8fb;
+$dark: #1f2532;
+$menu-text: rgba(#f7f7f7, 0.8);
+$menu-text-hover: #f7f7f7;
+$input-background: #fbfcfd;
+$light-input-background: #ffffff;
+$caret-color: #344966;
+$background: #f5f7fa;
+$hint-text-color: #bdbdbd;
+$resources-text-gray: #828282;
+$night-view-cell-background: #e2e5f4;
+$duration-line-background: #9cdedd;
+$tip-background: #f2994a;
+
+$tick: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
+
+$font-family: Roboto, Sans-Serif;
+
+$normal-input-height: 32px;
+$form-input-height: 40px;
+
+$errorTextMarginBottom: 14px;
+
+$shrinkCalendarCellWidth: 50px;

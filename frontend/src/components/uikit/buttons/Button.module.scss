@@ -1,0 +1,130 @@
+@import 'src/styles/variables';
+
+.button {
+  display: inline-block;
+  font-family: $font-family;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 15px;
+  border-radius: 2px;
+  border-style: solid;
+  border-width: 1px;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.default-button {
+  color: white;
+  background-color: $primary;
+  border-style: none;
+}
+
+.default-button:hover {
+  background-color: $primary-light;
+}
+
+.default-button:active {
+  background-color: $primary;
+  color: rgba(white, 0.5);
+}
+
+.default-button:disabled {
+  color: rgba(white, 0.5);
+  background-color: $primary-disabled;
+  border-style: none;
+  pointer-events: none !important;
+  cursor: default;
+}
+
+.default-button[data-disabled='true'] {
+  @extend .default-button, :disabled;
+  color: rgba(white, 0.5);
+  background-color: $primary-disabled;
+  border-style: none;
+  pointer-events: none !important;
+}
+
+.primary-button {
+  color: $primary;
+  background-color: white;
+  border-color: $primary;
+  line-height: 13px;
+}
+
+.primary-button:hover {
+  background-color: $primary-background;
+}
+
+.primary-button:active {
+  background-color: white;
+  color: $primary-light;
+}
+
+.primary-button[data-disabled='true'] {
+  cursor: default;
+  color: $primary-disabled;
+  background-color: white;
+  border-color: $primary-disabled;
+  pointer-events: none !important;
+}
+
+.secondary-button {
+  color: $secondary;
+  background-color: white;
+  border-color: $secondary;
+  line-height: 13px;
+}
+
+.secondary-button:hover {
+  background-color: $secondary-background;
+}
+
+.secondary-button:active {
+  background-color: white;
+  color: $secondary-light;
+}
+
+.secondary-button[data-disabled='true'] {
+  color: $secondary-light;
+  background-color: white;
+  border-color: $secondary-light;
+  pointer-events: none !important;
+}
+
+.danger-button {
+  color: $danger;
+  background-color: white;
+  border-color: $danger;
+  line-height: 13px;
+}
+
+.danger-button:hover {
+  background-color: $danger-background;
+}
+
+.danger-button:active {
+  background-color: white;
+  color: $danger-light;
+}
+
+.danger-button[data-disabled='true'] {
+  color: $danger-light;
+  background-color: white;
+  border-color: $danger-light;
+  pointer-events: none !important;
+}
+
+.content-button {
+  padding: 8px 16px;
+}
+
+.fullwidth-button {
+  padding: 8px 0;
+  width: 100%;
+}
+
+.icon {
+  margin-right: 7px;
+}

@@ -1,0 +1,197 @@
+trigger:
+- main
+
+variables:
+  BUILD_NUMBER: 0.1.$(Build.BuildId)
+  DOCKER_REGISTRY: 'registry.gitlab.com/mcctemplateapp1/main'
+  DOCKER_USER: 'mcctemplateapp'
+
+stages:
+  - stage: Build
+    jobs:
+      - job:
+        pool:
+          vmImage: ubuntu-latest
+
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '14.x'
+            displayName: 'Install Node.js'
+
+          - task: UseDotNet@2
+            inputs:
+              packageType: 'sdk'
+              version: '5.x'
+
+          - task: Cache@2
+            inputs:
+              key: 'yarn-cache|$(Agent.OS)|./yarn.lock'
+              path: $(Build.SourcesDirectory)/.yarn/cache
+            displayName: Cache yarn cache
+            continueOnError: true
+
+          - task: Cache@2
+            inputs:
+              key: 'node_modules|root|$(Agent.OS)|./yarn.lock'
+              path: $(Build.SourcesDirectory)/node_modules
+            displayName: Cache npm packages
+            continueOnError: true
+
+          - task: Cache@2
+            inputs:
+              key: 'node_modules|frontend|$(Agent.OS)|./yarn.lock'
+              path: $(Build.SourcesDirectory)/frontend/node_modules
+            displayName: Cache npm packages
+            continueOnError: true
+
+          - script: |
+              yarn install --immutable
+            displayName: 'yarn install'
+
+          - script: |
+              cd webapi
+              dotnet restore
+            displayName: 'dotnet restore'
+
+          - script: |
+              npm --no-git-tag-version version $(BUILD_NUMBER) --allow-same-version
+            displayName: 'set version'
+
+          - task: DotNetCoreCLI@2
+            inputs:
+              command: 'test'
+              arguments: --no-restore --collect:"XPlat Code Coverage" -c Release
+              projects: 'webapi/tests/*/*.csproj'
+              publishTestResults: true
+            displayName: 'dotnet test'
+
+          - script: |
+              mkdir ./cobertura
+              find '$(Agent.TempDirectory)' -name 'coverage.cobertura.xml' -exec cp --backup=numbered -t ./cobertura {} +
+              cd ./cobertura
+              for f in *~*~; do mv "$f" "$(echo "$f" | sed -r 's/(.*)\.~([0-9]+)~/\2\1/')"; done;
+            displayName: 'copy coverage files'
+
+          - script: |
+              cd ./webapi
+              dotnet tool restore
+              dotnet reportgenerator -reports:../cobertura/* -targetdir:../cobertura/report -sourcedirs:./ -assemblyfilters:+MccSoft.TemplateApp.App\;+MccSoft.TemplateApp.Common\;+MccSoft.TemplateApp.Domain
+            displayName: 'generate coverage report'
+
+          - publish: './cobertura'
+            artifact: 'backend-coverage'
+
+          - task: PublishTestResults@2
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '**/junit.xml'
+              mergeTestResults: true
+
+          - script: |
+              yarn build
+            displayName: 'build'
+
+#          - script: |
+#              wget $(DOCTL_URL)
+#              tar xf ./doctl-1.60.0-linux-amd64.tar.gz
+#            displayName: 'Download Digital Ocean Control binary'
+#
+#          - script: |
+#              ./doctl auth init -t $(DOCTL_TOKEN)
+#              ./doctl registry login --expiry-seconds 240
+#            displayName: 'Authenticate at Digital Ocean'
+
+          - script: |
+              docker login $(DOCKER_REGISTRY) -u $(DOCKER_USER) -p $(DOCKER_TOKEN)
+            displayName: 'Authenticate at Container Registry'
+
+          - task: Docker@2
+            condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+            inputs:
+              repository: $(DOCKER_REGISTRY)
+              command: 'buildAndPush'
+              Dockerfile: 'publish/Dockerfile'
+              buildContext: '$(Build.SourcesDirectory)/publish'
+              tags: |
+                $(BUILD_NUMBER)
+                latest
+            displayName: 'build and push version+latest'
+
+          - task: Docker@2
+            condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/main'))
+            inputs:
+              repository: $(DOCKER_REGISTRY)
+              command: 'buildAndPush'
+              Dockerfile: 'publish/Dockerfile'
+              buildContext: '$(Build.SourcesDirectory)/publish'
+              tags: |
+                $(BUILD_NUMBER)
+            displayName: 'build and push version only'
+
+          - publish: './docker-compose.yaml'
+            artifact: 'docker-compose'
+
+          - publish: './nginx'
+            artifact: 'nginx'
+
+          - publish: './scripts/deploy'
+            artifact: 'scripts'
+
+  - stage: DeployToDev
+    dependsOn: Build
+    condition: succeeded()
+    jobs:
+      - deployment:
+        environment:
+          name: 'DEV'
+          resourceType: VirtualMachine
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: scripts/azure-deploy-template.yml
+
+  - stage: TagDevSources
+    dependsOn: DeployToDev
+    condition: succeeded()
+    jobs:
+      - job:
+        condition: succeeded()
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - checkout: self
+            persistCredentials: true
+          - script: |
+              git tag 'dev' -f
+              git push origin 'dev' -f --tags
+
+  - stage: DeployToProd
+    dependsOn: Build
+    condition: succeeded()
+    jobs:
+      - deployment:
+        environment:
+          name: 'PROD'
+          resourceType: VirtualMachine
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: scripts/azure-deploy-template.yml
+
+  - stage: TagProdSources
+    dependsOn: DeployToProd
+    condition: succeeded()
+    jobs:
+      - job:
+        condition: succeeded()
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - checkout: self
+            persistCredentials: true
+          - script: |
+              git tag 'prod' -f
+              git push origin 'prod' -f --tags

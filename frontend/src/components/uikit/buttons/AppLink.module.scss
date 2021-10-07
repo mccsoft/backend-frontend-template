@@ -1,0 +1,74 @@
+@import 'src/styles/variables';
+
+.link {
+  display: inline-block;
+  font-family: $font-family;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 15px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.link[data-disabled='true'] {
+  cursor: default;
+  pointer-events: none !important;
+}
+
+.link[data-disabled='true'] .icon {
+  opacity: 0.5;
+}
+
+.default-link {
+  color: rgba($normal, 0.7);
+}
+
+.default-link:hover {
+  color: $default-hover;
+}
+
+.default-link[data-disabled='true'] {
+  color: rgba($normal, 0.3);
+}
+
+.primary-link {
+  color: $primary;
+  border-color: $primary;
+}
+
+.primary-link:hover {
+  color: $primary-link-hover;
+}
+
+.primary-link[data-disabled='true'] {
+  color: rgba($primary, 0.5);
+}
+
+.secondary-link {
+  color: $secondary;
+}
+
+.secondary-link:hover {
+  color: $secondary-link-hover;
+}
+
+.secondary-link[data-disabled='true'] {
+  color: rgba($secondary, 0.5);
+}
+
+.danger-link {
+  color: $danger;
+}
+
+.danger-link:hover {
+  color: $danger-link-hover;
+}
+
+.danger-link[data-disabled='true'] {
+  color: rgba($danger, 0.5);
+}
+
+.icon {
+  margin-right: 6px;
+}

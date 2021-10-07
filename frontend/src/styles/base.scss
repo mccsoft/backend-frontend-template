@@ -1,0 +1,79 @@
+@import './variables';
+
+.none-select {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.base-input {
+  /* !important is needed to be applied to MaterialUI components */
+  background-color: $input-background !important;
+  border: 1px solid $border-input !important;
+  box-sizing: border-box !important;
+  border-radius: 2px !important;
+  width: 100%;
+  height: $form-input-height;
+  font-family: $font-family;
+  font-size: 13px;
+  font-weight: normal;
+  font-style: normal;
+  color: $normal;
+  caret-color: $caret-color;
+}
+
+.inputErrorBorder {
+  border: 1px solid $danger !important;
+}
+.inputErrorBorder:hover {
+  @extend .inputErrorBorder;
+}
+
+.inputErrorBorder:focus-within {
+  @extend .inputErrorBorder;
+}
+
+.base-input[data-error='true'] {
+  @extend .inputErrorBorder;
+}
+
+.base-input[data-error='true']:hover {
+  @extend .inputErrorBorder;
+}
+
+.base-input[data-error='true']:focus-within {
+  @extend .inputErrorBorder;
+}
+
+.base-input:hover {
+  border: 1px solid $default-hover !important;
+}
+.base-input:focus-within {
+  border: 1px solid $border-focused !important;
+}
+.base-input:active {
+  border: 1px solid $border-focused !important;
+}
+.base-input:disabled {
+  border: 1px solid $border-disabled !important;
+  color: rgba($normal, 0.3) !important;
+}
+
+.base-input::placeholder {
+  color: rgba($normal, 0.5);
+}
+
+.base-input:focus::placeholder {
+  color: rgba($normal, 0.2);
+}
+.inputErrorText {
+  width: 100%;
+  margin-top: 2px;
+  font-weight: normal;
+  font-size: 10px;
+  height: 12px;
+
+  color: rgba($danger, 0.5);
+  margin-bottom: -$errorTextMarginBottom;
+}

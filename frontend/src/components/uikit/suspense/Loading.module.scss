@@ -1,0 +1,60 @@
+@import 'src/styles/variables';
+
+.container {
+  display: flex;
+  flex: 1 1;
+  position: relative;
+  min-height: 70px;
+  align-items: center;
+}
+
+.loadingData {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  max-width: 100%;
+}
+
+.loadingData[data-loaded='true'] {
+  pointer-events: none;
+}
+
+.loadingContainer {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  box-sizing: border-box;
+  pointer-events: none;
+  cursor: default;
+}
+
+.loading {
+  background-color: rgba(white, 0.8);
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 20px;
+  color: $primary;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.title {
+  margin-left: 5px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+}
+
+.centerContent {
+  align-items: center;
+}

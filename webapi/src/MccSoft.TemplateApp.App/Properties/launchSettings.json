@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "MccSoft.TemplateApp.App": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "launchUrl": "api",
+      "environmentVariables": {
+        "ASPNETCORE_URLS": "https://*:48728",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

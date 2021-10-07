@@ -1,0 +1,19 @@
+@import 'src/styles/variables';
+@import 'src/styles/base';
+
+.area {
+  @extend .base-input;
+  height: 121px;
+  resize: none;
+
+  padding: 13px 12px 12px 12px;
+}
+
+.helperText {
+  @extend .inputErrorText;
+  color: rgba($normal, 0.5);
+}
+
+.helperText[data-error='true'] {
+  color: rgba($danger, 0.5);
+}

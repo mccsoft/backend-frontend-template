@@ -1,0 +1,65 @@
+@import 'src/styles/variables';
+
+.custom-checkbox {
+  position: fixed;
+  z-index: -1;
+  opacity: 0;
+}
+
+.custom-checkbox + label {
+  display: inline-flex;
+  align-items: center;
+  user-select: none;
+
+  font-family: $font-family;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  color: $normal;
+  cursor: pointer;
+}
+
+.custom-checkbox + label::before {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  background: #ffffff;
+  border: 1px solid $border-input;
+  border-radius: 2px;
+  margin-right: 0.5em;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 50% 50%;
+}
+
+.custom-checkbox:not(:disabled):not(:checked) + label:hover::before {
+  background: $background-input-hover;
+  border: 1px solid $default-hover;
+}
+
+.custom-checkbox:not(:disabled):checked + label:hover::before {
+  background-image: $tick;
+  opacity: 0.5;
+}
+
+.custom-checkbox:checked + label::before {
+  width: 16px;
+  height: 16px;
+  border: none;
+
+  border-radius: 2px;
+  background-color: $primary;
+  background-image: $tick;
+}
+
+.custom-checkbox:disabled + label::before {
+  background-color: $primary-disabled;
+}
+
+.custom-checkbox:disabled + label {
+  opacity: 0.5;
+  pointer-events: none !important;
+}

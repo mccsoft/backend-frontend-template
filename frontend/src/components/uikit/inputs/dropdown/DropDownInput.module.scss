@@ -1,0 +1,136 @@
+@import 'src/styles/variables';
+@import 'src/styles/base';
+
+.root-container {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.dropdown {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: solid 1px $border-input;
+  border-radius: 2px;
+  box-sizing: border-box;
+  cursor: pointer;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.dropdown:hover {
+  border: 1px solid $default-hover;
+}
+
+.dropdown:focus::after {
+  content: none;
+}
+
+.dropdown[data-form-input='false'] {
+  height: $normal-input-height;
+  background: $light-input-background;
+}
+
+.dropdown[data-form-input='true'] {
+  height: $form-input-height;
+  background: $input-background;
+}
+
+.dropdown[data-expanded='true'] {
+  border: 1px solid $primary;
+}
+
+.dropdown[data-disabled='true'] {
+  opacity: 0.5;
+  border: 1px solid #dbdee3;
+  pointer-events: none !important;
+}
+
+.dropdown[data-error='true'] {
+  border: 1px solid $danger;
+}
+
+.option-value {
+  height: initial;
+  background-color: initial;
+  font-family: $font-family !important;
+  font-style: normal;
+  font-weight: normal;
+  color: $normal !important;
+  font-size: 13px;
+  line-height: 16px;
+  margin: 1px 0 0 0;
+  border: none;
+  padding: 0;
+}
+
+.dropdown-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: solid 1px rgba($normal, 0.1);
+  background: $light-input-background !important;
+  height: $normal-input-height;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.dropdown-form-item {
+  height: $form-input-height;
+}
+
+.dropdown-item:hover {
+  background: $background-input-hover !important;
+}
+
+.dropdown-item:focus {
+  background: $background-input-hover !important;
+}
+
+.dropdown-item-disabled {
+  opacity: 0.5;
+}
+
+.dropdown-item-selected-disabled {
+  opacity: 0.5;
+}
+
+.dropdown-item-selected {
+  background: $background-input-hover !important;
+}
+
+.dropdown-callout {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  box-shadow: 0 5px 13px rgba(0, 0, 0, 0.14);
+  border-radius: 4px;
+  -webkit-app-region: no-drag;
+}
+
+.expand-icon-wrapper {
+  top: initial;
+  position: initial;
+  height: 100%;
+  line-height: initial;
+  display: inline-flex;
+  align-items: center;
+}
+
+.expand-icon {
+  opacity: 0.7;
+}
+
+.expand-icon[data-expanded='true'] {
+  transform: rotate(180deg);
+}
+
+.dropdown-input-container:hover img {
+  opacity: 1;
+}
+
+.errorText {
+  @extend .inputErrorText;
+}

@@ -1,0 +1,15 @@
+{
+"Compare": "'{0}' und '{1}' sind nicht gleich",
+  "CreditCard": "Das Feld '{0}' muss eine gültige Creditcartennummer beinhalten",
+  "CustomValidation": "Das Feld '{0}' ist nicht gültig",
+  "EmailAddress": "Das Feld '{0}' muss eine gültige E-Mail-Adresse beinhalten",
+  "FileExtensions": "Das '{0}'-Feld darf nur folgende Datei-Erweiterungen enthalten: {1}",
+  "MaxLength": "Das Feld '{0}' darf nur maximal {1} Zeichen lang sein",
+  "MinLength": "Das Feld '{0}' benötigt mindestens {1} Zeichen",
+  "Phone": "Das Feld '{0}' muss eine gültigeTelefonnummer enthalten",
+  "Range": "Es sind nur Werte von {1} bis {2} im Feld '{0}' erlaubt",
+  "RegularExpression": "Nur eine RegEx im Format {1} ist im Feld '{0}' erlaubt",
+  "Required": "Das {0}-Feld wird benötigt",
+  "StringLength": "Das {0}-Feld muss zwischen {2} und {1} Zeichen lang sein",
+  "Url": "Das Feld '{0}' muss eine gültige Web-Adresse beinhalten (beginnend mit 'HTTP://', 'HTTPS://', oder 'FTP://') "
+  }

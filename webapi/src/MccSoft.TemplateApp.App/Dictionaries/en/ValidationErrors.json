@@ -1,0 +1,15 @@
+  {
+  "Compare": "'{0}' and '{1}' do not match.",
+  "CreditCard": "The {0} field must contain valid card number.",
+  "CustomValidation": "The {0} field is invalid.",
+  "EmailAddress": "The {0} field must contain valid e-mail address.",
+  "FileExtensions": "The {0} field can contain only files with the following extensions: {1}",
+  "MaxLength": "The {0} field can have maximum of {1} characters.",
+  "MinLength": "The {0} field must have minimum of {1} character.",
+  "Phone": "The {0} field must contain a valid phone number.",
+  "Range": "The {0} field must contain value from {1} to {2}.",
+  "RegularExpression": "The {0} field must contain value conforming to regular expression '{1}'.",
+  "Required": "The {0} field is required.",
+  "StringLength": "The {0} field must be from {2} to {1} characters long.",
+  "Url": "The {0} field must contain valid HTTP, HTTPS or FTP address."
+  }

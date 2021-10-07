@@ -1,0 +1,109 @@
+@import 'src/styles/variables';
+
+.rows-count-container {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: flex-start;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 15px;
+}
+.rows-count-title {
+  margin-right: 13px;
+  color: rgba($normal, 0.7);
+  pointer-events: none !important;
+}
+.rows-count-selected {
+  padding-bottom: 4px;
+  border-bottom-style: outset;
+  border-bottom-width: 1px;
+  border-bottom-color: $primary;
+  margin-left: 11px;
+  cursor: pointer;
+  color: $primary;
+}
+
+.rows-count {
+  margin-left: 11px;
+  border-style: none;
+  cursor: pointer;
+  color: rgba($normal, 0.7);
+}
+
+.rows-count:hover {
+  color: $default-hover !important;
+}
+
+.break {
+  margin: 2.5px;
+  height: 30px;
+  width: 30px;
+  line-height: 30px;
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  color: rgba($normal, 0.7);
+}
+
+.break:hover {
+  color: rgba($default-hover, 0.7);
+}
+
+.page {
+  padding: 0;
+  margin: 3px;
+  height: 30px;
+  width: 30px;
+  line-height: 30px;
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  color: rgba($normal, 0.7);
+}
+
+.page:hover {
+  color: rgba($default-hover, 0.7);
+}
+
+.active-page {
+  margin: 5px;
+  height: 26px;
+  width: 26px;
+  line-height: 26px;
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  background: $primary;
+  border-radius: 4px;
+  color: #ffffff;
+}
+
+.active-page:hover {
+  color: #ffffff;
+  background: $default-hover;
+}
+
+.pagination-container {
+  display: flex;
+  align-items: center;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  list-style: none;
+}
+
+.page-icon {
+  cursor: pointer;
+}
+
+.container {
+  background: $background;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  user-select: none;
+}

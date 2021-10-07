@@ -1,0 +1,30 @@
+@import 'src/styles/variables';
+@import 'src/styles/base';
+
+.helperText {
+  @extend .inputErrorText;
+  color: rgba($normal, 0.5);
+}
+
+.helperText[data-error='true'] {
+  color: rgba($danger, 0.5);
+}
+
+.input {
+  @extend .base-input;
+
+  padding: 12px 12px 11px;
+}
+.inputContainer {
+  position: relative;
+}
+.passwordEye {
+  position: absolute;
+  right: 6px;
+  top: 0;
+  height: $form-input-height;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  @extend .none-select;
+}

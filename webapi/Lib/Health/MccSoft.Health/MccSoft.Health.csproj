@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <noWarn>1591</noWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="App.Metrics.Health.Extensions.DependencyInjection" Version="3.2.0" />
+    <PackageReference Include="App.Metrics.AspNetCore" Version="4.2.0" />
+    <PackageReference Include="App.Metrics.Formatters.Prometheus" Version="4.0.0-preview1.0.3" />
+    <PackageReference Include="MassTransit" Version="5.2.3" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+    <PackageReference Include="App.Metrics.AspNetCore.Endpoints" Version="4.2.0" />
+    <PackageReference Include="App.Metrics.AspNetCore.Health" Version="3.2.0" />
+    <PackageReference Include="App.Metrics.AspNetCore.Mvc" Version="4.2.0" />
+    <PackageReference Include="App.Metrics.AspNetCore.Tracking" Version="4.2.0" />
+    <PackageReference Include="App.Metrics.Health.Checks.Process" Version="3.2.0" />
+  </ItemGroup>
+
+</Project>

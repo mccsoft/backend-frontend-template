@@ -1,0 +1,14 @@
+{
+"CreditCard": "Le champ {0} doit contenir un numéro de carte valide.",
+  "CustomValidation": "Le champ {0} est invalide.",
+  "EmailAddress": "Le champ {0} doit contenir une adresse courriel valide.",
+  "FileExtensions": "Le champ {0} peut seulement contenir des fichiers avec les extensions suivantes : {1}",
+  "MaxLength": "Le champ {0} ne peut dépasser {1} caractère(s).",
+  "MinLength": "Le champ {0} doit contenir au moins {1} caractère(s).",
+  "Phone": "Le champ {0} doit contenir un numéro de téléphone valide.",
+  "Range": "Le champ {0} doit contenir une valeur entre {1} et {2}.",
+  "RegularExpression": "Le champ {0} doit respecter l'expression régulière '{1}'.",
+  "Required": "Le champ {0} est obligatoire.",
+  "StringLength": "Le champ {0} doit être long de {2} à {1} caractère(s).",
+  "Url": "Le champ {0} doit contenir une adresse HTTP, HTTPS ou FTP valide."
+  }

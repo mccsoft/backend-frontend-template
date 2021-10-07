@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "csharpier": {
+      "version": "0.9.9",
+      "commands": [
+        "dotnet-csharpier"
+      ]
+    },
+    "dotnet-reportgenerator-globaltool": {
+      "version": "4.8.13",
+      "commands": [
+        "reportgenerator"
+      ]
+    }
+  }
+}

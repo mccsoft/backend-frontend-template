@@ -1,0 +1,6 @@
+/src/MccSoft.Unicorn.App/tempkey.rsa
+/.idea/.idea.MccSoft.Unicorn.Main/.idea/workspace.xml
+/.idea/.idea.MccSoft.Unicorn.Main/riderModule.iml
+/src/MccSoft.Unicorn.App/Statistics/*.repx
+cobertura/report
+cobertura/*.xml

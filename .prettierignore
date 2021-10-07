@@ -1,0 +1,7 @@
+build
+.vscode
+.idea
+publish
+webapi
+scripts
+nginx

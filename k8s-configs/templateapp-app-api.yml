@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: templateapp-main-api
+  labels:
+    app: templateapp-main-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: templateapp-main-api
+  template:
+    metadata:
+      labels:
+        app: templateapp-main-api
+    spec:
+      containers:
+      - name: templateapp-main-api
+        image: registry.digitalocean.com/templateapp/templateapp:latest
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 200m
+            memory: 200Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: templateapp-main-api-service
+spec:
+ type: LoadBalancer
+ ports:
+ - port: 80
+ selector:
+   app: templateapp-main-api
+
+---
+
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: templateapp-main-api-ingress
+  labels:
+    app: templateapp-main-api-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend:
+          serviceName: templateapp-main-api-service
+          servicePort: 80

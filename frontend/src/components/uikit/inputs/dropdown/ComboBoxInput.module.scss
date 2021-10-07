@@ -1,0 +1,151 @@
+@import 'src/styles/variables';
+@import 'src/styles/base';
+
+.root-container {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.combobox-input-container:hover img {
+  opacity: 1;
+}
+
+.combobox {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: solid 1px $border-input;
+  border-radius: 2px;
+  box-sizing: border-box;
+  padding: 0;
+  height: $normal-input-height;
+  background: $light-input-background;
+  cursor: initial;
+}
+
+.combobox:global(.is-open) {
+  border: 1px solid $primary !important;
+}
+
+.combobox::after {
+  content: none;
+}
+
+.combobox:hover {
+  border: 1px solid $default-hover;
+}
+
+.combobox:focus::after {
+  content: none;
+}
+
+.combobox:focus::after {
+  content: none;
+}
+
+.combobox-form-input {
+  height: $form-input-height;
+  background: $input-background;
+}
+
+.combobox-disabled {
+  opacity: 0.5;
+  border: 1px solid #dbdee3;
+  pointer-events: none !important;
+}
+
+.combobox-error {
+  border: 1px solid $danger !important;
+}
+
+.input {
+  min-width: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0 !important;
+  padding-left: 12px;
+  color: initial;
+  background-color: initial;
+}
+
+.value {
+  font-family: $font-family;
+  font-style: normal;
+  font-weight: normal;
+  color: $normal !important;
+  font-size: 13px;
+  line-height: 16px;
+}
+
+.combobox-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: solid 1px rgba($normal, 0.1);
+  background: $light-input-background !important;
+  height: $normal-input-height;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.combobox-form-item {
+  height: $form-input-height;
+}
+
+.combobox-item:hover {
+  background: $background-input-hover !important;
+}
+
+.combobox-item:focus {
+  background: $background-input-hover !important;
+}
+
+.combobox-item-selected {
+  background: $background-input-hover !important;
+}
+
+.combobox-callout {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  box-shadow: 0 5px 13px rgba(0, 0, 0, 0.14);
+  border-radius: 4px;
+}
+
+.expand-button {
+  top: initial;
+  position: initial;
+  height: 100%;
+  width: initial;
+  line-height: initial;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 12px 0 8px;
+  border: none;
+  color: initial;
+  background-color: initial;
+}
+
+.expand-button:hover {
+  color: initial;
+  background-color: initial;
+}
+
+.expanded {
+  transform: rotate(180deg);
+}
+
+.expand-icon-container {
+  height: initial;
+  margin: 0;
+}
+
+.expand-icon-container img {
+  opacity: 0.7;
+}
+
+.errorText {
+  @extend .inputErrorText;
+}

@@ -1,0 +1,12 @@
+﻿@using MccSoft.TemplateApp.App.Views.Shared
+@model MccSoft.TemplateApp.App.Views.Emails.Example.ExampleEmailModel
+@{
+    Layout = "GeneralEmailTemplate";
+}
+
+<p style="@Constants.DefaultParagraphStyle">
+    Greetings, @Model.Username!
+</p>
+<p style="@Constants.DefaultParagraphStyle">
+    Welcome to our <a href="@Model.SiteRootUrl">TemplateApp</a>.
+</p>

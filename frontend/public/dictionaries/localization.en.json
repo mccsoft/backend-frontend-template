@@ -1,0 +1,27 @@
+{
+  "Common_App": "TemplateApp",
+  "Page": {
+    "Login": {
+      "login_field": "Login",
+      "password_field": "Password",
+      "login_button": "Login"
+    },
+    "Products": {
+      "Create": {
+        "create_button": "Create"
+      }
+    }
+  },
+  "uikit": {
+    "inputs": {
+      "required": "Required"
+    }
+  },
+  "suspense": {
+    "reload": "Reload"
+  },
+  "Login_Failed": "Login failed",
+  "Login_User_Locked": "User locked",
+  "Login_Unknown_Failure": "Unknown error",
+  "Network Error": "No network"
+}

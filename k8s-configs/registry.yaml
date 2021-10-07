@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  .dockerconfigjson: eyJhdXRocyI6eyJyZWdpc3RyeS5kaWdpdGFsb2NlYW4uY29tIjp7ImF1dGgiOiJOREl5WkRnNU5HTmhNVEpqTWpVd09EZzVOREEwWldJeFpqQTJPR1ZrWm1ReVpHVTJaREUyWkdNNFlUUTROVE15WVdaaU5Ea3dabVV3TXpJek16SXdNVG8wTWpKa09EazBZMkV4TW1NeU5UQTRPRGswTURSbFlqRm1NRFk0WldSbVpESmtaVFprTVRaa1l6aGhORGcxTXpKaFptSTBPVEJtWlRBek1qTXpNakF4In19fQ==
+kind: Secret
+metadata:
+  annotations:
+    digitalocean.com/dosecret-identifier: registry-test-mcc-registry
+  creationTimestamp: null
+  name: registry-test-mcc-registry
+  namespace: default
+type: kubernetes.io/dockerconfigjson

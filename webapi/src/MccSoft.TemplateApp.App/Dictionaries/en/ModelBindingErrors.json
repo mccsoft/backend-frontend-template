@@ -1,0 +1,13 @@
+{
+  "AttemptedValueIsInvalid": "The value '{{value}}' is not valid for {{property}}",
+  "MissingBindRequiredValue": "A value for the '{{parameterName}}' parameter or property was not provided.",
+  "MissingKeyOrValue": "A value is required.",
+  "MissingRequestBodyRequired": "A non-empty request body is required.",
+  "NonPropertyAttemptedValueIsInvalid": "The value '{{value}}' is not valid.",
+  "NonPropertyUnknownValueIsInvalid": "The supplied value is invalid.",
+  "NonPropertyValueMustBeANumber": "The field must be a number.",
+  "UnknownValueIsInvalid": "The supplied value is invalid for {{propertyName}}.",
+  "ValueIsInvalid": "The value '{{value}}' is invalid.",
+  "ValueMustBeANumber": "The field {{propertyName}} must be a number.",
+  "ValueMustNotBeNull": "The value '{{value}}' is invalid."
+}

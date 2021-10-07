@@ -1,0 +1,55 @@
+@import 'src/styles/variables';
+
+.title {
+  font-family: $font-family;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 15px;
+  display: flex;
+  align-items: center;
+  color: rgba($normal, 0.5);
+  height: 15px;
+}
+
+.hint {
+}
+.field {
+  margin-top: 4px;
+  width: 100%;
+}
+.container {
+  padding-bottom: 1.5rem;
+}
+.title-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-bottom: 5px;
+}
+
+.field-link {
+  font-size: 10px;
+  line-height: 12px;
+}
+.error {
+  flex: 1;
+  font-size: 13px;
+  color: $danger;
+}
+.title-with-hint {
+  display: flex;
+  div:first-child {
+    margin-right: 7px;
+  }
+  div.hint {
+    opacity: 0.5;
+    cursor: pointer;
+  }
+  div.hint:hover {
+    opacity: 1;
+    path {
+      fill: #9cb1d3 !important;
+    }
+  }
+}
