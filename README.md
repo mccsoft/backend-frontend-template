@@ -1,4 +1,4 @@
-##What's that
+## What's that
 
 This is a template to set up a backend ASP.Net project with React frontend.
 Template contains:
