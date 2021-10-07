@@ -1,4 +1,5 @@
-#What's that
+##What's that
+
 This is a template to set up a backend ASP.Net project with React frontend.
 Template contains:
 1. ASP.NET Core backend (.NET 5)
@@ -35,7 +36,7 @@ The script does the following (you could do this manually if you like to):
 1. Adjust SPA port number to something random, so that it doesn't clash with other projects (in package.json: 'start' script, PORT=3011; in Startup.cs: spa.UseProxyToSpaDevelopmentServer("http://localhost:3011/"))
 
 Create a new git repository and copy everything (except `.git` folder) to it.
-
+Don't forget to change the favicons/tiles in `frontend/public` folder to the logo of your project (use https://realfavicongenerator.net/ to create favicons in all required sizes)
 ## How to run locally
 1. Check that connection string in appsettings is correct. Default connection string assumes that you have Postgres running on localhost on standard port with user/pass: postgres/postgres. Adjust connection string if the assumption is wrong.
     1. Make sure the target database exists (or that the postgres user has rights to create databases).
