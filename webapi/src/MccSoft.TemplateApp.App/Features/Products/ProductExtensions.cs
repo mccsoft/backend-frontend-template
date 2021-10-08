@@ -18,7 +18,13 @@ namespace MccSoft.TemplateApp.App.Features.Products
             new(() => ToProductDto().Compile());
 
         public static Expression<Func<Product, ProductDto>> ToProductDto() =>
-            product => new ProductDto { Id = product.Id, Title = product.Title, };
+            product =>
+                new ProductDto
+                {
+                    Id = product.Id,
+                    Title = product.Title,
+                    ProductType = product.ProductType
+                };
 
         [InjectLambda]
         public static ProductListItemDto ToProductListItemDto(this Product product)
@@ -31,6 +37,12 @@ namespace MccSoft.TemplateApp.App.Features.Products
         > ToProductListItemDtoExpressionCompiled = new(() => ToProductListItemDto().Compile());
 
         public static Expression<Func<Product, ProductListItemDto>> ToProductListItemDto() =>
-            product => new ProductListItemDto { Id = product.Id, Title = product.Title, };
+            product =>
+                new ProductListItemDto
+                {
+                    Id = product.Id,
+                    Title = product.Title,
+                    ProductType = product.ProductType
+                };
     }
 }

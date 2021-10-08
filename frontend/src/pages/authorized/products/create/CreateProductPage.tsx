@@ -13,7 +13,12 @@ import React, { useCallback } from 'react';
 import { useQueryClient } from 'react-query';
 import { useHistory } from 'react-router';
 import { QueryFactory } from 'services/api';
-import { CreateProductDto, ICreateProductDto } from 'services/api/api-client';
+import {
+  CreateProductDto,
+  ICreateProductDto,
+  ProductType,
+} from 'services/api/api-client';
+import { HookFormDropDownInput } from '../../../../components/uikit/inputs/dropdown/HookFormDropDownInput';
 
 export const CreateProductPage: React.FC = () => {
   const i18n = useScopedTranslation('Page.Products.Create');
@@ -31,6 +36,7 @@ export const CreateProductPage: React.FC = () => {
       history.push(Routes.Authorized.Products);
     }, []),
   );
+
   return (
     <Loading loading={form.formState.isSubmitting}>
       <AppLink
@@ -48,6 +54,22 @@ export const CreateProductPage: React.FC = () => {
               <Input
                 {...form.register('title', { ...requiredRule() })}
                 errorText={form.formState.errors.title?.message}
+              />
+            </Field>
+            <Field title={i18n.t('product_type')}>
+              <HookFormDropDownInput
+                control={form.control}
+                name={'productType'}
+                options={[
+                  { value: ProductType.Undefined },
+                  { value: ProductType.Auto },
+                  { value: ProductType.Electronic },
+                  { value: ProductType.Other },
+                ]}
+                valueField={'value'}
+                labelField={'value'}
+                required={true}
+                errorText={form.formState.errors.productType?.message}
               />
             </Field>
             <FormError>{form.overallError}</FormError>

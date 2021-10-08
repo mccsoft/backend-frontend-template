@@ -1,5 +1,5 @@
 import { Routes } from 'application/constants/routes';
-import {AppTable, emptyArray} from 'components/uikit/table/AppTable';
+import { AppTable, emptyArray } from 'components/uikit/table/AppTable';
 import { AppLink } from 'components/uikit/buttons/AppLink';
 import { ButtonColor } from 'components/uikit/buttons/Button';
 import { Input } from 'components/uikit/inputs/Input';
@@ -38,7 +38,8 @@ export const ProductListPage: React.FC = () => {
             accessor: 'title',
             Cell: ({ row }) => (
               <div>
-                {row.original.id}. {row.original.title}
+                {row.original.id}. {row.original.title} (
+                {row.original.productType})
               </div>
             ),
             width: 'auto',

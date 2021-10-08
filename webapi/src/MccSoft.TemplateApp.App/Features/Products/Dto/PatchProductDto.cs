@@ -8,5 +8,6 @@ namespace MccSoft.TemplateApp.App.Features.Products.Dto
     {
         [MinLength(3)]
         public string Title { get; set; }
+        public ProductType ProductType { get; set; }
     }
 }

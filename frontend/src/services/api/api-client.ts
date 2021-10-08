@@ -170,6 +170,7 @@ export class ProductClient {
 
   /**
    * @param search (optional)
+   * @param productType (optional)
    * @param offset (optional) Offset of list.
    * @param limit (optional) Number of requested records.
    * @param sortBy (optional) Field name for sorting in DB.
@@ -177,6 +178,7 @@ export class ProductClient {
    */
   search(
     search?: string | null | undefined,
+    productType?: ProductType | null | undefined,
     offset?: number | null | undefined,
     limit?: number | null | undefined,
     sortBy?: string | null | undefined,
@@ -186,6 +188,8 @@ export class ProductClient {
     let url_ = this.baseUrl + '/api/products?';
     if (search !== undefined && search !== null)
       url_ += 'Search=' + encodeURIComponent('' + search) + '&';
+    if (productType !== undefined && productType !== null)
+      url_ += 'ProductType=' + encodeURIComponent('' + productType) + '&';
     if (offset !== undefined && offset !== null)
       url_ += 'Offset=' + encodeURIComponent('' + offset) + '&';
     if (limit !== undefined && limit !== null)
@@ -413,6 +417,7 @@ export class ProductClient {
 }
 type SearchProductQueryParameters = {
   search?: string | null | null;
+  productType?: ProductType | null | null;
   offset?: number | null | null;
   limit?: number | null | null;
   sortBy?: string | null | null;
@@ -424,8 +429,41 @@ type GetProductQueryParameters = {
 };
 
 export class ProductQuery {
+  private baseUrl: string = '';
+
   static get Client() {
     return createClient(ProductClient);
+  }
+
+  static get Url() {
+    return new ProductQuery();
+  }
+
+  search(
+    search?: string | null | undefined,
+    productType?: ProductType | null | undefined,
+    offset?: number | null | undefined,
+    limit?: number | null | undefined,
+    sortBy?: string | null | undefined,
+    sortOrder?: SortOrder | undefined,
+  ): string {
+    let url_ = this.baseUrl + '/api/products?';
+    if (search !== undefined && search !== null)
+      url_ += 'Search=' + encodeURIComponent('' + search) + '&';
+    if (productType !== undefined && productType !== null)
+      url_ += 'ProductType=' + encodeURIComponent('' + productType) + '&';
+    if (offset !== undefined && offset !== null)
+      url_ += 'Offset=' + encodeURIComponent('' + offset) + '&';
+    if (limit !== undefined && limit !== null)
+      url_ += 'Limit=' + encodeURIComponent('' + limit) + '&';
+    if (sortBy !== undefined && sortBy !== null)
+      url_ += 'SortBy=' + encodeURIComponent('' + sortBy) + '&';
+    if (sortOrder === null)
+      throw new Error("The parameter 'sortOrder' cannot be null.");
+    else if (sortOrder !== undefined)
+      url_ += 'SortOrder=' + encodeURIComponent('' + sortOrder) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+    return url_;
   }
 
   static searchDefaultOptions?: UseQueryOptions<
@@ -435,6 +473,7 @@ export class ProductQuery {
   > = {};
   static searchQueryKey = (
     search?: string | null | undefined,
+    productType?: ProductType | null | undefined,
     offset?: number | null | undefined,
     limit?: number | null | undefined,
     sortBy?: string | null | undefined,
@@ -444,6 +483,7 @@ export class ProductQuery {
       'ProductClient',
       'search',
       search,
+      productType,
       offset,
       limit,
       sortBy,
@@ -452,10 +492,11 @@ export class ProductQuery {
   private static search(context: QueryFunctionContext) {
     return ProductQuery.Client.search(
       context.queryKey[2] as string | null | undefined,
-      context.queryKey[3] as number | null | undefined,
+      context.queryKey[3] as ProductType | null | undefined,
       context.queryKey[4] as number | null | undefined,
-      context.queryKey[5] as string | null | undefined,
-      context.queryKey[6] as SortOrder | undefined,
+      context.queryKey[5] as number | null | undefined,
+      context.queryKey[6] as string | null | undefined,
+      context.queryKey[7] as SortOrder | undefined,
     );
   }
 
@@ -472,6 +513,7 @@ export class ProductQuery {
   ): UseQueryResult<TSelectData, TError>;
   /**
    * @param search (optional)
+   * @param productType (optional)
    * @param offset (optional) Offset of list.
    * @param limit (optional) Number of requested records.
    * @param sortBy (optional) Field name for sorting in DB.
@@ -482,6 +524,7 @@ export class ProductQuery {
     TError = unknown,
   >(
     search?: string | null | undefined,
+    productType?: ProductType | null | undefined,
     offset?: number | null | undefined,
     limit?: number | null | undefined,
     sortBy?: string | null | undefined,
@@ -500,6 +543,7 @@ export class ProductQuery {
       | UseQueryOptions<PagedResultOfProductListItemDto, TError, TSelectData>
       | undefined = undefined;
     let search: any = undefined;
+    let productType: any = undefined;
     let offset: any = undefined;
     let limit: any = undefined;
     let sortBy: any = undefined;
@@ -507,11 +551,12 @@ export class ProductQuery {
 
     if (params.length > 0) {
       if (isParameterObject(params[0])) {
-        ({ search, offset, limit, sortBy, sortOrder } =
+        ({ search, productType, offset, limit, sortBy, sortOrder } =
           params[0] as SearchProductQueryParameters);
         options = params[1];
       } else {
-        [search, offset, limit, sortBy, sortOrder, options] = params;
+        [search, productType, offset, limit, sortBy, sortOrder, options] =
+          params;
       }
     }
 
@@ -519,6 +564,7 @@ export class ProductQuery {
       queryFn: ProductQuery.search,
       queryKey: ProductQuery.searchQueryKey(
         search,
+        productType,
         offset,
         limit,
         sortBy,
@@ -534,6 +580,7 @@ export class ProductQuery {
   }
   /**
    * @param search (optional)
+   * @param productType (optional)
    * @param offset (optional) Offset of list.
    * @param limit (optional) Number of requested records.
    * @param sortBy (optional) Field name for sorting in DB.
@@ -543,15 +590,32 @@ export class ProductQuery {
     queryClient: QueryClient,
     updater: (data: TData | undefined) => TData,
     search?: string | null | undefined,
+    productType?: ProductType | null | undefined,
     offset?: number | null | undefined,
     limit?: number | null | undefined,
     sortBy?: string | null | undefined,
     sortOrder?: SortOrder | undefined,
   ) {
     queryClient.setQueryData(
-      ProductQuery.searchQueryKey(search, offset, limit, sortBy, sortOrder),
+      ProductQuery.searchQueryKey(
+        search,
+        productType,
+        offset,
+        limit,
+        sortBy,
+        sortOrder,
+      ),
       updater,
     );
+  }
+
+  get(id: number): string {
+    let url_ = this.baseUrl + '/api/products/{id}';
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace('{id}', encodeURIComponent('' + id));
+    url_ = url_.replace(/[?&]$/, '');
+    return url_;
   }
 
   static getDefaultOptions?: UseQueryOptions<ProductDto, unknown, ProductDto> =
@@ -697,8 +761,23 @@ type GetClientRequestParametersOidcConfigurationQueryParameters = {
 };
 
 export class OidcConfigurationQuery {
+  private baseUrl: string = '';
+
   static get Client() {
     return createClient(OidcConfigurationClient);
+  }
+
+  static get Url() {
+    return new OidcConfigurationQuery();
+  }
+
+  getClientRequestParameters(clientId: string | null): string {
+    let url_ = this.baseUrl + '/_configuration/{clientId}';
+    if (clientId === undefined || clientId === null)
+      throw new Error("The parameter 'clientId' must be defined.");
+    url_ = url_.replace('{clientId}', encodeURIComponent('' + clientId));
+    url_ = url_.replace(/[?&]$/, '');
+    return url_;
   }
 
   static getClientRequestParametersDefaultOptions?: UseQueryOptions<
@@ -796,7 +875,7 @@ export class SignUrlClient {
   }
 
   getSignature(cancelToken?: CancelToken | undefined): Promise<string> {
-    let url_ = this.baseUrl + '/signature';
+    let url_ = this.baseUrl + '/api/sign-url/signature';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_ = <AxiosRequestConfig>{
@@ -863,7 +942,7 @@ export class SignUrlClient {
   }
 
   setSignatureCookie(cancelToken?: CancelToken | undefined): Promise<void> {
-    let url_ = this.baseUrl + '/signature/cookie';
+    let url_ = this.baseUrl + '/api/sign-url/signature/cookie';
     url_ = url_.replace(/[?&]$/, '');
 
     let options_ = <AxiosRequestConfig>{
@@ -925,8 +1004,20 @@ export class SignUrlClient {
   }
 }
 export class SignUrlQuery {
+  private baseUrl: string = '';
+
   static get Client() {
     return createClient(SignUrlClient);
+  }
+
+  static get Url() {
+    return new SignUrlQuery();
+  }
+
+  getSignature(): string {
+    let url_ = this.baseUrl + '/api/sign-url/signature';
+    url_ = url_.replace(/[?&]$/, '');
+    return url_;
   }
 
   static getSignatureDefaultOptions?: UseQueryOptions<string, unknown, string> =
@@ -964,6 +1055,12 @@ export class SignUrlQuery {
     updater: (data: TData | undefined) => TData,
   ) {
     queryClient.setQueryData(SignUrlQuery.getSignatureQueryKey(), updater);
+  }
+
+  setSignatureCookie(): string {
+    let url_ = this.baseUrl + '/api/sign-url/signature/cookie';
+    url_ = url_.replace(/[?&]$/, '');
+    return url_;
   }
 
   static setSignatureCookieDefaultOptions?: UseQueryOptions<
@@ -1239,8 +1336,20 @@ export class TestDataClient {
   }
 }
 export class TestDataQuery {
+  private baseUrl: string = '';
+
   static get Client() {
     return createClient(TestDataClient);
+  }
+
+  static get Url() {
+    return new TestDataQuery();
+  }
+
+  throwError(): string {
+    let url_ = this.baseUrl + '/error-test';
+    url_ = url_.replace(/[?&]$/, '');
+    return url_;
   }
 
   static throwErrorDefaultOptions?: UseQueryOptions<string, unknown, string> =
@@ -1370,8 +1479,20 @@ export class VersionClient {
   }
 }
 export class VersionQuery {
+  private baseUrl: string = '';
+
   static get Client() {
     return createClient(VersionClient);
+  }
+
+  static get Url() {
+    return new VersionQuery();
+  }
+
+  version(): string {
+    let url_ = this.baseUrl + '/api';
+    url_ = url_.replace(/[?&]$/, '');
+    return url_;
   }
 
   static versionDefaultOptions?: UseQueryOptions<string, unknown, string> = {};
@@ -1419,351 +1540,23 @@ export class VersionQuery {
   }
 }
 
-export class SignUrlTestClient {
-  private instance: AxiosInstance;
-  private baseUrl: string;
-  protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
-    undefined;
-
-  constructor(baseUrl?: string, instance?: AxiosInstance) {
-    this.instance = instance ? instance : axios.create();
-    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
-  }
-
-  /**
-     * It's preferable to use `imageGuid` in URL (not the productId), because it will be cached by the browser.
-    And when image for Product is updated, the URL of the image should be changed (to avoid displaying old image from cache).
-     */
-  getProductImage(
-    imageGuid: string | null,
-    cancelToken?: CancelToken | undefined,
-  ): Promise<void> {
-    let url_ = this.baseUrl + '/product/image/{imageGuid}';
-    if (imageGuid === undefined || imageGuid === null)
-      throw new Error("The parameter 'imageGuid' must be defined.");
-    url_ = url_.replace('{imageGuid}', encodeURIComponent('' + imageGuid));
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_ = <AxiosRequestConfig>{
-      method: 'GET',
-      url: url_,
-      headers: {},
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
-        }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processGetProductImage(_response);
-      });
-  }
-
-  protected processGetProductImage(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 400) {
-      const _responseText = response.data;
-      let result400: any = null;
-      let resultData400 = _responseText;
-      result400 = ValidationProblemDetails.fromJS(resultData400);
-      return throwException(
-        'A server side error occurred.',
-        status,
-        _responseText,
-        _headers,
-        result400,
-      );
-    } else if (status === 200) {
-      const _responseText = response.data;
-      return Promise.resolve<void>(<any>null);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<void>(<any>null);
-  }
-
-  /**
-     * It's preferable to use `imageGuid` in URL (not the productId), because it will be cached by the browser.
-    And when image for Product is updated, the URL of the image should be changed (to avoid displaying old image from cache).
-     */
-  getProductImageWithAdvancedUserValidation(
-    imageGuid: string | null,
-    cancelToken?: CancelToken | undefined,
-  ): Promise<void> {
-    let url_ = this.baseUrl + '/product/image/details/{imageGuid}';
-    if (imageGuid === undefined || imageGuid === null)
-      throw new Error("The parameter 'imageGuid' must be defined.");
-    url_ = url_.replace('{imageGuid}', encodeURIComponent('' + imageGuid));
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_ = <AxiosRequestConfig>{
-      method: 'GET',
-      url: url_,
-      headers: {},
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
-        }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processGetProductImageWithAdvancedUserValidation(_response);
-      });
-  }
-
-  protected processGetProductImageWithAdvancedUserValidation(
-    response: AxiosResponse,
-  ): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 400) {
-      const _responseText = response.data;
-      let result400: any = null;
-      let resultData400 = _responseText;
-      result400 = ValidationProblemDetails.fromJS(resultData400);
-      return throwException(
-        'A server side error occurred.',
-        status,
-        _responseText,
-        _headers,
-        result400,
-      );
-    } else if (status === 200) {
-      const _responseText = response.data;
-      return Promise.resolve<void>(<any>null);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<void>(<any>null);
-  }
-}
-type GetProductImageSignUrlTestQueryParameters = {
-  imageGuid: string | null;
-};
-
-type GetProductImageWithAdvancedUserValidationSignUrlTestQueryParameters = {
-  imageGuid: string | null;
-};
-
-export class SignUrlTestQuery {
-  static get Client() {
-    return createClient(SignUrlTestClient);
-  }
-
-  static getProductImageDefaultOptions?: UseQueryOptions<void, unknown, void> =
-    {};
-  static getProductImageQueryKey = (imageGuid: string | null) =>
-    removeUndefinedFromArrayTail([
-      'SignUrlTestClient',
-      'getProductImage',
-      imageGuid,
-    ]);
-  private static getProductImage(context: QueryFunctionContext) {
-    return SignUrlTestQuery.Client.getProductImage(
-      context.queryKey[2] as string | null,
-    );
-  }
-
-  static useGetProductImageQuery<TSelectData = void, TError = unknown>(
-    dto: GetProductImageSignUrlTestQueryParameters,
-    options?: UseQueryOptions<void, TError, TSelectData>,
-  ): UseQueryResult<TSelectData, TError>;
-  /**
-     * It's preferable to use `imageGuid` in URL (not the productId), because it will be cached by the browser.
-    And when image for Product is updated, the URL of the image should be changed (to avoid displaying old image from cache).
-     */
-  static useGetProductImageQuery<TSelectData = void, TError = unknown>(
-    imageGuid: string | null,
-    options?: UseQueryOptions<void, TError, TSelectData>,
-  ): UseQueryResult<TSelectData, TError>;
-  static useGetProductImageQuery<TSelectData = void, TError = unknown>(
-    ...params: any[]
-  ): UseQueryResult<TSelectData, TError> {
-    let options: UseQueryOptions<void, TError, TSelectData> | undefined =
-      undefined;
-    let imageGuid: any = undefined;
-
-    if (params.length > 0) {
-      if (isParameterObject(params[0])) {
-        ({ imageGuid } =
-          params[0] as GetProductImageSignUrlTestQueryParameters);
-        options = params[1];
-      } else {
-        [imageGuid, options] = params;
-      }
-    }
-
-    return useQuery<void, TError, TSelectData>({
-      queryFn: SignUrlTestQuery.getProductImage,
-      queryKey: SignUrlTestQuery.getProductImageQueryKey(imageGuid),
-      ...(SignUrlTestQuery.getProductImageDefaultOptions as unknown as UseQueryOptions<
-        void,
-        TError,
-        TSelectData
-      >),
-      ...options,
-    });
-  }
-  /**
-     * It's preferable to use `imageGuid` in URL (not the productId), because it will be cached by the browser.
-    And when image for Product is updated, the URL of the image should be changed (to avoid displaying old image from cache).
-     */
-  static setGetProductImageData<TData = void>(
-    queryClient: QueryClient,
-    updater: (data: TData | undefined) => TData,
-    imageGuid: string | null,
-  ) {
-    queryClient.setQueryData(
-      SignUrlTestQuery.getProductImageQueryKey(imageGuid),
-      updater,
-    );
-  }
-
-  static getProductImageWithAdvancedUserValidationDefaultOptions?: UseQueryOptions<
-    void,
-    unknown,
-    void
-  > = {};
-  static getProductImageWithAdvancedUserValidationQueryKey = (
-    imageGuid: string | null,
-  ) =>
-    removeUndefinedFromArrayTail([
-      'SignUrlTestClient',
-      'getProductImageWithAdvancedUserValidation',
-      imageGuid,
-    ]);
-  private static getProductImageWithAdvancedUserValidation(
-    context: QueryFunctionContext,
-  ) {
-    return SignUrlTestQuery.Client.getProductImageWithAdvancedUserValidation(
-      context.queryKey[2] as string | null,
-    );
-  }
-
-  static useGetProductImageWithAdvancedUserValidationQuery<
-    TSelectData = void,
-    TError = unknown,
-  >(
-    dto: GetProductImageWithAdvancedUserValidationSignUrlTestQueryParameters,
-    options?: UseQueryOptions<void, TError, TSelectData>,
-  ): UseQueryResult<TSelectData, TError>;
-  /**
-     * It's preferable to use `imageGuid` in URL (not the productId), because it will be cached by the browser.
-    And when image for Product is updated, the URL of the image should be changed (to avoid displaying old image from cache).
-     */
-  static useGetProductImageWithAdvancedUserValidationQuery<
-    TSelectData = void,
-    TError = unknown,
-  >(
-    imageGuid: string | null,
-    options?: UseQueryOptions<void, TError, TSelectData>,
-  ): UseQueryResult<TSelectData, TError>;
-  static useGetProductImageWithAdvancedUserValidationQuery<
-    TSelectData = void,
-    TError = unknown,
-  >(...params: any[]): UseQueryResult<TSelectData, TError> {
-    let options: UseQueryOptions<void, TError, TSelectData> | undefined =
-      undefined;
-    let imageGuid: any = undefined;
-
-    if (params.length > 0) {
-      if (isParameterObject(params[0])) {
-        ({ imageGuid } =
-          params[0] as GetProductImageWithAdvancedUserValidationSignUrlTestQueryParameters);
-        options = params[1];
-      } else {
-        [imageGuid, options] = params;
-      }
-    }
-
-    return useQuery<void, TError, TSelectData>({
-      queryFn: SignUrlTestQuery.getProductImageWithAdvancedUserValidation,
-      queryKey:
-        SignUrlTestQuery.getProductImageWithAdvancedUserValidationQueryKey(
-          imageGuid,
-        ),
-      ...(SignUrlTestQuery.getProductImageWithAdvancedUserValidationDefaultOptions as unknown as UseQueryOptions<
-        void,
-        TError,
-        TSelectData
-      >),
-      ...options,
-    });
-  }
-  /**
-     * It's preferable to use `imageGuid` in URL (not the productId), because it will be cached by the browser.
-    And when image for Product is updated, the URL of the image should be changed (to avoid displaying old image from cache).
-     */
-  static setGetProductImageWithAdvancedUserValidationData<TData = void>(
-    queryClient: QueryClient,
-    updater: (data: TData | undefined) => TData,
-    imageGuid: string | null,
-  ) {
-    queryClient.setQueryData(
-      SignUrlTestQuery.getProductImageWithAdvancedUserValidationQueryKey(
-        imageGuid,
-      ),
-      updater,
-    );
-  }
-}
-
 /** A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807. */
 export class ProblemDetails implements IProblemDetails {
   /** A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when
 dereferenced, it provide human-readable documentation for the problem type
 (e.g., using HTML [W3C.REC-html5-20141028]).  When this member is not present, its value is assumed to be
 "about:blank". */
-  type!: string;
+  type?: string | null;
   /** A short, human-readable summary of the problem type.It SHOULD NOT change from occurrence to occurrence
 of the problem, except for purposes of localization(e.g., using proactive content negotiation;
 see[RFC7231], Section 3.4). */
-  title!: string;
+  title?: string | null;
   /** The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem. */
-  status!: number | null;
+  status?: number | null;
   /** A human-readable explanation specific to this occurrence of the problem. */
-  detail!: string;
+  detail?: string | null;
   /** A URI reference that identifies the specific occurrence of the problem.It may or may not yield further information if dereferenced. */
-  instance!: string;
+  instance?: string | null;
   /** Gets the IDictionary`2 for extension members.
 
 Problem type definitions MAY extend the problem details object with additional members. Extension members appear in the same namespace as
@@ -1827,17 +1620,17 @@ export interface IProblemDetails {
 dereferenced, it provide human-readable documentation for the problem type
 (e.g., using HTML [W3C.REC-html5-20141028]).  When this member is not present, its value is assumed to be
 "about:blank". */
-  type: string;
+  type?: string | null;
   /** A short, human-readable summary of the problem type.It SHOULD NOT change from occurrence to occurrence
 of the problem, except for purposes of localization(e.g., using proactive content negotiation;
 see[RFC7231], Section 3.4). */
-  title: string;
+  title?: string | null;
   /** The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem. */
-  status: number | null;
+  status?: number | null;
   /** A human-readable explanation specific to this occurrence of the problem. */
-  detail: string;
+  detail?: string | null;
   /** A URI reference that identifies the specific occurrence of the problem.It may or may not yield further information if dereferenced. */
-  instance: string;
+  instance?: string | null;
   /** Gets the IDictionary`2 for extension members.
 
 Problem type definitions MAY extend the problem details object with additional members. Extension members appear in the same namespace as
@@ -1901,6 +1694,7 @@ export interface IValidationProblemDetails extends IProblemDetails {
 export class ProductDto implements IProductDto {
   id!: number;
   title!: string;
+  productType!: ProductType;
 
   constructor(data?: IProductDto) {
     if (data) {
@@ -1915,6 +1709,7 @@ export class ProductDto implements IProductDto {
     if (_data) {
       this.id = _data['id'];
       this.title = _data['title'];
+      this.productType = _data['productType'];
     }
   }
 
@@ -1929,6 +1724,7 @@ export class ProductDto implements IProductDto {
     data = typeof data === 'object' ? data : {};
     data['id'] = this.id;
     data['title'] = this.title;
+    data['productType'] = this.productType;
     return data;
   }
 }
@@ -1936,10 +1732,19 @@ export class ProductDto implements IProductDto {
 export interface IProductDto {
   id: number;
   title: string;
+  productType: ProductType;
+}
+
+export enum ProductType {
+  Undefined = 'Undefined',
+  Auto = 'Auto',
+  Electronic = 'Electronic',
+  Other = 'Other',
 }
 
 export class CreateProductDto implements ICreateProductDto {
   title!: string;
+  productType!: ProductType;
 
   constructor(data?: ICreateProductDto) {
     if (data) {
@@ -1953,6 +1758,7 @@ export class CreateProductDto implements ICreateProductDto {
   init(_data?: any) {
     if (_data) {
       this.title = _data['title'];
+      this.productType = _data['productType'];
     }
   }
 
@@ -1966,16 +1772,19 @@ export class CreateProductDto implements ICreateProductDto {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['title'] = this.title;
+    data['productType'] = this.productType;
     return data;
   }
 }
 
 export interface ICreateProductDto {
   title: string;
+  productType: ProductType;
 }
 
 export class PatchProductDto implements IPatchProductDto {
   title?: string;
+  productType?: ProductType;
 
   constructor(data?: IPatchProductDto) {
     if (data) {
@@ -1989,6 +1798,7 @@ export class PatchProductDto implements IPatchProductDto {
   init(_data?: any) {
     if (_data) {
       this.title = _data['title'];
+      this.productType = _data['productType'];
     }
   }
 
@@ -2002,12 +1812,14 @@ export class PatchProductDto implements IPatchProductDto {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['title'] = this.title;
+    data['productType'] = this.productType;
     return data;
   }
 }
 
 export interface IPatchProductDto {
   title?: string;
+  productType?: ProductType;
 }
 
 export class PagedResultOfProductListItemDto
@@ -2065,6 +1877,7 @@ export interface IPagedResultOfProductListItemDto {
 export class ProductListItemDto implements IProductListItemDto {
   id!: number;
   title!: string;
+  productType!: ProductType;
 
   constructor(data?: IProductListItemDto) {
     if (data) {
@@ -2079,6 +1892,7 @@ export class ProductListItemDto implements IProductListItemDto {
     if (_data) {
       this.id = _data['id'];
       this.title = _data['title'];
+      this.productType = _data['productType'];
     }
   }
 
@@ -2093,6 +1907,7 @@ export class ProductListItemDto implements IProductListItemDto {
     data = typeof data === 'object' ? data : {};
     data['id'] = this.id;
     data['title'] = this.title;
+    data['productType'] = this.productType;
     return data;
   }
 }
@@ -2100,6 +1915,7 @@ export class ProductListItemDto implements IProductListItemDto {
 export interface IProductListItemDto {
   id: number;
   title: string;
+  productType: ProductType;
 }
 
 export enum SortOrder {

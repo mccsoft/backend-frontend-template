@@ -8,6 +8,7 @@ namespace MccSoft.TemplateApp.Domain
     {
         private string _title;
         public int Id { get; set; }
+        public ProductType ProductType { get; set; }
 
         public string Title
         {

@@ -37,7 +37,7 @@ namespace MccSoft.TemplateApp.Http.Generated
         /// <param name="sortBy">Field name for sorting in DB.</param>
         /// <param name="sortOrder">Sort direction. Ascending or Descending.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<PagedResultOfProductListItemDto> SearchAsync(string search, int? offset, int? limit, string sortBy, SortOrder? sortOrder);
+        System.Threading.Tasks.Task<PagedResultOfProductListItemDto> SearchAsync(string search, ProductType? productType, int? offset, int? limit, string sortBy, SortOrder? sortOrder);
     
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <param name="offset">Offset of list.</param>
@@ -45,7 +45,7 @@ namespace MccSoft.TemplateApp.Http.Generated
         /// <param name="sortBy">Field name for sorting in DB.</param>
         /// <param name="sortOrder">Sort direction. Ascending or Descending.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<PagedResultOfProductListItemDto> SearchAsync(string search, int? offset, int? limit, string sortBy, SortOrder? sortOrder, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<PagedResultOfProductListItemDto> SearchAsync(string search, ProductType? productType, int? offset, int? limit, string sortBy, SortOrder? sortOrder, System.Threading.CancellationToken cancellationToken);
     
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<ProductDto> PatchAsync(int id, PatchProductDto dto);
@@ -271,9 +271,9 @@ namespace MccSoft.TemplateApp.Http.Generated
         /// <param name="sortBy">Field name for sorting in DB.</param>
         /// <param name="sortOrder">Sort direction. Ascending or Descending.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<PagedResultOfProductListItemDto> SearchAsync(string search, int? offset, int? limit, string sortBy, SortOrder? sortOrder)
+        public System.Threading.Tasks.Task<PagedResultOfProductListItemDto> SearchAsync(string search, ProductType? productType, int? offset, int? limit, string sortBy, SortOrder? sortOrder)
         {
-            return SearchAsync(search, offset, limit, sortBy, sortOrder, System.Threading.CancellationToken.None);
+            return SearchAsync(search, productType, offset, limit, sortBy, sortOrder, System.Threading.CancellationToken.None);
         }
     
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -282,13 +282,17 @@ namespace MccSoft.TemplateApp.Http.Generated
         /// <param name="sortBy">Field name for sorting in DB.</param>
         /// <param name="sortOrder">Sort direction. Ascending or Descending.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task<PagedResultOfProductListItemDto> SearchAsync(string search, int? offset, int? limit, string sortBy, SortOrder? sortOrder, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<PagedResultOfProductListItemDto> SearchAsync(string search, ProductType? productType, int? offset, int? limit, string sortBy, SortOrder? sortOrder, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/products?");
             if (search != null)
             {
                 urlBuilder_.Append(System.Uri.EscapeDataString("Search") + "=").Append(System.Uri.EscapeDataString(ConvertToString(search, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (productType != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("ProductType") + "=").Append(System.Uri.EscapeDataString(ConvertToString(productType, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             }
             if (offset != null)
             {
@@ -960,7 +964,7 @@ namespace MccSoft.TemplateApp.Http.Generated
         public async System.Threading.Tasks.Task<string> GetSignatureAsync(System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/signature");
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/sign-url/signature");
     
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1042,7 +1046,7 @@ namespace MccSoft.TemplateApp.Http.Generated
         public async System.Threading.Tasks.Task SetSignatureCookieAsync(System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/signature/cookie");
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/sign-url/signature/cookie");
     
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1876,339 +1880,13 @@ namespace MccSoft.TemplateApp.Http.Generated
             return result == null ? "" : result;
         }
     }
-    
-    [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.11.3.0 (NJsonSchema v10.4.4.0 (Newtonsoft.Json v12.0.0.0))")]
-    public partial interface ISignUrlTestClient : IBaseClient
-    {
-        /// <summary>It's preferable to use `imageGuid` in URL (not the productId), because it will be cached by the browser.
-        /// And when image for Product is updated, the URL of the image should be changed (to avoid displaying old image from cache).</summary>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task GetProductImageAsync(string imageGuid);
-    
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>It's preferable to use `imageGuid` in URL (not the productId), because it will be cached by the browser.
-        /// And when image for Product is updated, the URL of the image should be changed (to avoid displaying old image from cache).</summary>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task GetProductImageAsync(string imageGuid, System.Threading.CancellationToken cancellationToken);
-    
-        /// <summary>It's preferable to use `imageGuid` in URL (not the productId), because it will be cached by the browser.
-        /// And when image for Product is updated, the URL of the image should be changed (to avoid displaying old image from cache).</summary>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task GetProductImageWithAdvancedUserValidationAsync(string imageGuid);
-    
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>It's preferable to use `imageGuid` in URL (not the productId), because it will be cached by the browser.
-        /// And when image for Product is updated, the URL of the image should be changed (to avoid displaying old image from cache).</summary>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task GetProductImageWithAdvancedUserValidationAsync(string imageGuid, System.Threading.CancellationToken cancellationToken);
-    
-    }
-    
-    [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.11.3.0 (NJsonSchema v10.4.4.0 (Newtonsoft.Json v12.0.0.0))")]
-    public partial class SignUrlTestClient : BaseClient, ISignUrlTestClient
-    {
-        private string _baseUrl = "http://localhost:48728";
-        private System.Net.Http.HttpClient _httpClient;
-        private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
-    
-        public SignUrlTestClient(System.Net.Http.HttpClient httpClient)
-        {
-            _httpClient = httpClient;
-            _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(CreateSerializerSettings);
-        }
-    
-        private Newtonsoft.Json.JsonSerializerSettings CreateSerializerSettings()
-        {
-            var settings = new Newtonsoft.Json.JsonSerializerSettings();
-            UpdateJsonSerializerSettings(settings);
-            return settings;
-        }
-    
-        public string BaseUrl
-        {
-            get { return _baseUrl; }
-            set { _baseUrl = value; }
-        }
-    
-    
-        public Newtonsoft.Json.JsonSerializerSettings JsonSerializerSettings { get { return _settings.Value; } }
-    
-    
-    
-        partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, string url);
-        partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
-        partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
-        /// <summary>It's preferable to use `imageGuid` in URL (not the productId), because it will be cached by the browser.
-        /// And when image for Product is updated, the URL of the image should be changed (to avoid displaying old image from cache).</summary>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task GetProductImageAsync(string imageGuid)
-        {
-            return GetProductImageAsync(imageGuid, System.Threading.CancellationToken.None);
-        }
-    
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>It's preferable to use `imageGuid` in URL (not the productId), because it will be cached by the browser.
-        /// And when image for Product is updated, the URL of the image should be changed (to avoid displaying old image from cache).</summary>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task GetProductImageAsync(string imageGuid, System.Threading.CancellationToken cancellationToken)
-        {
-            var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/product/image/{imageGuid}");
-            urlBuilder_.Replace("{imageGuid}", System.Uri.EscapeDataString(ConvertToString(imageGuid, System.Globalization.CultureInfo.InvariantCulture)));
-    
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    request_.Method = new System.Net.Http.HttpMethod("GET");
-    
-                    PrepareRequest(client_, request_, urlBuilder_);
-    
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
-                    PrepareRequest(client_, request_, url_);
-    
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-    
-                        ProcessResponse(client_, response_);
-    
-                        var status_ = (int)response_.StatusCode;
-                        if (status_ == 400)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<ValidationProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<ValidationProblemDetails>("A server side error occurred.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
-                        if (status_ == 200)
-                        {
-                            return;
-                        }
-                        else
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-    
-        /// <summary>It's preferable to use `imageGuid` in URL (not the productId), because it will be cached by the browser.
-        /// And when image for Product is updated, the URL of the image should be changed (to avoid displaying old image from cache).</summary>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task GetProductImageWithAdvancedUserValidationAsync(string imageGuid)
-        {
-            return GetProductImageWithAdvancedUserValidationAsync(imageGuid, System.Threading.CancellationToken.None);
-        }
-    
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>It's preferable to use `imageGuid` in URL (not the productId), because it will be cached by the browser.
-        /// And when image for Product is updated, the URL of the image should be changed (to avoid displaying old image from cache).</summary>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task GetProductImageWithAdvancedUserValidationAsync(string imageGuid, System.Threading.CancellationToken cancellationToken)
-        {
-            var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/product/image/details/{imageGuid}");
-            urlBuilder_.Replace("{imageGuid}", System.Uri.EscapeDataString(ConvertToString(imageGuid, System.Globalization.CultureInfo.InvariantCulture)));
-    
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    request_.Method = new System.Net.Http.HttpMethod("GET");
-    
-                    PrepareRequest(client_, request_, urlBuilder_);
-    
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
-                    PrepareRequest(client_, request_, url_);
-    
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-    
-                        ProcessResponse(client_, response_);
-    
-                        var status_ = (int)response_.StatusCode;
-                        if (status_ == 400)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<ValidationProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<ValidationProblemDetails>("A server side error occurred.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
-                        if (status_ == 200)
-                        {
-                            return;
-                        }
-                        else
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-    
-        protected struct ObjectResponseResult<T>
-        {
-            public ObjectResponseResult(T responseObject, string responseText)
-            {
-                this.Object = responseObject;
-                this.Text = responseText;
-            }
-    
-            public T Object { get; }
-    
-            public string Text { get; }
-        }
-    
-        public bool ReadResponseAsString { get; set; }
-        
-        protected virtual async System.Threading.Tasks.Task<ObjectResponseResult<T>> ReadObjectResponseAsync<T>(System.Net.Http.HttpResponseMessage response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Threading.CancellationToken cancellationToken)
-        {
-            if (response == null || response.Content == null)
-            {
-                return new ObjectResponseResult<T>(default(T), string.Empty);
-            }
-        
-            if (ReadResponseAsString)
-            {
-                var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                try
-                {
-                    var typedBody = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(responseText, JsonSerializerSettings);
-                    return new ObjectResponseResult<T>(typedBody, responseText);
-                }
-                catch (Newtonsoft.Json.JsonException exception)
-                {
-                    var message = "Could not deserialize the response body string as " + typeof(T).FullName + ".";
-                    throw new ApiException(message, (int)response.StatusCode, responseText, headers, exception);
-                }
-            }
-            else
-            {
-                try
-                {
-                    using (var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
-                    using (var streamReader = new System.IO.StreamReader(responseStream))
-                    using (var jsonTextReader = new Newtonsoft.Json.JsonTextReader(streamReader))
-                    {
-                        var serializer = Newtonsoft.Json.JsonSerializer.Create(JsonSerializerSettings);
-                        var typedBody = serializer.Deserialize<T>(jsonTextReader);
-                        return new ObjectResponseResult<T>(typedBody, string.Empty);
-                    }
-                }
-                catch (Newtonsoft.Json.JsonException exception)
-                {
-                    var message = "Could not deserialize the response body stream as " + typeof(T).FullName + ".";
-                    throw new ApiException(message, (int)response.StatusCode, string.Empty, headers, exception);
-                }
-            }
-        }
-    
-        private string ConvertToString(object value, System.Globalization.CultureInfo cultureInfo)
-        {
-            if (value == null)
-            {
-                return "";
-            }
-        
-            if (value is System.Enum)
-            {
-                var name = System.Enum.GetName(value.GetType(), value);
-                if (name != null)
-                {
-                    var field = System.Reflection.IntrospectionExtensions.GetTypeInfo(value.GetType()).GetDeclaredField(name);
-                    if (field != null)
-                    {
-                        var attribute = System.Reflection.CustomAttributeExtensions.GetCustomAttribute(field, typeof(System.Runtime.Serialization.EnumMemberAttribute)) 
-                            as System.Runtime.Serialization.EnumMemberAttribute;
-                        if (attribute != null)
-                        {
-                            return attribute.Value != null ? attribute.Value : name;
-                        }
-                    }
-        
-                    var converted = System.Convert.ToString(System.Convert.ChangeType(value, System.Enum.GetUnderlyingType(value.GetType()), cultureInfo));
-                    return converted == null ? string.Empty : converted;
-                }
-            }
-            else if (value is bool) 
-            {
-                return System.Convert.ToString((bool)value, cultureInfo).ToLowerInvariant();
-            }
-            else if (value is byte[])
-            {
-                return System.Convert.ToBase64String((byte[]) value);
-            }
-            else if (value.GetType().IsArray)
-            {
-                var array = System.Linq.Enumerable.OfType<object>((System.Array) value);
-                return string.Join(",", System.Linq.Enumerable.Select(array, o => ConvertToString(o, cultureInfo)));
-            }
-        
-            var result = System.Convert.ToString(value, cultureInfo);
-            return result == null ? "" : result;
-        }
-    }
 
     /// <summary>A ProblemDetails for validation errors.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class ValidationProblemDetails : ProblemDetails
     {
         /// <summary>Gets the validation errors associated with this instance of ValidationProblemDetails.</summary>
-        [Newtonsoft.Json.JsonProperty("errors", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("errors", Required = Newtonsoft.Json.Required.Default )]
         public System.Collections.Generic.IDictionary<string, System.Collections.Generic.ICollection<string>> Errors { get; set; }
     
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
@@ -2231,36 +1909,32 @@ namespace MccSoft.TemplateApp.Http.Generated
         /// dereferenced, it provide human-readable documentation for the problem type
         /// (e.g., using HTML [W3C.REC-html5-20141028]).  When this member is not present, its value is assumed to be
         /// "about:blank".</summary>
-        [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.Default )]
         public string Type { get; set; }
     
         /// <summary>A short, human-readable summary of the problem type.It SHOULD NOT change from occurrence to occurrence
         /// of the problem, except for purposes of localization(e.g., using proactive content negotiation;
         /// see[RFC7231], Section 3.4).</summary>
-        [Newtonsoft.Json.JsonProperty("title", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [Newtonsoft.Json.JsonProperty("title", Required = Newtonsoft.Json.Required.Default )]
         public string Title { get; set; }
     
         /// <summary>The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.</summary>
-        [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.AllowNull)]
+        [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Default )]
         public int? Status { get; set; }
     
         /// <summary>A human-readable explanation specific to this occurrence of the problem.</summary>
-        [Newtonsoft.Json.JsonProperty("detail", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [Newtonsoft.Json.JsonProperty("detail", Required = Newtonsoft.Json.Required.Default )]
         public string Detail { get; set; }
     
         /// <summary>A URI reference that identifies the specific occurrence of the problem.It may or may not yield further information if dereferenced.</summary>
-        [Newtonsoft.Json.JsonProperty("instance", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [Newtonsoft.Json.JsonProperty("instance", Required = Newtonsoft.Json.Required.Default )]
         public string Instance { get; set; }
     
         /// <summary>Gets the IDictionary`2 for extension members.
         /// 
         /// Problem type definitions MAY extend the problem details object with additional members. Extension members appear in the same namespace as
         /// other members of a problem type.</summary>
-        [Newtonsoft.Json.JsonProperty("extensions", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("extensions", Required = Newtonsoft.Json.Required.Default )]
         public System.Collections.Generic.IDictionary<string, object> Extensions { get; set; }
     
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
@@ -2285,6 +1959,28 @@ namespace MccSoft.TemplateApp.Http.Generated
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Title { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("productType", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public ProductType ProductType { get; set; }
+    
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
+    public enum ProductType
+    {
+        [System.Runtime.Serialization.EnumMember(Value = @"Undefined")]
+        Undefined = 0,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"Auto")]
+        Auto = 1,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"Electronic")]
+        Electronic = 2,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"Other")]
+        Other = 3,
     
     }
     
@@ -2296,15 +1992,24 @@ namespace MccSoft.TemplateApp.Http.Generated
         [System.ComponentModel.DataAnnotations.StringLength(int.MaxValue, MinimumLength = 3)]
         public string Title { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("productType", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public ProductType ProductType { get; set; }
+    
     
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class PatchProductDto 
     {
-        [Newtonsoft.Json.JsonProperty("title", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("title", Required = Newtonsoft.Json.Required.DisallowNull )]
         [System.ComponentModel.DataAnnotations.StringLength(int.MaxValue, MinimumLength = 3)]
         public string Title { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("productType", Required = Newtonsoft.Json.Required.DisallowNull )]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public ProductType ProductType { get; set; }
     
     
     }
@@ -2331,6 +2036,11 @@ namespace MccSoft.TemplateApp.Http.Generated
         [Newtonsoft.Json.JsonProperty("title", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Title { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("productType", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public ProductType ProductType { get; set; }
     
     
     }

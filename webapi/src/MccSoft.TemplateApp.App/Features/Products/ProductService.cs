@@ -22,7 +22,7 @@ namespace MccSoft.TemplateApp.App.Features.Products
 
         public async Task<ProductDto> Create(CreateProductDto dto)
         {
-            var product = new Product(dto.Title);
+            var product = new Product(dto.Title) { ProductType = dto.ProductType, };
             _dbContext.Products.Add(product);
 
             await _dbContext.SaveChangesAsync();
@@ -47,6 +47,11 @@ namespace MccSoft.TemplateApp.App.Features.Products
             if (!string.IsNullOrEmpty(search.Search))
             {
                 query = query.Where(x => x.Title.Contains(search.Search));
+            }
+
+            if (search.ProductType != null)
+            {
+                query = query.Where(x => x.ProductType == search.ProductType);
             }
 
             return await query.Select(x => x.ToProductListItemDto())

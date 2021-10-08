@@ -63,6 +63,7 @@ using NeinLinq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using Npgsql;
 using NSwag;
 using NSwag.AspNetCore;
 using NSwag.Generation.Processors.Security;
@@ -354,7 +355,7 @@ namespace MccSoft.TemplateApp.App
                                 (ev, entry, auditLog) =>
                                 {
                                     auditLog.UserId =
-                                        _httpContextAccessor.HttpContext?.User?.Identity?.GetUserId();
+                                        _httpContextAccessor.HttpContext?.User?.Identity?.GetUserIdOrNull();
                                     auditLog.ChangeDate = DateTime.UtcNow;
                                     auditLog.EntityType = entry.Name;
                                     auditLog.Action = entry.Action;
@@ -682,6 +683,10 @@ namespace MccSoft.TemplateApp.App
 
             var context = scope.ServiceProvider.GetRequiredService<TemplateAppDbContext>();
             context.Database.Migrate();
+
+            var conn = (NpgsqlConnection)context.Database.GetDbConnection();
+            conn.Open();
+            conn.ReloadTypes();
 
             DefaultUserSeeder seeder =
                 scope.ServiceProvider.GetRequiredService<DefaultUserSeeder>();

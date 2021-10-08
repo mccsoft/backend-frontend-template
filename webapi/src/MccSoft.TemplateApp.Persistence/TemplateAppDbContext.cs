@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Options;
+using Npgsql;
 
 namespace MccSoft.TemplateApp.Persistence
 {
@@ -36,10 +37,11 @@ namespace MccSoft.TemplateApp.Persistence
             UserAccessor = userAccessor;
             OperationalStoreOptions = operationalStoreOptions;
         }
-
+        static TemplateAppDbContext() => NpgsqlConnection.GlobalTypeMapper.MapEnum<ProductType>();
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.HasPostgresEnum<ProductType>();
         }
 
         public IDbContextTransaction BeginTransaction()

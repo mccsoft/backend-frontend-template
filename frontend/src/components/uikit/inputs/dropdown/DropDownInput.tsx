@@ -11,11 +11,11 @@ import { useTranslation } from 'react-i18next';
 import { FieldsWithType } from '../../type-utils';
 
 const styles = require('./DropDownInput.module.scss');
-const arrowDownIcon = require('app/icons/arrow-down.svg');
+const arrowDownIcon = require('assets/icons/arrow-down.svg');
 
 export type DropDownInputProps<
   D extends Record<V, string | number>,
-  V extends FieldsWithType<D, string | number>
+  V extends FieldsWithType<D, string | number>,
 > = {
   options: D[];
   customOptions?: Array<CustomOption>;
@@ -63,7 +63,7 @@ interface CustomDropDownOption extends IDropdownOption {
 
 export function DropDownInput<
   D extends Record<V, string | number>,
-  V extends FieldsWithType<D, string | number>
+  V extends FieldsWithType<D, string | number>,
 >(props: DropDownInputProps<D, V>) {
   const {
     rootClassName,
