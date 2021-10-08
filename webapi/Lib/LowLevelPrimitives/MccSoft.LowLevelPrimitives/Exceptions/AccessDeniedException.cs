@@ -9,8 +9,7 @@ namespace MccSoft.LowLevelPrimitives.Exceptions
     /// <remarks>
     /// This is a generic exception that should be thrown when e.g. a custom permission check is made
     /// in an application service (i.e. permissions are checked manually, not by an attribute on
-    /// a controller action method). It should not be used to reject cross-tenant access.
-    /// For that case use <seealso cref="TenantAccessDeniedException"/>.
+    /// a controller action method).
     /// </remarks>
     public class AccessDeniedException : WebApiBaseException
     {
