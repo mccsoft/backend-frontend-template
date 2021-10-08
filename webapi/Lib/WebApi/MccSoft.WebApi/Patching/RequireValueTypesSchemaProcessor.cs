@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using MccSoft.WebApi.Patching.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using NJsonSchema;
 using NJsonSchema.Generation;
 
@@ -23,16 +24,34 @@ namespace MccSoft.WebApi.Patching
             if (
                 _patchRequestType.IsAssignableFrom(context.Type)
                 || context.Type == typeof(ValidationProblemDetails)
+                || context.Type == typeof(ProblemDetails)
             ) {
                 // Classes that inherits from PatchRequest are omitted (since all properties in these classes are optional)
                 return;
             }
 
-            Dictionary<string, PropertyInfo> clrProperties = context.Type.GetProperties()
-                .ToDictionary(x => x.Name.ToLower());
-
-            foreach (var propertyKeyValue in schema.Properties)
+            if (context.Type.IsAssignableTo(typeof(JToken)))
             {
+                // there's no need to do detailed parsing of JToken types
+                return;
+            }
+
+            Dictionary<string, PropertyInfo> clrProperties;
+            try
+            {
+                clrProperties = context.Type.GetProperties().ToDictionary(x => x.Name.ToLower());
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException(
+                    $"Error getting properties from type {context.Type}",
+                    e
+                );
+            }
+
+            foreach (var propertyKeyValue in schema.ActualProperties)
+            {
+                var actualSchema = schema.ActualSchema;
                 var property = propertyKeyValue.Value;
                 string propertyName = property.Name;
                 if (
@@ -42,10 +61,7 @@ namespace MccSoft.WebApi.Patching
                     || property.Type == JsonObjectType.Number
                     || property.Type == JsonObjectType.None /* enum */
                 ) {
-                    if (!schema.RequiredProperties.Contains(propertyName))
-                    {
-                        schema.RequiredProperties.Add(propertyName);
-                    }
+                    property.IsRequired = true;
 
                     if (!clrProperties.ContainsKey(propertyName.ToLower()))
                     {
@@ -59,17 +75,11 @@ namespace MccSoft.WebApi.Patching
 
                     if (canBeNull)
                     {
-                        if (schema.RequiredProperties.Contains(propertyName))
-                        {
-                            schema.RequiredProperties.Remove(propertyName);
-                        }
+                        property.IsRequired = false;
                     }
                     else
                     {
-                        if (!schema.RequiredProperties.Contains(propertyName))
-                        {
-                            schema.RequiredProperties.Add(propertyName);
-                        }
+                        property.IsRequired = true;
 
                         if (property.Type == JsonObjectType.String)
                         {
