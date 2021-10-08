@@ -33,8 +33,9 @@ namespace MccSoft.TemplateApp.ComponentTests.Infrastructure
                 solutionRelativePath: "src/MccSoft.TemplateApp.App",
                 applicationBasePath: "../../../../../"
             );
+            builder.ConfigureTestServices(_overrideServices);
 
-            builder.ConfigureTestServices(
+            builder.ConfigureServices(
                 services =>
                 {
                     var clientRequestParametersProvider =
@@ -42,8 +43,6 @@ namespace MccSoft.TemplateApp.ComponentTests.Infrastructure
                     services.AddSingleton<IClientRequestParametersProvider>(
                         clientRequestParametersProvider.Object
                     );
-
-                    _overrideServices?.Invoke(services);
 
                     services.AddSqliteInMemory<TemplateAppDbContext>(_databaseFileName);
                 }
