@@ -58,25 +58,4 @@ namespace MccSoft.TemplateApp.Persistence
             optionsBuilder.AddInterceptors(new AuditSaveChangesInterceptor());
         }
     }
-    [AuditIgnore]
-    public class Blog
-    {
-        public int Id { get; set; }
-        //...
-    }
-
-    [AuditInclude]
-    public class Post
-    {
-        public int Id { get; set; }
-        //...
-    }
-
-    public class AppUser
-    {
-        public int Id { get; set; }
-        [AuditIgnore]
-        public string Password { get; set; }
-        //...
-    }
 }
