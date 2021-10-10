@@ -85,8 +85,6 @@ export function lazyRetry<T extends ComponentType<any>>(
 export const QuerySuspenseErrorWrapper: React.FC<{ reset?: () => void }> = (
   props,
 ) => {
-  const i18n = useTranslation();
-
   const result: any = (
     <QueryErrorResetBoundary>
       {({ reset }) => (

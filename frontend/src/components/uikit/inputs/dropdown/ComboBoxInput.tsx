@@ -13,7 +13,7 @@ import clsx from 'clsx';
 import { PickFieldsWithType } from 'components/uikit/type-utils';
 
 const styles = require('components/uikit/inputs/dropdown/ComboBoxInput.module.css');
-const arrowDownIcon = require('app/icons/arrow-down.svg');
+const arrowDownIcon = require('assets/icons/arrow-down.svg');
 
 type Props<D, V extends keyof PickFieldsWithType<D, string | number | null>> = {
   options: D[];
@@ -36,7 +36,7 @@ type Props<D, V extends keyof PickFieldsWithType<D, string | number | null>> = {
 
 export function ComboBoxInput<
   D,
-  V extends keyof PickFieldsWithType<D, string | number | null>
+  V extends keyof PickFieldsWithType<D, string | number | null>,
 >(props: Props<D, V>) {
   const {
     rootClassName,
@@ -67,7 +67,7 @@ export function ComboBoxInput<
   );
 
   const getValueForOption = useCallback(
-    (option: D) => option && ((option[valueField] as any) as string | number),
+    (option: D) => option && (option[valueField] as any as string | number),
     [],
   );
 
@@ -104,7 +104,7 @@ export function ComboBoxInput<
           (selectedOption &&
             options.find(
               (option) =>
-                ((option[valueField] as any) as string | number) ===
+                (option[valueField] as any as string | number) ===
                 selectedOption.key,
             )) ||
           null;

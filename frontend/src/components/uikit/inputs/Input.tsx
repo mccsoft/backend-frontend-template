@@ -1,13 +1,7 @@
 import { ReactComponent as EyeHide } from 'assets/auth/eye-hide.svg';
 import { ReactComponent as EyeShow } from 'assets/auth/eye-show.svg';
 import clsx from 'clsx';
-import React, {
-  CSSProperties,
-  KeyboardEventHandler,
-  Ref,
-  useMemo,
-  useState,
-} from 'react';
+import React, { KeyboardEventHandler, Ref, useState } from 'react';
 
 const styles = require('./Input.module.scss');
 
@@ -34,7 +28,6 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(function Input(
     helperText,
     errorText,
     onEnterPressed,
-    value,
     type,
     badge,
     ...rest
@@ -63,7 +56,6 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(function Input(
     >
       <input
         ref={ref}
-        {...rest}
         className={clsx(styles.input, className)}
         data-error={isError}
         onKeyDown={onEnterPressed ? onKeyDown : undefined}

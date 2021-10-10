@@ -1,8 +1,3 @@
-export type FieldsWithType<TObject, TFieldType> = keyof PickFieldsWithType<
-  TObject,
-  TFieldType
->;
-
 export type PickFieldsWithType<Base, Type> = Pick<
   Base,
   {

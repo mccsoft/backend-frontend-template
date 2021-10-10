@@ -9,20 +9,16 @@ import * as React from 'react';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { PickFieldsWithType } from '../../type-utils';
 import { CheckBox } from '../../CheckBox';
 
 const styles = require('./DropDownInput.module.scss');
-const arrowDownIcon = require('app/icons/arrow-down.svg');
+const arrowDownIcon = require('assets/icons/arrow-down.svg');
 
-export type MultiSelectDropDownInputProps<
-  D,
-  V extends keyof PickFieldsWithType<D, string | number>,
-> = {
+export type MultiSelectDropDownInputProps<D extends unknown = unknown> = {
   options: D[];
-  valueField: V;
-  labelField: keyof PickFieldsWithType<D, string>;
-  values: Array<D[V]> | null;
+  labelFunction?: (item: D) => string;
+  idFunction?: (item: D) => string;
+  values: Array<D> | null;
   onSelectedOptionsChanged: (newValues: D[]) => void;
   rootClassName?: string;
   disabled?: boolean;
@@ -38,15 +34,12 @@ type DropdownItemWithOption<D> = {
   optionObject: D;
 } & IDropdownOption;
 
-export function MultiSelectDropDownInput<
-  D,
-  V extends keyof PickFieldsWithType<D, string | number>,
->(props: MultiSelectDropDownInputProps<D, V>) {
+export function MultiSelectDropDownInput<D extends unknown = unknown>(
+  props: MultiSelectDropDownInputProps<D>,
+) {
   const {
     rootClassName,
     options,
-    valueField,
-    labelField,
     disabled,
     values,
     onSelectedOptionsChanged,
@@ -58,22 +51,35 @@ export function MultiSelectDropDownInput<
     customPostfixRenderer,
   } = props;
 
+  const labelFunction =
+    props.labelFunction ??
+    useCallback(
+      (item: D) => (item as { toString: () => string }).toString(),
+      [],
+    );
+
   const i18next = useTranslation();
   const [expanded, setExpanded] = useState(false);
 
   const getLabelForOption = useCallback(
-    (option: D | undefined | null) =>
-      option === undefined || option === null
+    (option: D | null): string =>
+      option === null
         ? emptyLabel || i18next.t('uikit.inputs.nothing_selected')
-        : option[labelField],
-    [emptyLabel],
+        : labelFunction
+        ? labelFunction(option)
+        : (option as { toString: () => string }).toString(),
+    [emptyLabel, labelFunction],
   );
-
-  const getValueForOption: (option: D | null) => string | number = useCallback(
-    (option) =>
-      ((option && option[valueField]) as string | number | null) || '',
-    [],
-  );
+  const getValueForOption: (option: D | null | undefined) => string | null =
+    useCallback(
+      (option: D | null | undefined) =>
+        option === null || option === undefined
+          ? null
+          : props.idFunction
+          ? props.idFunction(option)
+          : getLabelForOption(option),
+      [getLabelForOption, props.idFunction],
+    );
 
   const caretDown = useCallback(
     () => (
@@ -107,10 +113,11 @@ export function MultiSelectDropDownInput<
   const optionList: Array<DropdownItemWithOption<D>> = useMemo(
     () =>
       options.map((option) => ({
-        key: getValueForOption(option) as string | number,
+        key: getValueForOption(option) ?? '',
         text: getLabelForOption(option),
+        data: option,
         optionObject: option,
-        selected: !!values?.find((value) => value === option[valueField]),
+        selected: !!values?.find((value) => value === option),
       })),
     [options, values],
   );
@@ -125,7 +132,7 @@ export function MultiSelectDropDownInput<
 
       const newSelectedOptions = newSelectedOptionsValues
         .map((selectedValue) =>
-          options.find((option) => option[valueField] === selectedValue),
+          options.find((option) => option === selectedValue),
         )
         .filter((option) => option) as D[];
       onSelectedOptionsChanged(newSelectedOptions);
@@ -166,7 +173,11 @@ export function MultiSelectDropDownInput<
           className={styles.dropdownItem}
           onClick={() => onChange(item)}
         >
-          <CheckBox checked={item.selected} title={item.text} />
+          <CheckBox
+            onChange={() => onChange(item)}
+            checked={item.selected}
+            title={item.text}
+          />
           {customPostfixRenderer?.(
             (item as DropdownItemWithOption<D>).optionObject,
           )}

@@ -27,9 +27,7 @@ export const CreateProductPage: React.FC = () => {
 
   const form = useAdvancedForm<ICreateProductDto>(
     useCallback(async (data) => {
-      const response = await QueryFactory.ProductQuery.Client.create(
-        new CreateProductDto(data),
-      );
+      await QueryFactory.ProductQuery.Client.create(new CreateProductDto(data));
       await queryClient.invalidateQueries(
         QueryFactory.ProductQuery.searchQueryKey(),
       );
@@ -47,7 +45,7 @@ export const CreateProductPage: React.FC = () => {
       >
         Back
       </AppLink>
-      <Grid container justify={'center'}>
+      <Grid container justifyContent={'center'}>
         <Grid item xs={12} md={6} lg={4}>
           <form onSubmit={form.handleSubmitDefault}>
             <Field title={i18n.t('title')}>
