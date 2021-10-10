@@ -108,9 +108,9 @@ export const fetchTokenEndpoint = async (
       ...response.data,
       claims,
     } as FetchLoginResponse;
-  } catch (e) {
+  } catch (e: any) {
     const response = e.response;
-    if (response.status === 400) {
+    if (response?.status === 400) {
       if (response.data?.error === 'invalid_grant') {
         if (response.data?.error_description === 'locked') {
           throw new Error('Login_User_Locked');

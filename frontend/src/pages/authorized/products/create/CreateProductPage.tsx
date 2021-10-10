@@ -61,14 +61,11 @@ export const CreateProductPage: React.FC = () => {
                 control={form.control}
                 name={'productType'}
                 options={[
-                  { value: ProductType.Undefined },
-                  { value: ProductType.Auto },
-                  { value: ProductType.Electronic },
-                  { value: ProductType.Other },
+                  ProductType.Auto,
+                  ProductType.Electronic,
+                  ProductType.Other,
                 ]}
-                valueField={'value'}
-                labelField={'value'}
-                required={true}
+                required={false}
                 errorText={form.formState.errors.productType?.message}
               />
             </Field>

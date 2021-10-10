@@ -1,5 +1,10 @@
-import { Dropdown, IDropdownOption, IDropdownStyles } from '@fluentui/react';
-import { ISelectableOption } from 'office-ui-fabric-react/src/utilities/selectableOption/SelectableOption.types';
+import {
+  Dropdown,
+  IDropdownOption,
+  IDropdownStyles,
+  IRenderFunction,
+  ISelectableOption,
+} from '@fluentui/react';
 import * as React from 'react';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +17,7 @@ const arrowDownIcon = require('app/icons/arrow-down.svg');
 
 export type MultiSelectDropDownInputProps<
   D,
-  V extends keyof PickFieldsWithType<D, string | number>
+  V extends keyof PickFieldsWithType<D, string | number>,
 > = {
   options: D[];
   valueField: V;
@@ -35,7 +40,7 @@ type DropdownItemWithOption<D> = {
 
 export function MultiSelectDropDownInput<
   D,
-  V extends keyof PickFieldsWithType<D, string | number>
+  V extends keyof PickFieldsWithType<D, string | number>,
 >(props: MultiSelectDropDownInputProps<D, V>) {
   const {
     rootClassName,
@@ -115,7 +120,7 @@ export function MultiSelectDropDownInput<
       const newSelectedOptionsValues = !selectedItem.selected
         ? [selectedItem.key, ...(values || [])]
         : (values || []).filter(
-            (value) => ((value as any) as string | number) !== selectedItem.key,
+            (value) => (value as any as string | number) !== selectedItem.key,
           );
 
       const newSelectedOptions = newSelectedOptionsValues
@@ -153,7 +158,7 @@ export function MultiSelectDropDownInput<
     [getTitle],
   );
 
-  const renderItem = useCallback(
+  const renderItem: IRenderFunction<ISelectableOption> = useCallback(
     (item: ISelectableOption | undefined) =>
       item ? (
         <div
@@ -180,7 +185,7 @@ export function MultiSelectDropDownInput<
         data-error={error}
         options={optionList}
         placeholder={getLabelForOption(null)}
-        selectedKeys={(values as any) as string[] | number[]}
+        selectedKeys={values as any as string[] | number[]}
         styles={dropdownStyles}
         onRenderCaretDown={caretDown}
         onClick={onDropdownClick}

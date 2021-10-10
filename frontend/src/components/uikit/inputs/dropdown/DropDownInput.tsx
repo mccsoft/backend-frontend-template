@@ -8,21 +8,17 @@ import clsx from 'clsx';
 import * as React from 'react';
 import { CSSProperties, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FieldsWithType } from '../../type-utils';
 
 const styles = require('./DropDownInput.module.scss');
 const arrowDownIcon = require('assets/icons/arrow-down.svg');
 
-export type DropDownInputProps<
-  D extends Record<V, string | number>,
-  V extends FieldsWithType<D, string | number>,
-> = {
+export type DropDownInputProps<D extends unknown = unknown> = {
   options: D[];
   customOptions?: Array<CustomOption>;
-  valueField: V;
-  labelField: FieldsWithType<D, string>;
   disabledField?: (item: D) => boolean;
-  value?: D[V] | null;
+  labelFunction?: (item: D) => string;
+  idFunction?: (item: D) => string;
+  value?: D | null;
   rootClassName?: string;
   disabled?: boolean;
   emptyLabel?: string;
@@ -39,7 +35,7 @@ export type DropDownInputProps<
       onSelectedOptionChanged: (newSelectedOption: D) => void;
     }
   | {
-      required: false;
+      required?: false | undefined;
       onSelectedOptionChanged: (newSelectedOption: D | null) => void;
     }
 );
@@ -50,26 +46,23 @@ export interface CustomOption {
   onClick: () => void;
 }
 
-type DropDownOption = StandardDropDownOption | CustomDropDownOption;
+type DropDownOption = IDropdownOption &
+  (
+    | {
+        type: 'standard';
+      }
+    | {
+        type: 'custom';
+        onClick: () => void;
+      }
+  );
 
-interface StandardDropDownOption extends IDropdownOption {
-  __option_type: 'standard';
-}
-
-interface CustomDropDownOption extends IDropdownOption {
-  __option_type: 'custom';
-  onClick: () => void;
-}
-
-export function DropDownInput<
-  D extends Record<V, string | number>,
-  V extends FieldsWithType<D, string | number>,
->(props: DropDownInputProps<D, V>) {
+export function DropDownInput<D extends unknown = unknown>(
+  props: DropDownInputProps<D>,
+) {
   const {
     rootClassName,
     options,
-    valueField,
-    labelField,
     disabled,
     onSelectedOptionChanged,
     value,
@@ -83,25 +76,36 @@ export function DropDownInput<
     customOptions,
   } = props;
 
+  const labelFunction =
+    props.labelFunction ??
+    useCallback(
+      (item: D) => (item as { toString: () => string }).toString(),
+      [],
+    );
+
   const i18next = useTranslation();
   const [expanded, setExpanded] = useState(false);
 
   const getLabelForOption = useCallback(
-    (option: D | null) =>
+    (option: D | null): string =>
       option === null
         ? emptyLabel || i18next.t('uikit.inputs.nothing_selected')
-        : labelField
-        ? option[labelField]
-        : option,
-    [emptyLabel],
+        : labelFunction
+        ? labelFunction(option)
+        : (option as { toString: () => string }).toString(),
+    [emptyLabel, labelFunction],
   );
 
-  const getValueForOption = useCallback(
-    (option: D) =>
-      option &&
-      ((valueField ? (option[valueField] as any) : option) as string | number),
-    [],
-  );
+  const getValueForOption: (option: D | null | undefined) => string | null =
+    useCallback(
+      (option: D | null | undefined) =>
+        option === null || option === undefined
+          ? null
+          : props.idFunction
+          ? props.idFunction(option)
+          : getLabelForOption(option),
+      [getLabelForOption, props.idFunction],
+    );
 
   const caretDown = useCallback(
     () => (
@@ -146,21 +150,24 @@ export function DropDownInput<
   const optionList: Array<DropDownOption> = useMemo(() => {
     const result: DropDownOption[] = (customOptions || []).map(
       (customOption) => ({
-        __option_type: 'custom',
+        type: 'custom',
         key: customOption.key,
         text: customOption.label,
         onClick: customOption.onClick,
       }),
     );
-    const standardOptions: Array<StandardDropDownOption> = options.map(
-      (option) => ({
-        __option_type: 'standard',
-        key: getValueForOption(option),
-        text: getLabelForOption(option),
-        disabled: props.disabledField ? props.disabledField(option) : false,
-      }),
+    result.push(
+      ...options.map(
+        (option): DropDownOption => ({
+          type: 'standard',
+          key: getValueForOption(option) ?? '',
+          text: getLabelForOption(option),
+          disabled: props.disabledField ? props.disabledField(option) : false,
+          data: option,
+        }),
+      ),
     );
-    result.push(...standardOptions);
+
     if (
       !required &&
       value !== null &&
@@ -168,10 +175,10 @@ export function DropDownInput<
       result.length > 0
     ) {
       result.unshift({
-        __option_type: 'standard',
-        key: -1,
+        type: 'standard',
+        key: '-1',
         text: getLabelForOption(null),
-      });
+      } as DropDownOption);
     }
     return result;
   }, [options, required, value, customOptions]);
@@ -179,16 +186,12 @@ export function DropDownInput<
   const onChange = useCallback(
     (_e: React.FormEvent<HTMLDivElement>, selectedOption?: IDropdownOption) => {
       const castedOption = selectedOption as DropDownOption | undefined;
-      if (castedOption?.__option_type === 'custom') {
+      if (castedOption?.type === 'custom') {
         castedOption.onClick();
       } else if (selectedOption?.key !== value) {
-        const foundOption =
-          selectedOption &&
-          options.find(
-            (option) => getValueForOption(option) === selectedOption.key,
-          );
-        const newVar: D | null = foundOption || null;
-        (onSelectedOptionChanged as (option: D | null) => void)(newVar);
+        (onSelectedOptionChanged as (option: D | null) => void)(
+          castedOption?.data,
+        );
       }
     },
     [options, onSelectedOptionChanged, value],
@@ -219,7 +222,7 @@ export function DropDownInput<
         options={optionList}
         placeholder={placeholder}
         onChange={onChange}
-        selectedKey={value}
+        selectedKey={getValueForOption(value)}
         styles={dropdownStyles}
         onRenderCaretDown={caretDown}
         onClick={onDropdownClick}

@@ -35,7 +35,7 @@ export const setupRefreshTokenInterceptor = (
           dispatch(AuthActions.loginAction(result));
           failedRequest.response.config.headers['Authorization'] =
             'Bearer ' + result.access_token;
-        } catch (e) {
+        } catch (e: any) {
           if (e.message === 'Login_Unknown_Failure') {
             dispatch(AuthActions.logoutAction());
             return;

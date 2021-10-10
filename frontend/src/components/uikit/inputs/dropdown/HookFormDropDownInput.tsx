@@ -2,7 +2,6 @@ import {
   DropDownInput,
   DropDownInputProps,
 } from 'components/uikit/inputs/dropdown/DropDownInput';
-import { FieldsWithType } from 'components/uikit/type-utils';
 import * as React from 'react';
 import {
   Control,
@@ -13,10 +12,9 @@ import {
 } from 'react-hook-form';
 
 type HookFormProps<
-  D extends FieldValues & Record<V, string | number>,
-  V extends FieldsWithType<D, string | number>,
-  TFieldValues extends FieldValues = FieldValues
-> = Omit<DropDownInputProps<D, V>, 'onSelectedOptionChanged'> & {
+  D extends unknown = unknown,
+  TFieldValues extends FieldValues = FieldValues,
+> = Omit<DropDownInputProps<D>, 'onSelectedOptionChanged'> & {
   name: Path<TFieldValues>;
   control: Control<TFieldValues>;
   rules?: Exclude<RegisterOptions, 'valueAsDate' | 'setValueAs'>;
@@ -25,10 +23,9 @@ type HookFormProps<
 };
 
 export function HookFormDropDownInput<
-  D extends FieldValues & Record<V, string | number>,
-  V extends FieldsWithType<D, string | number>,
-  TFieldValues extends FieldValues = FieldValues
->(props: HookFormProps<D, V, TFieldValues>) {
+  D extends unknown = unknown,
+  TFieldValues extends FieldValues = FieldValues,
+>(props: HookFormProps<D, TFieldValues>) {
   return (
     <Controller
       control={props.control}
@@ -39,13 +36,7 @@ export function HookFormDropDownInput<
           {...props}
           value={value as any}
           onSelectedOptionChanged={(value: D | null) => {
-            onChange(
-              value
-                ? props.valueField
-                  ? value[props.valueField]
-                  : value
-                : null,
-            );
+            onChange(value);
           }}
         />
       )}
