@@ -5,11 +5,14 @@ import { useTranslation } from 'react-i18next';
 import { HookFormDropDownInput } from '../../../components/uikit/inputs/dropdown/HookFormDropDownInput';
 import { ProductType } from '../../../services/api/api-client';
 import { HookFormMultiSelectDropDownInput } from '../../../components/uikit/inputs/dropdown/HookFormMultiSelectDropDownInput';
-import { Button } from '../../../components/uikit/buttons/Button';
+import { Button, ButtonColor } from '../../../components/uikit/buttons/Button';
 import { HookFormDatePicker } from '../../../components/uikit/inputs/date-time/HookFormDatePicker';
 import { Input } from '../../../components/uikit/inputs/Input';
 import { HookFormTimePicker } from '../../../components/uikit/inputs/date-time/HookFormTimePicker';
 import { requiredRule } from '../../../helpers/form/react-hook-form-helper';
+import { Routes } from '../../../application/constants/routes';
+import { AppLink } from '../../../components/uikit/buttons/AppLink';
+import { useHistory } from 'react-router';
 
 const styles = require('./UiKitPage.module.scss');
 
@@ -23,6 +26,7 @@ type UiKitForm = {
 
 export const UiKitPage: React.FC = () => {
   const i18n = useTranslation();
+  const history = useHistory();
   const form = useAdvancedForm<UiKitForm>(
     useCallback(async (data) => {
       console.log(data);
@@ -35,6 +39,14 @@ export const UiKitPage: React.FC = () => {
 
   return (
     <div>
+      <AppLink
+        color={ButtonColor.Primary}
+        onClick={() => {
+          history.push(Routes.Authorized.Products);
+        }}
+      >
+        Back
+      </AppLink>
       <form onSubmit={form.handleSubmitDefault} className={styles.main}>
         <Field title={i18n.t('Page.uikit.input')}>
           <Input

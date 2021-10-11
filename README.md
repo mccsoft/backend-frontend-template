@@ -2,7 +2,8 @@
 
 ## What's that
 
-This is a template to set up a backend ASP.Net project with React frontend. You could check it out at [https://template.mcc-tomsk.de](https://template.mcc-tomsk.de) 
+This is a template to set up a backend ASP.Net project with React frontend. You could check it out at [https://template.mcc-tomsk.de](https://template.mcc-tomsk.de) (credentials: admin/BSjo1M8jU760).
+
 Template contains:
 1. ASP.NET Core backend (.NET 5)
    1. Identity Server authentication (with support for Social Networks authentication)
