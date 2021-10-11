@@ -10,11 +10,20 @@
       "Create": {
         "create_button": "Create"
       }
+    },
+    "uikit": {
+      "dropdown": "Dropdown",
+      "time": "Time",
+      "date": "Date",
+      "combobox": "Combobox",
+      "submit_button_title": "Submit",
+      "multi_select_dropdown": "Multi select"
     }
   },
   "uikit": {
     "inputs": {
-      "required": "Required"
+      "required": "Required",
+      "nothing_selected": "No selection"
     }
   },
   "suspense": {

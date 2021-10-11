@@ -16,6 +16,7 @@ import { useSortBy, useTable } from 'react-table';
 import { QueryFactory } from 'services/api';
 import { ProductListItemDto } from 'services/api/api-client';
 import { StringParam, useQueryParams } from 'use-query-params';
+const styles = require('./ProductListPage.module.scss');
 
 export const ProductListPage: React.FC = () => {
   const history = useHistory();
@@ -68,14 +69,24 @@ export const ProductListPage: React.FC = () => {
 
   return (
     <div>
-      <AppLink
-        color={ButtonColor.Primary}
-        onClick={() => {
-          history.push(Routes.Authorized.CreateProduct);
-        }}
-      >
-        Create product
-      </AppLink>
+      <div className={styles.navigation}>
+        <AppLink
+          color={ButtonColor.Primary}
+          onClick={() => {
+            history.push(Routes.Authorized.CreateProduct);
+          }}
+        >
+          Create product
+        </AppLink>
+        <AppLink
+          color={ButtonColor.Primary}
+          onClick={() => {
+            history.push(Routes.Authorized.UiKit);
+          }}
+        >
+          UiKit
+        </AppLink>
+      </div>
       <Input
         placeholder={'search'}
         defaultValue={queryParams.search ?? undefined}

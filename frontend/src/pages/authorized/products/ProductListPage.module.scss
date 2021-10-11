@@ -1,0 +1,6 @@
+@import 'src/styles/variables';
+@import 'src/styles/base';
+.navigation {
+  display: flex;
+  justify-content: space-between;
+}

@@ -3,6 +3,13 @@ import ReactDOM from 'react-dom';
 import 'index.scss';
 import { App } from './App';
 import reportWebVitals from './reportWebVitals';
+import { formatISO } from 'date-fns';
+
+//to send dates to backend in local timezone (not in UTC)
+Date.prototype.toISOString = function () {
+  const result = formatISO(this);
+  return result;
+};
 
 ReactDOM.render(
   <React.StrictMode>

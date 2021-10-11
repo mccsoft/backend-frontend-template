@@ -5,15 +5,18 @@ import { ComboBoxInput } from 'components/uikit/inputs/dropdown/ComboBoxInput';
 
 const styles = require('./TimePicker.module.scss');
 
-interface TimePickerProps {
+export type TimePickerProps = {
   minTimeInMills?: number;
   timeInMills: number | null | undefined;
   onTimeChanged?: (newTime: number | null, isInvalid: boolean) => void;
   error?: boolean;
   errorText?: string;
+  /*
+  interval between generated time entries, e.g. 01:00 and 01:30
+   */
   timeEntriesIntervalInMinutes?: number;
   className?: string;
-}
+};
 
 interface TimeEntry {
   timeInMills: number;
@@ -102,14 +105,14 @@ export const TimePicker: FC<TimePickerProps> = (props) => {
     <div className={clsx(styles.container, className)}>
       <ComboBoxInput
         options={timeEntries}
-        valueField={'timeInMills'}
-        labelField={'label'}
+        labelFunction={(item) => item.label}
+        idFunction={(item) => item.timeInMills.toString()}
         label={
           timeInMills !== null && timeInMills !== undefined
             ? millsToTimeString(timeInMills)
             : undefined
         }
-        value={timeInMills}
+        value={timeEntries.find((x) => x.timeInMills === timeInMills)}
         variant={'formInput'}
         calloutMaxHeight={200}
         noPlaceholder={true}

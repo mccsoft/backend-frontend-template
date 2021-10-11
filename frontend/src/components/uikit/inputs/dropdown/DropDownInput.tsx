@@ -8,9 +8,9 @@ import clsx from 'clsx';
 import * as React from 'react';
 import { CSSProperties, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import arrowDownIcon from 'assets/icons/arrow-down.svg';
 
 const styles = require('./DropDownInput.module.scss');
-const arrowDownIcon = require('assets/icons/arrow-down.svg');
 
 export type DropDownInputProps<D extends unknown = unknown> = {
   options: D[];

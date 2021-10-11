@@ -4,23 +4,23 @@ import {
   IDropdownOption,
   IComboBoxStyles,
   ICalloutProps,
+  IComboBoxOption,
   IComboBox,
 } from '@fluentui/react';
 import * as React from 'react';
 import { CSSProperties, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { PickFieldsWithType } from 'components/uikit/type-utils';
+import arrowDownIcon from 'assets/icons/arrow-down.svg';
 
-const styles = require('components/uikit/inputs/dropdown/ComboBoxInput.module.css');
-const arrowDownIcon = require('assets/icons/arrow-down.svg');
+const styles = require('./ComboBoxInput.module.scss');
 
-type Props<D, V extends keyof PickFieldsWithType<D, string | number | null>> = {
+type Props<D extends unknown = unknown> = {
   options: D[];
-  valueField: V;
-  labelField: keyof PickFieldsWithType<D, string>;
+  labelFunction?: (item: D) => string;
+  idFunction?: (item: D) => string;
   label?: string;
-  value?: D[V] | null;
+  value?: D | null;
   rootClassName?: string;
   disabled?: boolean;
   emptyLabel?: string;
@@ -34,15 +34,10 @@ type Props<D, V extends keyof PickFieldsWithType<D, string | number | null>> = {
   virtualized?: boolean;
 };
 
-export function ComboBoxInput<
-  D,
-  V extends keyof PickFieldsWithType<D, string | number | null>,
->(props: Props<D, V>) {
+export function ComboBoxInput<D extends unknown = unknown>(props: Props<D>) {
   const {
     rootClassName,
     options,
-    valueField,
-    labelField,
     disabled,
     onValueChanged,
     label,
@@ -55,21 +50,35 @@ export function ComboBoxInput<
     noPlaceholder,
     style,
   } = props;
+  const labelFunction =
+    props.labelFunction ??
+    useCallback(
+      (item: D) => (item as { toString: () => string }).toString(),
+      [],
+    );
 
   const i18next = useTranslation();
 
   const getLabelForOption = useCallback(
-    (option: D | null) =>
+    (option: D | null): string =>
       option === null
         ? emptyLabel || i18next.t('uikit.inputs.nothing_selected')
-        : option[labelField],
-    [emptyLabel],
+        : labelFunction
+        ? labelFunction(option)
+        : (option as { toString: () => string }).toString(),
+    [emptyLabel, labelFunction],
   );
 
-  const getValueForOption = useCallback(
-    (option: D) => option && (option[valueField] as any as string | number),
-    [],
-  );
+  const getValueForOption: (option: D | null | undefined) => string | null =
+    useCallback(
+      (option: D | null | undefined) =>
+        option === null || option === undefined
+          ? null
+          : props.idFunction
+          ? props.idFunction(option)
+          : getLabelForOption(option),
+      [getLabelForOption, props.idFunction],
+    );
 
   const isFormInput = variant === 'formInput';
   const dropdownStyles: Partial<IComboBoxStyles> = useMemo(
@@ -89,27 +98,21 @@ export function ComboBoxInput<
 
   const optionList = useMemo(
     () =>
-      options.map((option) => ({
-        key: getValueForOption(option),
-        text: getLabelForOption(option),
-      })),
-    [options, value],
+      options.map(
+        (option) =>
+          ({
+            key: getValueForOption(option) ?? '',
+            text: getLabelForOption(option),
+            data: option,
+          } as IComboBoxOption),
+      ),
+    [options],
   );
 
   const onChange = useCallback(
     (e: React.FormEvent<IComboBox>, selectedOption?: IDropdownOption) => {
-      let foundOption: D | null = null;
-      if (selectedOption?.key !== value) {
-        foundOption =
-          (selectedOption &&
-            options.find(
-              (option) =>
-                (option[valueField] as any as string | number) ===
-                selectedOption.key,
-            )) ||
-          null;
-      }
-      onValueChanged((e.target as any).value, foundOption);
+      console.log(e.target, selectedOption);
+      onValueChanged((e.target as any).value, selectedOption?.data);
     },
     [options, onValueChanged, value],
   );
@@ -127,9 +130,8 @@ export function ComboBoxInput<
   );
 
   const knownKey = useMemo(
-    () =>
-      options.find((option) => getValueForOption(option) === (value as any)),
-    [options, value, getValueForOption],
+    () => options.find((option) => option === value),
+    [options, value],
   );
 
   const caretDownButtonStyles = useMemo(
@@ -162,6 +164,7 @@ export function ComboBoxInput<
     }),
     [arrowDownIcon],
   );
+  console.log('qwe', label);
   const Component = props.virtualized ? VirtualizedComboBox : ComboBox;
   return (
     <div className={clsx(styles.rootContainer, rootClassName)} style={style}>
@@ -172,7 +175,7 @@ export function ComboBoxInput<
         placeholder={placeholder}
         onChange={onChange}
         text={label || ''}
-        selectedKey={knownKey ? value : undefined}
+        selectedKey={knownKey ? getValueForOption(value) : undefined}
         styles={dropdownStyles}
         caretDownButtonStyles={caretDownButtonStyles}
         useComboBoxAsMenuWidth={true}

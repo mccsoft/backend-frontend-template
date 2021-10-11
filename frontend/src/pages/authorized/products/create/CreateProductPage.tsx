@@ -56,14 +56,13 @@ export const CreateProductPage: React.FC = () => {
             </Field>
             <Field title={i18n.t('product_type')}>
               <HookFormDropDownInput
-                control={form.control}
-                name={'productType'}
                 options={[
                   ProductType.Auto,
                   ProductType.Electronic,
                   ProductType.Other,
                 ]}
-                required={false}
+                name={'productType'}
+                control={form.control}
                 errorText={form.formState.errors.productType?.message}
               />
             </Field>

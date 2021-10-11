@@ -34,7 +34,7 @@ export function HookFormDropDownInput<
       render={({ field: { onChange, value } }) => (
         <DropDownInput
           {...props}
-          value={value as any}
+          value={value}
           onSelectedOptionChanged={(value: D | null) => {
             onChange(value);
           }}

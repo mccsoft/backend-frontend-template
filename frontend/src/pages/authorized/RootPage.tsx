@@ -7,6 +7,7 @@ import { CreateProductPage } from 'pages/authorized/products/create/CreateProduc
 import { ProductListPage } from 'pages/authorized/products/ProductListPage';
 import React from 'react';
 import { Route, Switch } from 'react-router';
+import { UiKitPage } from './uikit/UiKitPage';
 const styles = require('./RootPage.module.scss');
 
 export const RootPage: React.FC = () => {
@@ -16,6 +17,7 @@ export const RootPage: React.FC = () => {
       <div className={styles.container}>
         <div className={styles.content}>
           <Switch>
+            <Route path={Routes.Authorized.UiKit} component={UiKitPage} />
             <Route
               path={Routes.Authorized.CreateProduct}
               component={CreateProductPage}
@@ -24,18 +26,21 @@ export const RootPage: React.FC = () => {
               path={Routes.Authorized.ProductDetails()}
               component={CreateProductPage}
             />
+
             <Route component={ProductListPage} />
           </Switch>
         </div>
-        <div>Version: {appVersion()}</div>
-      </div>
-      <div className={styles.logOutWrapper}>
-        <Button
-          onClick={() => {
-            dispatch(AuthActions.logoutAction());
-          }}
-          title={'Log Out'}
-        />
+        <div className={styles.bottomNavigation}>
+          <div>Version: {appVersion()}</div>
+          <div className={styles.logOutWrapper}>
+            <Button
+              onClick={() => {
+                dispatch(AuthActions.logoutAction());
+              }}
+              title={'Log Out'}
+            />
+          </div>
+        </div>
       </div>
     </>
   );

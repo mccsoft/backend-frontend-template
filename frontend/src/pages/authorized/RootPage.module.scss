@@ -1,11 +1,11 @@
 @import 'src/styles/variables';
 @import 'src/styles/base';
-.log-out-wrapper {
-  position: absolute;
-  right:0px;
+.bottom-navigation {
+  display: flex;
+  justify-content: space-between;
 }
-.container{
-  flex:1;
+.container {
+  flex: 1;
   display: flex;
   flex-direction: column;
 }

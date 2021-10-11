@@ -1,4 +1,3 @@
-import { DatePicker, DatePickerProps } from './DatePicker';
 import {
   Control,
   Controller,
@@ -7,9 +6,10 @@ import {
   RegisterOptions,
 } from 'react-hook-form';
 import React from 'react';
+import { TimePicker, TimePickerProps } from './TimePicker';
 
-type HookFormDatePickerProps<TFieldValues extends FieldValues = FieldValues> =
-  Omit<DatePickerProps, 'onChange'> & {
+type HookFormTimePickerProps<TFieldValues extends FieldValues = FieldValues> =
+  Omit<TimePickerProps, 'onTimeChanged' | 'timeInMills'> & {
     name: Path<TFieldValues>;
     control: Control<TFieldValues>;
     rules?: Exclude<RegisterOptions, 'valueAsDate' | 'setValueAs'>;
@@ -22,19 +22,21 @@ We have to use Controlled components for native html datepickers,
 because they require values in a form of 'yyyy-MM-DD', but in uncontrolled form react-hook-form
 supply them with Date object.
  */
-export function HookFormDatePicker<
+export function HookFormTimePicker<
   TFieldValues extends FieldValues = FieldValues,
->(props: HookFormDatePickerProps<TFieldValues>) {
+>(props: HookFormTimePickerProps<TFieldValues>) {
   return (
     <Controller
       control={props.control}
       name={props.name}
       rules={props.rules}
       render={({ field }) => (
-        <DatePicker
+        <TimePicker
           {...props}
-          value={field.value as any}
-          onChange={field.onChange}
+          timeInMills={field.value as any}
+          onTimeChanged={(newTime: number | null, isInvalid: boolean) => {
+            field.onChange(newTime);
+          }}
         />
       )}
     />
