@@ -1,3 +1,5 @@
+[![Build Status](https://dev.azure.com/mcctomsk/Common/_apis/build/status/mcctomsk.backend-frontend-template?branchName=master)](https://dev.azure.com/mcctomsk/Common/_build/latest?definitionId=6&branchName=master)
+
 ## What's that
 
 This is a template to set up a backend ASP.Net project with React frontend.
