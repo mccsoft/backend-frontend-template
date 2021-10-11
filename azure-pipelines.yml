@@ -1,5 +1,5 @@
 trigger:
-- main
+- master
 
 variables:
   BUILD_NUMBER: 0.1.$(Build.BuildId)
