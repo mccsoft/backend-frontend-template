@@ -41,15 +41,8 @@ function convertDateToString(
 }
 export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(
   function DatePicker(props, ref) {
-    const {
-      withTime,
-      value,
-      defaultValue,
-      onChange,
-      min,
-      max,
-      ...rest
-    } = props;
+    const { withTime, value, defaultValue, onChange, min, max, ...rest } =
+      props;
     return (
       <Input
         {...rest}

@@ -22,6 +22,13 @@ type AdvancedFormReturnType<
   handleSubmitDefault: (e?: React.BaseSyntheticEvent) => Promise<void>;
 };
 
+/*
+ * useAdvancedForm adds some advanced options on top of useForm (react-hook-form).
+ * These advanced functions include:
+ * 1. Ability to specify submitHandler when defining the form
+ * 2. Parse error messages returned from backend and assign them to proper fields (assuming that server-side complies to ProblemDetails RFC)
+ * 3. Ability to provide defaultValues 'asynchronously' (i.e. after form has been initially rendered, e.g. when getting the data via react-query hooks).
+ */
 export function useAdvancedForm<
   TFieldValues extends FieldValues = FieldValues,
   TContext extends object = object,

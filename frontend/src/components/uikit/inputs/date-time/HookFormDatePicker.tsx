@@ -3,14 +3,14 @@ import {
   Control,
   Controller,
   FieldValues,
-  Path,
   RegisterOptions,
 } from 'react-hook-form';
 import React from 'react';
+import { DatePath } from '../hook-form';
 
 type HookFormDatePickerProps<TFieldValues extends FieldValues = FieldValues> =
-  Omit<DatePickerProps, 'onChange'> & {
-    name: Path<TFieldValues>;
+  Omit<DatePickerProps, 'onChange' | 'name'> & {
+    name: DatePath<TFieldValues>;
     control: Control<TFieldValues>;
     rules?: Exclude<RegisterOptions, 'valueAsDate' | 'setValueAs'>;
     onFocus?: () => void;
@@ -25,14 +25,15 @@ supply them with Date object.
 export function HookFormDatePicker<
   TFieldValues extends FieldValues = FieldValues,
 >(props: HookFormDatePickerProps<TFieldValues>) {
+  const { name, rules, control, ...rest } = props;
   return (
     <Controller
-      control={props.control}
-      name={props.name}
-      rules={props.rules}
+      control={control}
+      name={name}
+      rules={rules}
       render={({ field }) => (
         <DatePicker
-          {...props}
+          {...rest}
           value={field.value as any}
           onChange={field.onChange}
         />
