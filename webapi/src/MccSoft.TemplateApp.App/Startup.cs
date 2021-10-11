@@ -355,7 +355,7 @@ namespace MccSoft.TemplateApp.App
                                 (ev, entry, auditLog) =>
                                 {
                                     auditLog.UserId =
-                                        _httpContextAccessor.HttpContext?.User?.Identity?.GetUserIdOrNull();
+                                        _httpContextAccessor?.HttpContext?.User?.Identity?.GetUserIdOrNull();
                                     auditLog.ChangeDate = DateTime.UtcNow;
                                     auditLog.EntityType = entry.Name;
                                     auditLog.Action = entry.Action;
