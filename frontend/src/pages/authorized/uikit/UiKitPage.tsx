@@ -9,6 +9,7 @@ import { Button } from '../../../components/uikit/buttons/Button';
 import { HookFormDatePicker } from '../../../components/uikit/inputs/date-time/HookFormDatePicker';
 import { Input } from '../../../components/uikit/inputs/Input';
 import { HookFormTimePicker } from '../../../components/uikit/inputs/date-time/HookFormTimePicker';
+import { requiredRule } from '../../../helpers/form/react-hook-form-helper';
 
 const styles = require('./UiKitPage.module.scss');
 
@@ -36,7 +37,10 @@ export const UiKitPage: React.FC = () => {
     <div>
       <form onSubmit={form.handleSubmitDefault} className={styles.main}>
         <Field title={i18n.t('Page.uikit.input')}>
-          <Input {...form.register('input', { required: true })} />
+          <Input
+            {...form.register('input', requiredRule())}
+            errorText={form.formState.errors.input?.message}
+          />
         </Field>
         <Field title={i18n.t('Page.uikit.dropdown')}>
           <HookFormDropDownInput

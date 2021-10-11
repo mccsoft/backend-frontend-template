@@ -1,15 +1,18 @@
 import i18n from 'i18next';
 import { useEffect } from 'react';
-import { DefaultValues, UseFormReturn } from 'react-hook-form';
+import { DefaultValues, FieldValues, UseFormReturn } from 'react-hook-form';
 
 /*
 This hook is useful, when defaultValues of the Form become available AFTER form is initially rendered.
 E.g. when defaultValues are loaded via react-query.
 When defaultValues change, form fields are updated according to changed values.
  */
-export function useResetFormWhenDataIsLoaded<T>(
-  form: UseFormReturn<T>,
-  defaultValues?: DefaultValues<T>,
+export function useResetFormWhenDataIsLoaded<
+  TFieldValues extends FieldValues = FieldValues,
+  TContext extends object = object,
+>(
+  form: UseFormReturn<TFieldValues, TContext>,
+  defaultValues?: DefaultValues<TFieldValues>,
 ) {
   useEffect(() => {
     if (defaultValues) {

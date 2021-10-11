@@ -2932,7 +2932,7 @@ __metadata:
     react-devtools: 4.13.5
     react-dom: 17.0.2
     react-dropzone: ^11.3.2
-    react-hook-form: ^7.6.6
+    react-hook-form: ^7.17.2
     react-i18next: 11.8.15
     react-js-pagination: ^3.0.3
     react-lottie: 1.2.3
@@ -14926,12 +14926,12 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.6.6":
-  version: 7.11.0
-  resolution: "react-hook-form@npm:7.11.0"
+"react-hook-form@npm:^7.17.2":
+  version: 7.17.2
+  resolution: "react-hook-form@npm:7.17.2"
   peerDependencies:
     react: ^16.8.0 || ^17
-  checksum: 38cb064397017177067579302044207fb0a71717e3a80f0ab8f8caf482e8450cc01ac0d136073b6a1d0d455840a3b59bb33a69ec9e01f1f9d10695125c8edb65
+  checksum: e9481a68031f836909c1313e16616271d4ede2bb5e00d129ed44bbbe814ac317b163fd33b2a45d23e03d49daa2973e9b216e002952611e2974e156beacfadcc0
   languageName: node
   linkType: hard
 

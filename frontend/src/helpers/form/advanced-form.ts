@@ -1,19 +1,22 @@
 import { useResetFormWhenDataIsLoaded } from './react-hook-form-helper';
-import { SubmitErrorHandler, UseFormReturn } from 'react-hook-form/dist/types';
+import { History } from 'history';
 import {
+  FieldValues,
+  useForm,
+  SubmitErrorHandler,
+  UseFormReturn,
   SubmitHandler,
   UnpackNestedValue,
   UseFormProps,
-} from 'react-hook-form/dist/types/form';
-import { History } from 'history';
-import { FieldValues, useForm } from 'react-hook-form';
+} from 'react-hook-form';
 import * as React from 'react';
 import { useRef } from 'react';
 import { useErrorHandler } from './useErrorHandler';
 
 type AdvancedFormReturnType<
-  TFieldValues extends FieldValues = FieldValues
-> = UseFormReturn<TFieldValues> & {
+  TFieldValues extends FieldValues = FieldValues,
+  TContext extends object = object,
+> = UseFormReturn<TFieldValues, TContext> & {
   overallError: string;
   formErrorCombined: string;
   handleSubmitDefault: (e?: React.BaseSyntheticEvent) => Promise<void>;
@@ -21,8 +24,7 @@ type AdvancedFormReturnType<
 
 export function useAdvancedForm<
   TFieldValues extends FieldValues = FieldValues,
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  TContext extends object = object
+  TContext extends object = object,
 >(
   submitHandler: (
     data: UnpackNestedValue<TFieldValues>,
@@ -30,9 +32,9 @@ export function useAdvancedForm<
   ) => Promise<void>,
   options?: {
     shouldResetOnSuccess?: boolean;
-    initialize?: (form: UseFormReturn<TFieldValues>) => void;
+    initialize?: (form: UseFormReturn<TFieldValues, TContext>) => void;
   } & UseFormProps<TFieldValues, TContext>,
-): AdvancedFormReturnType<TFieldValues> {
+): AdvancedFormReturnType<TFieldValues, TContext> {
   const form = useForm<TFieldValues, TContext>(options);
   const isSubmitting = useRef(false);
   const shouldResetOnSuccess = options?.shouldResetOnSuccess ? true : false;
