@@ -111,7 +111,6 @@ export function ComboBoxInput<D extends unknown = unknown>(props: Props<D>) {
 
   const onChange = useCallback(
     (e: React.FormEvent<IComboBox>, selectedOption?: IDropdownOption) => {
-      console.log(e.target, selectedOption);
       onValueChanged((e.target as any).value, selectedOption?.data);
     },
     [options, onValueChanged, value],
@@ -164,7 +163,6 @@ export function ComboBoxInput<D extends unknown = unknown>(props: Props<D>) {
     }),
     [arrowDownIcon],
   );
-  console.log('qwe', label);
   const Component = props.virtualized ? VirtualizedComboBox : ComboBox;
   return (
     <div className={clsx(styles.rootContainer, rootClassName)} style={style}>
