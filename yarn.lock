@@ -2235,6 +2235,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@lottiefiles/jlottie@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@lottiefiles/jlottie@npm:1.1.0"
+  checksum: 66b608b1ef0e75e90529cc48f4a4e2a72debb267f1cab4a4a030d9ded9abdf5b6c9977791ab3095d0307b3812128e6abbf3d9a34a9ffee831f358b4aa07863b2
+  languageName: node
+  linkType: hard
+
 "@material-ui/core@npm:^4.11.4":
   version: 4.12.1
   resolution: "@material-ui/core@npm:4.12.1"
@@ -2877,6 +2884,7 @@ __metadata:
     "@fluentui/react": ^8.36.3
     "@fortawesome/free-solid-svg-icons": ^5.15.3
     "@fortawesome/react-fontawesome": ^0.1.14
+    "@lottiefiles/jlottie": ^1.1.0
     "@material-ui/core": ^4.11.4
     "@microsoft/signalr": ^5.0.6
     "@reduxjs/toolkit": ^1.5.1

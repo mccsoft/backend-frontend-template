@@ -1,15 +1,15 @@
 import clsx from 'clsx';
 import { convertToErrorString } from 'helpers/form/useErrorHandler';
 import React from 'react';
-import Lottie from 'react-lottie';
+import { JLottie } from 'components/animations/JLottie';
 
-const animationData = require('assets/animations/rainbow.json');
+const animationData = require('assets/animations/9629-loading.json');
 const styles = require('./Loading.module.scss');
 
 const defaultOptions = {
   loop: true,
   autoplay: true,
-  animationData: animationData,
+  animationData: JSON.stringify(animationData),
   rendererSettings: {
     preserveAspectRatio: 'xMidYMid slice',
   },
@@ -55,7 +55,7 @@ export const Loading: React.FC<Props> = (props) => {
         <div className={clsx(loadingStyles)} data-test-id="loading">
           <div className={styles.loading}>
             <div className={styles.row}>
-              <Lottie options={defaultOptions} height={20} width={20} />
+              <JLottie options={defaultOptions} className={styles.lottie} />
               {props.title && (
                 <div className={styles.title}> {props.title}</div>
               )}
