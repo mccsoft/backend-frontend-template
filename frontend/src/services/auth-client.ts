@@ -1,4 +1,3 @@
-import { getClientKey } from 'application/constants/env-variables';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { Base64 } from 'js-base64';
 import queryString from 'query-string';
@@ -17,7 +16,7 @@ export type FetchLoginResponse = {
 };
 
 const clientId = 'web-client';
-const clientKey = getClientKey();
+const clientKey = 'any';
 const scopes = 'offline_access profile MccSoft.TemplateApp.AppAPI';
 const backendUri = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
 export const sendLoginRequest = async (

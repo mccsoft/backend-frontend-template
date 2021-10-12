@@ -117,11 +117,5 @@ Don't forget to change the favicons/tiles in `frontend/public` folder to the log
 
   (Sentry URL you'd like to send BACKEND errors to)
 
-- REACT_APP_CLIENT_KEY, Swagger__ClientPublicKey
-
-  Public key generated via (`GenerateClientSecret.ps1` above)
-- IdentityServer__Clients__0__ClientSecrets__0__Value
-
-  Secret key generated via (`GenerateClientSecret.ps1` above)
 
 
