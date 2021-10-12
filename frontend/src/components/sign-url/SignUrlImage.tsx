@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { QueryFactory } from '../../services/api';
+import { QueryFactory } from 'services/api';
 
 type Props = Omit<
   React.DetailedHTMLProps<

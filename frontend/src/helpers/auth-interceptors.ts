@@ -1,10 +1,10 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
-import { AuthActions } from '../application/redux-store/auth/auth-reducer';
-import { getRefreshToken } from '../application/redux-store/auth/auth-selectors';
-import { AppDispatch } from '../application/redux-store/root-store';
-import { GlobalState } from '../application/redux-store/types';
-import { sendRefreshTokenRequest } from '../services/auth-client';
+import { AuthActions } from 'application/redux-store/auth/auth-reducer';
+import { getRefreshToken } from 'application/redux-store/auth/auth-selectors';
+import { AppDispatch } from 'application/redux-store/root-store';
+import { GlobalState } from 'application/redux-store/types';
+import { sendRefreshTokenRequest } from 'services/auth-client';
 
 export const injectTokenInterceptor = (getState: () => GlobalState) => {
   return async (config: AxiosRequestConfig) => {

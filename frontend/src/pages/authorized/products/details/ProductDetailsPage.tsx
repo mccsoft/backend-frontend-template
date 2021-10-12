@@ -1,6 +1,5 @@
 import { Routes } from 'application/constants/routes';
 import { AppLink } from 'components/uikit/buttons/AppLink';
-import { ButtonColor } from 'components/uikit/buttons/Button';
 import { Loading } from 'components/uikit/suspense/Loading';
 import { useHistory } from 'react-router';
 import React from 'react';

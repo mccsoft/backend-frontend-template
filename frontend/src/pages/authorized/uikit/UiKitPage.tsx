@@ -1,18 +1,18 @@
-import { useAdvancedForm } from '../../../helpers/form/advanced-form';
+import { useAdvancedForm } from 'helpers/form/advanced-form';
 import React, { useCallback, useMemo } from 'react';
 import { Field } from 'components/uikit/Field';
 import { useTranslation } from 'react-i18next';
-import { HookFormDropDownInput } from '../../../components/uikit/inputs/dropdown/HookFormDropDownInput';
-import { ProductType } from '../../../services/api/api-client';
-import { HookFormMultiSelectDropDownInput } from '../../../components/uikit/inputs/dropdown/HookFormMultiSelectDropDownInput';
-import { Button, ButtonColor } from '../../../components/uikit/buttons/Button';
-import { HookFormDatePicker } from '../../../components/uikit/inputs/date-time/HookFormDatePicker';
-import { Input } from '../../../components/uikit/inputs/Input';
-import { HookFormTimePicker } from '../../../components/uikit/inputs/date-time/HookFormTimePicker';
-import { requiredRule } from '../../../helpers/form/react-hook-form-helper';
-import { Routes } from '../../../application/constants/routes';
-import { AppLink } from '../../../components/uikit/buttons/AppLink';
+import { HookFormDropDownInput } from 'components/uikit/inputs/dropdown/HookFormDropDownInput';
+import { HookFormMultiSelectDropDownInput } from 'components/uikit/inputs/dropdown/HookFormMultiSelectDropDownInput';
+import { Button, ButtonColor } from 'components/uikit/buttons/Button';
+import { HookFormDatePicker } from 'components/uikit/inputs/date-time/HookFormDatePicker';
+import { Input } from 'components/uikit/inputs/Input';
+import { HookFormTimePicker } from 'components/uikit/inputs/date-time/HookFormTimePicker';
+import { requiredRule } from 'helpers/form/react-hook-form-helper';
+import { Routes } from 'application/constants/routes';
+import { AppLink } from 'components/uikit/buttons/AppLink';
 import { useHistory } from 'react-router';
+import { ProductType } from 'services/api/api-client';
 
 const styles = require('./UiKitPage.module.scss');
 

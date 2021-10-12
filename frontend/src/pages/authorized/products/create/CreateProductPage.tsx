@@ -18,7 +18,7 @@ import {
   ICreateProductDto,
   ProductType,
 } from 'services/api/api-client';
-import { HookFormDropDownInput } from '../../../../components/uikit/inputs/dropdown/HookFormDropDownInput';
+import { HookFormDropDownInput } from 'components/uikit/inputs/dropdown/HookFormDropDownInput';
 
 export const CreateProductPage: React.FC = () => {
   const i18n = useScopedTranslation('Page.Products.Create');
