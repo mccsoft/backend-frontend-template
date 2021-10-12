@@ -16,7 +16,7 @@
     "@types/react-copy-to-clipboard": "^5.0.0",
     "@types/react-lottie": "^1.2.5",
     "@types/react-paginate": "^7.1.0",
-    "@types/react-table": "^7.7.1",
+    "@types/react-table": "^7.7.6",
     "axios": "0.21.1",
     "axios-auth-refresh": "3.1.0",
     "clsx": "^1.1.1",

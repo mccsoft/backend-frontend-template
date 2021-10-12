@@ -111,10 +111,7 @@ export function useErrorHandler<TFieldValues extends FieldValues = FieldValues>(
   const [formErrorsCombined, setFormErrorsCombined] = useState('');
   const history = useHistory();
 
-  async function submitForm(
-    data: UnpackNestedValue<TFieldValues>,
-    _event?: React.BaseSyntheticEvent,
-  ) {
+  async function submitForm(data: UnpackNestedValue<TFieldValues>) {
     try {
       setOverallServerError('');
       await submitFunction(data, history);

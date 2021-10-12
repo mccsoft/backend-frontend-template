@@ -11,6 +11,8 @@ import {
 } from '@material-ui/core';
 
 export const emptyArray: any[] = [];
+// ignored because it's used in react-table as well
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function AppTable<D extends object = object>(props: {
   table: TableInstance<D>;
 }) {
@@ -29,10 +31,14 @@ export function AppTable<D extends object = object>(props: {
       >
         <TableHead>
           {tableObj.headerGroups.map((headerGroup) => (
-            <TableRow {...(headerGroup.getHeaderGroupProps() as any)}>
-              {headerGroup.headers.map((column: any) => (
+            <TableRow
+              {...(headerGroup.getHeaderGroupProps() as any)}
+              key={headerGroup.id}
+            >
+              {headerGroup.headers.map((column) => (
                 <TableCell
                   {...column.getHeaderProps(column.getSortByToggleProps())}
+                  key={column.id}
                 >
                   {column.render('Header')}
                   <span>
@@ -51,10 +57,10 @@ export function AppTable<D extends object = object>(props: {
           {tableObj.rows.map((row) => {
             tableObj.prepareRow(row);
             return (
-              <TableRow {...(row.getRowProps() as any)}>
-                {row.cells.map((cell) => {
+              <TableRow {...(row.getRowProps() as any)} key={row.id}>
+                {row.cells.map((cell, index) => {
                   return (
-                    <TableCell {...(cell.getCellProps() as any)}>
+                    <TableCell {...(cell.getCellProps() as any)} key={index}>
                       {cell.render('Cell')}
                     </TableCell>
                   );

@@ -1,4 +1,4 @@
-import { useAdvancedForm } from 'helpers/form/advanced-form';
+import { useAdvancedForm } from 'helpers/form/useAdvancedForm';
 import React, { useCallback, useMemo } from 'react';
 import { Field } from 'components/uikit/Field';
 import { useTranslation } from 'react-i18next';

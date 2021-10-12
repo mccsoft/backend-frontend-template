@@ -34,7 +34,7 @@ export function HookFormTimePicker<
         <TimePicker
           {...props}
           timeInMills={field.value as any}
-          onTimeChanged={(newTime: number | null, isInvalid: boolean) => {
+          onTimeChanged={(newTime: number | null, _isInvalid: boolean) => {
             field.onChange(newTime);
           }}
         />

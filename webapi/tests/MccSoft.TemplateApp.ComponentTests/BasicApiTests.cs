@@ -51,6 +51,7 @@ namespace MccSoft.TemplateApp.ComponentTests
             foreach (Type controllerType in controllerTypes)
             {
                 // It will throw exception if any controller's dependency is not registered.
+                // (it doesn't require controllers themselves to be registered, as opposed to scope.GetService<T>())
                 ActivatorUtilities.CreateInstance(scope.ServiceProvider, controllerType);
             }
         }

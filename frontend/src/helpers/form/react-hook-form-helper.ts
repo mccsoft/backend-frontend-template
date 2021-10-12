@@ -9,6 +9,8 @@ When defaultValues change, form fields are updated according to changed values.
  */
 export function useResetFormWhenDataIsLoaded<
   TFieldValues extends FieldValues = FieldValues,
+  // ignored because it's used in react-hook-form as well
+  // eslint-disable-next-line @typescript-eslint/ban-types
   TContext extends object = object,
 >(
   form: UseFormReturn<TFieldValues, TContext>,

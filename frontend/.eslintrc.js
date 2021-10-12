@@ -34,7 +34,7 @@ module.exports = {
     'react/jsx-key': 'warn',
     '@typescript-eslint/ban-types': 'warn',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
-    '@typescript-eslint/no-unused-vars': 'warn',
+    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     '@typescript-eslint/no-inferrable-types': 'off',
   },
 };

@@ -7,7 +7,7 @@ import { Field } from 'components/uikit/Field';
 import { FormError } from 'components/uikit/FormError';
 import { Input } from 'components/uikit/inputs/Input';
 import { Loading } from 'components/uikit/suspense/Loading';
-import { useAdvancedForm } from 'helpers/form/advanced-form';
+import { useAdvancedForm } from 'helpers/form/useAdvancedForm';
 import { requiredRule } from 'helpers/form/react-hook-form-helper';
 import React, { useCallback } from 'react';
 import { useQueryClient } from 'react-query';
