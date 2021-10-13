@@ -2900,7 +2900,6 @@ __metadata:
     "@types/react": 17.0.2
     "@types/react-copy-to-clipboard": ^5.0.0
     "@types/react-dom": 17.0.2
-    "@types/react-lottie": ^1.2.5
     "@types/react-paginate": ^7.1.0
     "@types/react-redux": 7.1.16
     "@types/react-router-dom": 5.1.7
@@ -2929,7 +2928,6 @@ __metadata:
     js-base64: 3.6.0
     js-logger: 1.6.1
     jwt-decode: ^3.1.2
-    lottie-react-web: 2.2.2
     nswag: 13.11.3
     prettier: 2.4.1
     query-string: ^7.0.0
@@ -2943,7 +2941,6 @@ __metadata:
     react-hook-form: ^7.17.2
     react-i18next: 11.8.15
     react-js-pagination: ^3.0.3
-    react-lottie: 1.2.3
     react-paginate: ^7.1.3
     react-query: 3.25.1
     react-query-swagger: 13.11.6
@@ -3320,15 +3317,6 @@ __metadata:
   dependencies:
     "@types/react": "*"
   checksum: 1725928a1c3a0026044e6401e6b53729e1a88849034fc67138d7784ec44a5132fe2e9056a19b741ccb462ff0ec0d8c2c01ef316bda19be0e31f2ead9346f600b
-  languageName: node
-  linkType: hard
-
-"@types/react-lottie@npm:^1.2.5":
-  version: 1.2.6
-  resolution: "@types/react-lottie@npm:1.2.6"
-  dependencies:
-    "@types/react": "*"
-  checksum: 7930bad2cc998d62c3be4a0c66edfcbf1d87af6ffca5befa860acec706fd62e6e1e964ecffe88c3ed5a42668606e9ff1f43cc1beff764c679f68aa05166ce746
   languageName: node
   linkType: hard
 
@@ -7252,13 +7240,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dom-walk@npm:^0.1.0":
-  version: 0.1.2
-  resolution: "dom-walk@npm:0.1.2"
-  checksum: 19eb0ce9c6de39d5e231530685248545d9cd2bd97b2cb3486e0bfc0f2a393a9addddfd5557463a932b52fdfcf68ad2a619020cd2c74a5fe46fbecaa8e80872f3
-  languageName: node
-  linkType: hard
-
 "domain-browser@npm:^1.1.1":
   version: 1.2.0
   resolution: "domain-browser@npm:1.2.0"
@@ -9070,16 +9051,6 @@ fsevents@^1.2.7:
     npm-conf: ^1.1.3
     tunnel: ^0.0.6
   checksum: b7e016093eab6058b5fdd8caea31c22dc1a607f0f0b41c001ade5e0227c5d74efe9ce9bae56316d794bc1cedd461a187b8b7e8f0a3eb4d194972cdfb9d860af2
-  languageName: node
-  linkType: hard
-
-"global@npm:^4.4.0":
-  version: 4.4.0
-  resolution: "global@npm:4.4.0"
-  dependencies:
-    min-document: ^2.19.0
-    process: ^0.11.10
-  checksum: 9c057557c8f5a5bcfbeb9378ba4fe2255d04679452be504608dd5f13b54edf79f7be1db1031ea06a4ec6edd3b9f5f17d2d172fb47e6c69dae57fd84b7e72b77f
   languageName: node
   linkType: hard
 
@@ -11742,34 +11713,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"lottie-api@npm:^1.0.2":
-  version: 1.0.3
-  resolution: "lottie-api@npm:1.0.3"
-  checksum: d0a69f9f97a80d8f48af13416119c525257e5f0ebbab96c2cb233131c0cf84cd6c25a9b0fedcc6fdb5ef6d974287a04bd6fc9d531d5904a0a191cc10c356dc72
-  languageName: node
-  linkType: hard
-
-"lottie-react-web@npm:2.2.2":
-  version: 2.2.2
-  resolution: "lottie-react-web@npm:2.2.2"
-  dependencies:
-    babel-runtime: ^6.26.0
-    global: ^4.4.0
-    lottie-api: ^1.0.2
-    lottie-web: ^5.6.1
-  peerDependencies:
-    react: ^0.14.7 || ^15.0.0 || ^16.0.0
-  checksum: 95e52e7388da438b60a20bd30cebe3d74d27a71bf5269337bc5ec9bb02f5bb9273e96885eb54119dc6a7e14b77fbcedf4a580bb3a20e4f5e4647900b20a2fd6e
-  languageName: node
-  linkType: hard
-
-"lottie-web@npm:^5.1.3, lottie-web@npm:^5.6.1":
-  version: 5.7.12
-  resolution: "lottie-web@npm:5.7.12"
-  checksum: 905bafff318ba35e6316b9c06ca2719926988853a81ace663e6aa9215b5628c0d3f30559ccd1d02e17baa849cbec68a91af9d65f3d927de5be052c97c12ec515
-  languageName: node
-  linkType: hard
-
 "lower-case@npm:^2.0.2":
   version: 2.0.2
   resolution: "lower-case@npm:2.0.2"
@@ -12116,15 +12059,6 @@ fsevents@^1.2.7:
   version: 1.0.1
   resolution: "mimic-response@npm:1.0.1"
   checksum: 034c78753b0e622bc03c983663b1cdf66d03861050e0c8606563d149bc2b02d63f62ce4d32be4ab50d0553ae0ffe647fc34d1f5281184c6e1e8cf4d85e8d9823
-  languageName: node
-  linkType: hard
-
-"min-document@npm:^2.19.0":
-  version: 2.19.0
-  resolution: "min-document@npm:2.19.0"
-  dependencies:
-    dom-walk: ^0.1.0
-  checksum: da6437562ea2228041542a2384528e74e22d1daa1a4ec439c165abf0b9d8a63e17e3b8a6dc6e0c731845e85301198730426932a0e813d23f932ca668340c9623
   languageName: node
   linkType: hard
 
@@ -14981,18 +14915,6 @@ fsevents@^1.2.7:
     react: 15.x.x - 16.x.x
     tar: 2.2.2
   checksum: 7b5c5420b685337cc531e16cbace2003fc34a0e6cba73811673b75d12568514e6c93e048632472b746a7852635b2679e7538648d4f2a67617b5f6dae47026bd8
-  languageName: node
-  linkType: hard
-
-"react-lottie@npm:1.2.3":
-  version: 1.2.3
-  resolution: "react-lottie@npm:1.2.3"
-  dependencies:
-    babel-runtime: ^6.26.0
-    lottie-web: ^5.1.3
-  peerDependencies:
-    react: ^0.14.7 || ^15.0.0 || ^16.0.0
-  checksum: 05326e40b45cb1f52efe324386875858cec4725392d98033f767566c2f101bdbf59111a42108596ef63c96c897f13cf8d3c612e7a288d0dee3e1b7fb1a7911a2
   languageName: node
   linkType: hard
 
