@@ -31,7 +31,7 @@ using MccSoft.TemplateApp.Persistence;
 using MccSoft.DomainHelpers.DomainEvents.Events;
 using MccSoft.LowLevelPrimitives;
 using MccSoft.Mailing;
-using MccSoft.PersistenceHelpers;
+using MccSoft.PersistenceHelpers.DomainEvents;
 using MccSoft.TemplateApp.App.Settings;
 using MccSoft.TemplateApp.Domain.Audit;
 using MccSoft.WebApi;
@@ -284,6 +284,20 @@ namespace MccSoft.TemplateApp.App
         {
             services.Configure<DefaultUserOptions>(Configuration.GetSection("DefaultUser"));
 
+            // to resolve all Handlers in a separate scope, or in a HTTP scope
+            services.AddTransient<ServiceFactory>(
+                p =>
+                {
+                    var httpContextAccessor = p.GetRequiredService<IHttpContextAccessor>();
+                    if (httpContextAccessor.HttpContext != null)
+                    {
+                        return httpContextAccessor.HttpContext.RequestServices.GetRequiredService;
+                    }
+
+                    var scope = p.CreateScope();
+                    return scope.ServiceProvider.GetRequiredService;
+                }
+            );
             services.AddMediatR(typeof(Startup), typeof(LogDomainEventHandler));
 
             ConfigureAudit(services);
@@ -388,6 +402,7 @@ namespace MccSoft.TemplateApp.App
         protected virtual void ConfigureDatabase(IServiceCollection services)
         {
             services.AddTransient<DomainEventsSaveChangesInterceptor>();
+            services.AddTransient<DomainEventsTransactionInterceptor>();
 
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<TemplateAppDbContext>(
@@ -398,7 +413,8 @@ namespace MccSoft.TemplateApp.App
                             )
                             .WithLambdaInjection()
                             .AddInterceptors(
-                                provider.GetRequiredService<DomainEventsSaveChangesInterceptor>()
+                                provider.GetRequiredService<DomainEventsSaveChangesInterceptor>(),
+                                provider.GetRequiredService<DomainEventsTransactionInterceptor>()
                             ),
                     contextLifetime: ServiceLifetime.Scoped,
                     optionsLifetime: ServiceLifetime.Singleton

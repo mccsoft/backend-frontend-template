@@ -5,7 +5,7 @@ namespace MccSoft.DomainHelpers.DomainEvents.Events
     /// <summary>
     /// Domain event which logs its content to standard logger on SaveChanges.
     /// </summary>
-    public class LogDomainEvent : IDomainEvent
+    public class LogDomainEvent : IDomainEventWithIntegerId
     {
         public static LogDomainEvent Info(string message, params object[] parameters)
         {
@@ -27,5 +27,6 @@ namespace MccSoft.DomainHelpers.DomainEvents.Events
         public LogLevel Level { get; set; }
         public string Message { get; set; }
         public object[] Parameters { get; set; }
+        public int Id { get; set; }
     }
 }

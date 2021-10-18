@@ -7,6 +7,7 @@ using MccSoft.TemplateApp.Persistence;
 using MccSoft.PersistenceHelpers;
 using MccSoft.WebApi.Pagination;
 using MccSoft.WebApi.Patching;
+using Microsoft.EntityFrameworkCore;
 using NeinLinq;
 
 namespace MccSoft.TemplateApp.App.Features.Products
@@ -22,12 +23,21 @@ namespace MccSoft.TemplateApp.App.Features.Products
 
         public async Task<ProductDto> Create(CreateProductDto dto)
         {
-            var product = new Product(dto.Title) { ProductType = dto.ProductType, };
-            _dbContext.Products.Add(product);
+            var productId = await _dbContext.Database.CreateExecutionStrategy()
+                .ExecuteAsync(
+                    async () =>
+                    {
+                        await using var transaction = _dbContext.BeginTransaction();
+                        var product = new Product(dto.Title) { ProductType = dto.ProductType, };
+                        _dbContext.Products.Add(product);
 
-            await _dbContext.SaveChangesAsync();
+                        await _dbContext.SaveChangesAsync();
+                        transaction.Commit();
 
-            return await Get(product.Id);
+                        return product.Id;
+                    }
+                );
+            return await Get(productId);
         }
 
         public async Task<ProductDto> Patch(int id, PatchProductDto dto)
