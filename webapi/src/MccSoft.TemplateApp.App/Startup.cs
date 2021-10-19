@@ -284,22 +284,6 @@ namespace MccSoft.TemplateApp.App
         {
             services.Configure<DefaultUserOptions>(Configuration.GetSection("DefaultUser"));
 
-            // to resolve all Handlers in a separate scope, or in a HTTP scope
-            services.AddTransient<ServiceFactory>(
-                p =>
-                {
-                    var httpContextAccessor = p.GetRequiredService<IHttpContextAccessor>();
-                    if (httpContextAccessor.HttpContext != null)
-                    {
-                        return httpContextAccessor.HttpContext.RequestServices.GetRequiredService;
-                    }
-
-                    var scope = p.CreateScope();
-                    return scope.ServiceProvider.GetRequiredService;
-                }
-            );
-            services.AddMediatR(typeof(Startup), typeof(LogDomainEventHandler));
-
             ConfigureAudit(services);
 
             services.AddScoped<IDateTimeProvider, DateTimeProvider>()
@@ -401,8 +385,7 @@ namespace MccSoft.TemplateApp.App
 
         protected virtual void ConfigureDatabase(IServiceCollection services)
         {
-            services.AddTransient<DomainEventsSaveChangesInterceptor>();
-            services.AddTransient<DomainEventsTransactionInterceptor>();
+            services.AddDomainEventsWithMediatR();
 
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<TemplateAppDbContext>(
@@ -412,10 +395,7 @@ namespace MccSoft.TemplateApp.App
                                 builder => builder.EnableRetryOnFailure()
                             )
                             .WithLambdaInjection()
-                            .AddInterceptors(
-                                provider.GetRequiredService<DomainEventsSaveChangesInterceptor>(),
-                                provider.GetRequiredService<DomainEventsTransactionInterceptor>()
-                            ),
+                            .AddDomainEventsInterceptors(provider),
                     contextLifetime: ServiceLifetime.Scoped,
                     optionsLifetime: ServiceLifetime.Singleton
                 );
