@@ -18,9 +18,11 @@ namespace MccSoft.Testing.SqliteUtils
         /// <param name="dbId">
         /// A unique identifier of the DB to create. Usually, a random string.
         /// </param>
+        /// <param name="configureDbContextOptions">Action to configure options of DbContextBuilder</param>
         public static void AddSqliteInMemory<TDbContext>(
             this IServiceCollection services,
-            string dbId
+            string dbId,
+            Action<DbContextOptionsBuilder, IServiceProvider>? configureDbContextOptions = null
         ) where TDbContext : DbContext
         {
             string connectionString = $"DataSource=file:memdb{dbId}?mode=memory&cache=shared";
@@ -33,7 +35,7 @@ namespace MccSoft.Testing.SqliteUtils
             // transactions in parallel threads, and Sqlite fails with error
             // "SqliteConnection does not support nested transactions".
             services.AddDbContext<TDbContext>(
-                options =>
+                (provider, options) =>
                 {
                     options.UseSqlite(connectionString)
                         .UsePostgresFunctionsInSqlite()
@@ -42,6 +44,7 @@ namespace MccSoft.Testing.SqliteUtils
                             IModelCustomizer,
                             ModelCustomizerWithPatchedDateTimeOffset
                         >();
+                    configureDbContextOptions?.Invoke(options, provider);
                 },
                 contextLifetime: ServiceLifetime.Scoped,
                 optionsLifetime: ServiceLifetime.Singleton

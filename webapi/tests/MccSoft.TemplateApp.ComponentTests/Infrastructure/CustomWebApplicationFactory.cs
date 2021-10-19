@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using MccSoft.PersistenceHelpers.DomainEvents;
 using MccSoft.TemplateApp.App;
 using MccSoft.TemplateApp.Persistence;
 using MccSoft.Testing.SqliteUtils;
@@ -44,7 +45,11 @@ namespace MccSoft.TemplateApp.ComponentTests.Infrastructure
                         clientRequestParametersProvider.Object
                     );
 
-                    services.AddSqliteInMemory<TemplateAppDbContext>(_databaseFileName);
+                    services.AddDomainEventsWithMediatR(typeof(Startup));
+                    services.AddSqliteInMemory<TemplateAppDbContext>(
+                        _databaseFileName,
+                        (builder, provider) => builder.AddDomainEventsInterceptors(provider)
+                    );
                 }
             );
         }
