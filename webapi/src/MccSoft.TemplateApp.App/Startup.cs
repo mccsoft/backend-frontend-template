@@ -385,7 +385,7 @@ namespace MccSoft.TemplateApp.App
 
         protected virtual void ConfigureDatabase(IServiceCollection services)
         {
-            services.AddDomainEventsWithMediatR();
+            services.AddDomainEventsWithMediatR(typeof(Startup), typeof(LogDomainEventHandler));
 
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<TemplateAppDbContext>(
