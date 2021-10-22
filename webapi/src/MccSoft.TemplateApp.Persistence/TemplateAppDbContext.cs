@@ -45,6 +45,13 @@ namespace MccSoft.TemplateApp.Persistence
             base.OnModelCreating(builder);
             builder.HasPostgresEnum<ProductType>();
             // when adding enum here don't forget to add it to static constructor as well (see above)
+
+            // if you already have some data in the table, which column you'd like to convert to enum
+            // you'd need to adjust migration SQL to something like the following
+            // migrationBuilder.Sql(
+            // @"ALTER TABLE ""Patients"" ALTER COLUMN ""NumberSource"" TYPE number_source using (enum_range(null::number_source))[""NumberSource""::int + 1];"
+            //     );
+            // For details see https://github.com/mcctomsk/backend-frontend-template/wiki/_new#migration-of-existing-data
         }
 
         public IDbContextTransaction BeginTransaction()
