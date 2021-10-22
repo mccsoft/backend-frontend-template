@@ -38,10 +38,13 @@ namespace MccSoft.TemplateApp.Persistence
             OperationalStoreOptions = operationalStoreOptions;
         }
         static TemplateAppDbContext() => NpgsqlConnection.GlobalTypeMapper.MapEnum<ProductType>();
+        // when adding enum here don't forget to OnModelCreating as well (see below)
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
             builder.HasPostgresEnum<ProductType>();
+            // when adding enum here don't forget to add it to static constructor as well (see above)
         }
 
         public IDbContextTransaction BeginTransaction()
