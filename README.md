@@ -10,7 +10,7 @@ Template contains:
    2. Guidance/example on how to structure backend
    3. Helpers for easy implementation of REST API for CRUD (with PATCH instead of UPDATE)
    4. Configured Domain events to apply DDD principles
-   5. Localization (i18next), background jobs (Hangfire), 
+   5. Localization (i18next), background jobs (Hangfire),
    6. Audit logging for DB entities
 1. React frontend
    1. CRA-based template
@@ -19,7 +19,7 @@ Template contains:
    1. Guidance/examples on setting up forms (react-hook-form), tables (with sorting/paging) and filters
    1. Support for injecting environment variables (without rebuilding the app)
    1. Redux with persistence
-   1. Routing with react-router   
+   1. Routing with react-router
    1. Error-boundaries which works with suspense/react-query/code splitting
    1. Pre-built authentication UI
 1. Build-script to build a single Docker container from backend and frontend
@@ -29,7 +29,7 @@ Template contains:
    1. Uploads it to Container Registry (on Digital Ocean)
    1. Deploys Image to preconfigured agent
 1. Instructions about configuring an agent to deploy aforementioned Docker Image on any linux PC (Digital Ocean prefered :))
-1. Kubernetes deployment files and guidance regarding deploy to kubernetes (in progress) 
+1. Kubernetes deployment files and guidance regarding deploy to kubernetes (in progress)
 
 ## Setting up new project from template
 Before using the template for your brand-new app run `yarn rename -n YourProjectName`. Use CamelCase for your project name.
@@ -50,8 +50,7 @@ Don't forget to change the favicons/tiles in `frontend/public` folder to the log
 
 
 ## How to set up CI/CD
-1. First of all, you need to create an email for your project. It will be needed for registering in 3rd party systems that the project will use (e.g. Sentry)
-   1. Ask Igor to create an email (e.g. studyapp@mcc-tomsk.de)
+1. First of all, you need to create an email for your project. It will be needed for registering in 3rd party systems that the project will use (e.g. Sentry and Loggly)
 1. Go to Azure and create Pipeline. Specify `azure-pipelines.yml` as the source of pipeline.
 1. Give access for WRITING to Repo for your Pipeline. This is required for Tagging your sources when App is deployed. Instructions: https://elanderson.net/2020/04/azure-devops-pipelines-manual-tagging/
 1. Set up Container Registry to push images to.
@@ -75,7 +74,7 @@ Don't forget to change the favicons/tiles in `frontend/public` folder to the log
    1. Alternatively, set up any linux machine with root access. Install `docker` and `docker-compose`.
       1. To install `docker` follow [instructions](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository):
       1. To install `docker-compose` (at least 1.29.0 is required to use profiles): `sudo apt install pip && pip install docker-compose;`
-   1. Write down the passwords somewhere in WIKI 
+   1. Write down the passwords somewhere in WIKI
 1. SSH into droplet/VM and run the following (line by line):
     ```
     apt install mc
@@ -90,7 +89,7 @@ Don't forget to change the favicons/tiles in `frontend/public` folder to the log
 1. Generate configuration (by running `./GenerateDotEnv.ps1` from `scripts` folder. File `.env.base` will be generated for you
 1. Copy generated `env.base` file to HOME directory of `azure` user.
 1. Adjust the file (change the Email, VirtualHost, Sentry and Loggly URLs).
-1. (You could also grab Postgres password from this file to connect to Postgres later from your PC) 
+1. (You could also grab Postgres password from this file to connect to Postgres later from your PC)
 1. Optional: ONLY if you used Digital Ocean container registry. Make sure that **root** user has access to Container Registry which stores the images.
    1. To do that (in case of Digital Ocean Container Registry) run the following:
       ```
