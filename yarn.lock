@@ -2937,12 +2937,12 @@ __metadata:
     react-devtools: 4.13.5
     react-dom: 17.0.2
     react-dropzone: ^11.3.2
-    react-hook-form: ^7.17.2
+    react-hook-form: ^7.19.0
     react-i18next: 11.8.15
     react-js-pagination: ^3.0.3
     react-paginate: ^7.1.3
     react-query: 3.25.1
-    react-query-swagger: 13.11.6
+    react-query-swagger: 13.11.7
     react-redux: 7.2.5
     react-router: 6.0.1
     react-router-dom: 6.0.1
@@ -14812,12 +14812,12 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.17.2":
-  version: 7.17.2
-  resolution: "react-hook-form@npm:7.17.2"
+"react-hook-form@npm:^7.19.0":
+  version: 7.19.0
+  resolution: "react-hook-form@npm:7.19.0"
   peerDependencies:
     react: ^16.8.0 || ^17
-  checksum: e9481a68031f836909c1313e16616271d4ede2bb5e00d129ed44bbbe814ac317b163fd33b2a45d23e03d49daa2973e9b216e002952611e2974e156beacfadcc0
+  checksum: e9d36685991ce744215efc4f278da281b4b852dcb078d09183e7997c882f944c1aed8f3ac6c84a25e5957a03c260b41daf3d6e9c63a6152f61059d9e43037eae
   languageName: node
   linkType: hard
 
@@ -14873,15 +14873,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-query-swagger@npm:13.11.6":
-  version: 13.11.6
-  resolution: "react-query-swagger@npm:13.11.6"
+"react-query-swagger@npm:13.11.7":
+  version: 13.11.7
+  resolution: "react-query-swagger@npm:13.11.7"
   peerDependencies:
     react-query: 3.x
     typescript: 3.x || 4.x
   bin:
     react-query-swagger: cli.js
-  checksum: 801933eb096d8248973e721e76d0cf9910ef49aa077b9fafcd2488697484cb56e925c4fbda4e269931b26e694e5f4398ab360b05369cfb270a689d76ef9b5397
+  checksum: f87e3ca8a3d9a686312342f1cf098ebaaab42ee4f6ac37d0bd77d185351d687551703bda57fe60a9a7a9449757502533e9df831efcca314ff888a2fff0cd99a7
   languageName: node
   linkType: hard
 
