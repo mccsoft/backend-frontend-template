@@ -20,7 +20,7 @@ export const AppRouter = () => {
           ) : (
             <>
               <Routes>
-                <Route element={<LoginPage />} />
+                <Route path={'*'} element={<LoginPage />} />
               </Routes>
               <div>Version: {appVersion()}</div>
             </>
