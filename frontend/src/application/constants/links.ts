@@ -1,4 +1,4 @@
-export const Routes = {
+export const Links = {
   Unauthorized: {
     Login: '/login',
   },

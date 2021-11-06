@@ -1,5 +1,4 @@
 import { useResetFormWhenDataIsLoaded } from './react-hook-form-helper';
-import { History } from 'history';
 import {
   FieldValues,
   useForm,
@@ -12,6 +11,7 @@ import {
 import * as React from 'react';
 import { useRef } from 'react';
 import { useErrorHandler } from './useErrorHandler';
+import { NavigateFunction } from 'react-router';
 
 type AdvancedFormReturnType<
   TFieldValues extends FieldValues = FieldValues,
@@ -39,7 +39,7 @@ export function useAdvancedForm<
 >(
   submitHandler: (
     data: UnpackNestedValue<TFieldValues>,
-    history: History,
+    navigate: NavigateFunction,
   ) => Promise<void>,
   options?: {
     shouldResetOnSuccess?: boolean;

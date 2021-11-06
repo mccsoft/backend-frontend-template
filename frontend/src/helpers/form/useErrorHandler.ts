@@ -1,4 +1,3 @@
-import { History } from 'history';
 import { useState } from 'react';
 import { FieldValues } from 'react-hook-form';
 import {
@@ -6,7 +5,7 @@ import {
   UseFormSetError,
 } from 'react-hook-form/dist/types/form';
 import { DeepPartial } from 'react-hook-form/dist/types/utils';
-import { useHistory } from 'react-router';
+import { NavigateFunction, useNavigate } from 'react-router';
 
 export type UseSendFormReturn<T> = {
   /*
@@ -102,19 +101,19 @@ export function handleSubmitFormError<T>(
 export function useErrorHandler<TFieldValues extends FieldValues = FieldValues>(
   submitFunction: (
     data: UnpackNestedValue<TFieldValues>,
-    history: History,
+    navigate: NavigateFunction,
   ) => Promise<void>,
   setError: UseFormSetError<TFieldValues>,
   reset?: (values?: DeepPartial<TFieldValues>) => void,
 ): UseSendFormReturn<TFieldValues> {
   const [overallServerError, setOverallServerError] = useState('');
   const [formErrorsCombined, setFormErrorsCombined] = useState('');
-  const history = useHistory();
+  const navigate = useNavigate();
 
   async function submitForm(data: UnpackNestedValue<TFieldValues>) {
     try {
       setOverallServerError('');
-      await submitFunction(data, history);
+      await submitFunction(data, navigate);
       reset?.(undefined);
     } catch (error) {
       const errorDetails = handleSubmitFormError(error, setError);

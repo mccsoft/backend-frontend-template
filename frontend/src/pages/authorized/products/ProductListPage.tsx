@@ -1,4 +1,4 @@
-import { Routes } from 'application/constants/routes';
+import { Links } from 'application/constants/links';
 import { AppTable, emptyArray } from 'components/uikit/table/AppTable';
 import { AppLink } from 'components/uikit/buttons/AppLink';
 import { ButtonColor } from 'components/uikit/buttons/Button';
@@ -11,7 +11,6 @@ import {
 } from 'helpers/pagination-helper';
 import { useUpdateSortByInUrl } from 'components/uikit/table/useUpdateSortByInUrl';
 import React, { useMemo } from 'react';
-import { useHistory } from 'react-router';
 import { useSortBy, useTable } from 'react-table';
 import { QueryFactory } from 'services/api';
 import { ProductListItemDto } from 'services/api/api-client';
@@ -19,8 +18,6 @@ import { StringParam, useQueryParams } from 'use-query-params';
 const styles = require('./ProductListPage.module.scss');
 
 export const ProductListPage: React.FC = () => {
-  const history = useHistory();
-
   const [queryParams, setQueryParams] = useQueryParams({
     search: StringParam,
     ...pagingSortingQueryParams(2),
@@ -72,18 +69,11 @@ export const ProductListPage: React.FC = () => {
       <div className={styles.navigation}>
         <AppLink
           color={ButtonColor.Primary}
-          onClick={() => {
-            history.push(Routes.Authorized.CreateProduct);
-          }}
+          to={Links.Authorized.CreateProduct}
         >
           Create product
         </AppLink>
-        <AppLink
-          color={ButtonColor.Primary}
-          onClick={() => {
-            history.push(Routes.Authorized.UiKit);
-          }}
-        >
+        <AppLink color={ButtonColor.Primary} to={Links.Authorized.UiKit}>
           UiKit
         </AppLink>
       </div>

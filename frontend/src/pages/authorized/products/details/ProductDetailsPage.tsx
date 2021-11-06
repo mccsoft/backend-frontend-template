@@ -1,12 +1,12 @@
-import { Routes } from 'application/constants/routes';
+import { Links } from 'application/constants/links';
 import { AppLink } from 'components/uikit/buttons/AppLink';
 import { Loading } from 'components/uikit/suspense/Loading';
-import { useHistory } from 'react-router';
 import React from 'react';
 import { QueryFactory } from 'services/api';
+import { useNavigate } from 'react-router';
 
 export const ProductDetailsPage: React.FC<{ id: number }> = (props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const productQuery = QueryFactory.ProductQuery.useGetQuery(props.id);
 
@@ -14,7 +14,7 @@ export const ProductDetailsPage: React.FC<{ id: number }> = (props) => {
     <>
       <AppLink
         onClick={() => {
-          history.push(Routes.Authorized.Products);
+          navigate(Links.Authorized.Products);
         }}
       >
         Back

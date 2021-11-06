@@ -1,16 +1,24 @@
 import clsx from 'clsx';
 import * as React from 'react';
 import { ButtonColor } from './Button';
+import { Link } from 'react-router-dom';
 
 const styles = require('./AppLink.module.scss');
 
-export interface LinkProps {
+export type LinkProps = {
   color?: ButtonColor;
   className?: string;
   disabled?: boolean;
   icon?: string;
-  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
-}
+} & (
+  | {
+      onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+      to?: undefined;
+    }
+  | {
+      to: string;
+    }
+);
 
 export const AppLink: React.FC<LinkProps> = (props) => {
   const { color, className, disabled, icon, children, ...rest } = {
@@ -23,10 +31,15 @@ export const AppLink: React.FC<LinkProps> = (props) => {
   linkStyles.push(styles[`${color}-link`]);
 
   return (
-    <a data-disabled={disabled} {...rest} className={clsx(linkStyles)}>
+    <Link
+      data-disabled={disabled}
+      {...rest}
+      to={props.to ?? ''}
+      className={clsx(linkStyles)}
+    >
       {icon && <img className={styles.icon} src={icon} />}
       {children}
-    </a>
+    </Link>
   );
 };
 
