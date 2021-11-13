@@ -43,6 +43,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MccSoft.Mailing", "Lib\Mail
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MccSoft.LowLevelPrimitives", "Lib\LowLevelPrimitives\MccSoft.LowLevelPrimitives\MccSoft.LowLevelPrimitives.csproj", "{11D8CC2C-E556-4003-BFBA-0A4CF8704E5E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MccSoft.WebApi.Tests", "Lib\WebApi\MccSoft.WebApi.Tests\MccSoft.WebApi.Tests.csproj", "{9E9A9816-8B3B-45D3-A00B-C3F3A0713B04}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,6 +123,10 @@ Global
 		{11D8CC2C-E556-4003-BFBA-0A4CF8704E5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11D8CC2C-E556-4003-BFBA-0A4CF8704E5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11D8CC2C-E556-4003-BFBA-0A4CF8704E5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E9A9816-8B3B-45D3-A00B-C3F3A0713B04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E9A9816-8B3B-45D3-A00B-C3F3A0713B04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E9A9816-8B3B-45D3-A00B-C3F3A0713B04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E9A9816-8B3B-45D3-A00B-C3F3A0713B04}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -139,6 +145,7 @@ Global
 		{D7E34174-4150-43ED-805E-EE29C2E3AFC3} = {752D03F1-4284-42FA-9493-FB77728C791B}
 		{ABCBB980-82FB-4DAF-9288-BFE316853B80} = {752D03F1-4284-42FA-9493-FB77728C791B}
 		{11D8CC2C-E556-4003-BFBA-0A4CF8704E5E} = {752D03F1-4284-42FA-9493-FB77728C791B}
+		{9E9A9816-8B3B-45D3-A00B-C3F3A0713B04} = {752D03F1-4284-42FA-9493-FB77728C791B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FA08DFAA-FC2C-43E9-8861-60BFCD4D965C}

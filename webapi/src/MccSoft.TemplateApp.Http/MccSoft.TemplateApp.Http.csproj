@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+  <TargetFramework>net6.0</TargetFramework>
     <Description>
       Provides access to the web API of the ServiceTemplate microservice.
     </Description>
@@ -14,8 +14,8 @@
   <ItemGroup>
     <PackageReference Include="JsonKnownTypes" Version="0.5.4" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.DataAnnotations" Version="2.2.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="NJsonSchema" Version="10.4.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="NJsonSchema" Version="10.5.2" />
   </ItemGroup>
 
 
