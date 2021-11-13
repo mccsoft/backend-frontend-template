@@ -22,7 +22,7 @@ stages:
           - task: UseDotNet@2
             inputs:
               packageType: 'sdk'
-              version: '5.x'
+              version: '6.x'
 
           - task: Cache@2
             inputs:
@@ -91,16 +91,6 @@ stages:
           - script: |
               yarn build
             displayName: 'build'
-
-#          - script: |
-#              wget $(DOCTL_URL)
-#              tar xf ./doctl-1.60.0-linux-amd64.tar.gz
-#            displayName: 'Download Digital Ocean Control binary'
-#
-#          - script: |
-#              ./doctl auth init -t $(DOCTL_TOKEN)
-#              ./doctl registry login --expiry-seconds 240
-#            displayName: 'Authenticate at Digital Ocean'
 
           - script: |
               docker login $(DOCKER_REGISTRY) -u $(DOCKER_USER) -p $(DOCKER_TOKEN)
