@@ -1,10 +1,10 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Duende.IdentityServer.AspNetIdentity;
+using Duende.IdentityServer.Extensions;
+using Duende.IdentityServer.Models;
 using IdentityModel;
-using IdentityServer4.AspNetIdentity;
-using IdentityServer4.Extensions;
-using IdentityServer4.Models;
 using MccSoft.LowLevelPrimitives;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Persistence;

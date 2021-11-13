@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Duende.IdentityServer.Validation;
 using IdentityOAuthSpaExtensions.Services;
-using IdentityServer4.Validation;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Persistence;
 using MccSoft.PersistenceHelpers;

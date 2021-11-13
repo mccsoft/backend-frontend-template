@@ -33,9 +33,14 @@ namespace MccSoft.Testing.SqliteUtils.EFExtensions
 
             public override string LogFragment => "";
 
+            public override bool ShouldUseSameServiceProvider(DbContextOptionsExtensionInfo other)
+            {
+                return true;
+            }
+
             public override void PopulateDebugInfo(IDictionary<string, string> debugInfo) { }
 
-            public override long GetServiceProviderHashCode()
+            public override int GetServiceProviderHashCode()
             {
                 return 0;
             }

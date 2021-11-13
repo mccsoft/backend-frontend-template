@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Threading;
+using Duende.IdentityServer.EntityFramework.Options;
 using Hangfire;
-using IdentityServer4.EntityFramework.Options;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Persistence;
 using MccSoft.Testing;

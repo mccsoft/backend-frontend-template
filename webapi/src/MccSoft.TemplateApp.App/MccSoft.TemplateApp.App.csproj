@@ -40,7 +40,7 @@
     <PackageReference Include="I18Next.Net" Version="0.7.1" />
     <PackageReference Include="I18Next.Net.AspNetCore" Version="0.7.1" />
     <PackageReference Include="I18Next.Net.Extensions" Version="0.7.1" />
-    <PackageReference Include="IdentityOAuthSpaExtensions" Version="1.0.6" />
+    <PackageReference Include="IdentityOAuthSpaExtensions" Version="1.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.0" />

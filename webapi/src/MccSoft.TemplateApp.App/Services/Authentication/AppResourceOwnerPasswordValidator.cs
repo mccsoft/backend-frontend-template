@@ -1,9 +1,10 @@
 using System.Threading.Tasks;
+using Duende.IdentityServer.AspNetIdentity;
+using Duende.IdentityServer.Events;
+using Duende.IdentityServer.Models;
+using Duende.IdentityServer.Services;
+using Duende.IdentityServer.Validation;
 using IdentityModel;
-using IdentityServer4.Events;
-using IdentityServer4.Models;
-using IdentityServer4.Services;
-using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
@@ -14,17 +15,17 @@ namespace MccSoft.TemplateApp.App.Services.Authentication
     /// Copied from IdentityServer default ResourceOwnerPasswordValidator.
     /// </summary>
     /// <typeparam name="TUser">The type of the user.</typeparam>
-    /// <seealso cref="IdentityServer4.Validation.IResourceOwnerPasswordValidator" />
+    /// <seealso cref="IResourceOwnerPasswordValidator" />
     public class AppResourceOwnerPasswordValidator<TUser> : IResourceOwnerPasswordValidator
         where TUser : class
     {
         private readonly SignInManager<TUser> _signInManager;
         private IEventService _events;
         private readonly UserManager<TUser> _userManager;
-        private readonly ILogger<IdentityServer4.AspNetIdentity.ResourceOwnerPasswordValidator<TUser>> _logger;
+        private readonly ILogger<ResourceOwnerPasswordValidator<TUser>> _logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="IdentityServer4.AspNetIdentity.ResourceOwnerPasswordValidator{TUser}"/> class.
+        /// Initializes a new instance of the <see cref="ResourceOwnerPasswordValidator{TUser}"/> class.
         /// </summary>
         /// <param name="userManager">The user manager.</param>
         /// <param name="signInManager">The sign in manager.</param>
@@ -34,7 +35,7 @@ namespace MccSoft.TemplateApp.App.Services.Authentication
             UserManager<TUser> userManager,
             SignInManager<TUser> signInManager,
             IEventService events,
-            ILogger<IdentityServer4.AspNetIdentity.ResourceOwnerPasswordValidator<TUser>> logger
+            ILogger<ResourceOwnerPasswordValidator<TUser>> logger
         ) {
             _userManager = userManager;
             _signInManager = signInManager;

@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Audit.EntityFramework;
-using IdentityServer4.EntityFramework.Options;
+using Duende.IdentityServer.EntityFramework.Options;
 using MccSoft.LowLevelPrimitives;
 using MccSoft.NpgSql;
 using MccSoft.TemplateApp.Domain;

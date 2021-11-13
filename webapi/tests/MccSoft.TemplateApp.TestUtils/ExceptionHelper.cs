@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using FluentAssertions.Specialized;
@@ -178,12 +179,12 @@ namespace MccSoft.TemplateApp.TestUtils
             return assertion;
         }
 
-        public static ExceptionAssertions<ApiException> ThrowNotAuthorizedException<T>(
+        public static Task<ExceptionAssertions<ApiException>> ThrowNotAuthorizedException<T>(
             this GenericAsyncFunctionAssertions<T> assertion,
             string because = "",
             params object[] becauseArgs
         ) {
-            return assertion.ThrowExactly<ApiException>(because, becauseArgs)
+            return assertion.ThrowExactlyAsync<ApiException>(because, becauseArgs)
                 .WithMessage("*Status: 403*", because, becauseArgs);
         }
     }

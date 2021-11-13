@@ -2,8 +2,6 @@ using System;
 using System.Security.Claims;
 using System.Security.Principal;
 using IdentityModel;
-using IdentityServer4.Extensions;
-using MccSoft.TemplateApp.App.Services.Authentication;
 
 namespace MccSoft.TemplateApp.App.Utils
 {
