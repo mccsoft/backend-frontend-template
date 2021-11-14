@@ -1,9 +1,9 @@
-{% for operation in Operations -%}
+﻿{% for operation in Operations -%}
 {% if operation.HttpMethodUpper == 'Get' -%}
 {% if operation.Parameters.size > 0 -%}
 {% if GenerateOptionalParameters == false -%}
 {% template Client.Classs.GetOperations.Documentation %}
-{{ operation.MethodAccessModifier }} {{ operation.ResultType }} {{ operation.ActualOperationName }}Async({{ Class }}{{ operation.ActualOperationName }}ParametersDto parameters)
+{{ operation.ResultType }} {{ operation.ActualOperationName }}Async({{ Class }}{{ operation.ActualOperationName }}ParametersDto parameters)
 {
     return {{ operation.ActualOperationName }}Async(parameters, System.Threading.CancellationToken.None);
 }
