@@ -18,6 +18,25 @@ namespace MccSoft.TemplateApp.Http.Generated
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.11.3.0 (NJsonSchema v10.4.4.0 (Newtonsoft.Json v12.0.0.0))")]
     public partial interface IProductClient : IBaseClient
     {
+        System.Threading.Tasks.Task<PagedResultOfProductListItemDto> SearchAsync(ProductClientSearchParametersDto parameters)
+        {
+            return SearchAsync(parameters, System.Threading.CancellationToken.None);
+        }
+        
+        public System.Threading.Tasks.Task<PagedResultOfProductListItemDto> SearchAsync(ProductClientSearchParametersDto parameters, System.Threading.CancellationToken cancellationToken)
+        {
+            return SearchAsync(parameters.search, parameters.productType, parameters.offset, parameters.limit, parameters.sortBy, parameters.sortOrder, cancellationToken);
+        }
+        
+        System.Threading.Tasks.Task<ProductDto> GetAsync(ProductClientGetParametersDto parameters)
+        {
+            return GetAsync(parameters, System.Threading.CancellationToken.None);
+        }
+        
+        public System.Threading.Tasks.Task<ProductDto> GetAsync(ProductClientGetParametersDto parameters, System.Threading.CancellationToken cancellationToken)
+        {
+            return GetAsync(parameters.id, cancellationToken);
+        }
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<ProductDto> CreateAsync(CreateProductDto dto);
     
@@ -91,7 +110,6 @@ namespace MccSoft.TemplateApp.Http.Generated
         public SortOrder? sortOrder { get; set; }
     }
     
-    
     public partial class ProductClientGetParametersDto
     {
     
@@ -131,24 +149,6 @@ namespace MccSoft.TemplateApp.Http.Generated
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, string url);
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
-        public System.Threading.Tasks.Task<PagedResultOfProductListItemDto> SearchAsync(ProductClientSearchParametersDto parameters)
-        {
-            return SearchAsync(parameters, System.Threading.CancellationToken.None);
-        }
-        public System.Threading.Tasks.Task<PagedResultOfProductListItemDto> SearchAsync(ProductClientSearchParametersDto parameters, System.Threading.CancellationToken cancellationToken)
-        {
-            return SearchAsync(parameters.search, parameters.productType, parameters.offset, parameters.limit, parameters.sortBy, parameters.sortOrder, cancellationToken);
-        }
-        
-        public System.Threading.Tasks.Task<ProductDto> GetAsync(ProductClientGetParametersDto parameters)
-        {
-            return GetAsync(parameters, System.Threading.CancellationToken.None);
-        }
-        public System.Threading.Tasks.Task<ProductDto> GetAsync(ProductClientGetParametersDto parameters, System.Threading.CancellationToken cancellationToken)
-        {
-            return GetAsync(parameters.id, cancellationToken);
-        }
-    
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public System.Threading.Tasks.Task<ProductDto> CreateAsync(CreateProductDto dto)
         {
@@ -237,7 +237,6 @@ namespace MccSoft.TemplateApp.Http.Generated
             }
         }
     
-    
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public System.Threading.Tasks.Task DeleteAsync(int? id)
         {
@@ -318,7 +317,6 @@ namespace MccSoft.TemplateApp.Http.Generated
                     client_.Dispose();
             }
         }
-    
     
         /// <param name="offset">Offset of list.</param>
         /// <param name="limit">Number of requested records.</param>
@@ -435,7 +433,6 @@ namespace MccSoft.TemplateApp.Http.Generated
             }
         }
     
-    
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public System.Threading.Tasks.Task<ProductDto> PatchAsync(int id, PatchProductDto dto)
         {
@@ -527,7 +524,6 @@ namespace MccSoft.TemplateApp.Http.Generated
                     client_.Dispose();
             }
         }
-    
     
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public System.Threading.Tasks.Task<ProductDto> GetAsync(int id)
@@ -716,11 +712,39 @@ namespace MccSoft.TemplateApp.Http.Generated
             var result = System.Convert.ToString(value, cultureInfo);
             return result == null ? "" : result;
         }
+        public System.Threading.Tasks.Task<PagedResultOfProductListItemDto> SearchAsync(ProductClientSearchParametersDto parameters)
+        {
+            return SearchAsync(parameters, System.Threading.CancellationToken.None);
+        }
+        
+        public System.Threading.Tasks.Task<PagedResultOfProductListItemDto> SearchAsync(ProductClientSearchParametersDto parameters, System.Threading.CancellationToken cancellationToken)
+        {
+            return SearchAsync(parameters.search, parameters.productType, parameters.offset, parameters.limit, parameters.sortBy, parameters.sortOrder, cancellationToken);
+        }
+        
+        public System.Threading.Tasks.Task<ProductDto> GetAsync(ProductClientGetParametersDto parameters)
+        {
+            return GetAsync(parameters, System.Threading.CancellationToken.None);
+        }
+        
+        public System.Threading.Tasks.Task<ProductDto> GetAsync(ProductClientGetParametersDto parameters, System.Threading.CancellationToken cancellationToken)
+        {
+            return GetAsync(parameters.id, cancellationToken);
+        }
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.11.3.0 (NJsonSchema v10.4.4.0 (Newtonsoft.Json v12.0.0.0))")]
     public partial interface IOidcConfigurationClient : IBaseClient
     {
+        System.Threading.Tasks.Task GetClientRequestParametersAsync(OidcConfigurationClientGetClientRequestParametersParametersDto parameters)
+        {
+            return GetClientRequestParametersAsync(parameters, System.Threading.CancellationToken.None);
+        }
+        
+        public System.Threading.Tasks.Task GetClientRequestParametersAsync(OidcConfigurationClientGetClientRequestParametersParametersDto parameters, System.Threading.CancellationToken cancellationToken)
+        {
+            return GetClientRequestParametersAsync(parameters.clientId, cancellationToken);
+        }
         /// <summary>Requests OIDC configuration for oAuth.</summary>
         /// <param name="clientId">Client od for requested configuration.</param>
         /// <returns>Return obj for oAuth config.</returns>
@@ -778,15 +802,6 @@ namespace MccSoft.TemplateApp.Http.Generated
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, string url);
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
-        public System.Threading.Tasks.Task GetClientRequestParametersAsync(OidcConfigurationClientGetClientRequestParametersParametersDto parameters)
-        {
-            return GetClientRequestParametersAsync(parameters, System.Threading.CancellationToken.None);
-        }
-        public System.Threading.Tasks.Task GetClientRequestParametersAsync(OidcConfigurationClientGetClientRequestParametersParametersDto parameters, System.Threading.CancellationToken cancellationToken)
-        {
-            return GetClientRequestParametersAsync(parameters.clientId, cancellationToken);
-        }
-    
         /// <summary>Requests OIDC configuration for oAuth.</summary>
         /// <param name="clientId">Client od for requested configuration.</param>
         /// <returns>Return obj for oAuth config.</returns>
@@ -971,6 +986,15 @@ namespace MccSoft.TemplateApp.Http.Generated
             var result = System.Convert.ToString(value, cultureInfo);
             return result == null ? "" : result;
         }
+        public System.Threading.Tasks.Task GetClientRequestParametersAsync(OidcConfigurationClientGetClientRequestParametersParametersDto parameters)
+        {
+            return GetClientRequestParametersAsync(parameters, System.Threading.CancellationToken.None);
+        }
+        
+        public System.Threading.Tasks.Task GetClientRequestParametersAsync(OidcConfigurationClientGetClientRequestParametersParametersDto parameters, System.Threading.CancellationToken cancellationToken)
+        {
+            return GetClientRequestParametersAsync(parameters.clientId, cancellationToken);
+        }
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.11.3.0 (NJsonSchema v10.4.4.0 (Newtonsoft.Json v12.0.0.0))")]
@@ -992,13 +1016,6 @@ namespace MccSoft.TemplateApp.Http.Generated
     
     }
     
-    public partial class SignUrlClientGetSignatureParametersDto
-    {
-    }
-    
-    public partial class SignUrlClientSetSignatureCookieParametersDto
-    {
-    }
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.11.3.0 (NJsonSchema v10.4.4.0 (Newtonsoft.Json v12.0.0.0))")]
     public partial class SignUrlClient : BaseClient, ISignUrlClient
     {
@@ -1033,24 +1050,6 @@ namespace MccSoft.TemplateApp.Http.Generated
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, string url);
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
-        public System.Threading.Tasks.Task<string> GetSignatureAsync(SignUrlClientGetSignatureParametersDto parameters)
-        {
-            return GetSignatureAsync(parameters, System.Threading.CancellationToken.None);
-        }
-        public System.Threading.Tasks.Task<string> GetSignatureAsync(SignUrlClientGetSignatureParametersDto parameters, System.Threading.CancellationToken cancellationToken)
-        {
-            return GetSignatureAsync(cancellationToken);
-        }
-        
-        public System.Threading.Tasks.Task SetSignatureCookieAsync(SignUrlClientSetSignatureCookieParametersDto parameters)
-        {
-            return SetSignatureCookieAsync(parameters, System.Threading.CancellationToken.None);
-        }
-        public System.Threading.Tasks.Task SetSignatureCookieAsync(SignUrlClientSetSignatureCookieParametersDto parameters, System.Threading.CancellationToken cancellationToken)
-        {
-            return SetSignatureCookieAsync(cancellationToken);
-        }
-    
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public System.Threading.Tasks.Task<string> GetSignatureAsync()
         {
@@ -1132,7 +1131,6 @@ namespace MccSoft.TemplateApp.Http.Generated
                     client_.Dispose();
             }
         }
-    
     
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public System.Threading.Tasks.Task SetSignatureCookieAsync()
@@ -1345,9 +1343,6 @@ namespace MccSoft.TemplateApp.Http.Generated
     
     }
     
-    public partial class TestDataClientThrowErrorParametersDto
-    {
-    }
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.11.3.0 (NJsonSchema v10.4.4.0 (Newtonsoft.Json v12.0.0.0))")]
     public partial class TestDataClient : BaseClient, ITestDataClient
     {
@@ -1382,15 +1377,6 @@ namespace MccSoft.TemplateApp.Http.Generated
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, string url);
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
-        public System.Threading.Tasks.Task<string> ThrowErrorAsync(TestDataClientThrowErrorParametersDto parameters)
-        {
-            return ThrowErrorAsync(parameters, System.Threading.CancellationToken.None);
-        }
-        public System.Threading.Tasks.Task<string> ThrowErrorAsync(TestDataClientThrowErrorParametersDto parameters, System.Threading.CancellationToken cancellationToken)
-        {
-            return ThrowErrorAsync(cancellationToken);
-        }
-    
         /// <summary>Demonstrates an error response.</summary>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public System.Threading.Tasks.Task<string> ThrowErrorAsync()
@@ -1474,7 +1460,6 @@ namespace MccSoft.TemplateApp.Http.Generated
                     client_.Dispose();
             }
         }
-    
     
         /// <summary>Sends a dummy email</summary>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -1560,7 +1545,6 @@ namespace MccSoft.TemplateApp.Http.Generated
                     client_.Dispose();
             }
         }
-    
     
         /// <summary>Tests RequiredOrUndefined attribute</summary>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -1771,9 +1755,6 @@ namespace MccSoft.TemplateApp.Http.Generated
     
     }
     
-    public partial class VersionClientVersionParametersDto
-    {
-    }
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.11.3.0 (NJsonSchema v10.4.4.0 (Newtonsoft.Json v12.0.0.0))")]
     public partial class VersionClient : BaseClient, IVersionClient
     {
@@ -1808,15 +1789,6 @@ namespace MccSoft.TemplateApp.Http.Generated
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, string url);
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
-        public System.Threading.Tasks.Task<string> VersionAsync(VersionClientVersionParametersDto parameters)
-        {
-            return VersionAsync(parameters, System.Threading.CancellationToken.None);
-        }
-        public System.Threading.Tasks.Task<string> VersionAsync(VersionClientVersionParametersDto parameters, System.Threading.CancellationToken cancellationToken)
-        {
-            return VersionAsync(cancellationToken);
-        }
-    
         /// <summary>Gets the version of the service.</summary>
         /// <returns>A string representing the version.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
