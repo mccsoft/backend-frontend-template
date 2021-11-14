@@ -1,15 +1,18 @@
-{% for operation in Operations -%}
-{% if operation.HttpMethodUpper == 'Get' -%}
+{%- for operation in Operations -%}
+{%- if operation.HttpMethodUpper == 'Get' -%}
+{%- if operation.Parameters.size > 0 -%}
 {{operation.MethodAccessModifier}} partial class {{ Class }}{{ operation.ActualOperationName }}ParametersDto
 {
-{%   for parameter in operation.Parameters   %}
-{%     if parameter.HasDescription -%}
+{%-   for parameter in operation.Parameters   %}
+{%-     if parameter.HasDescription -%}
     /// <summary>
     /// {{ parameter.Description | csharpdocs }}
     /// </summary>
-{%     endif -%}
+{%-     endif -%}
     public {{ parameter.Type }} {{ parameter.VariableName }} { get; set; }
-{%   endfor   -%}
+{%-   endfor   -%}
 }
-{% endif  %}
-{% endfor %}
+
+{%- endif  -%}
+{%- endif  -%}
+{%- endfor %}
