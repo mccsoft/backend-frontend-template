@@ -2942,7 +2942,7 @@ __metadata:
     react-js-pagination: ^3.0.3
     react-paginate: ^7.1.3
     react-query: 3.25.1
-    react-query-swagger: 13.11.7
+    react-query-swagger: 13.13.2
     react-redux: 7.2.5
     react-router: 6.0.1
     react-router-dom: 6.0.1
@@ -14873,15 +14873,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-query-swagger@npm:13.11.7":
-  version: 13.11.7
-  resolution: "react-query-swagger@npm:13.11.7"
+"react-query-swagger@npm:13.13.2":
+  version: 13.13.2
+  resolution: "react-query-swagger@npm:13.13.2"
   peerDependencies:
     react-query: 3.x
     typescript: 3.x || 4.x
   bin:
     react-query-swagger: cli.js
-  checksum: f87e3ca8a3d9a686312342f1cf098ebaaab42ee4f6ac37d0bd77d185351d687551703bda57fe60a9a7a9449757502533e9df831efcca314ff888a2fff0cd99a7
+  checksum: 5d1e8bf0ea165a590deff092447d2e6ba3f92feb3409e8b95c86e0a8fddfc3f6270aef77ae35c079851539be02f5e22599d034d2bf1ba147e16309cabedf2cdb
   languageName: node
   linkType: hard
 

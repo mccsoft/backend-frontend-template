@@ -1,0 +1,16 @@
+{% for operation in Operations -%}
+{% if operation.HttpMethodUpper == 'Get' -%}
+{% if GenerateOptionalParameters == false %}
+{% template Client.Classs.GetOperations.Documentation %}
+{{ operation.MethodAccessModifier }} {{ operation.ResultType }} {{ operation.ActualOperationName }}Async({{ Class }}{{ operation.ActualOperationName }}ParametersDto parameters)
+{
+    return {{ operation.ActualOperationName }}Async(parameters, System.Threading.CancellationToken.None);
+}
+{% endif -%}
+{% template Client.Classs.GetOperations.Documentation %}
+{{ operation.MethodAccessModifier }} {{ operation.ResultType }} {{ operation.ActualOperationName }}Async({{ Class }}{{ operation.ActualOperationName }}ParametersDto parameters, System.Threading.CancellationToken cancellationToken{% if GenerateOptionalParameters %} = default(System.Threading.CancellationToken){% endif %})
+{
+    return {{ operation.ActualOperationName }}Async({% for parameter in operation.Parameters %}parameters.{{ parameter.VariableName }}, {%   endfor   -%} cancellationToken);
+}
+{% endif -%}
+{% endfor -%}

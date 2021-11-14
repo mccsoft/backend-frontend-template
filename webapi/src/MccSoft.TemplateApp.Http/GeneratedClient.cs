@@ -63,6 +63,40 @@ namespace MccSoft.TemplateApp.Http.Generated
     
     }
     
+    public partial class ProductClientSearchParametersDto
+    {
+    
+        public string search { get; set; }
+    
+        public ProductType? productType { get; set; }
+    
+        /// <summary>
+        /// Offset of list.
+        /// </summary>
+        public int? offset { get; set; }
+    
+        /// <summary>
+        /// Number of requested records.
+        /// </summary>
+        public int? limit { get; set; }
+    
+        /// <summary>
+        /// Field name for sorting in DB.
+        /// </summary>
+        public string sortBy { get; set; }
+    
+        /// <summary>
+        /// Sort direction. Ascending or Descending.
+        /// </summary>
+        public SortOrder? sortOrder { get; set; }
+    }
+    
+    
+    public partial class ProductClientGetParametersDto
+    {
+    
+        public int id { get; set; }
+    }
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.11.3.0 (NJsonSchema v10.4.4.0 (Newtonsoft.Json v12.0.0.0))")]
     public partial class ProductClient : BaseClient, IProductClient
     {
@@ -97,6 +131,24 @@ namespace MccSoft.TemplateApp.Http.Generated
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, string url);
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
+        public System.Threading.Tasks.Task<PagedResultOfProductListItemDto> SearchAsync(ProductClientSearchParametersDto parameters)
+        {
+            return SearchAsync(parameters, System.Threading.CancellationToken.None);
+        }
+        public System.Threading.Tasks.Task<PagedResultOfProductListItemDto> SearchAsync(ProductClientSearchParametersDto parameters, System.Threading.CancellationToken cancellationToken)
+        {
+            return SearchAsync(parameters.search, parameters.productType, parameters.offset, parameters.limit, parameters.sortBy, parameters.sortOrder, cancellationToken);
+        }
+        
+        public System.Threading.Tasks.Task<ProductDto> GetAsync(ProductClientGetParametersDto parameters)
+        {
+            return GetAsync(parameters, System.Threading.CancellationToken.None);
+        }
+        public System.Threading.Tasks.Task<ProductDto> GetAsync(ProductClientGetParametersDto parameters, System.Threading.CancellationToken cancellationToken)
+        {
+            return GetAsync(parameters.id, cancellationToken);
+        }
+    
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public System.Threading.Tasks.Task<ProductDto> CreateAsync(CreateProductDto dto)
         {
@@ -185,6 +237,7 @@ namespace MccSoft.TemplateApp.Http.Generated
             }
         }
     
+    
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public System.Threading.Tasks.Task DeleteAsync(int? id)
         {
@@ -265,6 +318,7 @@ namespace MccSoft.TemplateApp.Http.Generated
                     client_.Dispose();
             }
         }
+    
     
         /// <param name="offset">Offset of list.</param>
         /// <param name="limit">Number of requested records.</param>
@@ -381,6 +435,7 @@ namespace MccSoft.TemplateApp.Http.Generated
             }
         }
     
+    
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public System.Threading.Tasks.Task<ProductDto> PatchAsync(int id, PatchProductDto dto)
         {
@@ -472,6 +527,7 @@ namespace MccSoft.TemplateApp.Http.Generated
                     client_.Dispose();
             }
         }
+    
     
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public System.Threading.Tasks.Task<ProductDto> GetAsync(int id)
@@ -680,6 +736,14 @@ namespace MccSoft.TemplateApp.Http.Generated
     
     }
     
+    public partial class OidcConfigurationClientGetClientRequestParametersParametersDto
+    {
+    
+        /// <summary>
+        /// Client od for requested configuration.
+        /// </summary>
+        public string clientId { get; set; }
+    }
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.11.3.0 (NJsonSchema v10.4.4.0 (Newtonsoft.Json v12.0.0.0))")]
     public partial class OidcConfigurationClient : BaseClient, IOidcConfigurationClient
     {
@@ -714,6 +778,15 @@ namespace MccSoft.TemplateApp.Http.Generated
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, string url);
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
+        public System.Threading.Tasks.Task GetClientRequestParametersAsync(OidcConfigurationClientGetClientRequestParametersParametersDto parameters)
+        {
+            return GetClientRequestParametersAsync(parameters, System.Threading.CancellationToken.None);
+        }
+        public System.Threading.Tasks.Task GetClientRequestParametersAsync(OidcConfigurationClientGetClientRequestParametersParametersDto parameters, System.Threading.CancellationToken cancellationToken)
+        {
+            return GetClientRequestParametersAsync(parameters.clientId, cancellationToken);
+        }
+    
         /// <summary>Requests OIDC configuration for oAuth.</summary>
         /// <param name="clientId">Client od for requested configuration.</param>
         /// <returns>Return obj for oAuth config.</returns>
@@ -919,6 +992,13 @@ namespace MccSoft.TemplateApp.Http.Generated
     
     }
     
+    public partial class SignUrlClientGetSignatureParametersDto
+    {
+    }
+    
+    public partial class SignUrlClientSetSignatureCookieParametersDto
+    {
+    }
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.11.3.0 (NJsonSchema v10.4.4.0 (Newtonsoft.Json v12.0.0.0))")]
     public partial class SignUrlClient : BaseClient, ISignUrlClient
     {
@@ -953,6 +1033,24 @@ namespace MccSoft.TemplateApp.Http.Generated
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, string url);
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
+        public System.Threading.Tasks.Task<string> GetSignatureAsync(SignUrlClientGetSignatureParametersDto parameters)
+        {
+            return GetSignatureAsync(parameters, System.Threading.CancellationToken.None);
+        }
+        public System.Threading.Tasks.Task<string> GetSignatureAsync(SignUrlClientGetSignatureParametersDto parameters, System.Threading.CancellationToken cancellationToken)
+        {
+            return GetSignatureAsync(cancellationToken);
+        }
+        
+        public System.Threading.Tasks.Task SetSignatureCookieAsync(SignUrlClientSetSignatureCookieParametersDto parameters)
+        {
+            return SetSignatureCookieAsync(parameters, System.Threading.CancellationToken.None);
+        }
+        public System.Threading.Tasks.Task SetSignatureCookieAsync(SignUrlClientSetSignatureCookieParametersDto parameters, System.Threading.CancellationToken cancellationToken)
+        {
+            return SetSignatureCookieAsync(cancellationToken);
+        }
+    
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public System.Threading.Tasks.Task<string> GetSignatureAsync()
         {
@@ -1034,6 +1132,7 @@ namespace MccSoft.TemplateApp.Http.Generated
                     client_.Dispose();
             }
         }
+    
     
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public System.Threading.Tasks.Task SetSignatureCookieAsync()
@@ -1246,6 +1345,9 @@ namespace MccSoft.TemplateApp.Http.Generated
     
     }
     
+    public partial class TestDataClientThrowErrorParametersDto
+    {
+    }
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.11.3.0 (NJsonSchema v10.4.4.0 (Newtonsoft.Json v12.0.0.0))")]
     public partial class TestDataClient : BaseClient, ITestDataClient
     {
@@ -1280,6 +1382,15 @@ namespace MccSoft.TemplateApp.Http.Generated
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, string url);
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
+        public System.Threading.Tasks.Task<string> ThrowErrorAsync(TestDataClientThrowErrorParametersDto parameters)
+        {
+            return ThrowErrorAsync(parameters, System.Threading.CancellationToken.None);
+        }
+        public System.Threading.Tasks.Task<string> ThrowErrorAsync(TestDataClientThrowErrorParametersDto parameters, System.Threading.CancellationToken cancellationToken)
+        {
+            return ThrowErrorAsync(cancellationToken);
+        }
+    
         /// <summary>Demonstrates an error response.</summary>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public System.Threading.Tasks.Task<string> ThrowErrorAsync()
@@ -1363,6 +1474,7 @@ namespace MccSoft.TemplateApp.Http.Generated
                     client_.Dispose();
             }
         }
+    
     
         /// <summary>Sends a dummy email</summary>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -1448,6 +1560,7 @@ namespace MccSoft.TemplateApp.Http.Generated
                     client_.Dispose();
             }
         }
+    
     
         /// <summary>Tests RequiredOrUndefined attribute</summary>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -1658,6 +1771,9 @@ namespace MccSoft.TemplateApp.Http.Generated
     
     }
     
+    public partial class VersionClientVersionParametersDto
+    {
+    }
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.11.3.0 (NJsonSchema v10.4.4.0 (Newtonsoft.Json v12.0.0.0))")]
     public partial class VersionClient : BaseClient, IVersionClient
     {
@@ -1692,6 +1808,15 @@ namespace MccSoft.TemplateApp.Http.Generated
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, string url);
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
+        public System.Threading.Tasks.Task<string> VersionAsync(VersionClientVersionParametersDto parameters)
+        {
+            return VersionAsync(parameters, System.Threading.CancellationToken.None);
+        }
+        public System.Threading.Tasks.Task<string> VersionAsync(VersionClientVersionParametersDto parameters, System.Threading.CancellationToken cancellationToken)
+        {
+            return VersionAsync(cancellationToken);
+        }
+    
         /// <summary>Gets the version of the service.</summary>
         /// <returns>A string representing the version.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -1881,12 +2006,10 @@ namespace MccSoft.TemplateApp.Http.Generated
         }
     }
 
-    /// <summary>A ProblemDetails for validation errors.</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class ValidationProblemDetails : ProblemDetails
+    public partial class ValidationProblemDetails : HttpValidationProblemDetails
     {
-        /// <summary>Gets the validation errors associated with this instance of ValidationProblemDetails.</summary>
-        [Newtonsoft.Json.JsonProperty("errors", Required = Newtonsoft.Json.Required.Default )]
+        [Newtonsoft.Json.JsonProperty("errors", Required = Newtonsoft.Json.Required.DisallowNull )]
         public System.Collections.Generic.IDictionary<string, System.Collections.Generic.ICollection<string>> Errors { get; set; }
     
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
@@ -1901,41 +2024,41 @@ namespace MccSoft.TemplateApp.Http.Generated
     
     }
     
-    /// <summary>A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807.</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
+    public partial class HttpValidationProblemDetails : ProblemDetails
+    {
+        [Newtonsoft.Json.JsonProperty("errors", Required = Newtonsoft.Json.Required.DisallowNull )]
+        public System.Collections.Generic.IDictionary<string, System.Collections.Generic.ICollection<string>> Errors { get; set; }
+    
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
+    
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties; }
+            set { _additionalProperties = value; }
+        }
+    
+    
+    }
+    
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class ProblemDetails 
     {
-        /// <summary>A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when
-        /// dereferenced, it provide human-readable documentation for the problem type
-        /// (e.g., using HTML [W3C.REC-html5-20141028]).  When this member is not present, its value is assumed to be
-        /// "about:blank".</summary>
         [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.Default )]
         public string Type { get; set; }
     
-        /// <summary>A short, human-readable summary of the problem type.It SHOULD NOT change from occurrence to occurrence
-        /// of the problem, except for purposes of localization(e.g., using proactive content negotiation;
-        /// see[RFC7231], Section 3.4).</summary>
         [Newtonsoft.Json.JsonProperty("title", Required = Newtonsoft.Json.Required.Default )]
         public string Title { get; set; }
     
-        /// <summary>The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.</summary>
         [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Default )]
         public int? Status { get; set; }
     
-        /// <summary>A human-readable explanation specific to this occurrence of the problem.</summary>
         [Newtonsoft.Json.JsonProperty("detail", Required = Newtonsoft.Json.Required.Default )]
         public string Detail { get; set; }
     
-        /// <summary>A URI reference that identifies the specific occurrence of the problem.It may or may not yield further information if dereferenced.</summary>
         [Newtonsoft.Json.JsonProperty("instance", Required = Newtonsoft.Json.Required.Default )]
         public string Instance { get; set; }
-    
-        /// <summary>Gets the IDictionary`2 for extension members.
-        /// 
-        /// Problem type definitions MAY extend the problem details object with additional members. Extension members appear in the same namespace as
-        /// other members of a problem type.</summary>
-        [Newtonsoft.Json.JsonProperty("extensions", Required = Newtonsoft.Json.Required.Default )]
-        public System.Collections.Generic.IDictionary<string, object> Extensions { get; set; }
     
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
     
@@ -1960,26 +2083,24 @@ namespace MccSoft.TemplateApp.Http.Generated
         public string Title { get; set; }
     
         [Newtonsoft.Json.JsonProperty("productType", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ProductType ProductType { get; set; }
     
     
     }
     
+    /// <summary>0 = Undefined
+    /// 1 = Auto
+    /// 2 = Electronic
+    /// 3 = Other</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public enum ProductType
     {
-        [System.Runtime.Serialization.EnumMember(Value = @"Undefined")]
         Undefined = 0,
     
-        [System.Runtime.Serialization.EnumMember(Value = @"Auto")]
         Auto = 1,
     
-        [System.Runtime.Serialization.EnumMember(Value = @"Electronic")]
         Electronic = 2,
     
-        [System.Runtime.Serialization.EnumMember(Value = @"Other")]
         Other = 3,
     
     }
@@ -1993,8 +2114,6 @@ namespace MccSoft.TemplateApp.Http.Generated
         public string Title { get; set; }
     
         [Newtonsoft.Json.JsonProperty("productType", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ProductType ProductType { get; set; }
     
     
@@ -2008,7 +2127,6 @@ namespace MccSoft.TemplateApp.Http.Generated
         public string Title { get; set; }
     
         [Newtonsoft.Json.JsonProperty("productType", Required = Newtonsoft.Json.Required.DisallowNull )]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ProductType ProductType { get; set; }
     
     
@@ -2038,20 +2156,18 @@ namespace MccSoft.TemplateApp.Http.Generated
         public string Title { get; set; }
     
         [Newtonsoft.Json.JsonProperty("productType", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ProductType ProductType { get; set; }
     
     
     }
     
+    /// <summary>0 = Asc
+    /// 1 = Desc</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public enum SortOrder
     {
-        [System.Runtime.Serialization.EnumMember(Value = @"Asc")]
         Asc = 0,
     
-        [System.Runtime.Serialization.EnumMember(Value = @"Desc")]
         Desc = 1,
     
     }

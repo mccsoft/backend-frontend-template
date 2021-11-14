@@ -55,12 +55,14 @@ export class ProductClient {
           throw _error;
         }
       })
-      .then((_response: AxiosResponse) => {
+      .then((_response: AxiosResponse<string>) => {
         return this.processCreate(_response);
       });
   }
 
-  protected processCreate(response: AxiosResponse): Promise<ProductDto> {
+  protected processCreate(
+    response: AxiosResponse<string>,
+  ): Promise<ProductDto> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === 'object') {
@@ -126,12 +128,12 @@ export class ProductClient {
           throw _error;
         }
       })
-      .then((_response: AxiosResponse) => {
+      .then((_response: AxiosResponse<string>) => {
         return this.processDelete(_response);
       });
   }
 
-  protected processDelete(response: AxiosResponse): Promise<void> {
+  protected processDelete(response: AxiosResponse<string>): Promise<void> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === 'object') {
@@ -220,13 +222,13 @@ export class ProductClient {
           throw _error;
         }
       })
-      .then((_response: AxiosResponse) => {
+      .then((_response: AxiosResponse<string>) => {
         return this.processSearch(_response);
       });
   }
 
   protected processSearch(
-    response: AxiosResponse,
+    response: AxiosResponse<string>,
   ): Promise<PagedResultOfProductListItemDto> {
     const status = response.status;
     let _headers: any = {};
@@ -300,12 +302,12 @@ export class ProductClient {
           throw _error;
         }
       })
-      .then((_response: AxiosResponse) => {
+      .then((_response: AxiosResponse<string>) => {
         return this.processPatch(_response);
       });
   }
 
-  protected processPatch(response: AxiosResponse): Promise<ProductDto> {
+  protected processPatch(response: AxiosResponse<string>): Promise<ProductDto> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === 'object') {
@@ -370,12 +372,12 @@ export class ProductClient {
           throw _error;
         }
       })
-      .then((_response: AxiosResponse) => {
+      .then((_response: AxiosResponse<string>) => {
         return this.processGet(_response);
       });
   }
 
-  protected processGet(response: AxiosResponse): Promise<ProductDto> {
+  protected processGet(response: AxiosResponse<string>): Promise<ProductDto> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === 'object') {
@@ -429,7 +431,9 @@ type GetProductQueryParameters = {
 };
 
 export class ProductQuery {
-  private baseUrl: string = '';
+  get baseUrl() {
+    return getBaseUrl() ?? '' + '';
+  }
 
   static get Client() {
     return createClient(ProductClient);
@@ -586,9 +590,11 @@ export class ProductQuery {
    * @param sortBy (optional) Field name for sorting in DB.
    * @param sortOrder (optional) Sort direction. Ascending or Descending.
    */
-  static setSearchData<TData = PagedResultOfProductListItemDto>(
+  static setSearchData(
     queryClient: QueryClient,
-    updater: (data: TData | undefined) => TData,
+    updater: (
+      data: PagedResultOfProductListItemDto | undefined,
+    ) => PagedResultOfProductListItemDto,
     search?: string | null | undefined,
     productType?: ProductType | null | undefined,
     offset?: number | null | undefined,
@@ -607,6 +613,24 @@ export class ProductQuery {
       ),
       updater,
     );
+  }
+
+  /**
+   * @param search (optional)
+   * @param productType (optional)
+   * @param offset (optional) Offset of list.
+   * @param limit (optional) Number of requested records.
+   * @param sortBy (optional) Field name for sorting in DB.
+   * @param sortOrder (optional) Sort direction. Ascending or Descending.
+   */
+  static setSearchDataByQueryId(
+    queryClient: QueryClient,
+    queryKey: string,
+    updater: (
+      data: PagedResultOfProductListItemDto | undefined,
+    ) => PagedResultOfProductListItemDto,
+  ) {
+    queryClient.setQueryData(queryKey, updater);
   }
 
   get(id: number): string {
@@ -661,12 +685,20 @@ export class ProductQuery {
       ...options,
     });
   }
-  static setGetData<TData = ProductDto>(
+  static setGetData(
     queryClient: QueryClient,
-    updater: (data: TData | undefined) => TData,
+    updater: (data: ProductDto | undefined) => ProductDto,
     id: number,
   ) {
     queryClient.setQueryData(ProductQuery.getQueryKey(id), updater);
+  }
+
+  static setGetDataByQueryId(
+    queryClient: QueryClient,
+    queryKey: string,
+    updater: (data: ProductDto | undefined) => ProductDto,
+  ) {
+    queryClient.setQueryData(queryKey, updater);
   }
 }
 
@@ -712,13 +744,13 @@ export class OidcConfigurationClient {
           throw _error;
         }
       })
-      .then((_response: AxiosResponse) => {
+      .then((_response: AxiosResponse<string>) => {
         return this.processGetClientRequestParameters(_response);
       });
   }
 
   protected processGetClientRequestParameters(
-    response: AxiosResponse,
+    response: AxiosResponse<string>,
   ): Promise<void> {
     const status = response.status;
     let _headers: any = {};
@@ -761,7 +793,9 @@ type GetClientRequestParametersOidcConfigurationQueryParameters = {
 };
 
 export class OidcConfigurationQuery {
-  private baseUrl: string = '';
+  get baseUrl() {
+    return getBaseUrl() ?? '' + '';
+  }
 
   static get Client() {
     return createClient(OidcConfigurationClient);
@@ -851,15 +885,28 @@ export class OidcConfigurationQuery {
    * @param clientId Client od for requested configuration.
    * @return Return obj for oAuth config.
    */
-  static setGetClientRequestParametersData<TData = void>(
+  static setGetClientRequestParametersData(
     queryClient: QueryClient,
-    updater: (data: TData | undefined) => TData,
+    updater: (data: void | undefined) => void,
     clientId: string | null,
   ) {
     queryClient.setQueryData(
       OidcConfigurationQuery.getClientRequestParametersQueryKey(clientId),
       updater,
     );
+  }
+
+  /**
+   * Requests OIDC configuration for oAuth.
+   * @param clientId Client od for requested configuration.
+   * @return Return obj for oAuth config.
+   */
+  static setGetClientRequestParametersDataByQueryId(
+    queryClient: QueryClient,
+    queryKey: string,
+    updater: (data: void | undefined) => void,
+  ) {
+    queryClient.setQueryData(queryKey, updater);
   }
 }
 
@@ -896,12 +943,14 @@ export class SignUrlClient {
           throw _error;
         }
       })
-      .then((_response: AxiosResponse) => {
+      .then((_response: AxiosResponse<string>) => {
         return this.processGetSignature(_response);
       });
   }
 
-  protected processGetSignature(response: AxiosResponse): Promise<string> {
+  protected processGetSignature(
+    response: AxiosResponse<string>,
+  ): Promise<string> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === 'object') {
@@ -961,12 +1010,14 @@ export class SignUrlClient {
           throw _error;
         }
       })
-      .then((_response: AxiosResponse) => {
+      .then((_response: AxiosResponse<string>) => {
         return this.processSetSignatureCookie(_response);
       });
   }
 
-  protected processSetSignatureCookie(response: AxiosResponse): Promise<void> {
+  protected processSetSignatureCookie(
+    response: AxiosResponse<string>,
+  ): Promise<void> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === 'object') {
@@ -1004,7 +1055,9 @@ export class SignUrlClient {
   }
 }
 export class SignUrlQuery {
-  private baseUrl: string = '';
+  get baseUrl() {
+    return getBaseUrl() ?? '' + '';
+  }
 
   static get Client() {
     return createClient(SignUrlClient);
@@ -1050,11 +1103,19 @@ export class SignUrlQuery {
       ...options,
     });
   }
-  static setGetSignatureData<TData = string>(
+  static setGetSignatureData(
     queryClient: QueryClient,
-    updater: (data: TData | undefined) => TData,
+    updater: (data: string | undefined) => string,
   ) {
     queryClient.setQueryData(SignUrlQuery.getSignatureQueryKey(), updater);
+  }
+
+  static setGetSignatureDataByQueryId(
+    queryClient: QueryClient,
+    queryKey: string,
+    updater: (data: string | undefined) => string,
+  ) {
+    queryClient.setQueryData(queryKey, updater);
   }
 
   setSignatureCookie(): string {
@@ -1096,14 +1157,22 @@ export class SignUrlQuery {
       ...options,
     });
   }
-  static setSetSignatureCookieData<TData = void>(
+  static setSetSignatureCookieData(
     queryClient: QueryClient,
-    updater: (data: TData | undefined) => TData,
+    updater: (data: void | undefined) => void,
   ) {
     queryClient.setQueryData(
       SignUrlQuery.setSignatureCookieQueryKey(),
       updater,
     );
+  }
+
+  static setSetSignatureCookieDataByQueryId(
+    queryClient: QueryClient,
+    queryKey: string,
+    updater: (data: void | undefined) => void,
+  ) {
+    queryClient.setQueryData(queryKey, updater);
   }
 }
 
@@ -1143,12 +1212,14 @@ export class TestDataClient {
           throw _error;
         }
       })
-      .then((_response: AxiosResponse) => {
+      .then((_response: AxiosResponse<string>) => {
         return this.processThrowError(_response);
       });
   }
 
-  protected processThrowError(response: AxiosResponse): Promise<string> {
+  protected processThrowError(
+    response: AxiosResponse<string>,
+  ): Promise<string> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === 'object') {
@@ -1213,12 +1284,12 @@ export class TestDataClient {
           throw _error;
         }
       })
-      .then((_response: AxiosResponse) => {
+      .then((_response: AxiosResponse<string>) => {
         return this.processSendEmail(_response);
       });
   }
 
-  protected processSendEmail(response: AxiosResponse): Promise<string> {
+  protected processSendEmail(response: AxiosResponse<string>): Promise<string> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === 'object') {
@@ -1290,12 +1361,12 @@ export class TestDataClient {
           throw _error;
         }
       })
-      .then((_response: AxiosResponse) => {
+      .then((_response: AxiosResponse<string>) => {
         return this.processPatch(_response);
       });
   }
 
-  protected processPatch(response: AxiosResponse): Promise<string> {
+  protected processPatch(response: AxiosResponse<string>): Promise<string> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === 'object') {
@@ -1336,7 +1407,9 @@ export class TestDataClient {
   }
 }
 export class TestDataQuery {
-  private baseUrl: string = '';
+  get baseUrl() {
+    return getBaseUrl() ?? '' + '';
+  }
 
   static get Client() {
     return createClient(TestDataClient);
@@ -1388,11 +1461,22 @@ export class TestDataQuery {
   /**
    * Demonstrates an error response.
    */
-  static setThrowErrorData<TData = string>(
+  static setThrowErrorData(
     queryClient: QueryClient,
-    updater: (data: TData | undefined) => TData,
+    updater: (data: string | undefined) => string,
   ) {
     queryClient.setQueryData(TestDataQuery.throwErrorQueryKey(), updater);
+  }
+
+  /**
+   * Demonstrates an error response.
+   */
+  static setThrowErrorDataByQueryId(
+    queryClient: QueryClient,
+    queryKey: string,
+    updater: (data: string | undefined) => string,
+  ) {
+    queryClient.setQueryData(queryKey, updater);
   }
 }
 
@@ -1433,12 +1517,12 @@ export class VersionClient {
           throw _error;
         }
       })
-      .then((_response: AxiosResponse) => {
+      .then((_response: AxiosResponse<string>) => {
         return this.processVersion(_response);
       });
   }
 
-  protected processVersion(response: AxiosResponse): Promise<string> {
+  protected processVersion(response: AxiosResponse<string>): Promise<string> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === 'object') {
@@ -1479,7 +1563,9 @@ export class VersionClient {
   }
 }
 export class VersionQuery {
-  private baseUrl: string = '';
+  get baseUrl() {
+    return getBaseUrl() ?? '' + '';
+  }
 
   static get Client() {
     return createClient(VersionClient);
@@ -1532,36 +1618,32 @@ export class VersionQuery {
    * Gets the version of the service.
    * @return A string representing the version.
    */
-  static setVersionData<TData = string>(
+  static setVersionData(
     queryClient: QueryClient,
-    updater: (data: TData | undefined) => TData,
+    updater: (data: string | undefined) => string,
   ) {
     queryClient.setQueryData(VersionQuery.versionQueryKey(), updater);
   }
+
+  /**
+   * Gets the version of the service.
+   * @return A string representing the version.
+   */
+  static setVersionDataByQueryId(
+    queryClient: QueryClient,
+    queryKey: string,
+    updater: (data: string | undefined) => string,
+  ) {
+    queryClient.setQueryData(queryKey, updater);
+  }
 }
 
-/** A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807. */
 export class ProblemDetails implements IProblemDetails {
-  /** A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when
-dereferenced, it provide human-readable documentation for the problem type
-(e.g., using HTML [W3C.REC-html5-20141028]).  When this member is not present, its value is assumed to be
-"about:blank". */
   type?: string | null;
-  /** A short, human-readable summary of the problem type.It SHOULD NOT change from occurrence to occurrence
-of the problem, except for purposes of localization(e.g., using proactive content negotiation;
-see[RFC7231], Section 3.4). */
   title?: string | null;
-  /** The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem. */
   status?: number | null;
-  /** A human-readable explanation specific to this occurrence of the problem. */
   detail?: string | null;
-  /** A URI reference that identifies the specific occurrence of the problem.It may or may not yield further information if dereferenced. */
   instance?: string | null;
-  /** Gets the IDictionary`2 for extension members.
-
-Problem type definitions MAY extend the problem details object with additional members. Extension members appear in the same namespace as
-other members of a problem type. */
-  extensions?: { [key: string]: any } | null;
 
   constructor(data?: IProblemDetails) {
     if (data) {
@@ -1579,13 +1661,6 @@ other members of a problem type. */
       this.status = _data['status'];
       this.detail = _data['detail'];
       this.instance = _data['instance'];
-      if (_data['extensions']) {
-        this.extensions = {} as any;
-        for (let key in _data['extensions']) {
-          if (_data['extensions'].hasOwnProperty(key))
-            (<any>this.extensions)![key] = _data['extensions'][key];
-        }
-      }
     }
   }
 
@@ -1603,48 +1678,72 @@ other members of a problem type. */
     data['status'] = this.status;
     data['detail'] = this.detail;
     data['instance'] = this.instance;
-    if (this.extensions) {
-      data['extensions'] = {};
-      for (let key in this.extensions) {
-        if (this.extensions.hasOwnProperty(key))
-          (<any>data['extensions'])[key] = this.extensions[key];
-      }
-    }
     return data;
   }
 }
 
-/** A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807. */
 export interface IProblemDetails {
-  /** A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when
-dereferenced, it provide human-readable documentation for the problem type
-(e.g., using HTML [W3C.REC-html5-20141028]).  When this member is not present, its value is assumed to be
-"about:blank". */
   type?: string | null;
-  /** A short, human-readable summary of the problem type.It SHOULD NOT change from occurrence to occurrence
-of the problem, except for purposes of localization(e.g., using proactive content negotiation;
-see[RFC7231], Section 3.4). */
   title?: string | null;
-  /** The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem. */
   status?: number | null;
-  /** A human-readable explanation specific to this occurrence of the problem. */
   detail?: string | null;
-  /** A URI reference that identifies the specific occurrence of the problem.It may or may not yield further information if dereferenced. */
   instance?: string | null;
-  /** Gets the IDictionary`2 for extension members.
-
-Problem type definitions MAY extend the problem details object with additional members. Extension members appear in the same namespace as
-other members of a problem type. */
-  extensions?: { [key: string]: any } | null;
 }
 
-/** A ProblemDetails for validation errors. */
-export class ValidationProblemDetails
+export class HttpValidationProblemDetails
   extends ProblemDetails
+  implements IHttpValidationProblemDetails
+{
+  errors?: { [key: string]: string[] };
+
+  constructor(data?: IHttpValidationProblemDetails) {
+    super(data);
+  }
+
+  init(_data?: any) {
+    super.init(_data);
+    if (_data) {
+      if (_data['errors']) {
+        this.errors = {} as any;
+        for (let key in _data['errors']) {
+          if (_data['errors'].hasOwnProperty(key))
+            (<any>this.errors)![key] =
+              _data['errors'][key] !== undefined ? _data['errors'][key] : [];
+        }
+      }
+    }
+  }
+
+  static fromJS(data: any): HttpValidationProblemDetails {
+    data = typeof data === 'object' ? data : {};
+    let result = new HttpValidationProblemDetails();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    if (this.errors) {
+      data['errors'] = {};
+      for (let key in this.errors) {
+        if (this.errors.hasOwnProperty(key))
+          (<any>data['errors'])[key] = this.errors[key];
+      }
+    }
+    super.toJSON(data);
+    return data;
+  }
+}
+
+export interface IHttpValidationProblemDetails extends IProblemDetails {
+  errors?: { [key: string]: string[] };
+}
+
+export class ValidationProblemDetails
+  extends HttpValidationProblemDetails
   implements IValidationProblemDetails
 {
-  /** Gets the validation errors associated with this instance of ValidationProblemDetails. */
-  errors?: { [key: string]: string[] } | null;
+  errors?: { [key: string]: string[] };
 
   constructor(data?: IValidationProblemDetails) {
     super(data);
@@ -1685,10 +1784,9 @@ export class ValidationProblemDetails
   }
 }
 
-/** A ProblemDetails for validation errors. */
-export interface IValidationProblemDetails extends IProblemDetails {
-  /** Gets the validation errors associated with this instance of ValidationProblemDetails. */
-  errors?: { [key: string]: string[] } | null;
+export interface IValidationProblemDetails
+  extends IHttpValidationProblemDetails {
+  errors?: { [key: string]: string[] };
 }
 
 export class ProductDto implements IProductDto {
@@ -1735,11 +1833,12 @@ export interface IProductDto {
   productType: ProductType;
 }
 
+/** 0 = Undefined 1 = Auto 2 = Electronic 3 = Other */
 export enum ProductType {
-  Undefined = 'Undefined',
-  Auto = 'Auto',
-  Electronic = 'Electronic',
-  Other = 'Other',
+  Undefined = 0,
+  Auto = 1,
+  Electronic = 2,
+  Other = 3,
 }
 
 export class CreateProductDto implements ICreateProductDto {
@@ -1918,9 +2017,10 @@ export interface IProductListItemDto {
   productType: ProductType;
 }
 
+/** 0 = Asc 1 = Desc */
 export enum SortOrder {
-  Asc = 'Asc',
-  Desc = 'Desc',
+  Asc = 0,
+  Desc = 1,
 }
 
 export class TestPatchDto implements ITestPatchDto {
@@ -2012,7 +2112,7 @@ import {
   QueryClient,
 } from 'react-query';
 
-function removeUndefinedFromArrayTail(arr: any[]): any[] {
+function removeUndefinedFromArrayTail<T>(arr: T[]): T[] {
   let lastDefinedValueIndex = arr.length - 1;
   while (lastDefinedValueIndex >= 0) {
     if (arr[lastDefinedValueIndex] === undefined) {
