@@ -38,7 +38,7 @@ namespace MccSoft.Testing.SqliteUtils
                 (provider, options) =>
                 {
                     options.UseSqlite(connectionString)
-                        .UsePostgresFunctionsInSqlite()
+                        // .UsePostgresFunctionsInSqlite()
                         .WithLambdaInjection()
                         .ReplaceService<
                             IModelCustomizer,
