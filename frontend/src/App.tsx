@@ -15,6 +15,8 @@ import * as Sentry from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 import { Suspense } from 'react';
 import { RootStore } from './application/redux-store';
+import { useTranslation } from 'react-i18next';
+import { useScopedTranslation } from './application/localization/useScopedTranslation';
 
 QueryFactory.setAxiosFactory(() => axios);
 axios.interceptors.request.use(
@@ -34,6 +36,10 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 export const App = () => {
+  const i182 = useScopedTranslation('Page.Login');
+  i182.t('login_field');
+  const i18n = useTranslation(undefined, { keyPrefix: 'Page.Login' });
+  const aasd = i18n.t('password_field');
   const queryClient = useMemo(() => {
     const queryClient = new QueryClient({
       defaultOptions: {

@@ -7,11 +7,8 @@ import HttpApi from 'i18next-http-backend';
 const languages = ['de', 'en'];
 type Language = 'de' | 'en';
 
-const namespaces = ['localization'];
-type Namespace = 'localization';
-
 const fallbackLng: Language = 'en';
-const defaultNS: Namespace = 'localization';
+export const defaultNS = 'translation';
 
 i18n
   .use(intervalPlural)
@@ -21,7 +18,6 @@ i18n
     fallbackLng,
     defaultNS,
     lng: fallbackLng,
-    ns: namespaces,
     load: 'languageOnly',
     preload: ['en'],
     //saveMissing: process.env.NODE_ENV !== 'production',

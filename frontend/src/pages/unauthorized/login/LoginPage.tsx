@@ -1,4 +1,4 @@
-import { useScopedTranslation } from 'application/localization/useScopedLocalization';
+import { useScopedTranslation } from 'application/localization/useScopedTranslation';
 import { AuthActions } from 'application/redux-store/auth/auth-reducer';
 import { useAppDispatch } from 'application/redux-store/root-store';
 import { Button } from 'components/uikit/buttons/Button';

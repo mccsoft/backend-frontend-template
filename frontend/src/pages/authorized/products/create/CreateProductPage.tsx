@@ -1,6 +1,6 @@
 import { Grid } from '@material-ui/core';
 import { Links } from 'application/constants/links';
-import { useScopedTranslation } from 'application/localization/useScopedLocalization';
+import { useScopedTranslation } from 'application/localization/useScopedTranslation';
 import { AppLink } from 'components/uikit/buttons/AppLink';
 import { Button, ButtonColor } from 'components/uikit/buttons/Button';
 import { Field } from 'components/uikit/Field';

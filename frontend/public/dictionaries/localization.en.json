@@ -8,10 +8,13 @@
     },
     "Products": {
       "Create": {
-        "create_button": "Create"
+        "create_button": "Create",
+        "title": "Title",
+        "product_type": "Product Type"
       }
     },
     "uikit": {
+      "input": "Input",
       "dropdown": "Dropdown",
       "time": "Time",
       "date": "Date",
@@ -23,7 +26,9 @@
   "uikit": {
     "inputs": {
       "required": "Required",
-      "nothing_selected": "No selection"
+      "nothing_selected": "No selection",
+      "all_selected": "All selected",
+      "some_selected": "Some selected"
     }
   },
   "suspense": {

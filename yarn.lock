@@ -1600,12 +1600,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.10.1, @babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.11.1, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.0, @babel/runtime@npm:^7.12.1, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.6, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.4.4, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.6.2, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.3, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.10.1, @babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.11.1, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.0, @babel/runtime@npm:^7.12.1, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.4.4, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.6.2, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.3, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
   version: 7.14.6
   resolution: "@babel/runtime@npm:7.14.6"
   dependencies:
     regenerator-runtime: ^0.13.4
   checksum: 927ffed7871f2ed29f967a8dad7a72aa10662f93b6735a89d664a161fa4dc2074b8947ca159a8a0a49cec9a71c8de473d7c2b22d3de0ee4d7dd06d24a7f98018
+  languageName: node
+  linkType: hard
+
+"@babel/runtime@npm:^7.14.5":
+  version: 7.16.3
+  resolution: "@babel/runtime@npm:7.16.3"
+  dependencies:
+    regenerator-runtime: ^0.13.4
+  checksum: ab8ac887096d76185ddbf291d28fb976cd32473696dc497ad4905b784acbd5aa462533ad83a5c5104e10ead28c2e0e119840ee28ed8eff90dcdde9d57f916eda
   languageName: node
   linkType: hard
 
@@ -2938,7 +2947,7 @@ __metadata:
     react-dom: 17.0.2
     react-dropzone: ^11.3.2
     react-hook-form: ^7.19.0
-    react-i18next: 11.8.15
+    react-i18next: 11.14.2
     react-js-pagination: ^3.0.3
     react-paginate: ^7.1.3
     react-query: 3.25.1
@@ -2957,7 +2966,7 @@ __metadata:
     sass: ^1.42.1
     source-map-explorer: ^2.5.2
     throttle-debounce: ^3.0.1
-    typescript: 4.4.3
+    typescript: 4.4.4
     use-query-params: ^1.2.3
     web-vitals: 1.1.2
   languageName: unknown
@@ -14821,16 +14830,16 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-i18next@npm:11.8.15":
-  version: 11.8.15
-  resolution: "react-i18next@npm:11.8.15"
+"react-i18next@npm:11.14.2":
+  version: 11.14.2
+  resolution: "react-i18next@npm:11.14.2"
   dependencies:
-    "@babel/runtime": ^7.13.6
+    "@babel/runtime": ^7.14.5
     html-parse-stringify: ^3.0.1
   peerDependencies:
     i18next: ">= 19.0.0"
     react: ">= 16.8.0"
-  checksum: 8991e5a385b0d4013eb264132fc9393cbd33801a8d4cad6491e552b4461dd9e4d80ea9831f3511d30bf5dd2340d5e2b703fa4c72070074d14386ab3ec141e043
+  checksum: 336051bda04f381b309a6737044038cd9b7b90077bb080f90860c683286bf88b1d774d40f4c2655ee66c4ab03267990a6ad562169430bf4b2d436b1064963814
   languageName: node
   linkType: hard
 
@@ -17720,23 +17729,23 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-typescript@4.4.3:
-  version: 4.4.3
-  resolution: "typescript@npm:4.4.3"
+typescript@4.4.4:
+  version: 4.4.4
+  resolution: "typescript@npm:4.4.4"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 05823f21796d450531a7e4ab299715d38fd9ded0e4ce7400876053f4b5166ca3dde7a68cecfe72d9086039f03c0b6edba36516fb10ed83c5837d9600532ea4c2
+  checksum: 89ecb8436bb48ef5594d49289f5f89103071716b6e4844278f4fb3362856e31203e187a9c76d205c3f0b674d221a058fd28310dbcbcf5d95e9a57229bb5203f1
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@4.4.3#~builtin<compat/typescript>":
-  version: 4.4.3
-  resolution: "typescript@patch:typescript@npm%3A4.4.3#~builtin<compat/typescript>::version=4.4.3&hash=32657b"
+"typescript@patch:typescript@4.4.4#~builtin<compat/typescript>":
+  version: 4.4.4
+  resolution: "typescript@patch:typescript@npm%3A4.4.4#~builtin<compat/typescript>::version=4.4.4&hash=32657b"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 28ab98313afab46788ff41014fdb5932430ada6e03cf9e92ac47f406526a2cac1ae2894834e7da61e46b7429318e9c47f45ba8de323332f0cb9af99b72ebae74
+  checksum: c97c33903f1eb4f9e178649befdfc859d93157db1eccd1e521e84976ec6861db53412d8018e5e4c5d09268771c65498d42caa64bd881878346c3644f6b7cd202
   languageName: node
   linkType: hard
 
