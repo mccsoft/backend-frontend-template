@@ -61,5 +61,21 @@ namespace MccSoft.TemplateApp.App.Controllers
         {
             return JsonConvert.SerializeObject(dto);
         }
+
+        public class MyFormData
+        {
+            public double A { get; set; }
+        }
+
+        /// <summary>
+        /// Try this in browser with language set to DE
+        /// </summary>
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("formdata")]
+        public string FormData([FromForm] MyFormData dto)
+        {
+            return JsonConvert.SerializeObject(dto);
+        }
     }
 }

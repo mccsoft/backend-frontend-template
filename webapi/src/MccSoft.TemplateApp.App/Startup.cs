@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
@@ -189,7 +190,18 @@ namespace MccSoft.TemplateApp.App
 
             app.UseRequestLocalization(
                 options =>
-                    options.SetDefaultCulture("en").AddSupportedCultures(new[] { "en", "fr", "de" })
+                {
+                    options.SupportedCultures = new[] { "en", "fr", "de" }.Select(
+                            lang =>
+                                new CultureInfo(lang)
+                                {
+                                    // we need to manually specify NumberFormat, because otherwise for DE browsers ASP.NET Core treats FormData 1.2 as 12.
+                                    NumberFormat = CultureInfo.InvariantCulture.NumberFormat,
+                                }
+                        )
+                        .ToList();
+                    options.SetDefaultCulture("en");
+                }
             );
             app.UseErrorHandling();
             app.UseRethrowErrorsFromPersistence();
