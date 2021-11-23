@@ -1,6 +1,6 @@
 import 'react-i18next';
 import { defaultNS } from './localization';
-import ns1 from '../../../public/dictionaries/localization.en.json';
+import ns1 from '../../../public/dictionaries/translation.en.json';
 
 declare module 'react-i18next' {
   // and extend them!
