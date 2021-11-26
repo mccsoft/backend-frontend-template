@@ -2930,8 +2930,8 @@ __metadata:
     eslint-plugin-prettier: 3.4.0
     eslint-plugin-react: 7.24.0
     eslint-plugin-react-hooks: 4.2.0
-    i18next: 20.2.4
-    i18next-http-backend: ^1.2.6
+    i18next: 21.5.2
+    i18next-http-backend: ^1.3.1
     i18next-intervalplural-postprocessor: 3.0.0
     js-base64: 3.6.0
     js-logger: 1.6.1
@@ -9604,12 +9604,12 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"i18next-http-backend@npm:^1.2.6":
-  version: 1.2.6
-  resolution: "i18next-http-backend@npm:1.2.6"
+"i18next-http-backend@npm:^1.3.1":
+  version: 1.3.1
+  resolution: "i18next-http-backend@npm:1.3.1"
   dependencies:
     cross-fetch: 3.1.4
-  checksum: 27943987ebc315c186e064cfe0a497dcb0f02d6ee9d6c56d38a45350d77cbc0f01bc100f4c338938b8c22db4a88f82937750178822062bdcf1ca4debb2726d1a
+  checksum: 4ee1d241f562e56b45f7125a3aee73517623a1af3eca7a4c5af8c537c732ed848268fde68c44fce3a34dec2ac2e30e8e5a4f8679abd3de0241fbb72d2f4fd65f
   languageName: node
   linkType: hard
 
@@ -9620,12 +9620,12 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"i18next@npm:20.2.4":
-  version: 20.2.4
-  resolution: "i18next@npm:20.2.4"
+"i18next@npm:21.5.2":
+  version: 21.5.2
+  resolution: "i18next@npm:21.5.2"
   dependencies:
     "@babel/runtime": ^7.12.0
-  checksum: 056e277900f559295b032cf8a135ffa9bd9cb1c2885ddd8730ffa1d694331f60b9fb71a4b725a48edcb18cc3f321cdf329255da49d4204b01d7b828faa0d2da1
+  checksum: 1968c334acee1167a7efb80304c273d425bdd6d5bb0018949e93f8f2af86d0712362f4486e825fd94ccc5a947a2839d2970ade99c56e772683708486bf1f3a07
   languageName: node
   linkType: hard
 

@@ -23,7 +23,6 @@ i18n
     //saveMissing: process.env.NODE_ENV !== 'production',
     lowerCaseLng: true,
     initImmediate: false,
-    whitelist: languages,
     interpolation: {
       escapeValue: false, // react already safes from xss
     },
