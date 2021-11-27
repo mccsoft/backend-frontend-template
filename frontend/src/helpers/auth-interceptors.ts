@@ -12,9 +12,10 @@ export const injectTokenInterceptor = (getState: () => GlobalState) => {
     const authState = state.auth;
     if (
       authState.type === 'authorized' &&
-      // we need it to avoid overriding Basic auth for refresh token requests
-      config.headers.Authorization === undefined
+      !config.url?.endsWith('/connect/token')
     ) {
+      // we should not overwrite Authorization headers for requests to IdentityServer, because there's Basic authorization header already
+      config.headers = config.headers ?? {};
       config.headers.Authorization = 'Bearer ' + authState.accessToken;
     }
     return config;

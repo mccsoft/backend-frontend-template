@@ -1,5 +1,4 @@
 import {
-  DefaultNamespace,
   KeyPrefix,
   Namespace,
   useTranslation,
@@ -12,8 +11,8 @@ Allows to specify the initial path of all translations returned by the function.
 E.g. useScopedTranslation('hl7.mapping'). All translations will start with 'hl7.mapping.*'
  */
 export function useScopedTranslation<
-  N extends Namespace = DefaultNamespace,
-  TKPrefix extends KeyPrefix<N> = undefined,
+  N extends Namespace,
+  TKPrefix extends KeyPrefix<N>,
 >(
   path: TKPrefix,
   ns?: N | Readonly<N>,
