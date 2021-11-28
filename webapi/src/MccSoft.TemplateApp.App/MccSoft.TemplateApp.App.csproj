@@ -32,11 +32,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Audit.NET.PostgreSql" Version="19.0.0" />
+    <PackageReference Include="Audit.NET.PostgreSql" Version="19.0.1" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.27" />
     <PackageReference Include="Hangfire.Core" Version="1.7.27" />
     <PackageReference Include="Hangfire.Dashboard.BasicAuthorization" Version="1.0.2" />
-    <PackageReference Include="Hangfire.PostgreSql" Version="1.8.6" />
+    <PackageReference Include="Hangfire.PostgreSql" Version="1.9.3" />
     <PackageReference Include="I18Next.Net" Version="0.7.1" />
     <PackageReference Include="I18Next.Net.AspNetCore" Version="0.7.1" />
     <PackageReference Include="I18Next.Net.Extensions" Version="0.7.1" />
