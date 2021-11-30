@@ -59,7 +59,7 @@
     <PackageReference Include="NeinLinq.EntityFrameworkCore" Version="6.0.0" />
     <PackageReference Include="NJsonSchema" Version="10.5.2" />
     <PackageReference Include="Npgsql.Json.NET" Version="6.0.0" />
-    <PackageReference Include="NSwag.AspNetCore" Version="13.14.3" />
+    <PackageReference Include="NSwag.AspNetCore" Version="13.14.7" />
 
 
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />

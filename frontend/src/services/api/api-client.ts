@@ -55,14 +55,12 @@ export class ProductClient {
           throw _error;
         }
       })
-      .then((_response: AxiosResponse<string>) => {
+      .then((_response: AxiosResponse) => {
         return this.processCreate(_response);
       });
   }
 
-  protected processCreate(
-    response: AxiosResponse<string>,
-  ): Promise<ProductDto> {
+  protected processCreate(response: AxiosResponse): Promise<ProductDto> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === 'object') {
@@ -128,12 +126,12 @@ export class ProductClient {
           throw _error;
         }
       })
-      .then((_response: AxiosResponse<string>) => {
+      .then((_response: AxiosResponse) => {
         return this.processDelete(_response);
       });
   }
 
-  protected processDelete(response: AxiosResponse<string>): Promise<void> {
+  protected processDelete(response: AxiosResponse): Promise<void> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === 'object') {
@@ -222,13 +220,13 @@ export class ProductClient {
           throw _error;
         }
       })
-      .then((_response: AxiosResponse<string>) => {
+      .then((_response: AxiosResponse) => {
         return this.processSearch(_response);
       });
   }
 
   protected processSearch(
-    response: AxiosResponse<string>,
+    response: AxiosResponse,
   ): Promise<PagedResultOfProductListItemDto> {
     const status = response.status;
     let _headers: any = {};
@@ -302,12 +300,12 @@ export class ProductClient {
           throw _error;
         }
       })
-      .then((_response: AxiosResponse<string>) => {
+      .then((_response: AxiosResponse) => {
         return this.processPatch(_response);
       });
   }
 
-  protected processPatch(response: AxiosResponse<string>): Promise<ProductDto> {
+  protected processPatch(response: AxiosResponse): Promise<ProductDto> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === 'object') {
@@ -372,12 +370,12 @@ export class ProductClient {
           throw _error;
         }
       })
-      .then((_response: AxiosResponse<string>) => {
+      .then((_response: AxiosResponse) => {
         return this.processGet(_response);
       });
   }
 
-  protected processGet(response: AxiosResponse<string>): Promise<ProductDto> {
+  protected processGet(response: AxiosResponse): Promise<ProductDto> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === 'object') {
@@ -744,13 +742,13 @@ export class OidcConfigurationClient {
           throw _error;
         }
       })
-      .then((_response: AxiosResponse<string>) => {
+      .then((_response: AxiosResponse) => {
         return this.processGetClientRequestParameters(_response);
       });
   }
 
   protected processGetClientRequestParameters(
-    response: AxiosResponse<string>,
+    response: AxiosResponse,
   ): Promise<void> {
     const status = response.status;
     let _headers: any = {};
@@ -943,14 +941,12 @@ export class SignUrlClient {
           throw _error;
         }
       })
-      .then((_response: AxiosResponse<string>) => {
+      .then((_response: AxiosResponse) => {
         return this.processGetSignature(_response);
       });
   }
 
-  protected processGetSignature(
-    response: AxiosResponse<string>,
-  ): Promise<string> {
+  protected processGetSignature(response: AxiosResponse): Promise<string> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === 'object') {
@@ -1010,14 +1006,12 @@ export class SignUrlClient {
           throw _error;
         }
       })
-      .then((_response: AxiosResponse<string>) => {
+      .then((_response: AxiosResponse) => {
         return this.processSetSignatureCookie(_response);
       });
   }
 
-  protected processSetSignatureCookie(
-    response: AxiosResponse<string>,
-  ): Promise<void> {
+  protected processSetSignatureCookie(response: AxiosResponse): Promise<void> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === 'object') {
@@ -1212,14 +1206,12 @@ export class TestDataClient {
           throw _error;
         }
       })
-      .then((_response: AxiosResponse<string>) => {
+      .then((_response: AxiosResponse) => {
         return this.processThrowError(_response);
       });
   }
 
-  protected processThrowError(
-    response: AxiosResponse<string>,
-  ): Promise<string> {
+  protected processThrowError(response: AxiosResponse): Promise<string> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === 'object') {
@@ -1284,12 +1276,12 @@ export class TestDataClient {
           throw _error;
         }
       })
-      .then((_response: AxiosResponse<string>) => {
+      .then((_response: AxiosResponse) => {
         return this.processSendEmail(_response);
       });
   }
 
-  protected processSendEmail(response: AxiosResponse<string>): Promise<string> {
+  protected processSendEmail(response: AxiosResponse): Promise<string> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === 'object') {
@@ -1361,12 +1353,92 @@ export class TestDataClient {
           throw _error;
         }
       })
-      .then((_response: AxiosResponse<string>) => {
+      .then((_response: AxiosResponse) => {
         return this.processPatch(_response);
       });
   }
 
-  protected processPatch(response: AxiosResponse<string>): Promise<string> {
+  protected processPatch(response: AxiosResponse): Promise<string> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === 'object') {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
+        }
+      }
+    }
+    if (status === 400) {
+      const _responseText = response.data;
+      let result400: any = null;
+      let resultData400 = _responseText;
+      result400 = ValidationProblemDetails.fromJS(resultData400);
+      return throwException(
+        'A server side error occurred.',
+        status,
+        _responseText,
+        _headers,
+        result400,
+      );
+    } else if (status === 200) {
+      const _responseText = response.data;
+      let result200: any = null;
+      let resultData200 = _responseText;
+      result200 = resultData200 !== undefined ? resultData200 : <any>null;
+      return result200;
+    } else if (status !== 200 && status !== 204) {
+      const _responseText = response.data;
+      return throwException(
+        'An unexpected server error occurred.',
+        status,
+        _responseText,
+        _headers,
+      );
+    }
+    return Promise.resolve<string>(<any>null);
+  }
+
+  /**
+   * Try this in browser with language set to DE
+   * @param a (optional)
+   */
+  formData(
+    a?: number | undefined,
+    cancelToken?: CancelToken | undefined,
+  ): Promise<string> {
+    let url_ = this.baseUrl + '/formdata';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = new FormData();
+    if (a === null || a === undefined)
+      throw new Error("The parameter 'a' cannot be null.");
+    else content_.append('A', a.toString());
+
+    let options_ = <AxiosRequestConfig>{
+      data: content_,
+      method: 'POST',
+      url: url_,
+      headers: {
+        Accept: 'application/json',
+      },
+      cancelToken,
+    };
+
+    return this.instance
+      .request(options_)
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
+        } else {
+          throw _error;
+        }
+      })
+      .then((_response: AxiosResponse) => {
+        return this.processFormData(_response);
+      });
+  }
+
+  protected processFormData(response: AxiosResponse): Promise<string> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === 'object') {
@@ -1517,12 +1589,12 @@ export class VersionClient {
           throw _error;
         }
       })
-      .then((_response: AxiosResponse<string>) => {
+      .then((_response: AxiosResponse) => {
         return this.processVersion(_response);
       });
   }
 
-  protected processVersion(response: AxiosResponse<string>): Promise<string> {
+  protected processVersion(response: AxiosResponse): Promise<string> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === 'object') {
@@ -1644,6 +1716,7 @@ export class ProblemDetails implements IProblemDetails {
   status?: number | null;
   detail?: string | null;
   instance?: string | null;
+  extensions?: { [key: string]: any };
 
   constructor(data?: IProblemDetails) {
     if (data) {
@@ -1661,6 +1734,13 @@ export class ProblemDetails implements IProblemDetails {
       this.status = _data['status'];
       this.detail = _data['detail'];
       this.instance = _data['instance'];
+      if (_data['extensions']) {
+        this.extensions = {} as any;
+        for (let key in _data['extensions']) {
+          if (_data['extensions'].hasOwnProperty(key))
+            (<any>this.extensions)![key] = _data['extensions'][key];
+        }
+      }
     }
   }
 
@@ -1678,6 +1758,13 @@ export class ProblemDetails implements IProblemDetails {
     data['status'] = this.status;
     data['detail'] = this.detail;
     data['instance'] = this.instance;
+    if (this.extensions) {
+      data['extensions'] = {};
+      for (let key in this.extensions) {
+        if (this.extensions.hasOwnProperty(key))
+          (<any>data['extensions'])[key] = this.extensions[key];
+      }
+    }
     return data;
   }
 }
@@ -1688,6 +1775,7 @@ export interface IProblemDetails {
   status?: number | null;
   detail?: string | null;
   instance?: string | null;
+  extensions?: { [key: string]: any };
 }
 
 export class HttpValidationProblemDetails
@@ -1833,12 +1921,11 @@ export interface IProductDto {
   productType: ProductType;
 }
 
-/** 0 = Undefined 1 = Auto 2 = Electronic 3 = Other */
 export enum ProductType {
-  Undefined = 0,
-  Auto = 1,
-  Electronic = 2,
-  Other = 3,
+  Undefined = 'Undefined',
+  Auto = 'Auto',
+  Electronic = 'Electronic',
+  Other = 'Other',
 }
 
 export class CreateProductDto implements ICreateProductDto {
@@ -2017,10 +2104,9 @@ export interface IProductListItemDto {
   productType: ProductType;
 }
 
-/** 0 = Asc 1 = Desc */
 export enum SortOrder {
-  Asc = 0,
-  Desc = 1,
+  Asc = 'Asc',
+  Desc = 'Desc',
 }
 
 export class TestPatchDto implements ITestPatchDto {

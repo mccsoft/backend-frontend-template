@@ -16,9 +16,9 @@
     <PackageReference Include="ErikEJ.EntityFrameworkCore.DgmlBuilder" Version="6.0.0" />
     <PackageReference Include="JsonKnownTypes" Version="0.5.4" />
     <PackageReference Include="NJsonSchema" Version="10.5.2" />
-    <PackageReference Include="NSwag.CodeGeneration.CSharp" Version="13.14.3" />
-    <PackageReference Include="NSwag.Generation" Version="13.14.3" />
-    <PackageReference Include="NSwag.CodeGeneration.TypeScript" Version="13.14.3" />
+    <PackageReference Include="NSwag.CodeGeneration.CSharp" Version="13.14.7" />
+    <PackageReference Include="NSwag.Generation" Version="13.14.7" />
+    <PackageReference Include="NSwag.CodeGeneration.TypeScript" Version="13.14.7" />
     <PackageReference Include="FluentAssertions" Version="6.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="6.0.0" />

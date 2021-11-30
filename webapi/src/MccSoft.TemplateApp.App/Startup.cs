@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Audit.Core;
 using Duende.IdentityServer.EntityFramework.Options;
@@ -138,7 +139,13 @@ namespace MccSoft.TemplateApp.App
                         AddGlobalFilters(opt);
                     }
                 )
-                .AddNewtonsoftJson(setupAction => SetupJson(setupAction.SerializerSettings));
+                .AddNewtonsoftJson(setupAction => SetupJson(setupAction.SerializerSettings))
+                .AddJsonOptions(
+                    options =>
+                    {
+                        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                    }
+                );
 
             services.AddIgnoreTimezoneAttributes();
 
