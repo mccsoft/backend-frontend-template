@@ -23,6 +23,7 @@ namespace MccSoft.WebApi.SignedUrl
 
         public const string UserIdClaimName = "id";
         public const string UrlParameterName = "sign";
+        public const string HeaderName = "X-Sign";
 
         public SignUrlHelper(IOptions<SignUrlOptions> signUrlOptions, IUserAccessor userAccessor)
         {
@@ -67,7 +68,7 @@ namespace MccSoft.WebApi.SignedUrl
             HttpContext context,
             out ClaimsPrincipal claimsPrincipal
         ) {
-            if (context.User.Identity != null)
+            if (context.User.Identity?.IsAuthenticated == true)
             {
                 claimsPrincipal = context.User;
                 return true;
@@ -132,9 +133,15 @@ namespace MccSoft.WebApi.SignedUrl
         public virtual string GetSignature(HttpContext httpContext)
         {
             string signature = httpContext.Request.Query[UrlParameterName].ToString();
+
             if (string.IsNullOrEmpty(signature))
             {
                 signature = httpContext.Request.Cookies[UrlParameterName];
+            }
+
+            if (string.IsNullOrEmpty(signature))
+            {
+                signature = httpContext.Request.Headers[HeaderName];
             }
 
             return signature;
