@@ -12,11 +12,13 @@ This causes the following problems:
 1. Inability to use standard browser Download dialog and features like pause/continue/restart/view the progress of a download (especially important for large files)
 1. Inability to use standard `<img src='_source_' />'` tag and standard browser caching.
 
-Signed URLs solve this by including a token into URL or Cookie:
+Signed URLs solve this by including a token into URL, Cookie, or Header:
 1. Query string: `https://server/product/2/image?sign=__signature__`. Normally used for .zip files (and other files that are downloaded once and do not need browser caching)
-1. Cookie. In this case URL will be just `https://server/product/2/image`, and Cookie will contain the value `sign=__signature__`. Best for images, because images are meant to be cached, but when using QueryString the signature will be changed quite often, which will prevent caching (changing Cookie won't prevent caching).
+2. Cookie. In this case URL will be just `https://server/product/2/image`, and Cookie will contain the value `sign=__signature__`. Best for images, because images are meant to be cached, but when using QueryString the signature will be changed quite often, which will prevent caching (changing Cookie won't prevent caching).
+3. Header. You can pass `X-Sign` header with `__signature__` value
 
 #How to use
+1. Call `services.AddSignUrl("SOME_SECRET_VALUE_AT_LEAST_16_BYTES")` somewhere from `Startup`.
 1. Decorate the actions (e.g. returning images for some of your items) you'd like to secure with `[ValidateSignedUrl]` attribute.
 1. Set the `sign` cookie on the Client. You could call `SignUrlTestController.SetSignatureCookie` from the client on a regular basis (e.g. once in 10 minutes) to achieve that.
 1. After that the client will be able to download images just by specifying `<img src='_url_' />`
