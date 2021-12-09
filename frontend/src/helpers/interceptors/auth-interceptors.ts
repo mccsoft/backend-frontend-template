@@ -12,7 +12,8 @@ export const injectTokenInterceptor = (getState: () => GlobalState) => {
     const authState = state.auth;
     if (
       authState.type === 'authorized' &&
-      !config.url?.endsWith('/connect/token')
+      !config.url?.endsWith('/connect/token') &&
+      !config.url?.endsWith('/connect/revocation')
     ) {
       // we should not overwrite Authorization headers for requests to IdentityServer, because there's Basic authorization header already
       config.headers = config.headers ?? {};

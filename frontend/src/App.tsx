@@ -8,22 +8,28 @@ import { addLogoutHandler } from './application/redux-store/root-reducer';
 import { PersistGate } from 'redux-persist/integration/react';
 import { AppRouter } from 'navigation/router';
 import axios from 'axios';
-import * as Interceptors from './helpers/auth-interceptors';
-import { setupRefreshTokenInterceptor } from './helpers/auth-interceptors';
+import {
+  injectTokenInterceptor,
+  setupRefreshTokenInterceptor,
+} from './helpers/interceptors/auth-interceptors';
 import { QueryFactory } from './services/api';
 import * as Sentry from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 import { Suspense } from 'react';
 import { RootStore } from './application/redux-store';
+import { sessionAxiosInterceptor } from './helpers/interceptors/inject-session-interceptor';
+import { injectLanguageInterceptor } from './helpers/interceptors/inject-language-interceptor';
 
 QueryFactory.setAxiosFactory(() => axios);
-axios.interceptors.request.use(
-  Interceptors.injectTokenInterceptor(RootStore.store.getState),
-);
 setupRefreshTokenInterceptor(
   RootStore.store.getState,
   RootStore.store.dispatch,
 );
+axios.interceptors.request.use(
+  injectTokenInterceptor(RootStore.store.getState),
+);
+axios.interceptors.request.use(injectLanguageInterceptor);
+axios.interceptors.request.use(sessionAxiosInterceptor);
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({

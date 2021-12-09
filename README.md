@@ -5,13 +5,14 @@
 This is a template to set up a backend ASP.Net project with React frontend. You could check it out at [https://template.mcc-tomsk.de](https://template.mcc-tomsk.de) (credentials: admin/BSjo1M8jU760).
 
 Template contains:
-1. ASP.NET Core backend (.NET 5)
+1. ASP.NET Core backend (.NET 6)
    1. Identity Server authentication (with support for Social Networks authentication)
    2. Guidance/example on how to structure backend
    3. Helpers for easy implementation of REST API for CRUD (with PATCH instead of UPDATE)
    4. Configured Domain events to apply DDD principles
-   5. Localization (i18next), background jobs (Hangfire),
+   5. Localization (i18next), background jobs (Hangfire), etc.
    6. Audit logging for DB entities
+   7. Logging via Serilog to [Loggly](https://loggly.com) (free up to 250MB/day). You could check out logs [yourself](https://mcctemplateapp.loggly.com/) (credentials: mcc.template.app@gmail.com/dBAeFm7_y5mq3)
 1. React frontend
    1. CRA-based template
    1. API client autogeneration (including react-query hooks)

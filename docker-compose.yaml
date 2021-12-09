@@ -34,12 +34,10 @@ services:
       - Sentry__Dsn=${SENTRY_DSN}
       - REACT_APP_CLIENT_KEY=${WEB_CLIENT_KEY}
       - Swagger__ClientPublicKey=${WEB_CLIENT_KEY}
-      - IdentityServer__Clients__0__ClientSecrets__0__Value=${WEB_CLIENT_SECRET}
-      - IdentityServer__Clients__1__ClientSecrets__0__Value=${MOBILE_CLIENT_SECRET}
-      - Logging__Remote__Server=${LOGGING_SERVER}
-      - Logging__Remote__Port=${LOGGING_PORT}
-      - Logging__Remote__Token=${LOGGING_TOKEN}
-      - Logging__Remote__InstanceName=${LOGGING_INSTANCE}
+      - Serilog__Remote__Server=${LOGGING_SERVER}
+      - Serilog__Remote__Port=${LOGGING_PORT}
+      - Serilog__Remote__Token=${LOGGING_TOKEN}
+      - Serilog__Remote__InstanceName=${LOGGING_INSTANCE}
       - SignUrl__Secret=${SIGN_URL_SECRET}
 
   nginx-proxy:
