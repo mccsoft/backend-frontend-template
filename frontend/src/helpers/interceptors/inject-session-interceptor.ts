@@ -10,6 +10,8 @@ export const sessionId = `${createId()}-${createId()}-${createId()}`;
  */
 export const sessionAxiosInterceptor = (config: AxiosRequestConfig) => {
   config.headers = config.headers ?? {};
-  config.headers['session-id'] = `${sessionId}-${appVersion()}`;
+  config.headers['ClientSession'] = sessionId;
+  config.headers['ClientVersion'] = appVersion();
+  config.headers['ClientPlatform'] = 'web';
   return config;
 };

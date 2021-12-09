@@ -88,7 +88,8 @@ namespace MccSoft.TemplateApp.App
             IConfiguration configuration,
             IWebHostEnvironment webHostEnvironment,
             ILogger<Startup> logger
-        ) {
+        )
+        {
             _webHostEnvironment = webHostEnvironment;
             _logger = logger;
             Configuration = configuration;
@@ -133,7 +134,8 @@ namespace MccSoft.TemplateApp.App
 
             JsonConvert.DefaultSettings = () => SetupJson(new JsonSerializerSettings());
 
-            services.AddControllers(
+            services
+                .AddControllers(
                     opt =>
                     {
                         AddGlobalFilters(opt);
@@ -155,7 +157,8 @@ namespace MccSoft.TemplateApp.App
                     x.AddPolicy(
                         "mypolicy",
                         configurePolicy =>
-                            configurePolicy.AllowAnyHeader()
+                            configurePolicy
+                                .AllowAnyHeader()
                                 .AllowAnyMethod()
                                 .WithExposedHeaders("x-miniprofiler-ids")
                                 .SetIsOriginAllowed(hostName => true)
@@ -183,7 +186,8 @@ namespace MccSoft.TemplateApp.App
             IApplicationBuilder app,
             IHostApplicationLifetime appLifetime,
             IHostEnvironment hostEnvironment
-        ) {
+        )
+        {
             UseForwardedHeaders(app);
 
             app.UseCors("mypolicy");
@@ -198,7 +202,8 @@ namespace MccSoft.TemplateApp.App
             app.UseRequestLocalization(
                 options =>
                 {
-                    options.SupportedCultures = new[] { "en", "fr", "de" }.Select(
+                    options.SupportedCultures = new[] { "en", "fr", "de" }
+                        .Select(
                             lang =>
                                 new CultureInfo(lang)
                                 {
@@ -243,6 +248,18 @@ namespace MccSoft.TemplateApp.App
                             diagnosticContext.Set(
                                 "UserId",
                                 httpContext.User?.Identity?.GetClaimValueOrNull(JwtClaimTypes.Id)
+                            );
+                            diagnosticContext.Set(
+                                "ClientSession",
+                                httpContext.Request?.Headers["ClientSession"].ToString()
+                            );
+                            diagnosticContext.Set(
+                                "ClientVersion",
+                                httpContext.Request?.Headers["ClientVersion"].ToString()
+                            );
+                            diagnosticContext.Set(
+                                "ClientPlatform",
+                                httpContext.Request?.Headers["ClientPlatform"].ToString()
                             );
                         };
                     }
@@ -305,12 +322,14 @@ namespace MccSoft.TemplateApp.App
 
             ConfigureAudit(services);
 
-            services.AddScoped<IDateTimeProvider, DateTimeProvider>()
+            services
+                .AddScoped<IDateTimeProvider, DateTimeProvider>()
                 .AddTransient<IUserAccessor, UserAccessor>()
                 .AddScoped<DefaultUserSeeder>()
                 .AddScoped<ProductService>();
 
-            services.AddSingleton<Func<TemplateAppDbContext>>(
+            services
+                .AddSingleton<Func<TemplateAppDbContext>>(
                     provider =>
                         () =>
                             new TemplateAppDbContext(
@@ -334,10 +353,12 @@ namespace MccSoft.TemplateApp.App
 
             Audit.Core.Configuration.AuditDisabled = !typedSettings.Enabled;
 
-            Audit.Core.Configuration.Setup()
+            Audit.Core.Configuration
+                .Setup()
                 .UseEntityFramework(
                     config =>
-                        config.UseDbContext(
+                        config
+                            .UseDbContext(
                                 ev =>
                                 {
                                     // https://github.com/thepirat000/Audit.NET/issues/451
@@ -395,7 +416,8 @@ namespace MccSoft.TemplateApp.App
                             .IgnoreMatchedProperties(true)
                 );
 
-            Audit.EntityFramework.Configuration.Setup()
+            Audit.EntityFramework.Configuration
+                .Setup()
                 .ForContext<TemplateAppDbContext>(
                     config => config.ForEntity<User>(_ => _.Ignore(user => user.PasswordHash))
                 )
@@ -406,7 +428,8 @@ namespace MccSoft.TemplateApp.App
         {
             services.AddDomainEventsWithMediatR(typeof(Startup), typeof(LogDomainEventHandler));
 
-            services.AddEntityFrameworkNpgsql()
+            services
+                .AddEntityFrameworkNpgsql()
                 .AddDbContext<TemplateAppDbContext>(
                     (provider, opt) =>
                         opt.UseNpgsql(
@@ -503,7 +526,8 @@ namespace MccSoft.TemplateApp.App
         {
             services.AddHangfire(
                 config =>
-                    config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                    config
+                        .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
                         .UseSimpleAssemblyNameTypeSerializer()
                         .UseRecommendedSerializerSettings()
                         .UsePostgreSqlStorage(
@@ -566,7 +590,8 @@ namespace MccSoft.TemplateApp.App
                 return;
             }
 
-            var clientConfig = Configuration.GetSection("IdentityServer:Clients")
+            var clientConfig = Configuration
+                .GetSection("IdentityServer:Clients")
                 .Get<List<Client>>()
                 .First();
 
@@ -598,7 +623,8 @@ namespace MccSoft.TemplateApp.App
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-            services.AddDefaultIdentity<User>(
+            services
+                .AddDefaultIdentity<User>(
                     options =>
                     {
                         options.SignIn.RequireConfirmedAccount = false;
@@ -621,7 +647,8 @@ namespace MccSoft.TemplateApp.App
                 }
             );
             AddIdentityServerCertificate(identityServerBuilder);
-            identityServerBuilder.AddApiAuthorization<User, TemplateAppDbContext>(options => { })
+            identityServerBuilder
+                .AddApiAuthorization<User, TemplateAppDbContext>(options => { })
                 .AddInMemoryClients(Configuration.GetSection("IdentityServer:Clients"))
                 .AddExtensionGrantValidator<TemplateAppExternalAuthenticationGrantValidator>();
 
@@ -634,9 +661,8 @@ namespace MccSoft.TemplateApp.App
                         Configuration.GetSection("IdentityServer:ValidIssuers").Get<List<string>>()
                         ?? new List<string>();
                     options.TokenValidationParameters.ValidIssuers = validIssuers;
-                    options.TokenValidationParameters.ValidateIssuer = Configuration.GetSection(
-                            "IdentityServer:ValidateIssuer"
-                        )
+                    options.TokenValidationParameters.ValidateIssuer = Configuration
+                        .GetSection("IdentityServer:ValidateIssuer")
                         .Get<bool>();
                     var defaultHandler = options.Events.OnMessageReceived;
                     options.Events.OnMessageReceived = context =>
@@ -645,7 +671,8 @@ namespace MccSoft.TemplateApp.App
             );
 
             services.ConfigureExternalAuth();
-            services.AddAuthentication()
+            services
+                .AddAuthentication()
                 .AddOpenIdConnect(options => Configuration.Bind("AzureAd", options));
 
             services.AddTransient<IProfileService, AppProfileService>();
@@ -675,7 +702,8 @@ namespace MccSoft.TemplateApp.App
         private static Task HandleFirstMessage(
             MessageReceivedContext context,
             Func<MessageReceivedContext, Task> defaultHandler
-        ) {
+        )
+        {
             var accessToken = context.Request.Query["access_token"];
             var path = context.HttpContext.Request.Path;
             var isWebsocketRequest =
@@ -710,8 +738,10 @@ namespace MccSoft.TemplateApp.App
             if (
                 !string.IsNullOrEmpty(defaultUser.UserName)
                 && !string.IsNullOrEmpty(defaultUser.Password)
-            ) {
-                seeder.SeedUser(defaultUser.UserName, defaultUser.Password)
+            )
+            {
+                seeder
+                    .SeedUser(defaultUser.UserName, defaultUser.Password)
                     .GetAwaiter()
                     .GetResult();
             }
