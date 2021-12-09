@@ -61,7 +61,10 @@ namespace MccSoft.Logging
             loggerConfiguration.Destructure.JsonNetTypes()
                 .ReadFrom.Configuration(configuration)
                 .Enrich.FromLogContext()
-                .Enrich.WithProperty("MachineName", Environment.MachineName)
+                .Enrich.WithProperty(
+                    "InstanceName",
+                    remoteLoggerOption.InstanceName ?? Environment.MachineName
+                )
                 .Enrich.WithProperty("Version", entryAssemblyVersion);
 
             if (!string.IsNullOrEmpty(sentryDsn))
