@@ -9,6 +9,9 @@ namespace MccSoft.HttpClientExtension
     {
         public static string? GetClaimValueOrNull(this IIdentity identity, string claimType)
         {
+            if (identity == null)
+                return null;
+
             if (identity is ClaimsIdentity id)
             {
                 var claim = id.FindFirst(claimType);
