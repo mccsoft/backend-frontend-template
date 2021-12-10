@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Security.Principal;
 
-namespace MccSoft.TemplateApp.App.Services.Authentication
+namespace MccSoft.HttpClientExtension
 {
     public static class ClaimExtensions
     {

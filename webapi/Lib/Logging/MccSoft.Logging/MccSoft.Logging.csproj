@@ -7,11 +7,16 @@
 
   <ItemGroup>
     <PackageReference Include="Destructurama.JsonNet" Version="2.0.0" />
+    <PackageReference Include="IdentityModel" Version="5.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
     <PackageReference Include="Sentry.Serilog" Version="3.12.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
     <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.4.1" />
     <PackageReference Include="Serilog.Sinks.Loggly" Version="5.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\HttpClientExtension\MccSoft.HttpClientExtension\MccSoft.HttpClientExtension.csproj" />
   </ItemGroup>
 
 </Project>

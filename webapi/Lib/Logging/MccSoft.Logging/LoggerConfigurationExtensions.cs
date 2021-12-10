@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Reflection;
 using Destructurama;
+using IdentityModel;
+using MccSoft.HttpClientExtension;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -17,6 +20,46 @@ namespace MccSoft.Logging
 {
     public static class LoggerConfigurationExtensions
     {
+        public static void UseSerilog(
+            this IApplicationBuilder app,
+            IHostEnvironment hostingEnvironment
+        )
+        {
+            if (!hostingEnvironment.IsEnvironment("Test"))
+            {
+                app.UseSerilogRequestLogging(
+                    options =>
+                    {
+                        options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+                        {
+                            diagnosticContext.Set(
+                                "UserId",
+                                httpContext.User?.Identity?.GetClaimValueOrNull(JwtClaimTypes.Id)
+                            );
+                            diagnosticContext.Set(
+                                "ClientSession",
+                                httpContext.Request?.Headers["ClientSession"].ToString()
+                            );
+                            diagnosticContext.Set(
+                                "ClientVersion",
+                                httpContext.Request?.Headers["ClientVersion"].ToString()
+                            );
+                            diagnosticContext.Set(
+                                "ClientPlatform",
+                                httpContext.Request?.Headers["ClientPlatform"].ToString()
+                            );
+                            diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value);
+                            diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
+                            diagnosticContext.Set(
+                                "RemoteIpAddress",
+                                httpContext.Connection.RemoteIpAddress
+                            );
+                        };
+                    }
+                );
+            }
+        }
+
         /// <summary>
         /// Configures Serilog to use Elasticsearch, and enriches with default global log context.
         /// </summary>
@@ -29,9 +72,11 @@ namespace MccSoft.Logging
             IWebHostEnvironment hostingEnvironment,
             IConfiguration configuration,
             string fileLogDirectory = "logs"
-        ) {
+        )
+        {
             string sentryDsn = configuration.GetValue<string>("Sentry:Dsn");
-            RemoteLoggerOptions remoteLoggerOption = configuration.GetSection("Serilog:Remote")
+            RemoteLoggerOptions remoteLoggerOption = configuration
+                .GetSection("Serilog:Remote")
                 .Get<RemoteLoggerOptions>();
 
             // By default DateTime in messages is formatted as "10/25/2020 00:00:00", so we create a custom formatter.
@@ -58,7 +103,8 @@ namespace MccSoft.Logging
             string entryAssemblyVersion = entryAssembly?.Version?.ToString(fieldCount: 3) ?? "";
             string serviceName = entryAssembly?.Name ?? "backend";
 
-            loggerConfiguration.Destructure.JsonNetTypes()
+            loggerConfiguration.Destructure
+                .JsonNetTypes()
                 .ReadFrom.Configuration(configuration)
                 .Enrich.FromLogContext()
                 .Enrich.WithProperty(
@@ -130,7 +176,8 @@ namespace MccSoft.Logging
 
         private static LoggerConfiguration ExcludeEfInformation(
             this LoggerConfiguration loggerConfiguration
-        ) {
+        )
+        {
             return loggerConfiguration.Filter.ByExcluding(
                 le =>
                     le.Level == LogEventLevel.Information
@@ -140,7 +187,8 @@ namespace MccSoft.Logging
 
         private static LoggerConfiguration ExcludeValidationErrors(
             this LoggerConfiguration loggerConfiguration
-        ) {
+        )
+        {
             return loggerConfiguration.Filter.ByExcluding(
                 le => le.Exception is ValidationException || le.Exception is INoSentryException
             );

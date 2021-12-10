@@ -110,5 +110,6 @@
 
   <ItemGroup>
     <Folder Include="Dictionaries" />
+    <Folder Include="logs" />
   </ItemGroup>
 </Project>

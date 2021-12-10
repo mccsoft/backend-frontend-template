@@ -31,6 +31,7 @@ using MccSoft.TemplateApp.App.Utils.Localization;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Persistence;
 using MccSoft.DomainHelpers.DomainEvents.Events;
+using MccSoft.Logging;
 using MccSoft.LowLevelPrimitives;
 using MccSoft.Mailing;
 using MccSoft.PersistenceHelpers.DomainEvents;
@@ -238,33 +239,7 @@ namespace MccSoft.TemplateApp.App
 
             app.UseAuthorization();
 
-            if (!hostEnvironment.IsEnvironment("Test"))
-            {
-                app.UseSerilogRequestLogging(
-                    options =>
-                    {
-                        options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
-                        {
-                            diagnosticContext.Set(
-                                "UserId",
-                                httpContext.User?.Identity?.GetClaimValueOrNull(JwtClaimTypes.Id)
-                            );
-                            diagnosticContext.Set(
-                                "ClientSession",
-                                httpContext.Request?.Headers["ClientSession"].ToString()
-                            );
-                            diagnosticContext.Set(
-                                "ClientVersion",
-                                httpContext.Request?.Headers["ClientVersion"].ToString()
-                            );
-                            diagnosticContext.Set(
-                                "ClientPlatform",
-                                httpContext.Request?.Headers["ClientPlatform"].ToString()
-                            );
-                        };
-                    }
-                );
-            }
+            app.UseSerilog(hostEnvironment);
 
             app.UseEndpoints(
                 endpoints =>
