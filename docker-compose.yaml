@@ -32,8 +32,6 @@ services:
       - IdentityServer__Key__Base64Certificate=${IdentityServer_Base64Certificate}
       - REACT_APP_SENTRY_DSN=${SENTRY_DSN}
       - Sentry__Dsn=${SENTRY_DSN}
-      - REACT_APP_CLIENT_KEY=${WEB_CLIENT_KEY}
-      - Swagger__ClientPublicKey=${WEB_CLIENT_KEY}
       - Serilog__Remote__Server=${LOGGING_SERVER}
       - Serilog__Remote__Port=${LOGGING_PORT}
       - Serilog__Remote__Token=${LOGGING_TOKEN}
