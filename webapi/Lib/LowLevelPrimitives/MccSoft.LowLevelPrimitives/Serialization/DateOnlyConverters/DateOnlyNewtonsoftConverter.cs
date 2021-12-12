@@ -16,6 +16,10 @@ public class DateOnlyNewtonsoftConverter : JsonConverter<DateOnly>
         JsonSerializer serializer
     )
     {
+        var value = reader.Value;
+        if (value is DateTime dateTime)
+            return new DateOnly(dateTime.Date.Year, dateTime.Date.Month, dateTime.Date.Day);
+
         return DateOnly.ParseExact((string)reader.Value, DateFormat, CultureInfo.InvariantCulture);
     }
 

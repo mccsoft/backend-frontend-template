@@ -10,7 +10,7 @@ namespace MccSoft.TemplateApp.App.Tests
 {
     public class ProductServiceTests : AppServiceTestBase<ProductService>
     {
-        private readonly DateTimeProvider _time = new DateTimeProvider();
+        private readonly DateTimeProvider _time = new();
 
         public ProductServiceTests()
         {

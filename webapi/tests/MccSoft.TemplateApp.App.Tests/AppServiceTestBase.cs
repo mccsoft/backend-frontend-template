@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Threading;
 using Duende.IdentityServer.EntityFramework.Options;
 using Hangfire;
+using MccSoft.NpgSql;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Persistence;
 using MccSoft.Testing;
@@ -30,7 +31,8 @@ namespace MccSoft.TemplateApp.App.Tests
                         userAccessor,
                         Options.Create(new OperationalStoreOptions())
                     )
-            ) {
+            )
+        {
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
             WithDbContext(
@@ -41,6 +43,8 @@ namespace MccSoft.TemplateApp.App.Tests
                     _userAccessorMock.Setup(x => x.GetUserId()).Returns(_defaultUser.Id);
                 }
             );
+            PostgresSerialization.AdjustDateOnlySerialization();
+            Audit.Core.Configuration.AuditDisabled = true;
         }
 
         protected ServiceCollection CreateServiceCollection(TemplateAppDbContext db)

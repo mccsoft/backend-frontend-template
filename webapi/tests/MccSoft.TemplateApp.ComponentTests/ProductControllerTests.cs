@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -62,7 +63,7 @@ namespace MccSoft.TemplateApp.ComponentTests
 
             await _productClient.PatchAsync(
                 createdProduct.Id,
-                new PatchProductDto() { Title = "321" }
+                new PatchProductDto() { Title = "321", LastStockUpdatedAt = DateTimeOffset.UtcNow }
             );
 
             var result = await _productClient.GetAsync(createdProduct.Id);
