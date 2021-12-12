@@ -23,7 +23,8 @@ namespace MccSoft.TemplateApp.App.Features.Products
                 {
                     Id = product.Id,
                     Title = product.Title,
-                    ProductType = product.ProductType
+                    ProductType = product.ProductType,
+                    LastStockUpdatedAt = product.LastStockUpdatedAt,
                 };
 
         [InjectLambda]
@@ -42,7 +43,8 @@ namespace MccSoft.TemplateApp.App.Features.Products
                 {
                     Id = product.Id,
                     Title = product.Title,
-                    ProductType = product.ProductType
+                    ProductType = product.ProductType,
+                    LastStockUpdatedAt = product.LastStockUpdatedAt,
                 };
     }
 }

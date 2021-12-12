@@ -15,9 +15,12 @@ import { useSortBy, useTable } from 'react-table';
 import { QueryFactory } from 'services/api';
 import { ProductListItemDto } from 'services/api/api-client';
 import { StringParam, useQueryParams } from 'use-query-params';
+import { localFormat } from '../../../helpers/date-helpers';
+import { useScopedTranslation } from '../../../application/localization/useScopedTranslation';
 const styles = require('./ProductListPage.module.scss');
 
 export const ProductListPage: React.FC = () => {
+  const i18n = useScopedTranslation('Page.Products.list');
   const [queryParams, setQueryParams] = useQueryParams({
     search: StringParam,
     ...pagingSortingQueryParams(2),
@@ -37,14 +40,15 @@ export const ProductListPage: React.FC = () => {
             Cell: ({ row }) => (
               <div>
                 {row.original.id}. {row.original.title} (
-                {row.original.productType})
+                {row.original.productType}) -{' '}
+                {localFormat(row.original.lastStockUpdatedAt, 'P')}
               </div>
             ),
             width: 'auto',
-            Header: 'Title',
+            Header: i18n.t('column_title'),
           },
         ];
-      }, []),
+      }, [i18n.i18n.language]),
       manualSortBy: true,
       initialState: useMemo(
         () => ({

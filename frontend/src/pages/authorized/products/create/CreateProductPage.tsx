@@ -19,6 +19,7 @@ import {
 } from 'services/api/api-client';
 import { HookFormDropDownInput } from 'components/uikit/inputs/dropdown/HookFormDropDownInput';
 import { useNavigate } from 'react-router';
+import { HookFormDatePicker } from '../../../../components/uikit/inputs/date-time/HookFormDatePicker';
 
 export const CreateProductPage: React.FC = () => {
   const i18n = useScopedTranslation('Page.Products.Create');
@@ -59,6 +60,13 @@ export const CreateProductPage: React.FC = () => {
                 name={'productType'}
                 control={form.control}
                 errorText={form.formState.errors.productType?.message}
+              />
+            </Field>
+            <Field title={i18n.t('product_type')}>
+              <HookFormDatePicker
+                name={'lastStockUpdatedAt'}
+                control={form.control}
+                errorText={form.formState.errors.lastStockUpdatedAt?.message}
               />
             </Field>
             <FormError>{form.overallError}</FormError>

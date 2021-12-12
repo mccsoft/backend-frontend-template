@@ -10,7 +10,11 @@
       "Create": {
         "create_button": "Create",
         "title": "Title",
-        "product_type": "Product Type"
+        "product_type": "Product Type",
+        "lastStockUpdatedAt": "Last Stock Update"
+      },
+      "list": {
+        "column_title": "Title"
       }
     },
     "uikit": {

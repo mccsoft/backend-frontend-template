@@ -1,4 +1,5 @@
-﻿using MccSoft.DomainHelpers;
+﻿using System;
+using MccSoft.DomainHelpers;
 using MccSoft.DomainHelpers.DomainEvents.Events;
 using Microsoft.Extensions.Logging;
 
@@ -9,6 +10,8 @@ namespace MccSoft.TemplateApp.Domain
         private string _title;
         public int Id { get; set; }
         public ProductType ProductType { get; set; }
+
+        public DateOnly LastStockUpdatedAt { get; set; }
 
         public string Title
         {

@@ -23,12 +23,17 @@ namespace MccSoft.TemplateApp.App.Features.Products
 
         public async Task<ProductDto> Create(CreateProductDto dto)
         {
-            var productId = await _dbContext.Database.CreateExecutionStrategy()
+            var productId = await _dbContext.Database
+                .CreateExecutionStrategy()
                 .ExecuteAsync(
                     async () =>
                     {
                         await using var transaction = _dbContext.BeginTransaction();
-                        var product = new Product(dto.Title) { ProductType = dto.ProductType, };
+                        var product = new Product(dto.Title)
+                        {
+                            ProductType = dto.ProductType,
+                            LastStockUpdatedAt = dto.LastStockUpdatedAt
+                        };
                         _dbContext.Products.Add(product);
 
                         await _dbContext.SaveChangesAsync();
@@ -64,7 +69,8 @@ namespace MccSoft.TemplateApp.App.Features.Products
                 query = query.Where(x => x.ProductType == search.ProductType);
             }
 
-            return await query.Select(x => x.ToProductListItemDto())
+            return await query
+                .Select(x => x.ToProductListItemDto())
                 .ToPagingListAsync(search, nameof(ProductListItemDto.Id));
         }
 

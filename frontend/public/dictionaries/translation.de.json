@@ -1,3 +1,21 @@
 {
-  "Common_App": "TemplateApp Admin"
+  "Common_App": "TemplateApp Admin",
+  "Page": {
+    "Login": {
+      "login_field": "Login",
+      "password_field": "Password",
+      "login_button": "Login"
+    },
+    "Products": {
+      "Create": {
+        "create_button": "Hinzufugen",
+        "title": "Titel",
+        "product_type": "Typ",
+        "lastStockUpdatedAt": "Last Stock Update"
+      },
+      "list": {
+        "column_title": "Titel"
+      }
+    }
+  }
 }

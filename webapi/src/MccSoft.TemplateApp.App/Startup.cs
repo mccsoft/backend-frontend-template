@@ -33,6 +33,7 @@ using MccSoft.TemplateApp.Persistence;
 using MccSoft.DomainHelpers.DomainEvents.Events;
 using MccSoft.Logging;
 using MccSoft.LowLevelPrimitives;
+using MccSoft.LowLevelPrimitives.Serialization.DateOnlyConverters;
 using MccSoft.Mailing;
 using MccSoft.PersistenceHelpers.DomainEvents;
 using MccSoft.TemplateApp.App.Settings;
@@ -40,9 +41,8 @@ using MccSoft.TemplateApp.Domain.Audit;
 using MccSoft.WebApi;
 using MccSoft.WebApi.Patching;
 using MccSoft.WebApi.Sentry;
-using MccSoft.WebApi.Serialization.DateTime;
+using MccSoft.WebApi.Serialization;
 using MccSoft.WebApi.SignedUrl;
-using MediatR;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -117,40 +117,23 @@ namespace MccSoft.TemplateApp.App
             services.AddSignUrl(Configuration.GetSection("SignUrl").GetValue<string>("Secret"));
             services.AddMailing(Configuration.GetSection("Email"));
 
-            JsonSerializerSettings SetupJson(JsonSerializerSettings settings)
-            {
-                settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                settings.ContractResolver = new PatchRequestContractResolver
+            JsonConvert.DefaultSettings = () =>
+                JsonSerializerSetup.SetupJson(new JsonSerializerSettings());
+
+            services.AddControllers(
+                opt =>
                 {
-                    NamingStrategy = new CamelCaseNamingStrategy
-                    {
-                        ProcessDictionaryKeys = false,
-                        OverrideSpecifiedNames = false
-                    }
-                };
-                settings.Converters.Add(new StringEnumConverter());
-
-                return settings;
-            }
-
-            JsonConvert.DefaultSettings = () => SetupJson(new JsonSerializerSettings());
-
+                    AddGlobalFilters(opt);
+                }
+            );
             services
-                .AddControllers(
-                    opt =>
-                    {
-                        AddGlobalFilters(opt);
-                    }
-                )
-                .AddNewtonsoftJson(setupAction => SetupJson(setupAction.SerializerSettings))
+                .AddControllers()
                 .AddJsonOptions(
-                    options =>
-                    {
-                        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                    }
+                    options => options.JsonSerializerOptions.Converters.Add(new DateOnlyConverter())
+                )
+                .AddNewtonsoftJson(
+                    setupAction => JsonSerializerSetup.SetupJson(setupAction.SerializerSettings)
                 );
-
-            services.AddIgnoreTimezoneAttributes();
 
             // ToDo this should be properly configured for Cloud scenario
             services.AddCors(
@@ -417,6 +400,7 @@ namespace MccSoft.TemplateApp.App
                     optionsLifetime: ServiceLifetime.Singleton
                 );
             AddHangfire(services, Configuration.GetConnectionString("DefaultConnection"));
+            PostgresSerialization.AdjustDateOnlySerialization();
         }
 
         protected virtual void AddSwagger(IServiceCollection services)

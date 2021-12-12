@@ -1881,6 +1881,7 @@ export class ProductDto implements IProductDto {
   id!: number;
   title!: string;
   productType!: ProductType;
+  lastStockUpdatedAt!: Date;
 
   constructor(data?: IProductDto) {
     if (data) {
@@ -1896,6 +1897,9 @@ export class ProductDto implements IProductDto {
       this.id = _data['id'];
       this.title = _data['title'];
       this.productType = _data['productType'];
+      this.lastStockUpdatedAt = _data['lastStockUpdatedAt']
+        ? new Date(_data['lastStockUpdatedAt'].toString())
+        : <any>undefined;
     }
   }
 
@@ -1911,6 +1915,9 @@ export class ProductDto implements IProductDto {
     data['id'] = this.id;
     data['title'] = this.title;
     data['productType'] = this.productType;
+    data['lastStockUpdatedAt'] = this.lastStockUpdatedAt
+      ? formatDate(this.lastStockUpdatedAt)
+      : <any>undefined;
     return data;
   }
 }
@@ -1919,6 +1926,7 @@ export interface IProductDto {
   id: number;
   title: string;
   productType: ProductType;
+  lastStockUpdatedAt: Date;
 }
 
 export enum ProductType {
@@ -1931,6 +1939,7 @@ export enum ProductType {
 export class CreateProductDto implements ICreateProductDto {
   title!: string;
   productType!: ProductType;
+  lastStockUpdatedAt!: Date;
 
   constructor(data?: ICreateProductDto) {
     if (data) {
@@ -1945,6 +1954,9 @@ export class CreateProductDto implements ICreateProductDto {
     if (_data) {
       this.title = _data['title'];
       this.productType = _data['productType'];
+      this.lastStockUpdatedAt = _data['lastStockUpdatedAt']
+        ? new Date(_data['lastStockUpdatedAt'].toString())
+        : <any>undefined;
     }
   }
 
@@ -1959,6 +1971,9 @@ export class CreateProductDto implements ICreateProductDto {
     data = typeof data === 'object' ? data : {};
     data['title'] = this.title;
     data['productType'] = this.productType;
+    data['lastStockUpdatedAt'] = this.lastStockUpdatedAt
+      ? formatDate(this.lastStockUpdatedAt)
+      : <any>undefined;
     return data;
   }
 }
@@ -1966,11 +1981,14 @@ export class CreateProductDto implements ICreateProductDto {
 export interface ICreateProductDto {
   title: string;
   productType: ProductType;
+  lastStockUpdatedAt: Date;
 }
 
 export class PatchProductDto implements IPatchProductDto {
   title?: string;
   productType?: ProductType;
+  /** We don't care about the time and only store the date here */
+  lastStockUpdatedAt?: Date;
 
   constructor(data?: IPatchProductDto) {
     if (data) {
@@ -1985,6 +2003,9 @@ export class PatchProductDto implements IPatchProductDto {
     if (_data) {
       this.title = _data['title'];
       this.productType = _data['productType'];
+      this.lastStockUpdatedAt = _data['lastStockUpdatedAt']
+        ? new Date(_data['lastStockUpdatedAt'].toString())
+        : <any>undefined;
     }
   }
 
@@ -1999,6 +2020,9 @@ export class PatchProductDto implements IPatchProductDto {
     data = typeof data === 'object' ? data : {};
     data['title'] = this.title;
     data['productType'] = this.productType;
+    data['lastStockUpdatedAt'] = this.lastStockUpdatedAt
+      ? this.lastStockUpdatedAt.toISOString()
+      : this.lastStockUpdatedAt;
     return data;
   }
 }
@@ -2006,6 +2030,8 @@ export class PatchProductDto implements IPatchProductDto {
 export interface IPatchProductDto {
   title?: string;
   productType?: ProductType;
+  /** We don't care about the time and only store the date here */
+  lastStockUpdatedAt?: Date;
 }
 
 export class PagedResultOfProductListItemDto
@@ -2064,6 +2090,7 @@ export class ProductListItemDto implements IProductListItemDto {
   id!: number;
   title!: string;
   productType!: ProductType;
+  lastStockUpdatedAt!: Date;
 
   constructor(data?: IProductListItemDto) {
     if (data) {
@@ -2079,6 +2106,9 @@ export class ProductListItemDto implements IProductListItemDto {
       this.id = _data['id'];
       this.title = _data['title'];
       this.productType = _data['productType'];
+      this.lastStockUpdatedAt = _data['lastStockUpdatedAt']
+        ? new Date(_data['lastStockUpdatedAt'].toString())
+        : <any>undefined;
     }
   }
 
@@ -2094,6 +2124,9 @@ export class ProductListItemDto implements IProductListItemDto {
     data['id'] = this.id;
     data['title'] = this.title;
     data['productType'] = this.productType;
+    data['lastStockUpdatedAt'] = this.lastStockUpdatedAt
+      ? formatDate(this.lastStockUpdatedAt)
+      : <any>undefined;
     return data;
   }
 }
@@ -2102,6 +2135,7 @@ export interface IProductListItemDto {
   id: number;
   title: string;
   productType: ProductType;
+  lastStockUpdatedAt: Date;
 }
 
 export enum SortOrder {
@@ -2143,6 +2177,16 @@ export class TestPatchDto implements ITestPatchDto {
 
 export interface ITestPatchDto {
   value: string;
+}
+
+function formatDate(d: Date) {
+  return (
+    d.getFullYear() +
+    '-' +
+    (d.getMonth() < 9 ? '0' + (d.getMonth() + 1) : d.getMonth() + 1) +
+    '-' +
+    (d.getDate() < 10 ? '0' + d.getDate() : d.getDate())
+  );
 }
 
 export class ApiException extends Error {

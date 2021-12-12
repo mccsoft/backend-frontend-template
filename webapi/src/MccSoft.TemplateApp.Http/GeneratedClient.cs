@@ -2166,6 +2166,11 @@ namespace MccSoft.TemplateApp.Http.Generated
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ProductType ProductType { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("lastStockUpdatedAt", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
+        public System.DateTimeOffset LastStockUpdatedAt { get; set; }
+    
     
     }
     
@@ -2199,6 +2204,11 @@ namespace MccSoft.TemplateApp.Http.Generated
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ProductType ProductType { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("lastStockUpdatedAt", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
+        public System.DateTimeOffset LastStockUpdatedAt { get; set; }
+    
     
     }
     
@@ -2212,6 +2222,10 @@ namespace MccSoft.TemplateApp.Http.Generated
         [Newtonsoft.Json.JsonProperty("productType", Required = Newtonsoft.Json.Required.DisallowNull )]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ProductType ProductType { get; set; }
+    
+        /// <summary>We don't care about the time and only store the date here</summary>
+        [Newtonsoft.Json.JsonProperty("lastStockUpdatedAt", Required = Newtonsoft.Json.Required.DisallowNull )]
+        public System.DateTimeOffset LastStockUpdatedAt { get; set; }
     
     
     }
@@ -2244,6 +2258,11 @@ namespace MccSoft.TemplateApp.Http.Generated
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ProductType ProductType { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("lastStockUpdatedAt", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
+        public System.DateTimeOffset LastStockUpdatedAt { get; set; }
+    
     
     }
     
@@ -2266,6 +2285,15 @@ namespace MccSoft.TemplateApp.Http.Generated
         public string Value { get; set; }
     
     
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.11.3.0 (NJsonSchema v10.4.4.0 (Newtonsoft.Json v12.0.0.0))")]
+    internal class DateFormatConverter : Newtonsoft.Json.Converters.IsoDateTimeConverter
+    {
+        public DateFormatConverter()
+        {
+            DateTimeFormat = "yyyy-MM-dd";
+        }
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.11.3.0 (NJsonSchema v10.4.4.0 (Newtonsoft.Json v12.0.0.0))")]
