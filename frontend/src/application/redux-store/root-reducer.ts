@@ -7,7 +7,7 @@ const combinedReducer: Reducer<CombinedState<GlobalState>> = combineReducers({
   theme: themeSlice.reducer,
 });
 
-export const logoutAction = createAction('asd');
+export const logoutAction = createAction('logout');
 
 export const rootReducer: Reducer<CombinedState<GlobalState>> = (
   state,
