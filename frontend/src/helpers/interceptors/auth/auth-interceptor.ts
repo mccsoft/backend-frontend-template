@@ -37,6 +37,7 @@ function setAuthDataInternal(data: AuthData | null) {
   });
   if (data === null) {
     _onLogout?.();
+    _logoutHandler();
   }
 }
 
@@ -54,7 +55,7 @@ let _onLogout: (() => void) | undefined;
 export function setupAuthInterceptor(
   axios: AxiosInstance,
   refreshAuthCall: (authData: AuthData) => Promise<AuthData>,
-  onLogout: () => void,
+  onLogout?: () => void,
 ) {
   _onLogout = onLogout;
   window.addEventListener('storage', (e) => {
