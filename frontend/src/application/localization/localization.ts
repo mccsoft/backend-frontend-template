@@ -27,7 +27,7 @@ export function initializeLocalization() {
       //saveMissing: process.env.NODE_ENV !== 'production',
       lowerCaseLng: true,
       initImmediate: true,
-      debug: true,
+      debug: false,
       supportedLngs: languages,
       interpolation: {
         escapeValue: false, // react already safes from xss

@@ -8,6 +8,6 @@ export const persistConfig: PersistConfig<any> = {
   key: 'root',
   version: 0,
   storage: storage,
-  whitelist: ['auth'] as (keyof GlobalState)[],
+  whitelist: ['theme'] as (keyof GlobalState)[],
   migrate: createMigrate(migrations, { debug: false }),
 };

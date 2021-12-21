@@ -1,31 +1,21 @@
 import { combineReducers } from 'redux';
 import { GlobalState } from './types';
-import { AuthActions, authSlice } from './auth/auth-reducer';
-import { CombinedState, Reducer } from '@reduxjs/toolkit';
+import { themeSlice } from 'application/redux-store/theme/theme-slice';
+import { CombinedState, createAction, Reducer } from '@reduxjs/toolkit';
 
 const combinedReducer: Reducer<CombinedState<GlobalState>> = combineReducers({
-  auth: authSlice.reducer,
+  theme: themeSlice.reducer,
 });
+
+export const logoutAction = createAction('asd');
 
 export const rootReducer: Reducer<CombinedState<GlobalState>> = (
   state,
   action,
 ) => {
-  if (action.type === AuthActions.logoutAction.type) {
-    _logoutHandler();
+  if (action.type === logoutAction.type) {
     state = undefined;
   }
 
   return combinedReducer(state, action);
 };
-let _logoutHandler = () => {
-  /* no action by default */
-};
-
-export function addLogoutHandler(handler: () => void) {
-  const oldLogoutHandler = _logoutHandler;
-  _logoutHandler = () => {
-    oldLogoutHandler();
-    handler();
-  };
-}

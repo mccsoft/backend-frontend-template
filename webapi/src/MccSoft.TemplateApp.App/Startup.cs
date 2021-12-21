@@ -619,6 +619,7 @@ namespace MccSoft.TemplateApp.App
                     var validIssuers =
                         Configuration.GetSection("IdentityServer:ValidIssuers").Get<List<string>>()
                         ?? new List<string>();
+                    options.TokenValidationParameters.ClockSkew = TimeSpan.Zero;
                     options.TokenValidationParameters.ValidIssuers = validIssuers;
                     options.TokenValidationParameters.ValidateIssuer = Configuration
                         .GetSection("IdentityServer:ValidateIssuer")

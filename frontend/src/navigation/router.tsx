@@ -1,5 +1,4 @@
 import { appVersion } from 'application/constants/env-variables';
-import { useIsAuthorized } from 'application/redux-store/auth/auth-selectors';
 import { QuerySuspenseErrorWrapper } from 'helpers/retry-helper';
 import { RootPage } from 'pages/authorized/RootPage';
 import { LoginPage } from 'pages/unauthorized/login/LoginPage';
@@ -7,6 +6,10 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { QueryParamProvider } from 'use-query-params';
 import { RouteAdapter } from './RouteAdapter';
+import {
+  useAuth,
+  useIsAuthorized,
+} from '../helpers/interceptors/auth/auth-interceptor';
 
 export const AppRouter = () => {
   const isAuth = useIsAuthorized();
@@ -15,7 +18,7 @@ export const AppRouter = () => {
     <BrowserRouter>
       <QueryParamProvider ReactRouterRoute={RouteAdapter}>
         <QuerySuspenseErrorWrapper>
-          {isAuth ? (
+          {!!isAuth ? (
             <RootPage />
           ) : (
             <>

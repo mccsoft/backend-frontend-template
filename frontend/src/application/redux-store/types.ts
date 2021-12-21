@@ -1,5 +1,5 @@
-import { AuthState } from './auth/auth-types';
+import { ThemeState } from './theme/theme-types';
 
 export type GlobalState = {
-  auth: AuthState;
+  theme: ThemeState;
 };

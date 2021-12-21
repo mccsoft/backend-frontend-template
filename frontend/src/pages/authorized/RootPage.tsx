@@ -1,6 +1,5 @@
 import { appVersion } from 'application/constants/env-variables';
 import { Links } from 'application/constants/links';
-import { AuthActions } from 'application/redux-store/auth/auth-reducer';
 import { useAppDispatch } from 'application/redux-store/root-store';
 import { Button } from 'components/uikit/buttons/Button';
 import { CreateProductPage } from 'pages/authorized/products/create/CreateProductPage';
@@ -15,6 +14,7 @@ import {
 } from '../../application/localization/localization';
 import { Language, languages } from '../../application/localization/locales';
 import { useTranslation } from 'react-i18next';
+import { setAuthData } from '../../helpers/interceptors/auth/auth-interceptor';
 const styles = require('./RootPage.module.scss');
 
 export const RootPage: React.FC = () => {
@@ -56,7 +56,7 @@ export const RootPage: React.FC = () => {
           <div className={styles.logOutWrapper}>
             <Button
               onClick={() => {
-                dispatch(AuthActions.logoutAction());
+                setAuthData(null);
               }}
               title={'Log Out'}
             />

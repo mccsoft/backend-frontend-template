@@ -4,14 +4,9 @@ import React, { useMemo } from 'react';
 import { Provider } from 'react-redux';
 import { LanguageProvider } from './application/localization/LanguageProvider';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { addLogoutHandler } from './application/redux-store/root-reducer';
 import { PersistGate } from 'redux-persist/integration/react';
 import { AppRouter } from 'navigation/router';
 import axios from 'axios';
-import {
-  injectTokenInterceptor,
-  setupRefreshTokenInterceptor,
-} from './helpers/interceptors/auth-interceptors';
 import { QueryFactory } from './services/api';
 import * as Sentry from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
@@ -19,14 +14,24 @@ import { Suspense } from 'react';
 import { RootStore } from './application/redux-store';
 import { sessionAxiosInterceptor } from './helpers/interceptors/inject-session-interceptor';
 import { injectLanguageInterceptor } from './helpers/interceptors/inject-language-interceptor';
+import {
+  addLogoutHandler,
+  setupAuthInterceptor,
+} from './helpers/interceptors/auth/auth-interceptor';
+import { sendRefreshTokenRequest } from './services/auth-client';
+import { logoutAction } from './application/redux-store/root-reducer';
 
 QueryFactory.setAxiosFactory(() => axios);
-setupRefreshTokenInterceptor(
-  RootStore.store.getState,
-  RootStore.store.dispatch,
-);
-axios.interceptors.request.use(
-  injectTokenInterceptor(RootStore.store.getState),
+
+setupAuthInterceptor(
+  axios,
+  async (authData) => {
+    const result = await sendRefreshTokenRequest(authData.refresh_token);
+    return result;
+  },
+  () => {
+    RootStore.store.dispatch(logoutAction);
+  },
 );
 axios.interceptors.request.use(injectLanguageInterceptor);
 axios.interceptors.request.use(sessionAxiosInterceptor);

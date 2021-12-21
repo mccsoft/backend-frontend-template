@@ -1,6 +1,4 @@
 import { useScopedTranslation } from 'application/localization/useScopedTranslation';
-import { AuthActions } from 'application/redux-store/auth/auth-reducer';
-import { useAppDispatch } from 'application/redux-store/root-store';
 import { Button } from 'components/uikit/buttons/Button';
 import { Field } from 'components/uikit/Field';
 import { FormError } from 'components/uikit/FormError';
@@ -12,6 +10,7 @@ import Logger from 'js-logger';
 import React, { useCallback } from 'react';
 import { sendLoginRequest } from 'services/auth-client';
 import Grid from '@material-ui/core/Grid';
+import { setAuthData } from '../../../helpers/interceptors/auth/auth-interceptor';
 
 type LoginForm = {
   login: string;
@@ -19,12 +18,11 @@ type LoginForm = {
 };
 
 export const LoginPage: React.FC = () => {
-  const dispatch = useAppDispatch();
   const i18n = useScopedTranslation('Page.Login');
   const form = useAdvancedForm<LoginForm>(
     useCallback(async (data) => {
       const response = await sendLoginRequest(data.login, data.password);
-      dispatch(AuthActions.loginAction(response));
+      setAuthData(response);
       Logger.info('Logged in successfully');
     }, []),
   );
