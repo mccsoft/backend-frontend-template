@@ -10,6 +10,7 @@
  * - use useIsAuthorized or useAuth hooks to get auth data.
  */
 import { AxiosInstance, AxiosRequestConfig } from 'axios';
+import Axios from 'axios';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
 import { AuthData } from './auth-data';
 import SuperTokensLock from 'browser-tabs-lock';
@@ -77,7 +78,13 @@ export function setupAuthInterceptor(
       const authData = await refreshAuthCall(_authData);
       setAuthData(authData);
     } catch (e) {
-      setAuthData(null);
+      if (Axios.isAxiosError(e)) {
+        if (e.response?.status === 400) {
+          setAuthData(null);
+        }
+      }
+
+      throw e;
     } finally {
       await refreshTokenLock.releaseLock(lockKey);
     }

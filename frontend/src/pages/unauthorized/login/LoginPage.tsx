@@ -8,7 +8,7 @@ import { useAdvancedForm } from 'helpers/form/useAdvancedForm';
 import { requiredRule } from 'helpers/form/react-hook-form-helper';
 import Logger from 'js-logger';
 import React, { useCallback } from 'react';
-import { sendLoginRequest } from 'services/auth-client';
+import { handleLoginErrors, sendLoginRequest } from 'services/auth-client';
 import Grid from '@material-ui/core/Grid';
 import { setAuthData } from '../../../helpers/interceptors/auth/auth-interceptor';
 
@@ -21,9 +21,13 @@ export const LoginPage: React.FC = () => {
   const i18n = useScopedTranslation('Page.Login');
   const form = useAdvancedForm<LoginForm>(
     useCallback(async (data) => {
-      const response = await sendLoginRequest(data.login, data.password);
-      setAuthData(response);
-      Logger.info('Logged in successfully');
+      try {
+        const response = await sendLoginRequest(data.login, data.password);
+        setAuthData(response);
+        Logger.info('Logged in successfully');
+      } catch (e) {
+        handleLoginErrors(e);
+      }
     }, []),
   );
   return (

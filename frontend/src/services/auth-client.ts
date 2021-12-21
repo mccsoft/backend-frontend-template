@@ -88,26 +88,32 @@ export const fetchTokenEndpoint = async (
     client_secret: clientKey,
   };
 
-  try {
-    const response: AxiosResponse = await axios.post(
-      `${backendUri}${urlPath}`,
-      queryString.stringify(bodyToSend),
-      {
-        headers: {
-          Authorization: `Basic ${Base64.btoa(`${clientId}:${clientKey}`)}`,
-        },
+  const response: AxiosResponse = await axios.post(
+    `${backendUri}${urlPath}`,
+    queryString.stringify(bodyToSend),
+    {
+      headers: {
+        Authorization: `Basic ${Base64.btoa(`${clientId}:${clientKey}`)}`,
+      },
 
-        skipAuthRefresh: true, // taken from https://github.com/Flyrell/axios-auth-refresh/
-      } as AxiosAuthRefreshRequestConfig,
-    );
+      skipAuthRefresh: true, // taken from https://github.com/Flyrell/axios-auth-refresh/
+    } as AxiosAuthRefreshRequestConfig,
+  );
 
-    const accessToken = response.data.access_token;
-    const claims = decodeClaimsFromToken(accessToken);
-    return {
-      ...response.data,
-      claims,
-    } as FetchLoginResponse;
-  } catch (e: any) {
+  const accessToken = response.data.access_token;
+  const claims = decodeClaimsFromToken(accessToken);
+  return {
+    ...response.data,
+    claims,
+  } as FetchLoginResponse;
+};
+export function decodeClaimsFromToken(token: string): UserClaims {
+  const claims = JwtDecode<UserClaims>(token);
+  return claims;
+}
+
+export function handleLoginErrors(e: unknown): never {
+  if (axios.isAxiosError(e)) {
     const response = e.response;
     if (response?.status === 400) {
       if (response.data?.error === 'invalid_grant') {
@@ -120,11 +126,7 @@ export const fetchTokenEndpoint = async (
         }
       }
     }
-
-    throw new Error('Login_Unknown_Failure');
   }
-};
-export function decodeClaimsFromToken(token: string): UserClaims {
-  const claims = JwtDecode<UserClaims>(token);
-  return claims;
+
+  throw new Error('Login_Unknown_Failure');
 }
