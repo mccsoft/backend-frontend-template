@@ -1,12 +1,13 @@
 /*
- * This file provides access/refresh token synchronization between browser tabs.
- * Using `createAuthRefreshInterceptor` you might be logged out when 2 browser tabs try to
+ * This file provides access/refresh token synchronization between browser tabs (and injecting into axios).
+ * It fixes the issue of `createAuthRefreshInterceptor` that you might be logged out when 2 browser tabs try to
  * refresh token at the same time.
  * That could happen, if you close the browser with several tabs and reopen it when Access Token expires.
  *
  * Usage:
- * - call setupAuthInterceptor(axios, () => {  refresh_token_logic_goes_here }
- * - when user is logged-in/logged-out call saveAuthData(authData or null)
+ * - call setupAuthInterceptor(axios, () => {  refresh_token_logic_goes_here }, () => { your_log_out_logic_here })
+ * - when user is logged-in/logged-out call setAuthData(authData or null)
+ * - use useIsAuthorized or useAuth hooks to get auth data.
  */
 import { AxiosInstance, AxiosRequestConfig } from 'axios';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
