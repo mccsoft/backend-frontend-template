@@ -88,17 +88,15 @@ export const fetchTokenEndpoint = async (
     client_secret: clientKey,
   };
 
-  const response: AxiosResponse = await axios.post(
-    `${backendUri}${urlPath}`,
-    queryString.stringify(bodyToSend),
-    {
+  const response: AxiosResponse = await axios
+    .create()
+    .post(`${backendUri}${urlPath}`, queryString.stringify(bodyToSend), {
       headers: {
         Authorization: `Basic ${Base64.btoa(`${clientId}:${clientKey}`)}`,
       },
 
       skipAuthRefresh: true, // taken from https://github.com/Flyrell/axios-auth-refresh/
-    } as AxiosAuthRefreshRequestConfig,
-  );
+    } as AxiosAuthRefreshRequestConfig);
 
   const accessToken = response.data.access_token;
   const claims = decodeClaimsFromToken(accessToken);
