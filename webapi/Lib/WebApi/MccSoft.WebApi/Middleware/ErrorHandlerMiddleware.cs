@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using MccSoft.LowLevelPrimitives;
 using MccSoft.LowLevelPrimitives.Exceptions;
+using MccSoft.WebApi.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog.Context;
 
 namespace MccSoft.WebApi.Middleware
 {
@@ -27,7 +29,8 @@ namespace MccSoft.WebApi.Middleware
             RequestDelegate next,
             ILogger<ErrorHandlerMiddleware> logger,
             IWebHostEnvironment env
-        ) {
+        )
+        {
             _next = next;
             _logger = logger;
             _env = env;
@@ -37,6 +40,7 @@ namespace MccSoft.WebApi.Middleware
         {
             try
             {
+                httpContext.Request.EnableBuffering();
                 await _next(httpContext);
             }
             catch (Exception ex) when (ex is IWebApiException wae)
@@ -58,6 +62,8 @@ namespace MccSoft.WebApi.Middleware
 
         private async Task ProcessException(HttpContext httpContext, Exception ex)
         {
+            LogContext.PushProperty("Request body", httpContext.Request.ReadAll());
+
             _logger.LogError($"An unhandled exception has occurred: {ex}");
             string detail = _env.IsProduction() ? null : ex.ToString();
             var details = new ProblemDetails
@@ -79,7 +85,8 @@ namespace MccSoft.WebApi.Middleware
             HttpContext httpContext,
             Exception ex,
             IActionResult result
-        ) {
+        )
+        {
             _logger.LogWarning($"{ex.GetType().Name}: {ex.Message}");
             await ExecuteResult(httpContext, result);
         }

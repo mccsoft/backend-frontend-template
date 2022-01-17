@@ -124,6 +124,7 @@ namespace MccSoft.Logging
                                     s.MinimumBreadcrumbLevel = LogEventLevel.Debug;
                                     s.MinimumEventLevel = LogEventLevel.Error;
                                     s.Dsn = sentryDsn;
+                                    s.AttachStacktrace = true;
                                 }
                             )
                 );
