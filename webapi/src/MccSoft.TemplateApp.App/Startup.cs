@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Audit.Core;
 using Duende.IdentityServer.EntityFramework.Options;
@@ -20,7 +19,6 @@ using Hangfire.PostgreSql;
 using I18Next.Net.Backends;
 using I18Next.Net.Extensions;
 using I18Next.Net.Plugins;
-using IdentityModel;
 using IdentityOAuthSpaExtensions;
 using MccSoft.TemplateApp.App.Features.Products;
 using MccSoft.NpgSql;
@@ -62,15 +60,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
+using Microsoft.Net.Http.Headers;
 using NeinLinq;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
 using Npgsql;
 using NSwag;
 using NSwag.AspNetCore;
 using NSwag.Generation.Processors.Security;
-using Serilog;
 
 [assembly: ApiController]
 [assembly: InternalsVisibleTo("MccSoft.TemplateApp.App.Tests")]
@@ -235,6 +231,20 @@ namespace MccSoft.TemplateApp.App
                 spa =>
                 {
                     spa.Options.SourcePath = "wwwroot";
+                    // https://github.com/dotnet/aspnetcore/issues/3147#issuecomment-435617378
+                    spa.Options.DefaultPageStaticFileOptions = new StaticFileOptions()
+                    {
+                        OnPrepareResponse = ctx =>
+                        {
+                            // Do not cache implicit `/index.html`
+                            var headers = ctx.Context.Response.GetTypedHeaders();
+                            headers.CacheControl = new CacheControlHeaderValue
+                            {
+                                Public = true,
+                                MaxAge = TimeSpan.FromDays(0)
+                            };
+                        }
+                    };
 
                     if (hostEnvironment.IsDevelopment())
                     {
