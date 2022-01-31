@@ -3,3 +3,8 @@
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
+
+if (process.env.NODE_ENV?.includes('debug')) {
+  // set loooong timeout in debug (so that it doesn't timeout with breakpoints set)
+  jest.setTimeout(10000000);
+}
