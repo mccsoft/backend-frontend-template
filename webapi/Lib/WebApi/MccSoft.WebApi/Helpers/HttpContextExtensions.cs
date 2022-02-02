@@ -7,12 +7,12 @@ namespace MccSoft.WebApi.Helpers
 {
     public static class HttpContextExtensions
     {
-        public static string ReadAll(this HttpRequest request)
+        public static async Task<string> ReadAll(this HttpRequest request)
         {
-            var buffer = request.Body.ToArray();
+            var buffer = await request.Body.ToArray();
             string requestBody = Encoding.UTF8.GetString(buffer);
             request.Body.Seek(0, SeekOrigin.Begin);
-            
+
             return requestBody;
         }
     }

@@ -62,7 +62,8 @@ namespace MccSoft.WebApi.Middleware
 
         private async Task ProcessException(HttpContext httpContext, Exception ex)
         {
-            LogContext.PushProperty("Request body", httpContext.Request.ReadAll());
+            string body = await httpContext.Request.ReadAll();
+            LogContext.PushProperty("Request body", body);
 
             _logger.LogError($"An unhandled exception has occurred: {ex}");
             string detail = _env.IsProduction() ? null : ex.ToString();
