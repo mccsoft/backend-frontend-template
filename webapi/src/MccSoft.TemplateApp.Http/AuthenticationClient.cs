@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MccSoft.TemplateApp.Http
 {
-    public class IdentityServerClient
+    public class AuthenticationClient
     {
         private readonly HttpClient _client;
 
@@ -18,7 +18,7 @@ namespace MccSoft.TemplateApp.Http
         private const string MobileClientId = "mobile-client";
         private const string MobileClientSecret = "DPdzNcy2vcV960RVITfTCEujmdXTehOPRqHOU4Q6fU4=";
 
-        public IdentityServerClient(HttpClient client)
+        public AuthenticationClient(HttpClient client)
         {
             _client = client;
         }

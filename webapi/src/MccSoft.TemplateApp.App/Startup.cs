@@ -3,16 +3,10 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Audit.Core;
-using Duende.IdentityServer.EntityFramework.Options;
-using Duende.IdentityServer.Models;
-using Duende.IdentityServer.Services;
-using Duende.IdentityServer.Validation;
 using Hangfire;
 using Hangfire.Dashboard.BasicAuthorization;
 using Hangfire.PostgreSql;
@@ -37,13 +31,12 @@ using MccSoft.PersistenceHelpers.DomainEvents;
 using MccSoft.TemplateApp.App.Settings;
 using MccSoft.TemplateApp.Domain.Audit;
 using MccSoft.WebApi;
+using MccSoft.WebApi.Authentication;
 using MccSoft.WebApi.Patching;
 using MccSoft.WebApi.Sentry;
 using MccSoft.WebApi.Serialization;
 using MccSoft.WebApi.SignedUrl;
-using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -67,6 +60,8 @@ using Npgsql;
 using NSwag;
 using NSwag.AspNetCore;
 using NSwag.Generation.Processors.Security;
+using OpenIddict.Abstractions;
+using OpenIddict.Validation.AspNetCore;
 
 [assembly: ApiController]
 [assembly: InternalsVisibleTo("MccSoft.TemplateApp.App.Tests")]
@@ -208,7 +203,7 @@ namespace MccSoft.TemplateApp.App
 
             app.UseAuthentication();
             UseSignOutLockedUser(app);
-            app.UseIdentityServer();
+
             if (hostEnvironment.IsDevelopment())
             {
                 IdentityModelEventSource.ShowPII = true;
@@ -304,8 +299,7 @@ namespace MccSoft.TemplateApp.App
                                 provider.GetRequiredService<
                                     DbContextOptions<TemplateAppDbContext>
                                 >(),
-                                provider.GetRequiredService<IUserAccessor>(),
-                                provider.GetRequiredService<IOptions<OperationalStoreOptions>>()
+                                provider.GetRequiredService<IUserAccessor>()
                             )
                 )
                 .RegisterRetryHelper();
@@ -343,8 +337,7 @@ namespace MccSoft.TemplateApp.App
                                         new DbContextOptionsBuilder<TemplateAppDbContext>().UseNpgsql(
                                             conn
                                         ).Options,
-                                        dbContext.UserAccessor,
-                                        dbContext.OperationalStoreOptions
+                                        dbContext.UserAccessor
                                     );
                                     if (tran != null)
                                     {
@@ -400,15 +393,19 @@ namespace MccSoft.TemplateApp.App
                 .AddEntityFrameworkNpgsql()
                 .AddDbContext<TemplateAppDbContext>(
                     (provider, opt) =>
+                    {
                         opt.UseNpgsql(
                                 Configuration.GetConnectionString("DefaultConnection"),
                                 builder => builder.EnableRetryOnFailure()
                             )
                             .WithLambdaInjection()
-                            .AddDomainEventsInterceptors(provider),
+                            .AddDomainEventsInterceptors(provider);
+                        opt.UseOpenIddict();
+                    },
                     contextLifetime: ServiceLifetime.Scoped,
                     optionsLifetime: ServiceLifetime.Singleton
                 );
+
             AddHangfire(services, Configuration.GetConnectionString("DefaultConnection"));
             PostgresSerialization.AdjustDateOnlySerialization();
         }
@@ -559,11 +556,6 @@ namespace MccSoft.TemplateApp.App
                 return;
             }
 
-            var clientConfig = Configuration
-                .GetSection("IdentityServer:Clients")
-                .Get<List<Client>>()
-                .First();
-
             app.UseOpenApi(
                 options =>
                 {
@@ -577,8 +569,6 @@ namespace MccSoft.TemplateApp.App
                     options.DocumentPath = "/swagger/v1/swagger.json";
                     options.OAuth2Client = new OAuth2ClientSettings()
                     {
-                        ClientId = clientConfig.ClientId,
-                        ClientSecret = SwaggerOptions.ClientPublicKey,
                         AppName = "swagger",
                         Realm = "swagger",
                     };
@@ -588,8 +578,6 @@ namespace MccSoft.TemplateApp.App
 
         protected virtual void ConfigureAuth(IServiceCollection services)
         {
-            // services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
-
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             services
@@ -598,7 +586,9 @@ namespace MccSoft.TemplateApp.App
                     {
                         options.SignIn.RequireConfirmedAccount = false;
                         options.Lockout.AllowedForNewUsers = false;
-                        Configuration.GetSection("IdentityServer:Password").Bind(options.Password);
+
+                        // configure password security rules
+                        Configuration.GetSection("OpenId:Password").Bind(options.Password);
                     }
                 )
                 .AddErrorDescriber<LocalizableIdentityErrorDescriber>()
@@ -607,87 +597,90 @@ namespace MccSoft.TemplateApp.App
                 .AddEntityFrameworkStores<TemplateAppDbContext>()
                 .AddDefaultTokenProviders();
 
-            var identityServerBuilder = services.AddIdentityServer(
+            // Configure Identity to use the same JWT claims as OpenIddict instead
+            // of the legacy WS-Federation claims it uses by default (ClaimTypes),
+            // which saves you from doing the mapping in your authorization controller.
+            services.Configure<IdentityOptions>(
                 options =>
                 {
-                    options.Events.RaiseSuccessEvents = true;
-                    options.Events.RaiseFailureEvents = true;
-                    options.Events.RaiseErrorEvents = true;
-                }
-            );
-            AddIdentityServerCertificate(identityServerBuilder);
-            identityServerBuilder
-                .AddApiAuthorization<User, TemplateAppDbContext>(options => { })
-                .AddInMemoryClients(Configuration.GetSection("IdentityServer:Clients"))
-                .AddExtensionGrantValidator<TemplateAppExternalAuthenticationGrantValidator>();
-
-            services.AddAuthentication().AddIdentityServerJwt();
-            services.Configure<JwtBearerOptions>(
-                IdentityServerJwtConstants.IdentityServerJwtBearerScheme,
-                options =>
-                {
-                    var validIssuers =
-                        Configuration.GetSection("IdentityServer:ValidIssuers").Get<List<string>>()
-                        ?? new List<string>();
-                    options.TokenValidationParameters.ClockSkew = TimeSpan.Zero;
-                    options.TokenValidationParameters.ValidIssuers = validIssuers;
-                    options.TokenValidationParameters.ValidateIssuer = Configuration
-                        .GetSection("IdentityServer:ValidateIssuer")
-                        .Get<bool>();
-                    var defaultHandler = options.Events.OnMessageReceived;
-                    options.Events.OnMessageReceived = context =>
-                        HandleFirstMessage(context, defaultHandler);
+                    options.ClaimsIdentity.UserNameClaimType = OpenIddictConstants.Claims.Name;
+                    options.ClaimsIdentity.UserIdClaimType = OpenIddictConstants.Claims.Subject;
+                    options.ClaimsIdentity.RoleClaimType = OpenIddictConstants.Claims.Role;
+                    options.ClaimsIdentity.EmailClaimType = OpenIddictConstants.Claims.Email;
                 }
             );
 
-            services.ConfigureExternalAuth();
+            services
+                .AddOpenIddict()
+                // Register the OpenIddict core components.
+                .AddCore(
+                    options =>
+                    {
+                        // Configure OpenIddict to use the Entity Framework Core stores and models.
+                        // Note: call ReplaceDefaultEntities() to replace the default OpenIddict entities.
+                        options.UseEntityFrameworkCore().UseDbContext<TemplateAppDbContext>();
+                    }
+                )
+                // Register the OpenIddict server components.
+                .AddServer(
+                    options =>
+                    {
+                        // Enable the token endpoint.
+                        options.SetTokenEndpointUris("/connect/token");
+
+                        // Enable the password flow.
+                        options.AllowPasswordFlow();
+                        options.AllowRefreshTokenFlow();
+
+                        // Accept anonymous clients (i.e clients that don't send a client_id).
+                        options.AcceptAnonymousClients();
+
+                        // Register the signing and encryption credentials.
+                        options.DisableAccessTokenEncryption();
+
+                        // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
+
+                        options.UseAspNetCore().EnableTokenEndpointPassthrough();
+
+                        if (_webHostEnvironment.IsDevelopment())
+                        {
+                            options.UseAspNetCore().DisableTransportSecurityRequirement();
+                        }
+                        options.AddSigningCertificateFromConfiguration(Configuration);
+                        options.AddEncryptionCertificateFromConfiguration(Configuration);
+                    }
+                )
+                // Register the OpenIddict validation components.
+                .AddValidation(
+                    options =>
+                    {
+                        // Import the configuration from the local OpenIddict server instance.
+                        options.UseLocalServer();
+
+                        // Register the ASP.NET Core host.
+                        options.UseAspNetCore();
+                    }
+                );
+
+            // services.ConfigureExternalAuth();
+
             services
                 .AddAuthentication()
                 .AddOpenIdConnect(options => Configuration.Bind("AzureAd", options));
 
-            services.AddTransient<IProfileService, AppProfileService>();
-            services.AddTransient<
-                IResourceOwnerPasswordValidator,
-                AppResourceOwnerPasswordValidator<User>
-            >();
-
-            services.AddScoped<DbContext, TemplateAppDbContext>();
-        }
-
-        private void AddIdentityServerCertificate(IIdentityServerBuilder identityServerBuilder)
-        {
-            var section = Configuration.GetSection("IdentityServer:Key");
-            var base64Certificate = section.GetValue<string>("Base64Certificate");
-            if (!string.IsNullOrEmpty(base64Certificate))
-            {
-                var tempFile = Guid.NewGuid().ToString();
-                section["FilePath"] = tempFile;
-                File.WriteAllBytes(
-                    Path.Combine(Directory.GetCurrentDirectory(), tempFile),
-                    Convert.FromBase64String(base64Certificate)
-                );
-            }
-        }
-
-        private static Task HandleFirstMessage(
-            MessageReceivedContext context,
-            Func<MessageReceivedContext, Task> defaultHandler
-        )
-        {
-            var accessToken = context.Request.Query["access_token"];
-            var path = context.HttpContext.Request.Path;
-            var isWebsocketRequest =
-                !string.IsNullOrEmpty(accessToken)
-                && path.StartsWithSegments(_changeTrackingHubUrl);
-            if (isWebsocketRequest)
-            {
-                context.Token = accessToken;
-                return Task.CompletedTask;
-            }
-            else
-            {
-                return defaultHandler(context);
-            }
+            // Make OpenIddict a default Authorization policy
+            // (so that you could use [Authorize] without specifying scheme
+            services.AddAuthorization(
+                options =>
+                {
+                    var defaultAuthorizationPolicy = new AuthorizationPolicyBuilder(
+                        OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme
+                    )
+                        .RequireAuthenticatedUser()
+                        .Build();
+                    options.DefaultPolicy = defaultAuthorizationPolicy;
+                }
+            );
         }
 
         protected virtual void RunMigration(IServiceProvider container)

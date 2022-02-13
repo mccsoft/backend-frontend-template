@@ -17,16 +17,16 @@ export type FetchLoginResponse = {
 
 const clientId = 'web-client';
 const clientKey = 'any';
-const scopes = 'offline_access profile MccSoft.TemplateApp.AppAPI';
+const scopes = 'offline_access';
 const backendUri = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
 export const sendLoginRequest = async (
-  userName: string,
+  username: string,
   password: string,
 ): Promise<FetchLoginResponse> => {
   const accountAuthBody = {
     scope: scopes,
     grant_type: 'password',
-    userName,
+    username,
     password,
   };
 
@@ -84,17 +84,11 @@ export const fetchTokenEndpoint = async (
 ): Promise<FetchLoginResponse> => {
   const bodyToSend = {
     ...body,
-    client_id: clientId,
-    client_secret: clientKey,
   };
 
   const response: AxiosResponse = await axios
     .create()
     .post(`${backendUri}${urlPath}`, queryString.stringify(bodyToSend), {
-      headers: {
-        Authorization: `Basic ${Base64.btoa(`${clientId}:${clientKey}`)}`,
-      },
-
       skipAuthRefresh: true, // taken from https://github.com/Flyrell/axios-auth-refresh/
     } as AxiosAuthRefreshRequestConfig);
 

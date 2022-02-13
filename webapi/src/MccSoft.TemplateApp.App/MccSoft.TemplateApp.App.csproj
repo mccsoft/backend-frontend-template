@@ -33,15 +33,14 @@
 
   <ItemGroup>
     <PackageReference Include="Audit.NET.PostgreSql" Version="19.0.2" />
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.27" />
-    <PackageReference Include="Hangfire.Core" Version="1.7.27" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.28" />
+    <PackageReference Include="Hangfire.Core" Version="1.7.28" />
     <PackageReference Include="Hangfire.Dashboard.BasicAuthorization" Version="1.0.2" />
-    <PackageReference Include="Hangfire.PostgreSql" Version="1.9.4" />
+    <PackageReference Include="Hangfire.PostgreSql" Version="1.9.6" />
     <PackageReference Include="I18Next.Net" Version="0.7.1" />
     <PackageReference Include="I18Next.Net.AspNetCore" Version="0.7.1" />
     <PackageReference Include="I18Next.Net.Extensions" Version="0.7.1" />
     <PackageReference Include="IdentityOAuthSpaExtensions" Version="1.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.0" />
@@ -72,6 +71,8 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.0" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.14" />
 
+    <PackageReference Include="OpenIddict.AspNetCore" Version="3.1.1" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="3.1.1" />
   </ItemGroup>
 
 

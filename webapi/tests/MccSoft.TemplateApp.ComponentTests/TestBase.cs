@@ -32,7 +32,7 @@ namespace MccSoft.TemplateApp.ComponentTests
         protected readonly IServiceScope TestScope;
 
         protected readonly HttpClient Client;
-        protected readonly IdentityServerClient IdentityServerClient;
+        protected readonly AuthenticationClient AuthenticationClient;
 
         protected readonly TestServer TestServer;
         protected Mock<IBackgroundJobClient> _backgroundJobClient;
@@ -56,7 +56,7 @@ namespace MccSoft.TemplateApp.ComponentTests
             TestServer = applicationFactory.Server;
             TestScope = TestServer.Host.Services.CreateScope();
             Configuration = ResolveFromTestScope<IConfiguration>();
-            IdentityServerClient = new IdentityServerClient(Client);
+            AuthenticationClient = new AuthenticationClient(Client);
 
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 
@@ -102,10 +102,12 @@ namespace MccSoft.TemplateApp.ComponentTests
                     ConfigureServices,
                     filename
                 )
-            ) {
+            )
+            {
                 using (TestServer server = applicationFactory.Server)
                 {
-                    server.Services.GetRequiredService<SqliteConnectionHolder>()
+                    server.Services
+                        .GetRequiredService<SqliteConnectionHolder>()
                         .BackupDatabase(_backupSqliteFileName);
                 }
             }

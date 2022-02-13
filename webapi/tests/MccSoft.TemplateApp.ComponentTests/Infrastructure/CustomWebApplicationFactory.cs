@@ -7,7 +7,6 @@ using MccSoft.PersistenceHelpers.DomainEvents;
 using MccSoft.TemplateApp.App;
 using MccSoft.TemplateApp.Persistence;
 using MccSoft.Testing.SqliteUtils;
-using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Moq;
 
 namespace MccSoft.TemplateApp.ComponentTests.Infrastructure
@@ -20,7 +19,8 @@ namespace MccSoft.TemplateApp.ComponentTests.Infrastructure
         public CustomWebApplicationFactory(
             Action<IServiceCollection> overrideServices,
             string databaseFileName
-        ) {
+        )
+        {
             _overrideServices = overrideServices;
             _databaseFileName = databaseFileName;
         }
@@ -39,12 +39,6 @@ namespace MccSoft.TemplateApp.ComponentTests.Infrastructure
             builder.ConfigureServices(
                 services =>
                 {
-                    var clientRequestParametersProvider =
-                        new Mock<IClientRequestParametersProvider>();
-                    services.AddSingleton<IClientRequestParametersProvider>(
-                        clientRequestParametersProvider.Object
-                    );
-
                     services.AddDomainEventsWithMediatR(typeof(Startup));
                     services.AddSqliteInMemory<TemplateAppDbContext>(
                         _databaseFileName,

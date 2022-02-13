@@ -60,6 +60,7 @@ const replacements = [
 
 await changeFrontendPortNumber(frontendPortNumber);
 await changeBackendPortNumber(backendPortNumber);
+await changePasswordsInAppsettings();
 await renameFiles(replacements);
 await replaceInFiles(replacements);
 
@@ -131,4 +132,31 @@ function changeBackendPortNumber(port) {
     paths: ["./frontend/package.json"],
     silent: true,
   });
+}
+
+function changePasswordsInAppsettings() {
+  replace({
+    regex: /"DashboardPassword": "(.*?)"/,
+    replacement: `"DashboardPassword": ${generatePassword(10)}"`,
+    paths: ["./webapi/src/MccSoft.TemplateApp.App/appsettings.json"],
+    silent: true,
+  });
+  // replace({
+  //   regex: /"DashboardPassword": "(.*?)"/,
+  //   replacement: `"DashboardPassword": ${generatePassword(10)}"`,
+  //   paths: ["./webapi/src/MccSoft.TemplateApp.App/appsettings.json"],
+  //   silent: true,
+  // });
+
+}
+
+function generatePassword(length) {
+  var result           = '';
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < length; i++ ) {
+    result += characters.charAt(Math.floor(Math.random() *
+        charactersLength));
+  }
+  return result;
 }

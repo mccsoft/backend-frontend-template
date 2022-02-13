@@ -1,16 +1,13 @@
 ﻿using System.Data;
-using System.Threading;
 using System.Threading.Tasks;
 using Audit.EntityFramework;
-using Duende.IdentityServer.EntityFramework.Options;
 using MccSoft.LowLevelPrimitives;
 using MccSoft.NpgSql;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Domain.Audit;
-using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.Extensions.Options;
 using Npgsql;
 
 namespace MccSoft.TemplateApp.Persistence
@@ -18,24 +15,20 @@ namespace MccSoft.TemplateApp.Persistence
     public class TemplateAppDbContext
         :
           // DbContext
-          ApiAuthorizationDbContext<User>,
+          IdentityDbContext<User>,
           ITransactionFactory
     {
         public IUserAccessor UserAccessor { get; }
-        public IOptions<OperationalStoreOptions> OperationalStoreOptions { get; }
-
         public DbSet<Product> Products { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
 
         public TemplateAppDbContext(
             DbContextOptions<TemplateAppDbContext> options,
-            IUserAccessor userAccessor,
-            IOptions<OperationalStoreOptions> operationalStoreOptions
-        ) : base(options, operationalStoreOptions)
+            IUserAccessor userAccessor
+        ) : base(options)
         // : base(options)
         {
             UserAccessor = userAccessor;
-            OperationalStoreOptions = operationalStoreOptions;
         }
         static TemplateAppDbContext() => NpgsqlConnection.GlobalTypeMapper.MapEnum<ProductType>();
         // when adding enum here don't forget to OnModelCreating as well (see below)

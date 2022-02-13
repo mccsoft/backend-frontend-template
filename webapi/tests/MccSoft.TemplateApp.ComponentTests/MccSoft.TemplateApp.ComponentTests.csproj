@@ -41,11 +41,4 @@
     <ProjectReference Include="..\MccSoft.TemplateApp.TestUtils\MccSoft.TemplateApp.TestUtils.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\..\src\MccSoft.TemplateApp.App\idsrv4cert.pfx">
-      <Link>idsrv4cert.pfx</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

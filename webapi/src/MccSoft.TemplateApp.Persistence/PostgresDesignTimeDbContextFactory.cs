@@ -1,7 +1,5 @@
-﻿using Duende.IdentityServer.EntityFramework.Options;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Options;
 
 namespace MccSoft.TemplateApp.Persistence
 {
@@ -17,16 +15,13 @@ namespace MccSoft.TemplateApp.Persistence
         {
             var optionsBuilder = new DbContextOptionsBuilder<TemplateAppDbContext>();
 
-            optionsBuilder.UseNpgsql(
-                "Server=localhost;Database=template_app;Port=5432;Username=postgres;Password=postgres;Pooling=true;Keepalive=5;Command Timeout=60;"
-            );
+            optionsBuilder
+                .UseNpgsql(
+                    "Server=localhost;Database=template_app;Port=5432;Username=postgres;Password=postgres;Pooling=true;Keepalive=5;Command Timeout=60;"
+                )
+                .UseOpenIddict();
 
-            var operationalStoreOptions = new OperationalStoreOptions();
-            return new TemplateAppDbContext(
-                optionsBuilder.Options,
-                null,
-                Options.Create(operationalStoreOptions)
-            );
+            return new TemplateAppDbContext(optionsBuilder.Options, null);
         }
     }
 }

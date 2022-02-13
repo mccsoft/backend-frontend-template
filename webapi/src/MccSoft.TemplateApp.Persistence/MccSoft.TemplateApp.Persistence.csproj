@@ -22,6 +22,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.1" />
     <PackageReference Include="Npgsql.Json.NET" Version="6.0.1" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="3.1.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Lib\LowLevelPrimitives\MccSoft.LowLevelPrimitives\MccSoft.LowLevelPrimitives.csproj" />

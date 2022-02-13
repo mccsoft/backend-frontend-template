@@ -5,16 +5,23 @@ using MccSoft.HttpClientExtension;
 using MccSoft.LowLevelPrimitives;
 using MccSoft.LowLevelPrimitives.Exceptions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 
 namespace MccSoft.TemplateApp.App.Services.Authentication
 {
     public class UserAccessor : IUserAccessor
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IOptions<IdentityOptions> _identityOptions;
 
-        public UserAccessor(IHttpContextAccessor httpContextAccessor)
+        public UserAccessor(
+            IHttpContextAccessor httpContextAccessor,
+            IOptions<IdentityOptions> identityOptions
+        )
         {
             _httpContextAccessor = httpContextAccessor;
+            _identityOptions = identityOptions;
         }
 
         /// <inheritdoc/>
@@ -22,7 +29,7 @@ namespace MccSoft.TemplateApp.App.Services.Authentication
         {
             var user = GetUserIdentity();
 
-            return user.GetClaimValue(JwtClaimTypes.Id);
+            return user.GetClaimValue(_identityOptions.Value.ClaimsIdentity.UserIdClaimType);
         }
 
         /// <inheritdoc/>

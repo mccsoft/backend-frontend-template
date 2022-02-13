@@ -11,10 +11,11 @@ namespace MccSoft.TemplateApp.ComponentTests.Helpers
     public static class AuthHelper
     {
         public static async Task<JwtSecurityToken> SignInGetToken(
-            this IdentityServerClient client,
+            this AuthenticationClient client,
             string userName,
             string password
-        ) {
+        )
+        {
             var content = await client.SignIn(userName, password);
 
             content.Should().NotBeNullOrEmpty();
@@ -26,10 +27,11 @@ namespace MccSoft.TemplateApp.ComponentTests.Helpers
         }
 
         public static async Task<List<string>> SignInGetPermissions(
-            this IdentityServerClient client,
+            this AuthenticationClient client,
             string userName,
             string password
-        ) {
+        )
+        {
             var token = await client.SignInGetToken(userName, password);
             var permissions = token.Claims.Select(claim => claim.Value).ToList();
 

@@ -1,6 +1,5 @@
 using System.Globalization;
 using System.Threading;
-using Duende.IdentityServer.EntityFramework.Options;
 using Hangfire;
 using MccSoft.NpgSql;
 using MccSoft.TemplateApp.Domain;
@@ -9,7 +8,6 @@ using MccSoft.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.Options;
 using Moq;
 
 namespace MccSoft.TemplateApp.App.Tests
@@ -24,14 +22,7 @@ namespace MccSoft.TemplateApp.App.Tests
         private User _defaultUser;
 
         public AppServiceTestBase()
-            : base(
-                (options, userAccessor) =>
-                    new TemplateAppDbContext(
-                        options,
-                        userAccessor,
-                        Options.Create(new OperationalStoreOptions())
-                    )
-            )
+            : base((options, userAccessor) => new TemplateAppDbContext(options, userAccessor))
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
