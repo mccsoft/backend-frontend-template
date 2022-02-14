@@ -665,22 +665,20 @@ namespace MccSoft.TemplateApp.App
             // services.ConfigureExternalAuth();
 
             services
-                .AddAuthentication()
+                .AddAuthentication(
+                    options =>
+                    {
+                        options.DefaultAuthenticateScheme =
+                            OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+                        options.DefaultChallengeScheme =
+                            OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+                    }
+                )
                 .AddOpenIdConnect(options => Configuration.Bind("AzureAd", options));
 
             // Make OpenIddict a default Authorization policy
             // (so that you could use [Authorize] without specifying scheme
-            services.AddAuthorization(
-                options =>
-                {
-                    var defaultAuthorizationPolicy = new AuthorizationPolicyBuilder(
-                        OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme
-                    )
-                        .RequireAuthenticatedUser()
-                        .Build();
-                    options.DefaultPolicy = defaultAuthorizationPolicy;
-                }
-            );
+            services.AddAuthorization();
         }
 
         protected virtual void RunMigration(IServiceProvider container)

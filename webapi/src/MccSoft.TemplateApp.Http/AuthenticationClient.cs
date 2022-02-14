@@ -12,12 +12,6 @@ namespace MccSoft.TemplateApp.Http
 
         private const string _authUrl = "connect/token";
 
-        private const string ClientId = "web-client";
-        private const string ClientSecret = "a47f8b85-8629-49e1-975f-2f407ca451f9";
-
-        private const string MobileClientId = "mobile-client";
-        private const string MobileClientSecret = "DPdzNcy2vcV960RVITfTCEujmdXTehOPRqHOU4Q6fU4=";
-
         public AuthenticationClient(HttpClient client)
         {
             _client = client;
@@ -34,12 +28,7 @@ namespace MccSoft.TemplateApp.Http
                     new KeyValuePair<string, string>("scope", "profile")
                 }
             );
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Basic",
-                Convert.ToBase64String(
-                    System.Text.Encoding.ASCII.GetBytes($"{ClientId}:{ClientSecret}")
-                )
-            );
+
             content.Headers.ContentType = MediaTypeHeaderValue.Parse(
                 "application/x-www-form-urlencoded"
             );
