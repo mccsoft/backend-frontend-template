@@ -61,6 +61,7 @@ const replacements = [
 await changeFrontendPortNumber(frontendPortNumber);
 await changeBackendPortNumber(backendPortNumber);
 await changePasswordsInAppsettings();
+
 await renameFiles(replacements);
 await replaceInFiles(replacements);
 
@@ -137,16 +138,16 @@ function changeBackendPortNumber(port) {
 function changePasswordsInAppsettings() {
   replace({
     regex: /"DashboardPassword": "(.*?)"/,
-    replacement: `"DashboardPassword": ${generatePassword(10)}"`,
+    replacement: `"DashboardPassword": "${generatePassword(12)}"`,
     paths: ["./webapi/src/MccSoft.TemplateApp.App/appsettings.json"],
     silent: true,
   });
-  // replace({
-  //   regex: /"DashboardPassword": "(.*?)"/,
-  //   replacement: `"DashboardPassword": ${generatePassword(10)}"`,
-  //   paths: ["./webapi/src/MccSoft.TemplateApp.App/appsettings.json"],
-  //   silent: true,
-  // });
+  replace({
+    regex: /("DefaultUser".*?"Password": ").*?"/gims,
+    replacement: `$1${generatePassword(12)}"`,
+    paths: ["./webapi/src/MccSoft.TemplateApp.App/appsettings.json"],
+    silent: true,
+  });
 
 }
 
