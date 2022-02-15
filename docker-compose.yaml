@@ -33,7 +33,7 @@ services:
       - OpenId__EncryptionCertificate__Base64Certificate=${OpenId__EncryptionCertificate__Base64Certificate}
       - OpenId__EncryptionCertificate__Password=${OpenId__EncryptionCertificate__Password}
       - Hangfire__DashboardPassword=${Hangfire__DashboardPassword}
-      - Hangfire__DashboardPassword=${Hangfire__DashboardPassword}
+      - DefaultUser__Password=${DefaultUser__Password}
       - REACT_APP_SENTRY_DSN=${Sentry__Dsn}
       - Sentry__Dsn=${Sentry__Dsn}
       - Serilog__Remote__Server=${Serilog__Remote__Server}

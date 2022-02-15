@@ -21,8 +21,8 @@ OpenId__SigningCertificate__Base64Certificate='+$SigningCertificate_Base64Certif
 OpenId__SigningCertificate__Password='+$SigningCertificate_Password+'
 OpenId__EncryptionCertificate__Base64Certificate='+$EncryptionCertificate_Base64Certificate+'
 OpenId__EncryptionCertificate__Password='+$EncryptionCertificate_Password+'
-Hangfire__DashboardPassword='+$[System.Web.Security.Membership]::GeneratePassword(14, 0)+'
-DefaultUser__Password='+$[System.Web.Security.Membership]::GeneratePassword(14, 0)+'
+Hangfire__DashboardPassword='+[System.Web.Security.Membership]::GeneratePassword(14, 0)+'
+DefaultUser__Password='+[System.Web.Security.Membership]::GeneratePassword(14, 0)+'
 SignUrl__Secret='+[System.Web.Security.Membership]::GeneratePassword(20, 4)+'
 '
 
