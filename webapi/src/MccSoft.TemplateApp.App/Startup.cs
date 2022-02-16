@@ -303,8 +303,6 @@ namespace MccSoft.TemplateApp.App
                             )
                 )
                 .RegisterRetryHelper();
-            // HangFire jobs
-            // services.AddScoped<TherapyDataSyncJob>();
         }
 
         private void ConfigureAudit(IServiceCollection services)

@@ -14,16 +14,19 @@ namespace MccSoft.NpgSql
     public class PostgresRetryHelper<TDbContext, TCaller>
         where TDbContext : DbContext, ITransactionFactory, IDisposable
     {
+        private readonly TDbContext _dbContext;
         private readonly Func<TDbContext> _dbContextFactory;
         private readonly TransactionLogger<TCaller> _transactionLogger;
         private readonly ILogger _logger;
-        private const int _retryLimit = 5;
 
         public PostgresRetryHelper(
+            TDbContext dbContext,
             Func<TDbContext> dbContextFactory,
             ILoggerFactory loggerFactory,
             TransactionLogger<TCaller> transactionLogger
-        ) {
+        )
+        {
+            _dbContext = dbContext;
             _dbContextFactory = dbContextFactory;
             _transactionLogger = transactionLogger;
             _logger = loggerFactory.CreateLogger<PostgresRetryHelper<TDbContext, TCaller>>();
@@ -37,52 +40,47 @@ namespace MccSoft.NpgSql
         /// <param name="action">The action that may result in a transient error.</param>
         public async Task<TResult> RetryInTransactionAsync<TResult>(
             Func<TDbContext, ILogger, Task<TResult>> action
-        ) {
+        )
+        {
             TResult result = default;
-            bool failed;
-            int retries = 0;
 
-            do
-            {
-                failed = false;
-                try
+            IExecutionStrategy strategy = _dbContext.Database.CreateExecutionStrategy();
+            await strategy.ExecuteAsync(
+                async () =>
                 {
-                    using (TDbContext db = _dbContextFactory())
-                    {
-                        IExecutionStrategy strategy = db.Database.CreateExecutionStrategy();
-                        await strategy.Execute(
-                            async () =>
-                            {
-                                await using IDbContextTransaction transaction =
-                                    await db.BeginTransactionAsync();
-                                result = await action(db, _transactionLogger);
-                                await transaction.CommitAsync();
-                            }
-                        );
-                    }
-                    //using (IDbContextTransaction transaction = await db.BeginTransactionAsync())
-                    //{
-                    //    result = await action(db, _transactionLogger);
-                    //    transaction.Commit();
-                    //}
+                    await using TDbContext db = _dbContextFactory();
+                    await using IDbContextTransaction transaction =
+                        await db.BeginTransactionAsync();
+                    result = await action(db, _transactionLogger);
+                    await transaction.CommitAsync();
                 }
-                catch (Exception ex)
-                    when (retries < _retryLimit && TransientHelper.IsTransientPostgresError(ex))
+            );
+
+            _transactionLogger.Succeed();
+
+            return result;
+        }
+
+        /// <summary>
+        /// Retries the specified action on transient Postgres errors with exponential backoff.
+        /// Doesn't wrap the whole action in a transaction automatically!
+        /// Use when you have a single SaveChanges inside the action.
+        /// </summary>
+        /// <param name="action">The action that may result in a transient error.</param>
+        public async Task<TResult> RetryWithoutTransactionAsync<TResult>(
+            Func<TDbContext, ILogger, Task<TResult>> action
+        )
+        {
+            TResult result = default;
+
+            IExecutionStrategy strategy = _dbContext.Database.CreateExecutionStrategy();
+            await strategy.ExecuteAsync(
+                async () =>
                 {
-                    failed = true;
-                    retries++;
-                    _logger.LogWarning(
-                        ex,
-                        "Retrying on a transient error. Retry count: " + retries
-                    );
-
-                    // Delay grows exponentially: 5, 25, 125, ... 3125ms.
-                    var sleepTime = TimeSpan.FromMilliseconds(Math.Pow(5.0, retries));
-                    await Task.Delay(sleepTime);
-
-                    _transactionLogger.Fail();
+                    await using TDbContext db = _dbContextFactory();
+                    result = await action(db, _transactionLogger);
                 }
-            } while (failed);
+            );
 
             _transactionLogger.Succeed();
 
@@ -108,14 +106,45 @@ namespace MccSoft.NpgSql
 
         /// <summary>
         /// Retries the specified action on transient Postgres errors with exponential backoff.
+        /// Doesn't wrap the whole action in a transaction automatically!
+        /// Use when you have a single SaveChanges inside the action.
+        /// </summary>
+        /// <param name="action">The action that may result in a transient error.</param>
+        public async Task RetryWithoutTransactionAsync(Func<TDbContext, ILogger, Task> action)
+        {
+            await RetryWithoutTransactionAsync(
+                async (dbContext, transactionLogger) =>
+                {
+                    await action(dbContext, transactionLogger);
+                    return 0;
+                }
+            );
+        }
+
+        /// <summary>
+        /// Retries the specified action on transient Postgres errors with exponential backoff.
         /// Wraps the action in a transaction that is committed automatically
         /// if the action doesn't throw and returns the result of the action.
         /// </summary>
         /// <param name="action">The action that may result in a transient error.</param>
         public async Task<TResult> RetryInTransactionAsync<TResult>(
             Func<TDbContext, Task<TResult>> action
-        ) {
+        )
+        {
             return await RetryInTransactionAsync((dbContext, _) => action(dbContext));
+        }
+
+        /// <summary>
+        /// Retries the specified action on transient Postgres errors with exponential backoff.
+        /// Doesn't wrap the whole action in a transaction automatically!
+        /// Use when you have a single SaveChanges inside the action.
+        /// </summary>
+        /// <param name="action">The action that may result in a transient error.</param>
+        public async Task<TResult> RetryWithoutTransactionAsync<TResult>(
+            Func<TDbContext, Task<TResult>> action
+        )
+        {
+            return await RetryWithoutTransactionAsync((dbContext, _) => action(dbContext));
         }
 
         /// <summary>
@@ -127,6 +156,23 @@ namespace MccSoft.NpgSql
         public async Task RetryInTransactionAsync(Func<TDbContext, Task> action)
         {
             await RetryInTransactionAsync(
+                async (dbContext) =>
+                {
+                    await action(dbContext);
+                    return 0;
+                }
+            );
+        }
+
+        /// <summary>
+        /// Retries the specified action on transient Postgres errors with exponential backoff.
+        /// Wraps the action in a transaction that is committed automatically
+        /// if the action doesn't throw.
+        /// </summary>
+        /// <param name="action">The action that may result in a transient error.</param>
+        public async Task RetryWithoutTransactionAsync(Func<TDbContext, Task> action)
+        {
+            await RetryWithoutTransactionAsync(
                 async (dbContext) =>
                 {
                     await action(dbContext);

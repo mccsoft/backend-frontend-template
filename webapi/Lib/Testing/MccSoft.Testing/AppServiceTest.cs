@@ -53,7 +53,8 @@ namespace MccSoft.Testing
         /// <param name="dbContextFactory">A function that creates a DbContext.</param>
         protected AppServiceTest(
             Func<DbContextOptions<TDbContext>, IUserAccessor, TDbContext> dbContextFactory
-        ) {
+        )
+        {
             _userAccessorMock = new Mock<IUserAccessor>();
             _userAccessorMock.Setup(x => x.GetUserId()).Returns("123");
             _userAccessorMock.Setup(x => x.IsHttpContextAvailable).Returns(true);
@@ -90,7 +91,8 @@ namespace MccSoft.Testing
             var connection = new SqliteConnection("DataSource=:memory:");
             connection.Open();
 
-            return new DbContextOptionsBuilder<TDbContext>().UseSqlite(connection)
+            return new DbContextOptionsBuilder<TDbContext>()
+                .UseSqlite(connection)
                 .UseLoggerFactory(LoggerFactory)
                 .EnableSensitiveDataLogging()
                 .ReplaceService<IModelCustomizer, ModelCustomizerWithPatchedDateTimeOffset>()
@@ -114,7 +116,8 @@ namespace MccSoft.Testing
         /// <param name="action">The action that creates the service.</param>
         protected TService InitializeService(
             Func<PostgresRetryHelper<TDbContext, TService>, TDbContext, TService> action
-        ) {
+        )
+        {
             return action(CreatePostgresRetryHelper<TService>(), GetLongLivingDbContext());
         }
 
@@ -128,6 +131,7 @@ namespace MccSoft.Testing
         {
             var loggerFactory = new NullLoggerFactory();
             return new PostgresRetryHelper<TDbContext, TAnyService>(
+                CreateDb(),
                 CreateDb,
                 loggerFactory,
                 new TransactionLogger<TAnyService>(SetupLogger<TAnyService>())
