@@ -5,7 +5,7 @@
       "launchBrowser": false,
       "launchUrl": "api",
       "environmentVariables": {
-        "ASPNETCORE_URLS": "https://*:48728",
+        "ASPNETCORE_URLS": "https://*:5001",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }

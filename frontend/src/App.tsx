@@ -20,6 +20,7 @@ import {
 } from './helpers/interceptors/auth/auth-interceptor';
 import { sendRefreshTokenRequest } from './services/auth-client';
 import { logoutAction } from './application/redux-store/root-reducer';
+import { OpenIdCallback } from './pages/unauthorized/openid/OpenIdCallback';
 
 QueryFactory.setAxiosFactory(() => axios);
 
@@ -71,7 +72,9 @@ export const App = () => {
         <Provider store={RootStore.store}>
           <PersistGate loading={fallback} persistor={RootStore.persistor}>
             <LanguageProvider>
-              <AppRouter />
+              <OpenIdCallback>
+                <AppRouter />
+              </OpenIdCallback>
             </LanguageProvider>
           </PersistGate>
         </Provider>

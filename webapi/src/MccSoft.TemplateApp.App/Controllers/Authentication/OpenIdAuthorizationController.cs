@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -34,11 +36,105 @@ public class AuthorizationController : Controller
     }
 
     [AllowAnonymous]
+    [HttpGet("~/connect/authorize/callback")]
+    [HttpPost("~/connect/authorize/callback")]
+    [IgnoreAntiforgeryToken]
+    public IActionResult ExternalCallback(string? remoteError, string originalQuery)
+    {
+        if (remoteError != null)
+        {
+            return BadRequest("Error from external provider. " + remoteError);
+        }
+
+        string redirectUrl = Url.Action(nameof(Authorize), "Authorization") + originalQuery;
+        return LocalRedirect(redirectUrl!);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("~/connect/authorize")]
+    [HttpPost("~/connect/authorize")]
+    [IgnoreAntiforgeryToken]
+    public async Task<IActionResult> Authorize()
+    {
+        var request = HttpContext.GetOpenIddictServerRequest();
+        var externalLoginInfo = await _signInManager.GetExternalLoginInfoAsync();
+        if (externalLoginInfo == null)
+        {
+            // If an identity provider was explicitly specified, redirect
+            // the user agent to the AccountController.ExternalLogin action.
+            var provider = (string)request["provider"];
+            if (string.IsNullOrEmpty(provider))
+            {
+                return Content("No external authentication provider was specified");
+            }
+
+            var redirectUrl = Url.Action(
+                nameof(ExternalCallback),
+                "Authorization",
+                new { originalQuery = HttpContext.Request.QueryString }
+            );
+
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(
+                provider,
+                redirectUrl
+            );
+            // Request a redirect to the external login provider.
+            return Challenge(properties, provider);
+        }
+
+        try
+        {
+            var user = await _userManager.FindByLoginAsync(
+                externalLoginInfo.LoginProvider,
+                externalLoginInfo.ProviderKey
+            );
+            if (user == null)
+            {
+                //ToDo: copy data from principal claims
+                user = new User { UserName = "asdasdasd", };
+
+                var identityResult = await _userManager.CreateAsync(user);
+                if (!identityResult.Succeeded)
+                {
+                    return BadRequest(identityResult.Errors);
+                }
+
+                await _userManager.AddLoginAsync(user, externalLoginInfo);
+            }
+
+            var principal = await _signInManager.CreateUserPrincipalAsync(user);
+            principal.SetScopes(request.GetScopes());
+            return SignIn(
+                principal,
+                new AuthenticationProperties(),
+                "OpenIddict.Server.AspNetCore"
+            );
+        }
+        catch (Exception ex)
+        {
+            return BadRequest();
+        }
+    }
+
+    [AllowAnonymous]
     [HttpPost("~/connect/token"), Produces("application/json")]
     public async Task<IActionResult> Exchange()
     {
         var request = HttpContext.GetOpenIddictServerRequest();
-        if (request.IsPasswordGrantType())
+        if (request.IsAuthorizationCodeGrantType())
+        {
+            // Retrieve the claims principal stored in the authorization code
+            var principal =
+                (
+                    await HttpContext.AuthenticateAsync(
+                        OpenIddictServerAspNetCoreDefaults.AuthenticationScheme
+                    )
+                ).Principal;
+            ImmutableArray<string> requestScopes = request.GetScopes();
+            principal.SetScopes(requestScopes);
+            return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+        }
+        else if (request.IsPasswordGrantType())
         {
             var user = await _userManager.FindByNameAsync(request.Username);
             if (user == null)
@@ -84,9 +180,7 @@ public class AuthorizationController : Controller
             await AddClaims(principal, user);
 
             // Set the list of scopes granted to the client application.
-            principal.SetScopes(
-                new[] { Scopes.Profile, Scopes.Roles }.Intersect(request.GetScopes())
-            );
+            principal.SetScopes(request.GetScopes());
 
             foreach (var claim in principal.Claims)
             {

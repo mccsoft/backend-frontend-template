@@ -13,7 +13,6 @@ using Hangfire.PostgreSql;
 using I18Next.Net.Backends;
 using I18Next.Net.Extensions;
 using I18Next.Net.Plugins;
-using IdentityOAuthSpaExtensions;
 using MccSoft.TemplateApp.App.Features.Products;
 using MccSoft.NpgSql;
 using MccSoft.TemplateApp.App.Middleware;
@@ -168,9 +167,8 @@ namespace MccSoft.TemplateApp.App
             app.UseCors("mypolicy");
 
             RunMigration(app.ApplicationServices);
+            app.AddOpenIdDictApplicationsFromConfiguration().GetAwaiter().GetResult();
             UseHangfire(app);
-
-            app.UseExternalAuth();
 
             app.UseRouting();
 
@@ -504,11 +502,17 @@ namespace MccSoft.TemplateApp.App
                             }
                         )
             );
+            services.AddHangfireServer(
+                options =>
+                {
+                    options.WorkerCount = 2;
+                }
+            );
         }
 
         protected virtual void UseHangfire(IApplicationBuilder app)
         {
-            app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 2 });
+            // app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 2 });
 
             // var therapySyncJobSettings = Configuration.GetSection(nameof(TherapyDataSyncJobSettings))
             //     .Get<HangFireJobSettings>();
@@ -627,6 +631,13 @@ namespace MccSoft.TemplateApp.App
                     {
                         // Enable the token endpoint.
                         options.SetTokenEndpointUris("/connect/token");
+                        options
+                            .AllowAuthorizationCodeFlow()
+                            .RequireProofKeyForCodeExchange()
+                            .SetAuthorizationEndpointUris("/connect/authorize");
+                        // options
+                        //     .AllowImplicitFlow()
+                        //     .SetAuthorizationEndpointUris("/connect/authorize");
 
                         // Enable the password flow.
                         options.AllowPasswordFlow();
@@ -640,12 +651,16 @@ namespace MccSoft.TemplateApp.App
 
                         // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
 
-                        options.UseAspNetCore().EnableTokenEndpointPassthrough();
+                        options
+                            .UseAspNetCore()
+                            .EnableTokenEndpointPassthrough()
+                            .EnableAuthorizationEndpointPassthrough();
 
                         if (_webHostEnvironment.IsDevelopment())
                         {
                             options.UseAspNetCore().DisableTransportSecurityRequirement();
                         }
+
                         options.AddSigningCertificateFromConfiguration(Configuration);
                         options.AddEncryptionCertificateFromConfiguration(Configuration);
                     }
@@ -674,7 +689,30 @@ namespace MccSoft.TemplateApp.App
                             OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
                     }
                 )
-                .AddOpenIdConnect(options => Configuration.Bind("AzureAd", options));
+                // .AddOpenIdConnect(
+                //     options =>
+                //         Configuration.GetSection("ExternalAuthentication").Bind("AzureAd", options)
+                // )
+                .AddGoogle(
+                    options =>
+                    {
+                        Configuration.GetSection("ExternalAuthentication:Google").Bind(options);
+                    }
+                )
+                .AddFacebook(
+                    options =>
+                    {
+                        Configuration
+                            .GetSection("ExternalAuthentication")
+                            .Bind("Facebook", options);
+                    }
+                )
+                .AddMicrosoftAccount(
+                    options =>
+                    {
+                        Configuration.GetSection("ExternalAuthentication:Microsoft").Bind(options);
+                    }
+                );
 
             // Make OpenIddict a default Authorization policy
             // (so that you could use [Authorize] without specifying scheme

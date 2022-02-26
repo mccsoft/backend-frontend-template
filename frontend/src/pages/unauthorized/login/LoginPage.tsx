@@ -11,6 +11,7 @@ import React, { useCallback } from 'react';
 import { handleLoginErrors, sendLoginRequest } from 'services/auth-client';
 import Grid from '@material-ui/core/Grid';
 import { setAuthData } from '../../../helpers/interceptors/auth/auth-interceptor';
+import { openExternalLoginPopup } from '../openid/openid-manager';
 
 type LoginForm = {
   login: string;
@@ -50,6 +51,13 @@ export const LoginPage: React.FC = () => {
             </Field>
             <FormError>{form.overallError}</FormError>
             <Button type={'submit'} title={i18n.t('login_button')} />
+            <Button
+              type={'button'}
+              onClick={async () => {
+                await openExternalLoginPopup('Facebook');
+              }}
+              title={'Facebook'}
+            />
           </form>
         </Grid>
       </Grid>
