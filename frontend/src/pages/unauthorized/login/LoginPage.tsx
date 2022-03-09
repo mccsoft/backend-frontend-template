@@ -54,9 +54,9 @@ export const LoginPage: React.FC = () => {
             <Button
               type={'button'}
               onClick={async () => {
-                await openExternalLoginPopup('Facebook');
+                await openExternalLoginPopup('Google');
               }}
-              title={'Facebook'}
+              title={'Google'}
             />
           </form>
         </Grid>

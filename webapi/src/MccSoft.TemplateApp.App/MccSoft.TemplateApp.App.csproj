@@ -117,8 +117,4 @@
     <Folder Include="logs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="Controllers\Authentication\oauth-result.html" />
-    <EmbeddedResource Include="Controllers\Authentication\oauth-result.html" />
-  </ItemGroup>
 </Project>

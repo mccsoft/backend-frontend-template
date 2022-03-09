@@ -644,7 +644,7 @@ namespace MccSoft.TemplateApp.App
                         options.AllowRefreshTokenFlow();
 
                         // Accept anonymous clients (i.e clients that don't send a client_id).
-                        options.AcceptAnonymousClients();
+                        // options.AcceptAnonymousClients();
 
                         // Register the signing and encryption credentials.
                         options.DisableAccessTokenEncryption();
