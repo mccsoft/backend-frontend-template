@@ -72,9 +72,7 @@ export const App = () => {
         <Provider store={RootStore.store}>
           <PersistGate loading={fallback} persistor={RootStore.persistor}>
             <LanguageProvider>
-              <OpenIdCallback>
-                <AppRouter />
-              </OpenIdCallback>
+              <AppRouter />
             </LanguageProvider>
           </PersistGate>
         </Provider>

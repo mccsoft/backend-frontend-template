@@ -1,15 +1,17 @@
 import { UserManager, UserManagerSettings } from 'oidc-client-ts';
-
-export const authCallbackPath = '/auth/openid-callback';
-const scopes = 'offline_access';
+import {
+  authCallbackPath,
+  backendUri,
+  clientId,
+  redirectUri,
+  scopes,
+} from './openid-settings';
 
 function getClientSettings(): UserManagerSettings {
-  const backendUri = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
-
   return {
     authority: backendUri,
-    client_id: 'web_client',
-    redirect_uri: `${backendUri}${authCallbackPath}`,
+    client_id: clientId,
+    redirect_uri: redirectUri,
     post_logout_redirect_uri: backendUri,
     response_type: 'code',
     filterProtocolClaims: true,
@@ -18,8 +20,11 @@ function getClientSettings(): UserManagerSettings {
     extraTokenParams: { scope: scopes },
   };
 }
-const manager = new UserManager(getClientSettings());
+let manager: UserManager | undefined;
 function getManager() {
+  if (!manager) {
+    manager = new UserManager(getClientSettings());
+  }
   return manager;
 }
 
@@ -29,9 +34,26 @@ export async function openExternalLoginPopup(provider: string) {
       extraQueryParams: { provider: provider },
     } as any);
     return user;
-  } catch (e) {}
+  } catch (e) {
+    console.error('Error during external authentication', e);
+  }
 }
+
+export function handleAuthenticationSignInPopupCallback() {
+  const url = window.location.pathname;
+  const isOpenIdCallback = url.startsWith(authCallbackPath);
+  if (isOpenIdCallback) {
+    completeAuthorization().catch((e) => console.error(e));
+    return true;
+  }
+  return false;
+}
+
 export async function completeAuthorization() {
-  const user = await getManager().signinPopupCallback(window.location.href);
+  const user = new UserManager({
+    redirect_uri: redirectUri,
+    client_id: clientId,
+    authority: backendUri,
+  }).signinPopupCallback(window.location.href);
   return user;
 }

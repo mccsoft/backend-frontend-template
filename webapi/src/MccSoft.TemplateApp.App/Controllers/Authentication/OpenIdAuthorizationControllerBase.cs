@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -33,7 +32,7 @@ public abstract class AuthorizationControllerBase<TUser, TKey> : Controller
     protected readonly SignInManager<TUser> _signInManager;
     protected readonly UserManager<TUser> _userManager;
 
-    public AuthorizationControllerBase(
+    protected AuthorizationControllerBase(
         SignInManager<TUser> signInManager,
         UserManager<TUser> userManager
     )
@@ -91,7 +90,7 @@ public abstract class AuthorizationControllerBase<TUser, TKey> : Controller
 
         try
         {
-            TUser user = await _userManager.FindByLoginAsync(
+            TUser? user = await _userManager.FindByLoginAsync(
                 externalLoginInfo.LoginProvider,
                 externalLoginInfo.ProviderKey
             );
