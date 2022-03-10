@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace MccSoft.Testing.SqliteUtils.EFExtensions
 {
@@ -18,7 +19,7 @@ namespace MccSoft.Testing.SqliteUtils.EFExtensions
 
         void IDbContextOptionsExtension.ApplyServices(IServiceCollection services)
         {
-            services.AddSingleton<
+            services.TryAddScoped<
                 IMethodCallTranslatorProvider,
                 CustomSqliteMethodCallTranslatorPlugin
             >();

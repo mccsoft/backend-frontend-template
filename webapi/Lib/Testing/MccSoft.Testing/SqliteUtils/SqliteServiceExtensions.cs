@@ -37,13 +37,15 @@ namespace MccSoft.Testing.SqliteUtils
             services.AddDbContext<TDbContext>(
                 (provider, options) =>
                 {
-                    options.UseSqlite(connectionString)
+                    options
+                        .UseSqlite(connectionString)
                         // .UsePostgresFunctionsInSqlite()
                         .WithLambdaInjection()
                         .ReplaceService<
                             IModelCustomizer,
                             ModelCustomizerWithPatchedDateTimeOffset
                         >();
+                    options.UseOpenIddict();
                     configureDbContextOptions?.Invoke(options, provider);
                 },
                 contextLifetime: ServiceLifetime.Scoped,
