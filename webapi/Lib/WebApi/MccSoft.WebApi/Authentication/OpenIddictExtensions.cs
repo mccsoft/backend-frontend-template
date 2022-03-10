@@ -1,7 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
+using MccSoft.WebApi.Patching;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OpenIddict.Abstractions;
+using OpenIddict.EntityFrameworkCore.Models;
 
 namespace MccSoft.WebApi.Authentication;
 
@@ -52,6 +57,39 @@ public static class OpenIddictExtensions
         else
         {
             options.AddDevelopmentEncryptionCertificate();
+        }
+    }
+
+    public static async Task AddOpenIdDictApplicationsFromConfiguration(
+        this IApplicationBuilder applicationBuilder,
+        string configurationSection = "OpenId:Clients"
+    )
+    {
+        using IServiceScope scope = applicationBuilder.ApplicationServices.CreateScope();
+        IServiceProvider serviceProvider = scope.ServiceProvider;
+        IOpenIddictApplicationManager manager =
+            serviceProvider.GetRequiredService<IOpenIddictApplicationManager>();
+        var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+
+        var clients = configuration
+            .GetSection(configurationSection)
+            .Get<OpenIddictApplicationDescriptor[]>();
+
+        foreach (var client in clients)
+        {
+            var clientObject = await manager.FindByClientIdAsync(client.ClientId!);
+            // See OpenIddictConstants.Permissions for available permissions
+
+            if (clientObject is null)
+            {
+                await manager.CreateAsync(client);
+            }
+            else
+            {
+                client.Type ??= "public";
+                await manager.PopulateAsync(clientObject, client);
+                await manager.UpdateAsync(clientObject);
+            }
         }
     }
 }

@@ -18,8 +18,9 @@ import {
   addLogoutHandler,
   setupAuthInterceptor,
 } from './helpers/interceptors/auth/auth-interceptor';
-import { sendRefreshTokenRequest } from './services/auth-client';
+import { sendRefreshTokenRequest } from './helpers/interceptors/auth/auth-client';
 import { logoutAction } from './application/redux-store/root-reducer';
+import { OpenIdCallback } from './pages/unauthorized/openid/OpenIdCallback';
 
 QueryFactory.setAxiosFactory(() => axios);
 

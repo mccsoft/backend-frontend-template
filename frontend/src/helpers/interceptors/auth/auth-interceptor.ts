@@ -12,7 +12,11 @@
 import { AxiosInstance, AxiosRequestConfig } from 'axios';
 import Axios from 'axios';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
-import { AuthData } from './auth-data';
+import {
+  AuthData,
+  decodeClaimsFromToken,
+  FetchLoginResponse,
+} from './auth-data';
 import SuperTokensLock from 'browser-tabs-lock';
 import { useEffect, useState } from 'react';
 
@@ -24,21 +28,24 @@ const authDataKey = 'auth_data';
 let _authData: AuthData | null = JSON.parse(
   window.localStorage.getItem(authDataKey) || 'null',
 );
-
-export function setAuthData(data: AuthData | null) {
-  window.localStorage.setItem(authDataKey, JSON.stringify(data));
-  setAuthDataInternal(data);
-}
-
-function setAuthDataInternal(data: AuthData | null) {
+function setAuthDataVariable(data: AuthData | null) {
   _authData = data;
   _setAuthFunctions.forEach((item) => {
     item(data);
   });
+  window.localStorage.setItem(authDataKey, JSON.stringify(data));
+}
+
+export function setAuthData(data: Omit<AuthData, 'claims'> | null) {
   if (data === null) {
     _onLogout?.();
     _logoutHandler();
+    setAuthDataVariable(null);
+    return;
   }
+
+  const claims = decodeClaimsFromToken(data.access_token);
+  setAuthDataVariable({ ...data, claims: claims });
 }
 
 const _setAuthFunctions = new Set<(auth: AuthData | null) => void>();
@@ -54,14 +61,14 @@ const lockAcquiringTimeout = 10000;
 let _onLogout: (() => void) | undefined;
 export function setupAuthInterceptor(
   axios: AxiosInstance,
-  refreshAuthCall: (authData: AuthData) => Promise<AuthData>,
+  refreshAuthCall: (authData: AuthData) => Promise<FetchLoginResponse>,
   onLogout?: () => void,
 ) {
   _onLogout = onLogout;
   window.addEventListener('storage', (e) => {
     if (e.storageArea === localStorage && e.key === authDataKey) {
       const authData = e.newValue ? JSON.parse(e.newValue) : null;
-      setAuthDataInternal(authData);
+      setAuthData(authData);
     }
   });
 

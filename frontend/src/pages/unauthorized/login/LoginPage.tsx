@@ -8,14 +8,29 @@ import { useAdvancedForm } from 'helpers/form/useAdvancedForm';
 import { requiredRule } from 'helpers/form/react-hook-form-helper';
 import Logger from 'js-logger';
 import React, { useCallback } from 'react';
-import { handleLoginErrors, sendLoginRequest } from 'services/auth-client';
+import {
+  handleLoginErrors,
+  sendLoginRequest,
+} from 'helpers/interceptors/auth/auth-client';
 import Grid from '@material-ui/core/Grid';
 import { setAuthData } from '../../../helpers/interceptors/auth/auth-interceptor';
+import { openExternalLoginPopup } from '../openid/openid-manager';
 
 type LoginForm = {
   login: string;
   password: string;
 };
+
+async function loginViaExternalProvider(provider: string) {
+  const user = await openExternalLoginPopup(provider);
+  if (user) {
+    setAuthData({
+      access_token: user.access_token,
+      refresh_token: user.refresh_token!,
+    });
+    Logger.info('Logged in successfully');
+  }
+}
 
 export const LoginPage: React.FC = () => {
   const i18n = useScopedTranslation('Page.Login');
@@ -50,6 +65,13 @@ export const LoginPage: React.FC = () => {
             </Field>
             <FormError>{form.overallError}</FormError>
             <Button type={'submit'} title={i18n.t('login_button')} />
+            <Button
+              type={'button'}
+              onClick={async () => {
+                await loginViaExternalProvider('Google');
+              }}
+              title={'Google'}
+            />
           </form>
         </Grid>
       </Grid>

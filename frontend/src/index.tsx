@@ -4,6 +4,7 @@ import 'index.scss';
 import { App } from './App';
 import reportWebVitals from './reportWebVitals';
 import { formatISO } from 'date-fns';
+import { OpenIdCallback } from './pages/unauthorized/openid/OpenIdCallback';
 
 //to send dates to backend in local timezone (not in UTC)
 Date.prototype.toISOString = function () {
@@ -13,7 +14,9 @@ Date.prototype.toISOString = function () {
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <OpenIdCallback>
+      <App />
+    </OpenIdCallback>
   </React.StrictMode>,
   document.getElementById('root'),
 );
