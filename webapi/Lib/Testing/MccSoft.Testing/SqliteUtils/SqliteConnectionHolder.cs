@@ -24,7 +24,7 @@ namespace MccSoft.Testing.SqliteUtils
 
         public void BackupDatabase(string backupFileName)
         {
-            var newConnection = new SqliteConnection($"DataSource={backupFileName}");
+            var newConnection = new SqliteConnection($"DataSource={backupFileName};Pooling=false");
             _connection.BackupDatabase(newConnection);
         }
 

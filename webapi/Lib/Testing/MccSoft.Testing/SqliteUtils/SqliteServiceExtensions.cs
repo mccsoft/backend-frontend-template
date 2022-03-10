@@ -25,7 +25,8 @@ namespace MccSoft.Testing.SqliteUtils
             Action<DbContextOptionsBuilder, IServiceProvider>? configureDbContextOptions = null
         ) where TDbContext : DbContext
         {
-            string connectionString = $"DataSource=file:memdb{dbId}?mode=memory&cache=shared";
+            string connectionString =
+                $"DataSource=file:memdb{dbId}?mode=memory&cache=shared;Pooling=false";
             services.AddSingleton(
                 new SqliteConnectionHolder.ConnectionString { Str = connectionString }
             );
