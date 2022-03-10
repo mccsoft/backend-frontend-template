@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace MccSoft.Testing.SqliteUtils.EFExtensions
 {
@@ -7,19 +8,12 @@ namespace MccSoft.Testing.SqliteUtils.EFExtensions
     {
         public static DbContextOptionsBuilder UsePostgresFunctionsInSqlite(
             this DbContextOptionsBuilder optionsBuilder
-        ) {
-            var extension = GetOrCreateExtension(optionsBuilder);
-            ((IDbContextOptionsBuilderInfrastructure)optionsBuilder).AddOrUpdateExtension(
-                extension
-            );
-
-            return optionsBuilder;
+        )
+        {
+            return optionsBuilder.ReplaceService<
+                IMethodCallTranslatorProvider,
+                CustomSqliteMethodCallTranslatorPlugin
+            >();
         }
-
-        private static SqliteDbContextOptionsExtension GetOrCreateExtension(
-            DbContextOptionsBuilder optionsBuilder
-        ) =>
-            optionsBuilder.Options.FindExtension<SqliteDbContextOptionsExtension>()
-            ?? new SqliteDbContextOptionsExtension();
     }
 }
