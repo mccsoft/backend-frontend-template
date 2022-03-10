@@ -1,19 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { Base64 } from 'js-base64';
 import queryString from 'query-string';
-import JwtDecode from 'jwt-decode';
-
-export type UserClaims = {
-  id: string;
-  name: string;
-};
-
-export type FetchLoginResponse = {
-  access_token: string;
-  refresh_token: string;
-  expires_in: number;
-  claims: UserClaims;
-};
+import { FetchLoginResponse } from './auth-data';
 
 const clientId = 'web-client';
 const clientKey = 'any';
@@ -92,17 +79,10 @@ export const fetchTokenEndpoint = async (
       skipAuthRefresh: true, // taken from https://github.com/Flyrell/axios-auth-refresh/
     } as AxiosAuthRefreshRequestConfig);
 
-  const accessToken = response.data.access_token;
-  const claims = decodeClaimsFromToken(accessToken);
   return {
     ...response.data,
-    claims,
   } as FetchLoginResponse;
 };
-export function decodeClaimsFromToken(token: string): UserClaims {
-  const claims = JwtDecode<UserClaims>(token);
-  return claims;
-}
 
 export function handleLoginErrors(e: unknown): never {
   if (axios.isAxiosError(e)) {
