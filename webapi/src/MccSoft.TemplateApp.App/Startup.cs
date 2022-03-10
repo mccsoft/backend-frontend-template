@@ -34,6 +34,7 @@ using MccSoft.WebApi.Authentication;
 using MccSoft.WebApi.Patching;
 using MccSoft.WebApi.Sentry;
 using MccSoft.WebApi.Serialization;
+using MccSoft.WebApi.Serialization.ModelBinding;
 using MccSoft.WebApi.SignedUrl;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -103,6 +104,7 @@ namespace MccSoft.TemplateApp.App
             ConfigureDatabase(services);
             ConfigureAuth(services);
             AddI18Next(services);
+            services.UseUtcEverywhere();
 
             services.AddSignUrl(Configuration.GetSection("SignUrl").GetValue<string>("Secret"));
             services.AddMailing(Configuration.GetSection("Email"));
