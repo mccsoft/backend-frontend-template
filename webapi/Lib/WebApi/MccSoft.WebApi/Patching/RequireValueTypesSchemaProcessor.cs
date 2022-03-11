@@ -25,7 +25,8 @@ namespace MccSoft.WebApi.Patching
                 _patchRequestType.IsAssignableFrom(context.Type)
                 || context.Type == typeof(ValidationProblemDetails)
                 || context.Type == typeof(ProblemDetails)
-            ) {
+            )
+            {
                 // Classes that inherits from PatchRequest are omitted (since all properties in these classes are optional)
                 return;
             }
@@ -60,9 +61,8 @@ namespace MccSoft.WebApi.Patching
                     || property.Type == JsonObjectType.Integer
                     || property.Type == JsonObjectType.Number
                     || property.Type == JsonObjectType.None /* enum */
-                ) {
-                    property.IsRequired = true;
-
+                )
+                {
                     if (!clrProperties.ContainsKey(propertyName.ToLower()))
                     {
                         // this could happen with 'discriminator' field
@@ -83,7 +83,7 @@ namespace MccSoft.WebApi.Patching
 
                         if (property.Type == JsonObjectType.String)
                         {
-                            if (property.Format != "date-time")
+                            if (property.Format != "date-time" && property.Format != "date")
                             {
                                 property.IsNullableRaw = false;
                             }
