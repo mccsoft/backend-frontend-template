@@ -169,7 +169,7 @@ namespace MccSoft.TemplateApp.App
             app.UseCors("mypolicy");
 
             RunMigration(app.ApplicationServices);
-            app.AddOpenIdDictApplicationsFromConfiguration().GetAwaiter().GetResult();
+            app.UseOpenIdDictApplicationsFromConfiguration().GetAwaiter().GetResult();
             UseHangfire(app);
 
             app.UseRouting();
@@ -584,6 +584,7 @@ namespace MccSoft.TemplateApp.App
         {
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
+            services.AddOpenIddictConfigurations(Configuration);
             services
                 .AddDefaultIdentity<User>(
                     options =>

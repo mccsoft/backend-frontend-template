@@ -11,6 +11,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using IdentityModel;
+using MccSoft.WebApi.Authentication;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -25,20 +26,25 @@ namespace MccSoft.TemplateApp.App.Controllers.Authentication;
 /// <summary>
 /// Default implementation of AuthorizationController that allows logging in via external login providers
 /// </summary>
-public abstract class AuthorizationControllerBase<TUser, TKey> : Controller
+public abstract class OpenIdAuthorizationControllerBase<TUser, TKey> : Controller
     where TUser : IdentityUser<TKey>, new()
     where TKey : IEquatable<TKey>
 {
     protected readonly SignInManager<TUser> _signInManager;
     protected readonly UserManager<TUser> _userManager;
+    private readonly IOpenIddictConfigurationProvider _configurationProvider;
 
-    protected AuthorizationControllerBase(
+    protected virtual string ControllerName => GetType().Name.Replace("Controller", "");
+
+    protected OpenIdAuthorizationControllerBase(
         SignInManager<TUser> signInManager,
-        UserManager<TUser> userManager
+        UserManager<TUser> userManager,
+        IOpenIddictConfigurationProvider configurationProvider
     )
     {
         _signInManager = signInManager;
         _userManager = userManager;
+        _configurationProvider = configurationProvider;
     }
 
     [AllowAnonymous]
@@ -52,7 +58,7 @@ public abstract class AuthorizationControllerBase<TUser, TKey> : Controller
             return BadRequest("Error from external provider. " + remoteError);
         }
 
-        string redirectUrl = Url.Action(nameof(Authorize), "Authorization") + originalQuery;
+        string redirectUrl = Url.Action(nameof(Authorize), ControllerName) + originalQuery;
         return LocalRedirect(redirectUrl!);
     }
 
@@ -76,7 +82,7 @@ public abstract class AuthorizationControllerBase<TUser, TKey> : Controller
 
             var redirectUrl = Url.Action(
                 nameof(ExternalCallback),
-                "Authorization",
+                ControllerName,
                 new { originalQuery = HttpContext.Request.QueryString }
             );
 
@@ -194,6 +200,31 @@ public abstract class AuthorizationControllerBase<TUser, TKey> : Controller
 
             return await SignInUser(user, request);
         }
+        else if (request.IsRefreshTokenGrantType())
+        {
+            // Retrieve the claims principal stored in the refresh token.
+            var info = await HttpContext.AuthenticateAsync(
+                OpenIddictServerAspNetCoreDefaults.AuthenticationScheme
+            );
+
+            // Retrieve the user profile corresponding to the refresh token.
+            // Note: if you want to automatically invalidate the refresh token
+            // when the user password/roles change, use the following line instead:
+            // var user = _signInManager.ValidateSecurityStampAsync(info.Principal);
+            var user = await _userManager.GetUserAsync(info.Principal);
+            if (user == null)
+            {
+                return Error("refresh_token_invalid");
+            }
+
+            // Ensure the user is still allowed to sign in.
+            if (!await _signInManager.CanSignInAsync(user))
+            {
+                return StandardError();
+            }
+
+            return await SignInUser(user, request);
+        }
 
         throw new NotImplementedException("The specified grant type is not implemented.");
     }
@@ -201,6 +232,26 @@ public abstract class AuthorizationControllerBase<TUser, TKey> : Controller
     protected virtual async Task<IActionResult> SignInUser(TUser user, OpenIddictRequest? request)
     {
         var principal = await _signInManager.CreateUserPrincipalAsync(user);
+        if (
+            !string.IsNullOrEmpty(request?.ClientId)
+            && _configurationProvider.TryGetConfiguration(request.ClientId, out var configuration)
+        )
+        {
+            if (configuration.RefreshTokenLifetime != null)
+            {
+                principal.SetRefreshTokenLifetime(
+                    TimeSpan.FromSeconds(configuration.RefreshTokenLifetime.Value)
+                );
+            }
+
+            if (configuration.AccessTokenLifetime != null)
+            {
+                principal.SetAccessTokenLifetime(
+                    TimeSpan.FromSeconds(configuration.AccessTokenLifetime.Value)
+                );
+            }
+        }
+
         await AddClaims(principal, user);
 
         var scopes = request.GetScopes();
@@ -226,7 +277,7 @@ public abstract class AuthorizationControllerBase<TUser, TKey> : Controller
             {
                 [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
                 [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = description
-            }
+            }!
         );
 
         return Forbid(properties, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);

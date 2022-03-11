@@ -1,12 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using MccSoft.WebApi.Patching;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenIddict.Abstractions;
-using OpenIddict.EntityFrameworkCore.Models;
 
 namespace MccSoft.WebApi.Authentication;
 
@@ -60,20 +58,18 @@ public static class OpenIddictExtensions
         }
     }
 
-    public static async Task AddOpenIdDictApplicationsFromConfiguration(
-        this IApplicationBuilder applicationBuilder,
-        string configurationSection = "OpenId:Clients"
+    public static async Task UseOpenIdDictApplicationsFromConfiguration(
+        this IApplicationBuilder applicationBuilder
     )
     {
         using IServiceScope scope = applicationBuilder.ApplicationServices.CreateScope();
         IServiceProvider serviceProvider = scope.ServiceProvider;
         IOpenIddictApplicationManager manager =
             serviceProvider.GetRequiredService<IOpenIddictApplicationManager>();
-        var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+        var configurationProvider =
+            serviceProvider.GetRequiredService<IOpenIddictConfigurationProvider>();
 
-        var clients = configuration
-            .GetSection(configurationSection)
-            .Get<OpenIddictApplicationDescriptor[]>();
+        var clients = configurationProvider.GetAllConfigurations();
 
         foreach (var client in clients)
         {
@@ -91,5 +87,17 @@ public static class OpenIddictExtensions
                 await manager.UpdateAsync(clientObject);
             }
         }
+    }
+
+    public static void AddOpenIddictConfigurations(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        string configurationSection = "OpenId"
+    )
+    {
+        services.AddTransient<IOpenIddictConfigurationProvider, OpenIddictConfigurationProvider>();
+        services.Configure<OpenIddictConfiguration>(
+            configuration.GetSection($"{configurationSection}")
+        );
     }
 }
