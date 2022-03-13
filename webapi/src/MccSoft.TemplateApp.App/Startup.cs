@@ -30,13 +30,11 @@ using MccSoft.PersistenceHelpers.DomainEvents;
 using MccSoft.TemplateApp.App.Settings;
 using MccSoft.TemplateApp.Domain.Audit;
 using MccSoft.WebApi;
-using MccSoft.WebApi.Authentication;
 using MccSoft.WebApi.Patching;
 using MccSoft.WebApi.Sentry;
 using MccSoft.WebApi.Serialization;
 using MccSoft.WebApi.Serialization.ModelBinding;
 using MccSoft.WebApi.SignedUrl;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -62,6 +60,7 @@ using NSwag.AspNetCore;
 using NSwag.Generation.Processors.Security;
 using OpenIddict.Abstractions;
 using OpenIddict.Validation.AspNetCore;
+using Shaddix.OpenIddict.ExternalAuthentication.Infrastructure;
 
 [assembly: ApiController]
 [assembly: InternalsVisibleTo("MccSoft.TemplateApp.App.Tests")]
@@ -70,7 +69,6 @@ namespace MccSoft.TemplateApp.App
 {
     public class Startup
     {
-        private const string _changeTrackingHubUrl = "/change-tracking-hub";
         private const string _healthCheckUrl = "/health";
         private readonly ILogger<Startup> _logger;
         private readonly IWebHostEnvironment _webHostEnvironment;
@@ -584,7 +582,6 @@ namespace MccSoft.TemplateApp.App
         {
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-            services.AddOpenIddictConfigurations(Configuration);
             services
                 .AddDefaultIdentity<User>(
                     options =>
@@ -617,45 +614,18 @@ namespace MccSoft.TemplateApp.App
 
             services
                 .AddOpenIddict()
-                // Register the OpenIddict core components.
                 .AddCore(
                     options =>
                     {
-                        // Configure OpenIddict to use the Entity Framework Core stores and models.
-                        // Note: call ReplaceDefaultEntities() to replace the default OpenIddict entities.
                         options.UseEntityFrameworkCore().UseDbContext<TemplateAppDbContext>();
                     }
                 )
-                // Register the OpenIddict server components.
+                .AddDefaultAuthorizationController()
+                .AddOpenIddictConfigurations(Configuration)
                 .AddServer(
                     options =>
                     {
-                        // Enable the token endpoint.
-                        options.SetTokenEndpointUris("/connect/token");
-                        options
-                            .AllowAuthorizationCodeFlow()
-                            .RequireProofKeyForCodeExchange()
-                            .SetAuthorizationEndpointUris("/connect/authorize");
-                        // options
-                        //     .AllowImplicitFlow()
-                        //     .SetAuthorizationEndpointUris("/connect/authorize");
-
-                        // Enable the password flow.
-                        options.AllowPasswordFlow();
-                        options.AllowRefreshTokenFlow();
-
-                        // Accept anonymous clients (i.e clients that don't send a client_id).
-                        // options.AcceptAnonymousClients();
-
-                        // Register the signing and encryption credentials.
                         options.DisableAccessTokenEncryption();
-
-                        // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
-
-                        options
-                            .UseAspNetCore()
-                            .EnableTokenEndpointPassthrough()
-                            .EnableAuthorizationEndpointPassthrough();
 
                         if (_webHostEnvironment.IsDevelopment())
                         {
@@ -678,8 +648,6 @@ namespace MccSoft.TemplateApp.App
                     }
                 );
 
-            // services.ConfigureExternalAuth();
-
             services
                 .AddAuthentication(
                     options =>
@@ -690,10 +658,6 @@ namespace MccSoft.TemplateApp.App
                             OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
                     }
                 )
-                // .AddOpenIdConnect(
-                //     options =>
-                //         Configuration.GetSection("ExternalAuthentication").Bind("AzureAd", options)
-                // )
                 .AddGoogle(
                     options =>
                     {
