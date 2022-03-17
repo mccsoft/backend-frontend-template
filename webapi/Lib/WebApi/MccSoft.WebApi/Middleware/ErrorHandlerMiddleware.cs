@@ -69,7 +69,8 @@ namespace MccSoft.WebApi.Middleware
 
         private async Task ProcessException(HttpContext httpContext, Exception ex)
         {
-            await PushBodyToLog(httpContext);
+            string body = await httpContext.Request.ReadAll();
+            LogContext.PushProperty("RequestBody", body);
 
             // TODO: Replace `{ex}` in the message with just the type and message when we upgrade Elasticsearch to v7.
             // Until then we put the call stack into the message to make it searchable in Kibana.
@@ -106,7 +107,8 @@ namespace MccSoft.WebApi.Middleware
             IActionResult result
         )
         {
-            await PushBodyToLog(httpContext);
+            string body = await httpContext.Request.ReadAll();
+            LogContext.PushProperty("RequestBody", body);
 
             _logger.LogWarning("{ErrorType}: {ErrorMessage}", ex.GetType().Name, ex.Message);
             if (result is ObjectResult { Value: ProblemDetails details })
@@ -115,12 +117,6 @@ namespace MccSoft.WebApi.Middleware
             }
 
             await ExecuteResult(httpContext, result);
-        }
-
-        private async Task PushBodyToLog(HttpContext httpContext)
-        {
-            string body = await httpContext.Request.ReadAll();
-            LogContext.PushProperty("Request body", body);
         }
     }
 }
