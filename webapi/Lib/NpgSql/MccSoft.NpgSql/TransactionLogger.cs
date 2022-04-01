@@ -54,7 +54,8 @@ namespace MccSoft.NpgSql
             TState state,
             Exception exception,
             Func<TState, Exception, string> formatter
-        ) {
+        )
+        {
             _logEntriesCollection.Add(new LogEntry(logLevel, eventId, state, exception));
         }
 

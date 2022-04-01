@@ -24,7 +24,8 @@ namespace MccSoft.WebApi.SignedUrl
         public ValidateSignedUrlAttribute(
             string claimType = SignUrlHelper.UserIdClaimName,
             string claimValue = null
-        ) {
+        )
+        {
             ClaimType = claimType;
             ClaimValue = claimValue;
         }
@@ -38,7 +39,8 @@ namespace MccSoft.WebApi.SignedUrl
         public ValidateSignedUrlAttribute(
             string claimType,
             Predicate<string> claimValuePredicate = null
-        ) {
+        )
+        {
             ClaimType = claimType;
             ClaimValuePredicate = claimValuePredicate;
         }
@@ -46,7 +48,8 @@ namespace MccSoft.WebApi.SignedUrl
         public override async Task OnActionExecutionAsync(
             ActionExecutingContext context,
             ActionExecutionDelegate next
-        ) {
+        )
+        {
             var httpContext = context.HttpContext;
             SignUrlHelper helper = httpContext.RequestServices.GetRequiredService<SignUrlHelper>();
 

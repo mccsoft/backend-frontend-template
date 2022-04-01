@@ -199,7 +199,8 @@ namespace MccSoft.TemplateApp.Persistence.Migrations
                 columns: table =>
                     new
                     {
-                        Id = table.Column<int>(type: "integer", nullable: false)
+                        Id = table
+                            .Column<int>(type: "integer", nullable: false)
                             .Annotation(
                                 "Npgsql:ValueGenerationStrategy",
                                 NpgsqlValueGenerationStrategy.IdentityByDefaultColumn
@@ -226,7 +227,8 @@ namespace MccSoft.TemplateApp.Persistence.Migrations
                 columns: table =>
                     new
                     {
-                        Id = table.Column<int>(type: "integer", nullable: false)
+                        Id = table
+                            .Column<int>(type: "integer", nullable: false)
                             .Annotation(
                                 "Npgsql:ValueGenerationStrategy",
                                 NpgsqlValueGenerationStrategy.IdentityByDefaultColumn

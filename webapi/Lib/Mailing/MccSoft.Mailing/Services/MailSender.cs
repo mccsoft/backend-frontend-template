@@ -28,7 +28,8 @@ namespace MccSoft.Mailing
             MailSettings mailSettings,
             IBackgroundJobClient backgroundJobClient,
             ILogger<MailSender> logger
-        ) {
+        )
+        {
             _razorRenderService = razorRenderService;
             _options = options;
             _mailSettings = mailSettings;
@@ -115,7 +116,8 @@ namespace MccSoft.Mailing
             string text,
             string from = null,
             List<string> attachments = null
-        ) {
+        )
+        {
             var message = new MimeMessage();
 
             message.From.Add(

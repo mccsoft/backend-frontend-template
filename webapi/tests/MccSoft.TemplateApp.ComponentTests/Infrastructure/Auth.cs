@@ -54,7 +54,8 @@ namespace MccSoft.AdminService.ComponentTests.Infrastructure
         public static AuthenticationBuilder AddTestAuthentication(
             this AuthenticationBuilder builder,
             Action<TestAuthenticationOptions> configureOptions
-        ) {
+        )
+        {
             return builder.AddScheme<TestAuthenticationOptions, TestAuthenticationHandler>(
                 TestAuthenticationOptions.Scheme,
                 configureOptions

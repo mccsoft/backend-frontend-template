@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Xunit;
+
 // ReSharper disable ParameterOnlyUsedForPreconditionCheck.Global
 // ReSharper disable ParameterOnlyUsedForPreconditionCheck.Local
 // ReSharper disable UnusedMember.Global
@@ -39,11 +40,13 @@ namespace MccSoft.Testing
             /// Property names need to be equal to match.
             /// </summary>
             Equal,
+
             /// <summary>
             /// Property name match if source ends with target or
             /// target ends with source name.
             /// </summary>
             EndsWith,
+
             /// <summary>
             /// Property name match if source starts with target or
             /// target starts with source name.
@@ -93,7 +96,8 @@ namespace MccSoft.Testing
             bool checkIfSourceIsMissingTargetIsNull = false,
             PropertyNameSearchKind nameSearchKind = PropertyNameSearchKind.Equal,
             int? expectedNumberOfComparedProperties = null
-        ) {
+        )
+        {
             if (targetPropertiesToIgnore == null)
             {
                 targetPropertiesToIgnore = new List<string>();
@@ -193,7 +197,8 @@ namespace MccSoft.Testing
             TimeSpan timeout,
             string errorMessage = null,
             double checkPeriodInSeconds = 0.25
-        ) {
+        )
+        {
             errorMessage = errorMessage ?? $"Operation failed to complete in {timeout}.";
             using (var tokenSource = new CancellationTokenSource(timeout))
             {
@@ -310,7 +315,8 @@ namespace MccSoft.Testing
             LoggedMessage message,
             Field field,
             object expectedValue
-        ) {
+        )
+        {
             object value = HasField(message, field);
             Assert.Equal(expectedValue, value);
         }
@@ -335,7 +341,8 @@ namespace MccSoft.Testing
             PropertyInfo propertyInfo,
             object targetValue,
             object sourceValue
-        ) {
+        )
+        {
             Assert.True(
                 // The values should be exactly equal, because one is a copy of the other.
                 Equals(targetValue, sourceValue),
@@ -359,7 +366,8 @@ namespace MccSoft.Testing
             bool ignoreMissingSourceProperty,
             bool checkIfSourceIsMissingTargetIsNull,
             PropertyNameSearchKind nameSearchKind
-        ) {
+        )
+        {
             int numberOfComparedProperties = 0;
 
             if (target == null)
@@ -398,7 +406,8 @@ namespace MccSoft.Testing
                         sourceProp = sourceType.GetProperty(propName);
                         if (nameSearchKind != PropertyNameSearchKind.Equal && sourceProp == null)
                         {
-                            sourceProp = sourceType.GetProperties()
+                            sourceProp = sourceType
+                                .GetProperties()
                                 .FirstOrDefault(
                                     info =>
                                     {
@@ -454,7 +463,8 @@ namespace MccSoft.Testing
                 if (
                     comparerMap != null
                     && comparerMap.TryGetValue(propertyInfo.Name, out IEqualityComparer comparer)
-                ) {
+                )
+                {
                     Assert.True(
                         comparer.Equals(sourceValue, targetValue),
                         $"Property '{propertyInfo.Name}' differs from the source. The target "

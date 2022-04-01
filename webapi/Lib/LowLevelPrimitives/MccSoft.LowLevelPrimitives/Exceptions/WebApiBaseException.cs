@@ -75,7 +75,8 @@ namespace MccSoft.LowLevelPrimitives.Exceptions
                     Detail = _detail,
                     Instance = "",
                 }
-            ) {
+            )
+            {
                 StatusCode = _statusCode,
                 ContentTypes = { "application/problem+json", "application/problem+xml" }
             };

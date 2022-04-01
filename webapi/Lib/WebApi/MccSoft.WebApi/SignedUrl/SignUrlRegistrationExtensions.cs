@@ -14,7 +14,8 @@ namespace MccSoft.WebApi.SignedUrl
             this IServiceCollection services,
             string secret,
             Action<SignUrlOptions> configureAction = null
-        ) {
+        )
+        {
             if (string.IsNullOrEmpty(secret))
             {
                 throw new ArgumentNullException("Secret should be a non-empty string");

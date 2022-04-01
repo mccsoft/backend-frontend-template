@@ -17,7 +17,8 @@ namespace MccSoft.PersistenceHelpers.DomainEvents
         public DomainEventsTransactionInterceptor(
             IMediator mediator,
             ILogger<DomainEventsTransactionInterceptor> logger
-        ) {
+        )
+        {
             _mediator = mediator;
             _logger = logger;
         }
@@ -25,18 +26,15 @@ namespace MccSoft.PersistenceHelpers.DomainEvents
         public override void TransactionCommitted(
             DbTransaction transaction,
             TransactionEndEventData eventData
-        ) {
+        )
+        {
             List<IDomainEventEntity> domainEventEntities =
                 DbContextInterceptorHelpers.GetChangedDomainEventEntitiesWithDomainEvents(
                     eventData.Context,
                     true
                 );
-            DbContextInterceptorHelpers.ExecuteDomainEvents(
-                    eventData.Context,
-                    domainEventEntities,
-                    _mediator,
-                    _logger
-                )
+            DbContextInterceptorHelpers
+                .ExecuteDomainEvents(eventData.Context, domainEventEntities, _mediator, _logger)
                 .GetAwaiter()
                 .GetResult();
 
@@ -47,7 +45,8 @@ namespace MccSoft.PersistenceHelpers.DomainEvents
             DbTransaction transaction,
             TransactionEndEventData eventData,
             CancellationToken cancellationToken = new CancellationToken()
-        ) {
+        )
+        {
             List<IDomainEventEntity> domainEventEntities =
                 DbContextInterceptorHelpers.GetChangedDomainEventEntitiesWithDomainEvents(
                     eventData.Context,

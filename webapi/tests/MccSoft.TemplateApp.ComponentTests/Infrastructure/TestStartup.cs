@@ -34,7 +34,8 @@ namespace MccSoft.TemplateApp.ComponentTests.Infrastructure
         {
             base.ConfigureAuth(services);
 
-            services.AddAuthentication(
+            services
+                .AddAuthentication(
                     options =>
                     {
                         options.DefaultAuthenticateScheme = TestAuthenticationOptions.Scheme;

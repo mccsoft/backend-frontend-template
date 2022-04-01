@@ -14,8 +14,10 @@ namespace MccSoft.PersistenceHelpers.DomainEvents
         internal static List<IDomainEventEntity> GetChangedDomainEventEntitiesWithDomainEvents(
             DbContext dbContext,
             bool includeUnchanged = false
-        ) {
-            return dbContext.ChangeTracker.Entries<IDomainEventEntity>()
+        )
+        {
+            return dbContext.ChangeTracker
+                .Entries<IDomainEventEntity>()
                 .Where(
                     x =>
                         x.State != EntityState.Detached
@@ -31,7 +33,8 @@ namespace MccSoft.PersistenceHelpers.DomainEvents
             IEnumerable<IDomainEventEntity> domainEventEntities,
             IMediator mediator,
             ILogger logger
-        ) {
+        )
+        {
             foreach (var entity in domainEventEntities)
             {
                 var events = entity.DomainEvents.ToList();
@@ -68,7 +71,8 @@ namespace MccSoft.PersistenceHelpers.DomainEvents
         internal static T GetPrimaryKey<T>(DbContext context, object entity)
         {
             var entry = context.Entry(entity);
-            object keyPart = entry.Metadata.FindPrimaryKey()
+            object keyPart = entry.Metadata
+                .FindPrimaryKey()
                 .Properties.Select(p => entry.Property(p.Name).CurrentValue)
                 .First();
 

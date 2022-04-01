@@ -9,7 +9,8 @@ namespace MccSoft.TemplateApp.App.Utils.Localization
 
         public LocalizableIdentityErrorDescriber(
             IStringLocalizer<LocalizableIdentityErrorDescriber> localizer
-        ) {
+        )
+        {
             _localizer = localizer;
         }
 
@@ -27,7 +28,7 @@ namespace MccSoft.TemplateApp.App.Utils.Localization
             return new IdentityError
             {
                 Code = nameof(DefaultError),
-                Description = _localizer["IdentityErrors:DefaultError", new {  }]
+                Description = _localizer["IdentityErrors:DefaultError", new { }]
             };
         }
 
@@ -36,7 +37,7 @@ namespace MccSoft.TemplateApp.App.Utils.Localization
             return new IdentityError
             {
                 Code = nameof(ConcurrencyFailure),
-                Description = _localizer["IdentityErrors:DefaultError", new {  }]
+                Description = _localizer["IdentityErrors:DefaultError", new { }]
             };
         }
 
@@ -45,7 +46,7 @@ namespace MccSoft.TemplateApp.App.Utils.Localization
             return new IdentityError
             {
                 Code = nameof(PasswordMismatch),
-                Description = _localizer["IdentityErrors:PasswordMismatch", new {  }]
+                Description = _localizer["IdentityErrors:PasswordMismatch", new { }]
             };
         }
 
@@ -54,7 +55,7 @@ namespace MccSoft.TemplateApp.App.Utils.Localization
             return new IdentityError
             {
                 Code = nameof(InvalidToken),
-                Description = _localizer["IdentityErrors:InvalidToken", new {  }]
+                Description = _localizer["IdentityErrors:InvalidToken", new { }]
             };
         }
 
@@ -63,7 +64,7 @@ namespace MccSoft.TemplateApp.App.Utils.Localization
             return new IdentityError
             {
                 Code = nameof(LoginAlreadyAssociated),
-                Description = _localizer["IdentityErrors:LoginAlreadyAssociated", new {  }]
+                Description = _localizer["IdentityErrors:LoginAlreadyAssociated", new { }]
             };
         }
 
@@ -117,7 +118,7 @@ namespace MccSoft.TemplateApp.App.Utils.Localization
             return new IdentityError
             {
                 Code = nameof(UserAlreadyHasPassword),
-                Description = _localizer["IdentityErrors:UserAlreadyHasPassword", new {  }]
+                Description = _localizer["IdentityErrors:UserAlreadyHasPassword", new { }]
             };
         }
 
@@ -126,7 +127,7 @@ namespace MccSoft.TemplateApp.App.Utils.Localization
             return new IdentityError
             {
                 Code = nameof(UserLockoutNotEnabled),
-                Description = _localizer["IdentityErrors:UserLockoutNotEnabled", new {  }]
+                Description = _localizer["IdentityErrors:UserLockoutNotEnabled", new { }]
             };
         }
 
@@ -162,7 +163,7 @@ namespace MccSoft.TemplateApp.App.Utils.Localization
             return new IdentityError
             {
                 Code = nameof(PasswordRequiresNonAlphanumeric),
-                Description = _localizer["IdentityErrors:PasswordRequiresNonAlphanumeric", new {  }]
+                Description = _localizer["IdentityErrors:PasswordRequiresNonAlphanumeric", new { }]
             };
         }
 
@@ -171,7 +172,7 @@ namespace MccSoft.TemplateApp.App.Utils.Localization
             return new IdentityError
             {
                 Code = nameof(PasswordRequiresDigit),
-                Description = _localizer["IdentityErrors:PasswordRequiresDigit", new {  }]
+                Description = _localizer["IdentityErrors:PasswordRequiresDigit", new { }]
             };
         }
 
@@ -180,7 +181,7 @@ namespace MccSoft.TemplateApp.App.Utils.Localization
             return new IdentityError
             {
                 Code = nameof(PasswordRequiresLower),
-                Description = _localizer["IdentityErrors:PasswordRequiresLower", new {  }]
+                Description = _localizer["IdentityErrors:PasswordRequiresLower", new { }]
             };
         }
 
@@ -189,7 +190,7 @@ namespace MccSoft.TemplateApp.App.Utils.Localization
             return new IdentityError
             {
                 Code = nameof(PasswordRequiresUpper),
-                Description = _localizer["IdentityErrors:PasswordRequiresUpper", new {  }]
+                Description = _localizer["IdentityErrors:PasswordRequiresUpper", new { }]
             };
         }
 
@@ -210,7 +211,7 @@ namespace MccSoft.TemplateApp.App.Utils.Localization
             return new IdentityError
             {
                 Code = nameof(PasswordRequiresUpper),
-                Description = _localizer["IdentityErrors:RecoveryCodeRedemptionFailed", new {  }]
+                Description = _localizer["IdentityErrors:RecoveryCodeRedemptionFailed", new { }]
             };
         }
     }

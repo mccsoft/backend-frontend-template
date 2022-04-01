@@ -38,7 +38,8 @@ namespace MccSoft.TemplateApp.ComponentTests
         [Fact]
         public void AllControllersAreResolvable()
         {
-            var controllerTypes = typeof(Startup).Assembly.GetTypes()
+            var controllerTypes = typeof(Startup).Assembly
+                .GetTypes()
                 .Where(
                     x =>
                         (
@@ -130,9 +131,9 @@ namespace MccSoft.TemplateApp.ComponentTests
             var typeScriptClientGenerator = new TypeScriptClientGenerator(
                 document,
                 typescriptSettings
-            ) {
-
-            };
+            )
+            {
+                };
             var typescriptCode = typeScriptClientGenerator.GenerateFile();
 
             // && yarn replace \"this\\.(\\w*?)\\.toISOString\\(\\) : <any>undefined\" \"this.$1.toISOString() : this.$1\" app/api/api-client.ts
@@ -156,13 +157,13 @@ namespace MccSoft.TemplateApp.ComponentTests
         [Fact]
         public void PatchRequest_AllFieldsMatch()
         {
-            var dtoTypes = typeof(Startup).Assembly.GetTypes()
+            var dtoTypes = typeof(Startup).Assembly
+                .GetTypes()
                 .Where(x => IsSubclassOfRawGeneric(typeof(PatchRequest<>), x))
                 .ToList();
 
             var exclusions = new Dictionary<Type, IList<string>>()
             {
-
                 // { typeof(PatchPatientDto), new[] { nameof(PatchPatientDto.DeviceSerialNumber) } },
             };
 
@@ -174,14 +175,12 @@ namespace MccSoft.TemplateApp.ComponentTests
                     continue;
                 }
 
-                var properties = patchRequestType.GetProperties(
-                        BindingFlags.Instance | BindingFlags.Public
-                    )
+                var properties = patchRequestType
+                    .GetProperties(BindingFlags.Instance | BindingFlags.Public)
                     .Where(x => x.GetGetMethod() != null)
                     .Where(x => x.GetCustomAttribute<DoNotPatchAttribute>() == null);
-                var domainProperties = domainType.GetProperties(
-                        BindingFlags.Instance | BindingFlags.Public
-                    )
+                var domainProperties = domainType
+                    .GetProperties(BindingFlags.Instance | BindingFlags.Public)
                     .ToDictionary(x => x.Name);
 
                 foreach (var property in properties)

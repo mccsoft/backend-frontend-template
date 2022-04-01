@@ -14,7 +14,8 @@ namespace MccSoft.WebApi.Patching
         protected override JsonProperty CreateProperty(
             MemberInfo member,
             MemberSerialization memberSerialization
-        ) {
+        )
+        {
             var prop = base.CreateProperty(member, memberSerialization);
 
             prop.SetIsSpecified += (o, o1) =>

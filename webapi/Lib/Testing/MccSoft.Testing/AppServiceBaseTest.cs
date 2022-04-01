@@ -28,7 +28,8 @@ namespace MccSoft.Testing
         public ILogger<TAnyService> SetupLogger<TAnyService>()
         {
             var loggerMock = new Mock<ILogger<TAnyService>>();
-            loggerMock.Setup(
+            loggerMock
+                .Setup(
                     logger =>
                         logger.Log(
                             It.IsAny<LogLevel>(),

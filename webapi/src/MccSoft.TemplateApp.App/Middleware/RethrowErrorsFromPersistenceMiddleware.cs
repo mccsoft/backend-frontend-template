@@ -16,7 +16,8 @@ namespace MccSoft.TemplateApp.App.Middleware
         public RethrowErrorsFromPersistenceMiddleware(
             RequestDelegate next,
             ILogger<RethrowErrorsFromPersistenceMiddleware> logger
-        ) {
+        )
+        {
             _next = next;
             _logger = logger;
         }

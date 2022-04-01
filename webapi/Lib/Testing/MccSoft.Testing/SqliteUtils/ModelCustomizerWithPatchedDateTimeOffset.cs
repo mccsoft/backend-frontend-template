@@ -19,9 +19,8 @@ namespace MccSoft.Testing.SqliteUtils
     /// </summary>
     public class ModelCustomizerWithPatchedDateTimeOffset : ModelCustomizer
     {
-        public ModelCustomizerWithPatchedDateTimeOffset(
-            ModelCustomizerDependencies dependencies
-        ) : base(dependencies) { }
+        public ModelCustomizerWithPatchedDateTimeOffset(ModelCustomizerDependencies dependencies)
+            : base(dependencies) { }
 
         public override void Customize(ModelBuilder modelBuilder, DbContext context)
         {
@@ -40,7 +39,8 @@ namespace MccSoft.Testing.SqliteUtils
         private ModelBuilder UseValueConverterForType<T>(
             ModelBuilder modelBuilder,
             ValueConverter converter
-        ) {
+        )
+        {
             return UseValueConverterForType(modelBuilder, typeof(T), converter);
         }
 
@@ -48,11 +48,13 @@ namespace MccSoft.Testing.SqliteUtils
             ModelBuilder modelBuilder,
             Type type,
             ValueConverter converter
-        ) {
+        )
+        {
 #pragma warning disable EF1001 // Internal EF Core API usage.
             foreach (IMutableEntityType entityType in modelBuilder.Model.GetEntityTypes())
             {
-                List<PropertyInfo> properties = entityType.ClrType.GetProperties()
+                List<PropertyInfo> properties = entityType.ClrType
+                    .GetProperties()
                     .Where(p => p.PropertyType == type)
                     .ToList();
 
@@ -62,7 +64,8 @@ namespace MccSoft.Testing.SqliteUtils
 
                 foreach (PropertyInfo property in properties)
                 {
-                    builder.Property(type, property.Name, ConfigurationSource.Explicit)
+                    builder
+                        .Property(type, property.Name, ConfigurationSource.Explicit)
                         .HasConversion(converter, ConfigurationSource.Explicit);
                 }
             }

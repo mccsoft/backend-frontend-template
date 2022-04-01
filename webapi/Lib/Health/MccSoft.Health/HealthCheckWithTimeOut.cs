@@ -44,7 +44,8 @@ namespace MccSoft.Health
         /// </returns>
         protected override async ValueTask<HealthCheckResult> CheckAsync(
             CancellationToken cancellationToken = default
-        ) {
+        )
+        {
             var sw = new Stopwatch();
 
             try
@@ -52,7 +53,8 @@ namespace MccSoft.Health
                 using (
                     CancellationTokenSource tokenSource =
                         CancellationTokenSource.CreateLinkedTokenSource(cancellationToken)
-                ) {
+                )
+                {
                     tokenSource.CancelAfter(_timeout);
 
                     sw.Start();

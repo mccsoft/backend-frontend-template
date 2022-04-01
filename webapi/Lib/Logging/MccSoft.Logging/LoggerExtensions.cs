@@ -33,7 +33,8 @@ namespace MccSoft.Logging
             string activityName,
             string sessionId,
             params KeyValuePair<string, object>[] additionalParams
-        ) {
+        )
+        {
             return new TopLevelActivityScope(
                 logger,
                 activityName,
@@ -67,7 +68,8 @@ namespace MccSoft.Logging
             string message,
             AdditionalParams @params,
             LogLevel level = LogLevel.Information
-        ) {
+        )
+        {
             if (@params == null)
             {
                 throw new ArgumentNullException(nameof(@params));
@@ -100,7 +102,8 @@ namespace MccSoft.Logging
             OperationContext context,
             Func<Task> action,
             [CallerMemberName] string operationName = ""
-        ) {
+        )
+        {
             Func<Task<int>> func = async () =>
             {
                 await action();
@@ -130,7 +133,8 @@ namespace MccSoft.Logging
             AdditionalParams startParams,
             Func<Task> action,
             [CallerMemberName] string operationName = ""
-        ) {
+        )
+        {
             Func<Task<int>> func = async () =>
             {
                 await action();
@@ -156,7 +160,8 @@ namespace MccSoft.Logging
             OperationContext context,
             Func<Task<T>> action,
             [CallerMemberName] string operationName = ""
-        ) {
+        )
+        {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             using (LogContext.Push(new OperationContextEnricher(context, operationName)))
@@ -199,7 +204,8 @@ namespace MccSoft.Logging
             AdditionalParams startParams,
             Func<Task<T>> action,
             [CallerMemberName] string operationName = ""
-        ) {
+        )
+        {
             if (startParams == null)
             {
                 throw new ArgumentNullException(nameof(startParams));
@@ -243,7 +249,8 @@ namespace MccSoft.Logging
             OperationContext context,
             Func<T> action,
             [CallerMemberName] string operationName = ""
-        ) {
+        )
+        {
             T result;
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -281,7 +288,8 @@ namespace MccSoft.Logging
             OperationContext context,
             Func<Task<T>> action,
             [CallerMemberName] string operationName = ""
-        ) {
+        )
+        {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             using (LogContext.Push(new OperationContextEnricher(context, operationName)))
@@ -316,7 +324,8 @@ namespace MccSoft.Logging
             OperationContext context,
             Action action = default,
             [CallerMemberName] string operationName = ""
-        ) {
+        )
+        {
             Func<int> func = () =>
             {
                 action();
@@ -345,7 +354,8 @@ namespace MccSoft.Logging
             AdditionalParams startParams,
             Func<T> action,
             [CallerMemberName] string operationName = ""
-        ) {
+        )
+        {
             if (startParams == null)
             {
                 throw new ArgumentNullException(nameof(startParams));
@@ -391,7 +401,8 @@ namespace MccSoft.Logging
             AdditionalParams startParams,
             Action action = default,
             [CallerMemberName] string operationName = ""
-        ) {
+        )
+        {
             Func<int> func = () =>
             {
                 action();
@@ -407,7 +418,8 @@ namespace MccSoft.Logging
         private static AdditionalParams MakeStartMessageParams(
             OperationContext context,
             AdditionalParams @params = null
-        ) {
+        )
+        {
             IEnumerable<KeyValuePair<Field, object>> source =
                 @params == null ? context : context.Concat(@params);
             // We embed Method explicitly into the start message, so don't need it here.

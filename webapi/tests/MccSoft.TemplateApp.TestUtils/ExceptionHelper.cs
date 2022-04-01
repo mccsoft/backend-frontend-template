@@ -19,15 +19,20 @@ namespace MccSoft.TemplateApp.TestUtils
             string expectedWildcardPattern,
             string because = "",
             params object[] becauseArgs
-        ) {
-            Execute.Assertion.BecauseOf(because, becauseArgs)
+        )
+        {
+            Execute.Assertion
+                .BecauseOf(because, becauseArgs)
                 .UsingLineBreaks.ForCondition(assertion.Subject.Any())
                 .FailWith("Expected ApiException exception {reason}, but no exception was thrown.");
 
             var exception = assertion.Subject.First();
-            var typedException =
-                exception.Should().BeOfType<ApiException<ValidationProblemDetails>>().Subject;
-            typedException.Result.Detail.Should()
+            var typedException = exception
+                .Should()
+                .BeOfType<ApiException<ValidationProblemDetails>>()
+                .Subject;
+            typedException.Result.Detail
+                .Should()
                 .MatchEquivalentOf(expectedWildcardPattern, because, becauseArgs);
             return assertion;
         }
@@ -38,8 +43,10 @@ namespace MccSoft.TemplateApp.TestUtils
             string error = "",
             string because = "",
             params object[] becauseArgs
-        ) {
-            Execute.Assertion.BecauseOf(because, becauseArgs)
+        )
+        {
+            Execute.Assertion
+                .BecauseOf(because, becauseArgs)
                 .UsingLineBreaks.ForCondition(assertion.Subject.Any())
                 .FailWith(
                     "Expected FailedRequestException exception {reason}, but no exception was thrown."
@@ -77,16 +84,20 @@ namespace MccSoft.TemplateApp.TestUtils
             string error = "",
             string because = "",
             params object[] becauseArgs
-        ) {
-            Execute.Assertion.BecauseOf(because, becauseArgs)
+        )
+        {
+            Execute.Assertion
+                .BecauseOf(because, becauseArgs)
                 .UsingLineBreaks.ForCondition(assertion.Subject.Any())
                 .FailWith(
                     "Expected FailedRequestException exception {reason}, but no exception was thrown."
                 );
 
             var exception = assertion.Subject.First();
-            var apiException =
-                exception.Should().BeOfType<ApiException<ValidationProblemDetails>>().Subject;
+            var apiException = exception
+                .Should()
+                .BeOfType<ApiException<ValidationProblemDetails>>()
+                .Subject;
             ValidationProblemDetails validationProblemDetails = apiException.Result;
             validationProblemDetails.Errors.Should().ContainKey(fieldName);
             if (!string.IsNullOrEmpty(error))
@@ -103,8 +114,10 @@ namespace MccSoft.TemplateApp.TestUtils
             string error = "",
             string because = "",
             params object[] becauseArgs
-        ) {
-            Execute.Assertion.BecauseOf(because, becauseArgs)
+        )
+        {
+            Execute.Assertion
+                .BecauseOf(because, becauseArgs)
                 .UsingLineBreaks.ForCondition(assertion.Subject.Any())
                 .FailWith(
                     "Expected FailedRequestException exception {reason}, but no exception was thrown."
@@ -129,8 +142,10 @@ namespace MccSoft.TemplateApp.TestUtils
             string type,
             string because = "",
             params object[] becauseArgs
-        ) {
-            Execute.Assertion.BecauseOf(because, becauseArgs)
+        )
+        {
+            Execute.Assertion
+                .BecauseOf(because, becauseArgs)
                 .UsingLineBreaks.ForCondition(assertion.Subject.Any())
                 .FailWith(
                     "Expected FailedRequestException exception {reason}, but no exception was thrown."
@@ -148,8 +163,10 @@ namespace MccSoft.TemplateApp.TestUtils
             this ExceptionAssertions<ApiException> assertion,
             string because = "",
             params object[] becauseArgs
-        ) {
-            Execute.Assertion.BecauseOf(because, becauseArgs)
+        )
+        {
+            Execute.Assertion
+                .BecauseOf(because, becauseArgs)
                 .UsingLineBreaks.ForCondition(assertion.Subject.Any())
                 .FailWith("Expected ApiException exception {reason}, but no exception was thrown.");
 
@@ -168,8 +185,10 @@ namespace MccSoft.TemplateApp.TestUtils
             this ExceptionAssertions<ApiException> assertion,
             string because = "",
             params object[] becauseArgs
-        ) {
-            Execute.Assertion.BecauseOf(because, becauseArgs)
+        )
+        {
+            Execute.Assertion
+                .BecauseOf(because, becauseArgs)
                 .UsingLineBreaks.ForCondition(assertion.Subject.Any())
                 .FailWith("Expected ApiException exception {reason}, but no exception was thrown.");
 
@@ -183,8 +202,10 @@ namespace MccSoft.TemplateApp.TestUtils
             this GenericAsyncFunctionAssertions<T> assertion,
             string because = "",
             params object[] becauseArgs
-        ) {
-            return assertion.ThrowExactlyAsync<ApiException>(because, becauseArgs)
+        )
+        {
+            return assertion
+                .ThrowExactlyAsync<ApiException>(because, becauseArgs)
                 .WithMessage("*Status: 403*", because, becauseArgs);
         }
     }

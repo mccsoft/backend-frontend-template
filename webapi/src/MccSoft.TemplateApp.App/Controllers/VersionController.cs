@@ -29,7 +29,8 @@ namespace MccSoft.TemplateApp.App.Controllers
         [HttpGet("api")]
         public string Version()
         {
-            var attribute = typeof(VersionController).GetTypeInfo()
+            var attribute = typeof(VersionController)
+                .GetTypeInfo()
                 .Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
 
             if (attribute == null)

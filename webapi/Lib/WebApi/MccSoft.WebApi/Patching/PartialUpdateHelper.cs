@@ -26,7 +26,8 @@ namespace MccSoft.WebApi.Patching
             TObjectWithNewValues objectWithNewValues
         ) where TObjectWithNewValues : IPatchRequest
         {
-            var objectWithNewValuesProperties = objectWithNewValues.GetType()
+            var objectWithNewValuesProperties = objectWithNewValues
+                .GetType()
                 .GetProperties()
                 .Where(x => x.GetGetMethod() != null)
                 .ToList();
@@ -44,7 +45,8 @@ namespace MccSoft.WebApi.Patching
                     )
                     && propertyInObjectToUpdate.SetMethod != null
                     && propertyInObjectToUpdate.SetMethod.IsPublic
-                ) {
+                )
+                {
                     var propertyValue = propertyInNewValuesObject.GetValue(objectWithNewValues);
                     Type propertyType =
                         Nullable.GetUnderlyingType(propertyInObjectToUpdate.PropertyType)
@@ -61,16 +63,19 @@ namespace MccSoft.WebApi.Patching
                     }
 
                     if (
-                        propertyInNewValuesObject.PropertyType.GetInterfaces()
+                        propertyInNewValuesObject.PropertyType
+                            .GetInterfaces()
                             .Contains(typeof(IPatchRequest))
-                    ) {
+                    )
+                    {
                         var newValue =
                             propertyInObjectToUpdate.GetValue(objectToUpdate)
                             ?? Activator.CreateInstance(propertyType);
 
                         try
                         {
-                            typeof(PartialUpdateHelper).GetMethod("Update")
+                            typeof(PartialUpdateHelper)
+                                .GetMethod("Update")
                                 .MakeGenericMethod(
                                     propertyInObjectToUpdate.PropertyType,
                                     propertyInNewValuesObject.PropertyType
@@ -132,7 +137,8 @@ namespace MccSoft.WebApi.Patching
         public static TResult GetValue<T, TResult>(
             this PatchRequest<T> patchRequest,
             Expression<Func<T, TResult>> field
-        ) {
+        )
+        {
             var propertyName = ((System.Linq.Expressions.MemberExpression)field.Body).Member.Name;
             return (TResult)patchRequest.GetType().GetProperty(propertyName).GetValue(patchRequest);
         }
@@ -155,14 +161,18 @@ namespace MccSoft.WebApi.Patching
                 .Append(type)
                 .FirstOrDefault(
                     x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IList<>)
-                )?.GetGenericArguments().FirstOrDefault();
+                )
+                ?.GetGenericArguments()
+                .FirstOrDefault();
         }
 
         private static void BlindMap<TObjectToUpdate, TObjectWithNewValues>(
             this TObjectToUpdate objectToUpdate,
             TObjectWithNewValues objectWithNewValues
-        ) {
-            var objectWithNewValuesProperties = objectWithNewValues.GetType()
+        )
+        {
+            var objectWithNewValuesProperties = objectWithNewValues
+                .GetType()
                 .GetProperties()
                 .Where(x => x.GetGetMethod() != null)
                 .ToList();
@@ -176,7 +186,8 @@ namespace MccSoft.WebApi.Patching
                     propertyInObjectToUpdate != null
                     && propertyInObjectToUpdate.SetMethod != null
                     && propertyInObjectToUpdate.SetMethod.IsPublic
-                ) {
+                )
+                {
                     var propertyValue = propertyInNewValuesObject.GetValue(objectWithNewValues);
                     Type propertyType =
                         Nullable.GetUnderlyingType(propertyInObjectToUpdate.PropertyType)

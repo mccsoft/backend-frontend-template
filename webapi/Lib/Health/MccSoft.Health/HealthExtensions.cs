@@ -27,9 +27,11 @@ namespace MccSoft.Health
         public static void AddAppHealth(
             this IServiceCollection services,
             IConfiguration configuration
-        ) {
+        )
+        {
             int? metricsPort = GetMetricsPort(configuration);
-            IHealthRoot health = AppMetricsHealth.CreateDefaultBuilder()
+            IHealthRoot health = AppMetricsHealth
+                .CreateDefaultBuilder()
                 .HealthChecks.AddProcessPhysicalMemoryCheck(
                     "Working Set",
                     300_000_000,

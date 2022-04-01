@@ -8,7 +8,8 @@ namespace MccSoft.TemplateApp.Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql(@"TRUNCATE TABLE ""Products""");
-            migrationBuilder.AlterDatabase()
+            migrationBuilder
+                .AlterDatabase()
                 .Annotation("Npgsql:Enum:product_type", "undefined,auto,electronic,other");
 
             migrationBuilder.AddColumn<ProductType>(
@@ -24,7 +25,8 @@ namespace MccSoft.TemplateApp.Persistence.Migrations
         {
             migrationBuilder.DropColumn(name: "ProductType", table: "Products");
 
-            migrationBuilder.AlterDatabase()
+            migrationBuilder
+                .AlterDatabase()
                 .OldAnnotation("Npgsql:Enum:product_type", "undefined,auto,electronic,other");
         }
     }

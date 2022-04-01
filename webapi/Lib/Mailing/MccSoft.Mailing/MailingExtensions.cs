@@ -17,7 +17,8 @@ namespace MccSoft.Mailing
         > DefaultEmailModelPathConverter = (model, templateType) =>
         {
             string typeName = model.GetType().Name;
-            string folderName = typeName.Replace("EmailModel", "")
+            string folderName = typeName
+                .Replace("EmailModel", "")
                 .Replace("MailModel", "")
                 .Replace("Model", "");
             return BasePath
@@ -40,9 +41,11 @@ namespace MccSoft.Mailing
             [NotNull] this IServiceCollection services,
             IConfiguration configuration,
             Func<EmailModelBase, EmailTemplateType, string> getEmailViewPath = null
-        ) {
+        )
+        {
             services.Configure<MailSenderOptions>(configuration);
-            return services.AddSingleton(
+            return services
+                .AddSingleton(
                     new MailSettings()
                     {
                         EmailViewPathProvider = getEmailViewPath ?? DefaultEmailModelPathConverter

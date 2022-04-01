@@ -52,7 +52,8 @@ namespace MccSoft.WebApi.Throttler
         public override async Task OnActionExecutionAsync(
             ActionExecutingContext context,
             ActionExecutionDelegate next
-        ) {
+        )
+        {
             InitializeThrottlerIfNotYet(context.HttpContext);
 
             var httpContext = context.HttpContext;
@@ -131,8 +132,9 @@ namespace MccSoft.WebApi.Throttler
         {
             if (_throttleGroup == ThrottleGroup.Identity)
             {
-                _throttler.ThrottleGroup =
-                    context.HttpContext.User.FindFirst(JwtClaimTypes.Subject).Value;
+                _throttler.ThrottleGroup = context.HttpContext.User
+                    .FindFirst(JwtClaimTypes.Subject)
+                    .Value;
             }
 
             if (_throttleGroup == ThrottleGroup.IpAddress)

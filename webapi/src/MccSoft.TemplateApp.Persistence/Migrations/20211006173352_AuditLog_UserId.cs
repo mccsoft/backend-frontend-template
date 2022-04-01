@@ -10,12 +10,14 @@ namespace MccSoft.TemplateApp.Persistence.Migrations
                 name: "UserId",
                 table: "AuditLogs",
                 type: "text",
-                nullable: true);
+                nullable: true
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_AuditLogs_UserId",
                 table: "AuditLogs",
-                column: "UserId");
+                column: "UserId"
+            );
 
             migrationBuilder.AddForeignKey(
                 name: "FK_AuditLogs_AspNetUsers_UserId",
@@ -23,22 +25,20 @@ namespace MccSoft.TemplateApp.Persistence.Migrations
                 column: "UserId",
                 principalTable: "AspNetUsers",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
+                onDelete: ReferentialAction.Restrict
+            );
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
                 name: "FK_AuditLogs_AspNetUsers_UserId",
-                table: "AuditLogs");
+                table: "AuditLogs"
+            );
 
-            migrationBuilder.DropIndex(
-                name: "IX_AuditLogs_UserId",
-                table: "AuditLogs");
+            migrationBuilder.DropIndex(name: "IX_AuditLogs_UserId", table: "AuditLogs");
 
-            migrationBuilder.DropColumn(
-                name: "UserId",
-                table: "AuditLogs");
+            migrationBuilder.DropColumn(name: "UserId", table: "AuditLogs");
         }
     }
 }

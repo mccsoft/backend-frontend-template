@@ -17,16 +17,16 @@ namespace MccSoft.WebApi.SignedUrl
         private readonly SignUrlHelper _signUrlHelper;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public SignUrlTestController(IHostEnvironment hostEnvironment,
+        public SignUrlTestController(
+            IHostEnvironment hostEnvironment,
             SignUrlHelper signUrlHelper,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor
+        )
         {
             _hostEnvironment = hostEnvironment;
             _signUrlHelper = signUrlHelper;
             _httpContextAccessor = httpContextAccessor;
         }
-
-
         /// <summary>
         /// It's preferable to use `imageGuid` in URL (not the productId), because it will be cached by the browser.
         /// And when image for Product is updated, the URL of the image should be changed (to avoid displaying old image from cache).
@@ -54,7 +54,7 @@ namespace MccSoft.WebApi.SignedUrl
         //
         //     var userId = claimsPrincipal.FindFirstValue(SignUrlHelper.UserIdClaimName);
         //
-        //     // you could add any custom logic to check if user is allowed to access the file. 
+        //     // you could add any custom logic to check if user is allowed to access the file.
         //     if (userId != "admin")
         //     {
         //         throw new AccessDeniedException("Access denied");

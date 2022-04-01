@@ -19,7 +19,8 @@ namespace MccSoft.PersistenceHelpers
 
         public static void UnsafeConfigureNotFoundException(
             Func<Type, string, string, Exception> exceptionFactory
-        ) {
+        )
+        {
             _createException = exceptionFactory;
         }
 
@@ -158,7 +159,8 @@ namespace MccSoft.PersistenceHelpers
             Type entityType,
             string specification,
             string messageIfNotFound
-        ) {
+        )
+        {
             messageIfNotFound = messageIfNotFound == null ? "" : messageIfNotFound + " ";
             throw new PersistenceResourceNotFoundException(
                 $"{messageIfNotFound}The entity of type '{entityType.Name}' was not found. "

@@ -6,8 +6,9 @@ namespace MccSoft.NpgSql
     {
         public static void RegisterRetryHelper(this IServiceCollection services)
         {
-            services.AddScoped(typeof(TransactionLogger<>))
-                .AddScoped(typeof(PostgresRetryHelper<, >));
+            services
+                .AddScoped(typeof(TransactionLogger<>))
+                .AddScoped(typeof(PostgresRetryHelper<,>));
         }
     }
 }

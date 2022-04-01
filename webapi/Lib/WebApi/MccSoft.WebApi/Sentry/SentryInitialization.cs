@@ -20,7 +20,8 @@ namespace MccSoft.WebApi.Sentry
             this IWebHostBuilder builder,
             Action<SentryAspNetCoreOptions> configureOptions = null,
             bool requestBodyBufferingIsEnabled = true
-        ) {
+        )
+        {
             builder.ConfigureServices(
                 services => services.AddTransient<ISentryEventProcessor, SentryEventProcessor>()
             );

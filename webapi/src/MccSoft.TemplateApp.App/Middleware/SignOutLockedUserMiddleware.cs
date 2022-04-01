@@ -22,7 +22,8 @@ namespace MccSoft.TemplateApp.App.Middleware
             UserManager<User> userManager,
             SignInManager<User> signInManager,
             IUserAccessor userAccessor
-        ) {
+        )
+        {
             if (userAccessor.IsUserAuthenticated)
             {
                 var userId = userAccessor.GetUserId();

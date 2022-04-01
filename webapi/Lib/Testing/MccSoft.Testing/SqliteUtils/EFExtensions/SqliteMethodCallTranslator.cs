@@ -27,7 +27,8 @@ namespace MccSoft.Testing.SqliteUtils.EFExtensions
             MethodInfo method,
             IReadOnlyList<SqlExpression> arguments,
             IDiagnosticsLogger<DbLoggerCategory.Query> logger
-        ) {
+        )
+        {
             if (method == iLikeMethod)
             {
                 var args = new List<SqlExpression> { arguments[1], arguments[2] }; // cut the first parameter (DBFunctions) from extension function

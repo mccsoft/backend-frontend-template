@@ -67,7 +67,8 @@ namespace MccSoft.WebApi.SignedUrl
         public virtual bool IsSignatureValid(
             HttpContext context,
             out ClaimsPrincipal claimsPrincipal
-        ) {
+        )
+        {
             if (context.User.Identity?.IsAuthenticated == true)
             {
                 claimsPrincipal = context.User;

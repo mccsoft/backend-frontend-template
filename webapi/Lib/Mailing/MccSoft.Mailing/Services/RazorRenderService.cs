@@ -22,7 +22,8 @@ namespace MccSoft.Mailing
             IRazorViewEngine razorViewEngine,
             ITempDataProvider tempDataProvider,
             IServiceProvider serviceProvider
-        ) {
+        )
+        {
             _razorViewEngine = razorViewEngine;
             _tempDataProvider = tempDataProvider;
             _serviceProvider = serviceProvider;
@@ -48,7 +49,8 @@ namespace MccSoft.Mailing
             var viewDictionary = new ViewDataDictionary(
                 new EmptyModelMetadataProvider(),
                 new ModelStateDictionary()
-            ) {
+            )
+            {
                 Model = model,
             };
 

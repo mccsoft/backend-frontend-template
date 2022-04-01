@@ -21,7 +21,8 @@ namespace MccSoft.TemplateApp.App.Controllers
         public ActionResult SetSignatureCookie(
             [FromServices] SignUrlHelper signUrlHelper,
             [FromServices] IHttpContextAccessor httpContextAccessor
-        ) {
+        )
+        {
             string signature = signUrlHelper.GenerateSignature();
 
             httpContextAccessor.HttpContext!.Response.Cookies.Append(

@@ -15,7 +15,8 @@ namespace MccSoft.TemplateApp.ComponentTests.Helpers
             this ClaimsIdentity identity,
             string type,
             string value
-        ) {
+        )
+        {
             var existingClaim = identity.Claims.FirstOrDefault(x => x.Type == type);
             if (existingClaim != null)
             {

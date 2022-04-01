@@ -24,7 +24,8 @@ namespace MccSoft.Logging
             public TraceLoggingScope(
                 Activity activity,
                 List<KeyValuePair<string, object>> additionalParams
-            ) {
+            )
+            {
                 if (activity == null)
                 {
                     throw new ArgumentNullException(nameof(activity));
@@ -63,7 +64,8 @@ namespace MccSoft.Logging
                             if (
                                 index < 0
                                 || index > _activityFieldCount + _additionalParams.Count - 1
-                            ) {
+                            )
+                            {
                                 throw new ArgumentOutOfRangeException(nameof(index));
                             }
 
@@ -97,7 +99,8 @@ namespace MccSoft.Logging
             string activityName,
             string sessionId,
             List<KeyValuePair<string, object>> paramList
-        ) {
+        )
+        {
             _activityToRestore = Activity.Current;
 
             // We don't want to inherit a TraceId from the global root activity.

@@ -11,7 +11,8 @@ namespace MccSoft.PersistenceHelpers.DomainEvents
         public static DbContextOptionsBuilder AddDomainEventsInterceptors(
             this DbContextOptionsBuilder dbContextOptionsBuilder,
             IServiceProvider provider
-        ) {
+        )
+        {
             return dbContextOptionsBuilder.AddInterceptors(
                 provider.GetRequiredService<DomainEventsSaveChangesInterceptor>(),
                 provider.GetRequiredService<DomainEventsTransactionInterceptor>()
@@ -21,7 +22,8 @@ namespace MccSoft.PersistenceHelpers.DomainEvents
         public static void AddDomainEventsWithMediatR(
             this IServiceCollection services,
             params Type[] handlerAssemblyMarkerTypes
-        ) {
+        )
+        {
             services.AddTransient<DomainEventsSaveChangesInterceptor>();
             services.AddTransient<DomainEventsTransactionInterceptor>();
 

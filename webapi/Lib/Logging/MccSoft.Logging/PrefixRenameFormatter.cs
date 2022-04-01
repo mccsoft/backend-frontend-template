@@ -55,16 +55,17 @@ namespace MccSoft.Logging
             bool inlineFields = false,
             bool renderMessageTemplate = true,
             bool formatStackTraceAsArray = false
-        ) : base(
-            omitEnclosingObject,
-            closingDelimiter,
-            renderMessage,
-            formatProvider,
-            serializer,
-            inlineFields,
-            renderMessageTemplate,
-            formatStackTraceAsArray
-        ) { }
+        )
+            : base(
+                omitEnclosingObject,
+                closingDelimiter,
+                renderMessage,
+                formatProvider,
+                serializer,
+                inlineFields,
+                renderMessageTemplate,
+                formatStackTraceAsArray
+            ) { }
 
         /// <summary>
         /// Escape the name of the Property before calling ElasticSearch
@@ -72,7 +73,8 @@ namespace MccSoft.Logging
         protected override void WriteDictionary(
             IReadOnlyDictionary<ScalarValue, LogEventPropertyValue> elements,
             TextWriter output
-        ) {
+        )
+        {
             Dictionary<ScalarValue, LogEventPropertyValue> escaped = elements.ToDictionary(
                 e => ReplacePrefixInFieldName(e.Key),
                 e => e.Value
@@ -89,7 +91,8 @@ namespace MccSoft.Logging
             object value,
             ref string precedingDelimiter,
             TextWriter output
-        ) {
+        )
+        {
             name = ReplacePrefixInFieldName(name);
 
             base.WriteJsonProperty(name, value, ref precedingDelimiter, output);
@@ -126,8 +129,10 @@ namespace MccSoft.Logging
             string template,
             ref string delim,
             TextWriter output
-        ) {
-            string escaped = template.Replace("{" + _prefix, "{" + _dottedPrefix)
+        )
+        {
+            string escaped = template
+                .Replace("{" + _prefix, "{" + _dottedPrefix)
                 .Replace("{@" + _prefix, "{@" + _dottedPrefix);
             base.WriteMessageTemplate(escaped, ref delim, output);
         }

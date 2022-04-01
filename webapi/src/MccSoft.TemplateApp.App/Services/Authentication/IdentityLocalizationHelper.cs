@@ -54,7 +54,8 @@ namespace MccSoft.TemplateApp.App.Services.Authentication
             string? oldPasswordFieldName = null,
             string? newPasswordFieldName = null,
             string? usernameFieldName = null
-        ) {
+        )
+        {
             IdentityError firstError = result.Errors.First();
             if (!string.IsNullOrEmpty(oldPasswordFieldName) && IsOldPasswordError(firstError.Code))
                 throw new ValidationException(oldPasswordFieldName, firstError.Description);

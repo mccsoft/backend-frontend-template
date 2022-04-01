@@ -34,7 +34,8 @@ namespace MccSoft.Testing
         protected virtual async Task WaitForResultConsumed(
             TaskCompletionSource<bool> taskCompletionSource,
             int timeout = 1000
-        ) {
+        )
+        {
             var taskList = new List<Task> { taskCompletionSource.Task, Task.Delay(timeout) };
             var finishedTask = await Task.WhenAny(taskList);
             if (!(finishedTask is Task<bool>))

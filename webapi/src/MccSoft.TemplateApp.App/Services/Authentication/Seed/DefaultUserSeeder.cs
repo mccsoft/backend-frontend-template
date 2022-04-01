@@ -14,7 +14,8 @@ namespace MccSoft.TemplateApp.App.Services.Authentication
         public DefaultUserSeeder(
             IOptions<IdentityOptions> identityOptions,
             UserManager<User> userManager
-        ) {
+        )
+        {
             _identityOptions = identityOptions;
             _userManager = userManager;
         }
@@ -55,7 +56,6 @@ namespace MccSoft.TemplateApp.App.Services.Authentication
                     await _userManager.ResetPasswordAsync(existingUser, token, password);
                 }
             }
-
             finally
             {
                 //reset settings to default

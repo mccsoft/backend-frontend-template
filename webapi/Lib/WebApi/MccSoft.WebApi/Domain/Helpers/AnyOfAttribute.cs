@@ -10,7 +10,8 @@ namespace MccSoft.WebApi.Domain.Helpers
         protected override ValidationResult IsValid(
             object value,
             ValidationContext validationContext
-        ) {
+        )
+        {
             if (PossibleValues.Any(x => x.Equals(value)))
                 return ValidationResult.Success;
             else

@@ -16,7 +16,8 @@ namespace MccSoft.WebApi.Sentry
         public SentryEventProcessor(
             IConfiguration configuration,
             ILogger<SentryEventProcessor> logger
-        ) {
+        )
+        {
             _logger = logger;
             _stageName = configuration["Stage:Name"];
             Assembly entryAssembly = Assembly.GetEntryAssembly();
@@ -53,10 +54,12 @@ namespace MccSoft.WebApi.Sentry
                 {
                     // HACK: Retrieve name of service bus message,
                     // which was failed to consume, from LogEntry.
-                    string failedServiceBusMessageName = Regex.Match(
-                        message,
-                        "Failed to consume \'(?<failedServiceBusMessageName>.*)\' in"
-                    ).Groups["failedServiceBusMessageName"].ToString();
+                    string failedServiceBusMessageName = Regex
+                        .Match(
+                            message,
+                            "Failed to consume \'(?<failedServiceBusMessageName>.*)\' in"
+                        )
+                        .Groups["failedServiceBusMessageName"].ToString();
 
                     @event.SetFingerprint(
                         new[]

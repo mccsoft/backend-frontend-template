@@ -26,7 +26,8 @@ namespace MccSoft.PersistenceHelpers.DomainEvents
         public DomainEventsSaveChangesInterceptor(
             IMediator mediator,
             ILogger<DomainEventsSaveChangesInterceptor> logger
-        ) {
+        )
+        {
             _mediator = mediator;
             _logger = logger;
         }
@@ -35,7 +36,8 @@ namespace MccSoft.PersistenceHelpers.DomainEvents
             DbContextEventData eventData,
             InterceptionResult<int> result,
             CancellationToken cancellationToken = new CancellationToken()
-        ) {
+        )
+        {
             if (eventData.Context.Database.CurrentTransaction == null)
             {
                 _domainEventEntities =
@@ -50,7 +52,8 @@ namespace MccSoft.PersistenceHelpers.DomainEvents
         public override InterceptionResult<int> SavingChanges(
             DbContextEventData eventData,
             InterceptionResult<int> result
-        ) {
+        )
+        {
             if (eventData.Context.Database.CurrentTransaction == null)
             {
                 _domainEventEntities =
@@ -66,7 +69,8 @@ namespace MccSoft.PersistenceHelpers.DomainEvents
             SaveChangesCompletedEventData eventData,
             int result,
             CancellationToken cancellationToken = new()
-        ) {
+        )
+        {
             if (eventData.Context.Database.CurrentTransaction == null)
             {
                 await DbContextInterceptorHelpers.ExecuteDomainEvents(
@@ -84,7 +88,8 @@ namespace MccSoft.PersistenceHelpers.DomainEvents
         {
             if (eventData.Context.Database.CurrentTransaction == null)
             {
-                DbContextInterceptorHelpers.ExecuteDomainEvents(
+                DbContextInterceptorHelpers
+                    .ExecuteDomainEvents(
                         eventData.Context,
                         _domainEventEntities,
                         _mediator,
