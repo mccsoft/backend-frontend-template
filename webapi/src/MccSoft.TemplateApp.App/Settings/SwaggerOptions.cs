@@ -9,6 +9,7 @@ namespace MccSoft.TemplateApp.App.Settings
         {
             public string? Name { get; set; }
         }
+
         public class EndpointOptions
         {
             public string? Url { get; set; }
@@ -19,6 +20,7 @@ namespace MccSoft.TemplateApp.App.Settings
         {
             public string? Email { get; set; }
         }
+
         public bool Enabled { get; set; }
 
         public string? Description { get; set; }

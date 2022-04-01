@@ -330,9 +330,9 @@ namespace MccSoft.TemplateApp.App
                                     DbConnection conn = db.GetDbConnection();
                                     IDbContextTransaction tran = db.CurrentTransaction;
                                     TemplateAppDbContext auditContext = new TemplateAppDbContext(
-                                        new DbContextOptionsBuilder<TemplateAppDbContext>().UseNpgsql(
-                                            conn
-                                        ).Options,
+                                        new DbContextOptionsBuilder<TemplateAppDbContext>()
+                                            .UseNpgsql(conn)
+                                            .Options,
                                         dbContext.UserAccessor
                                     );
                                     if (tran != null)
@@ -355,8 +355,9 @@ namespace MccSoft.TemplateApp.App
                                     auditLog.EntityType = entry.Name;
                                     auditLog.Action = entry.Action;
                                     auditLog.FullKey = entry.PrimaryKey;
-                                    auditLog.Key =
-                                        entry.PrimaryKey.Values.FirstOrDefault()?.ToString();
+                                    auditLog.Key = entry.PrimaryKey.Values
+                                        .FirstOrDefault()
+                                        ?.ToString();
                                     auditLog.Change = entry.Changes?.ToDictionary(
                                         x => x.ColumnName,
                                         x => x.NewValue
@@ -697,8 +698,9 @@ namespace MccSoft.TemplateApp.App
 
             DefaultUserSeeder seeder =
                 scope.ServiceProvider.GetRequiredService<DefaultUserSeeder>();
-            DefaultUserOptions defaultUser =
-                scope.ServiceProvider.GetRequiredService<IOptions<DefaultUserOptions>>().Value;
+            DefaultUserOptions defaultUser = scope.ServiceProvider
+                .GetRequiredService<IOptions<DefaultUserOptions>>()
+                .Value;
             if (
                 !string.IsNullOrEmpty(defaultUser.UserName)
                 && !string.IsNullOrEmpty(defaultUser.Password)

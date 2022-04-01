@@ -9,10 +9,12 @@
         /// Offset of list.
         /// </summary>
         public int? Offset { get; set; }
+
         /// <summary>
         /// Number of requested records.
         /// </summary>
         public int? Limit { get; set; }
+
         /// <summary>
         /// Field name for sorting in DB.
         /// </summary>

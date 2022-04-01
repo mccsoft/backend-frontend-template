@@ -87,8 +87,8 @@ namespace MccSoft.Testing
                 p =>
                 {
                     Type propertyType = p.PropertyType.IsNullableType()
-                        ? Nullable.GetUnderlyingType(p.PropertyType)
-                        : p.PropertyType;
+                      ? Nullable.GetUnderlyingType(p.PropertyType)
+                      : p.PropertyType;
 
                     return typeof(Enum).IsAssignableFrom(propertyType);
                 }
@@ -100,8 +100,8 @@ namespace MccSoft.Testing
                 p =>
                 {
                     Type propertyType = p.PropertyType.IsNullableType()
-                        ? Nullable.GetUnderlyingType(p.PropertyType)
-                        : p.PropertyType;
+                      ? Nullable.GetUnderlyingType(p.PropertyType)
+                      : p.PropertyType;
 
                     return typeof(Boolean).IsAssignableFrom(propertyType);
                 }
@@ -214,6 +214,7 @@ namespace MccSoft.Testing
                 propertyInfo.SetValue(obj, value);
             }
         }
+
         private static void ProcessTimeSpans(object obj, IEnumerable<PropertyInfo> propertyInfos)
         {
             foreach (PropertyInfo propertyInfo in propertyInfos)

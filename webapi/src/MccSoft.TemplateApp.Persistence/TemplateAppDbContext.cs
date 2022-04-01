@@ -30,7 +30,9 @@ namespace MccSoft.TemplateApp.Persistence
         {
             UserAccessor = userAccessor;
         }
+
         static TemplateAppDbContext() => NpgsqlConnection.GlobalTypeMapper.MapEnum<ProductType>();
+
         // when adding enum here don't forget to OnModelCreating as well (see below)
 
         protected override void OnModelCreating(ModelBuilder builder)

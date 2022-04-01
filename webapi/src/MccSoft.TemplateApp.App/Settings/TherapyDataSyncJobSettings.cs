@@ -1,6 +1,4 @@
 namespace MccSoft.TemplateApp.App.Settings
 {
-    public class TherapyDataSyncJobSettings : HangFireJobSettings
-    {
-    }
+    public class TherapyDataSyncJobSettings : HangFireJobSettings { }
 }

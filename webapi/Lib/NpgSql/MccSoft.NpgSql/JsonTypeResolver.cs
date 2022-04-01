@@ -21,6 +21,7 @@ public static class PostgresSerialization
         );
     }
 }
+
 class JsonOverrideTypeHandlerResolverFactory : TypeHandlerResolverFactory
 {
     private readonly JsonSerializerOptions _options;

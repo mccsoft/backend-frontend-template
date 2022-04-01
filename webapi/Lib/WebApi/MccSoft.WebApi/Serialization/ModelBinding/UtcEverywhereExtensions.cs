@@ -37,8 +37,11 @@ public static class UtcEverywhereExtensions
                 }
             );
 
-        HttpClientDefaults.MediaTypeFormatters.JsonFormatter.SerializerSettings.DateTimeZoneHandling =
-            DateTimeZoneHandling.Utc;
+        HttpClientDefaults
+            .MediaTypeFormatters
+            .JsonFormatter
+            .SerializerSettings
+            .DateTimeZoneHandling = DateTimeZoneHandling.Utc;
         JsonConvert.DefaultSettings = () =>
         {
             var serializerSettings = new JsonSerializerSettings

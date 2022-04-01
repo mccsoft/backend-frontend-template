@@ -16,6 +16,7 @@ namespace MccSoft.Testing.SqliteUtils
         }
 
         private readonly SqliteConnection _connection;
+
         public SqliteConnectionHolder(ConnectionString connectionString)
         {
             _connection = new SqliteConnection(connectionString.Str);

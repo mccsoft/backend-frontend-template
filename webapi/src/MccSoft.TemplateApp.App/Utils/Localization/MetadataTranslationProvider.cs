@@ -14,9 +14,7 @@ namespace MccSoft.TemplateApp.App.Utils.Localization
         /// <summary>
         /// just a marker class to use in StringLocalizer
         /// </summary>
-        public class DataAnnotationLocalizer
-        {
-        }
+        public class DataAnnotationLocalizer { }
 
         public MetadataTranslationProvider(IStringLocalizer<DataAnnotationLocalizer> localizer)
         {

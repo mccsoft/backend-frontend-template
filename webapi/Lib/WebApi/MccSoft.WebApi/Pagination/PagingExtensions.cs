@@ -59,8 +59,8 @@ namespace MccSoft.WebApi.Pagination
             var totalRecordCount = await query.CountAsync();
 
             var sort = string.IsNullOrEmpty(sortExpression)
-                ? defaultSortExpression
-                : sortExpression;
+              ? defaultSortExpression
+              : sortExpression;
 
             if (sortOrder == SortOrder.Desc)
             {
