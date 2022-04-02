@@ -20,10 +20,11 @@ public static class UtcEverywhereExtensions
         );
 
         services
-            .AddControllers()
+            .AddControllers(options => options.UseDateOnlyTimeOnlyStringConverters())
             .AddJsonOptions(
                 opts =>
                 {
+                    opts.UseDateOnlyTimeOnlyStringConverters();
                     opts.JsonSerializerOptions.Converters.Add(new JsonNetDateTimeUtcConverter());
                 }
             )

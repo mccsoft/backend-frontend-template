@@ -2926,7 +2926,7 @@ __metadata:
     js-logger: 1.6.1
     jwt-decode: 3.1.2
     nock: 13.2.4
-    nswag: 13.11.3
+    nswag: 13.15.10
     oidc-client-ts: 2.0.1
     prettier: 2.4.1
     query-string: 7.1.1
@@ -2941,8 +2941,8 @@ __metadata:
     react-i18next: 11.15.0
     react-js-pagination: 3.0.3
     react-paginate: 8.1.2
-    react-query: 3.25.1
-    react-query-swagger: 13.13.3
+    react-query: 3.34.19
+    react-query-swagger: 13.16.5
     react-redux: 7.2.5
     react-router: 6.0.1
     react-router-dom: 6.0.1
@@ -12652,12 +12652,12 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"nswag@npm:13.11.3":
-  version: 13.11.3
-  resolution: "nswag@npm:13.11.3"
+"nswag@npm:13.15.10, nswag@npm:^13.15.10":
+  version: 13.15.10
+  resolution: "nswag@npm:13.15.10"
   bin:
     nswag: bin/nswag.js
-  checksum: 1bf0ba4eb1f0bafd2d13421ea159acfa2aca115c576d58831672b8113f65501b42b010e8cac37ba004a1bf8296d62ec55453fa00280f3167a46eb832e0925f07
+  checksum: 7c0d3de065e5aafdf3d6340802ac047ccdec89394794e4df62649473413f640d949feeb9e77ebed6f9a28f5b484429d3239226860a11237ac0d8b726396258d2
   languageName: node
   linkType: hard
 
@@ -14943,21 +14943,23 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-query-swagger@npm:13.13.3":
-  version: 13.13.3
-  resolution: "react-query-swagger@npm:13.13.3"
+"react-query-swagger@npm:13.16.5":
+  version: 13.16.5
+  resolution: "react-query-swagger@npm:13.16.5"
+  dependencies:
+    nswag: ^13.15.10
   peerDependencies:
     react-query: 3.x
     typescript: 3.x || 4.x
   bin:
     react-query-swagger: cli.js
-  checksum: 84999514e25b96ce94950b73e01f1ce1ade16d7cf34301699cb47dcfbb75f4159a37f94a5262affb4765dd458fc7e79541bdfd387bf8039780342340847a576b
+  checksum: e08adcbb2f60d1c78fbb517bfdba58025d3bc798c16fc40583180fc8b880472fbdc229fc801416a6c9f5b880a63a46433cc186bdc8f4b94721c266c58c309580
   languageName: node
   linkType: hard
 
-"react-query@npm:3.25.1":
-  version: 3.25.1
-  resolution: "react-query@npm:3.25.1"
+"react-query@npm:3.34.19":
+  version: 3.34.19
+  resolution: "react-query@npm:3.34.19"
   dependencies:
     "@babel/runtime": ^7.5.5
     broadcast-channel: ^3.4.1
@@ -14969,7 +14971,7 @@ fsevents@^1.2.7:
       optional: true
     react-native:
       optional: true
-  checksum: eb32e7421b2fcb7ab58f9695c8bde715adbb7fb493249a12814352772fd233c8dbc8f522adb588a493c6352e3800a5688bfddb8921c872a1f9f377f9f8fad33c
+  checksum: 765bec81e521a78ef04a8feb6710041ce838ef82bf6e1d35c7e9327cc242b232b242fd89f3604adf6747dce2df055d12b15e8e4208687cc5eb493c1c0bf71d34
   languageName: node
   linkType: hard
 

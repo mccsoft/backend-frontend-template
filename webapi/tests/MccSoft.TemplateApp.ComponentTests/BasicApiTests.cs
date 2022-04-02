@@ -78,6 +78,44 @@ namespace MccSoft.TemplateApp.ComponentTests
             );
         }
 
+        /// <summary>
+        /// Generates HTTP Client for the API and places it in Lmt.Unicorn.Http project
+        /// </summary>
+        [Fact]
+        public async Task GenerateHttpClient_ValidAndExported()
+        {
+            string exportPath = Path.GetTempFileName();
+
+            await SaveSwaggerJsonToFile(exportPath, null);
+            await GenerateTypescriptHttpClient(exportPath);
+
+            await SaveSwaggerJsonToFile(exportPath, "https://localhost");
+            await GenerateCSharpHttpClient(exportPath);
+        }
+
+        private async Task SaveSwaggerJsonToFile(string exportPath, string baseUrl)
+        {
+            string url = Configuration["Swagger:Endpoint:Url"];
+            Assert.False(string.IsNullOrEmpty(url), "No url for swagger found");
+            Assert.False(string.IsNullOrEmpty(exportPath), "Export path for swagger not found.");
+
+            HttpClient client = TestServer.CreateClient();
+            client.Timeout = Client.Timeout;
+            if (baseUrl != null)
+            {
+                client.BaseAddress = new Uri(baseUrl);
+            }
+
+            string swaggerJsonString = await client.GetStringAsync(url);
+            JObject swagger = JObject.Parse(swaggerJsonString);
+            //AssertEx.ApiDocumented(swagger);
+            await using (StreamWriter file = File.CreateText(exportPath))
+            {
+                using JsonTextWriter writer = new JsonTextWriter(file);
+                swagger.WriteTo(writer);
+            }
+        }
+
         private async Task GenerateCSharpHttpClient(string exportPath)
         {
             var document = await OpenApiDocument.FromJsonAsync(File.ReadAllText(exportPath));
@@ -90,7 +128,11 @@ namespace MccSoft.TemplateApp.ComponentTests
                 ExposeJsonSerializerSettings = true,
                 GenerateUpdateJsonSerializerSettingsMethod = false,
                 ClientBaseInterface = "IBaseClient",
-                CSharpGeneratorSettings = { Namespace = "MccSoft.TemplateApp.Http.Generated", }
+                CSharpGeneratorSettings =
+                {
+                    Namespace = "MccSoft.TemplateApp.Http.Generated",
+                    TemplateDirectory = "../../../../../src/MccSoft.TemplateApp.Http/template",
+                }
             };
 
             var csharpGenerator = new CSharpClientGenerator(document, csharpSettings);
@@ -121,7 +163,7 @@ namespace MccSoft.TemplateApp.ComponentTests
                 TypeScriptGeneratorSettings =
                 {
                     TemplateDirectory =
-                        "../../../../../../node_modules/nswag-react-query/templates",
+                        "../../../../../../node_modules/react-query-swagger/templates",
                     NullValue = TypeScriptNullValue.Undefined,
                     MarkOptionalProperties = true,
                     GenerateConstructorInterface = true,
@@ -131,9 +173,7 @@ namespace MccSoft.TemplateApp.ComponentTests
             var typeScriptClientGenerator = new TypeScriptClientGenerator(
                 document,
                 typescriptSettings
-            )
-            {
-                };
+            );
             var typescriptCode = typeScriptClientGenerator.GenerateFile();
 
             // && yarn replace \"this\\.(\\w*?)\\.toISOString\\(\\) : <any>undefined\" \"this.$1.toISOString() : this.$1\" app/api/api-client.ts
@@ -145,8 +185,10 @@ namespace MccSoft.TemplateApp.ComponentTests
             );
             typescriptCode = Regex.Replace(typescriptCode, @"\| undefined;", "| null;");
             typescriptCode = Regex.Replace(typescriptCode, @"""http://localhost""", @"""""");
-            // File.WriteAllText("../../../../../../@MccSoft.unicorn-shared/app/api/api-client.ts",
-            //     typescriptCode);
+            File.WriteAllText(
+                "../../../../../../frontend/src/services/api/api-client.ts",
+                typescriptCode
+            );
         }
 
         /// <summary>

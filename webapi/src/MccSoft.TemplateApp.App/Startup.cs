@@ -310,6 +310,7 @@ namespace MccSoft.TemplateApp.App
             var typedSettings = settings.Get<AuditSettings>();
 
             Audit.Core.Configuration.AuditDisabled = !typedSettings.Enabled;
+            Audit.Core.Configuration.JsonSettings.Converters.Add(new DateOnlyConverter());
 
             Audit.Core.Configuration
                 .Setup()

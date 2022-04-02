@@ -48,7 +48,7 @@ namespace MccSoft.TemplateApp.ComponentTests
                 a.CreateProductGeneratedDto(title)
             );
 
-            var results = await _productClient.SearchAsync("", null, null, null, null, null);
+            var results = await _productClient.SearchAsync("", null, null, null, null, null, null);
             results.TotalCount.Should().Be(1);
             results.Data.Select(x => x.Title).Should().BeEquivalentTo(new[] { title });
         }
