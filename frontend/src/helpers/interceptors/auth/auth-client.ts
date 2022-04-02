@@ -1,9 +1,10 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import queryString from 'query-string';
 import { FetchLoginResponse } from './auth-data';
+import { Base64 } from 'js-base64';
 
-const clientId = 'web-client';
-const clientKey = 'any';
+const clientId = 'web_client';
+const clientKey = '';
 const scopes = 'offline_access';
 const backendUri = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
 export const sendLoginRequest = async (
@@ -76,6 +77,9 @@ export const fetchTokenEndpoint = async (
   const response: AxiosResponse = await axios
     .create()
     .post(`${backendUri}${urlPath}`, queryString.stringify(bodyToSend), {
+      headers: {
+        Authorization: `Basic ${Base64.btoa(`${clientId}:${clientKey}`)}`,
+      },
       skipAuthRefresh: true, // taken from https://github.com/Flyrell/axios-auth-refresh/
     } as AxiosAuthRefreshRequestConfig);
 

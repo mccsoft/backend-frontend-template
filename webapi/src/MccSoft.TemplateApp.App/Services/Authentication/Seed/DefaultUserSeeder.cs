@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using MccSoft.TemplateApp.Domain;
 using Microsoft.AspNetCore.Identity;
@@ -42,6 +43,7 @@ namespace MccSoft.TemplateApp.App.Services.Authentication
                 passwordOptions.RequireNonAlphanumeric = false;
                 passwordOptions.RequiredLength = 0;
                 passwordOptions.RequireUppercase = false;
+                passwordOptions.RequireLowercase = false;
                 passwordOptions.RequireDigit = false;
 
                 if (existingUser == null)
@@ -53,7 +55,15 @@ namespace MccSoft.TemplateApp.App.Services.Authentication
                 else
                 {
                     var token = await _userManager.GeneratePasswordResetTokenAsync(existingUser);
-                    await _userManager.ResetPasswordAsync(existingUser, token, password);
+                    var result = await _userManager.ResetPasswordAsync(
+                        existingUser,
+                        token,
+                        password
+                    );
+                    if (!result.Succeeded)
+                    {
+                        throw new InvalidOperationException($"Reset password failed, {result}");
+                    }
                 }
             }
             finally
