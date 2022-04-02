@@ -89,7 +89,7 @@
     "typescript": "4.5.2"
   },
   "scripts": {
-    "start": "TSC_WATCHFILE=UseFsEventsWithFallbackDynamicPolling PORT=3148 react-app-rewired start",
+    "start": "PORT=3148 react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
@@ -98,7 +98,8 @@
     "generate-api-client-axios": "react-query-swagger openapi2tsclient /runtime:Net60 /input:http://localhost:48728/swagger/v1/swagger.json /output:src/services/api/api-client.ts /template:Axios /serviceHost:. /generateConstructorInterface:true /generateOptionalParameters:true /markOptionalProperties:true /nullValue:undefined /typeStyle:Class && yarn replace \"this\\.(\\\\w*?)\\.toISOString\\\\(\\\\) : <any>undefined\" \"this.\\$1.toISOString() : this.\\$1\" src/services/api/api-client.ts  && yarn replace \"\\\\| undefined;\" \"| null;\" src/services/api/api-client.ts",
     "generate-api-client-dotnet": "nswag openapi2csclient /runtime:Net60 /input:http://localhost:48728/swagger/v1/swagger.json /output:../webapi/src/MccSoft.TemplateApp.Http/GeneratedClient.cs /templateDirectory:../webapi/src/MccSoft.TemplateApp.Http/template /namespace:MccSoft.TemplateApp.Http.Generated /generateClientInterfaces:true /clientBaseClass:BaseClient /exposeJsonSerializerSettings:true /generateUpdateJsonSerializerSettingsMethod:false /clientBaseInterface:IBaseClient; yarn replace \", NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore\" \" \" ../webapi/src/MccSoft.TemplateApp.Http/GeneratedClient.cs",
     "analyze-statoscope": "STATS=1 react-app-rewired build",
-    "analyze-sourcemap-size": "source-map-explorer build/static/js/*.js"
+    "analyze-sourcemap-size": "source-map-explorer build/static/js/*.js",
+    "npm-start": "react-app-rewired start"
   },
   "eslintConfig": {
     "extends": [

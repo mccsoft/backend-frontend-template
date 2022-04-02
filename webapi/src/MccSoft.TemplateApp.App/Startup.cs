@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
@@ -42,6 +43,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -223,7 +225,6 @@ namespace MccSoft.TemplateApp.App
             app.UseSpa(
                 spa =>
                 {
-                    spa.Options.SourcePath = "wwwroot";
                     // https://github.com/dotnet/aspnetcore/issues/3147#issuecomment-435617378
                     spa.Options.DefaultPageStaticFileOptions = new StaticFileOptions()
                     {
@@ -241,7 +242,13 @@ namespace MccSoft.TemplateApp.App
 
                     if (hostEnvironment.IsDevelopment())
                     {
-                        spa.UseProxyToSpaDevelopmentServer("http://localhost:3148/");
+                        spa.Options.SourcePath = Path.GetFullPath("../../../frontend");
+                        spa.UseReactDevelopmentServer("npm-start");
+                        // spa.UseProxyToSpaDevelopmentServer("http://localhost:3148/");
+                    }
+                    else
+                    {
+                        spa.Options.SourcePath = "wwwroot";
                     }
                 }
             );
