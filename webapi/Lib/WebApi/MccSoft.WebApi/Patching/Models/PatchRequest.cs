@@ -11,19 +11,23 @@ namespace MccSoft.WebApi.Patching.Models
     [JsonSchemaIgnore]
     public abstract class PatchRequest<TDomain> : IPatchRequest
     {
-        private Dictionary<string, bool> FieldStatus { get; set; } = new Dictionary<string, bool>();
+        private HashSet<string> FieldStatus { get; } = new();
 
         /// <summary>
         /// Returns true if property was present in http request; false otherwise
         /// </summary>
         public bool IsFieldPresent(string propertyName)
         {
-            return FieldStatus.ContainsKey(propertyName.ToLowerInvariant());
+            return FieldStatus.Contains(propertyName.ToLowerInvariant());
         }
 
         public void SetHasProperty(string propertyName)
         {
-            FieldStatus[propertyName.ToLowerInvariant()] = true;
+            string unifiedName = propertyName.ToLower();
+            if (!FieldStatus.Contains(unifiedName))
+            {
+                FieldStatus.Add(unifiedName);
+            }
         }
     }
 }
