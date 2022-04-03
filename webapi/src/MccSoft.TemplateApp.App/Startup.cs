@@ -467,12 +467,7 @@ namespace MccSoft.TemplateApp.App
                                     AuthorizationUrl = "/connect/token",
                                     Scopes = new Dictionary<string, string>()
                                     {
-                                        { "profile", "profile" },
                                         { "offline_access", "offline_access" },
-                                        {
-                                            "MccSoft.TemplateApp.AppAPI",
-                                            "MccSoft.TemplateApp.AppAPI"
-                                        },
                                     }
                                 }
                             }
