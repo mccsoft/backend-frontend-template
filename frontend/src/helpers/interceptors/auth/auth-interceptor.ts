@@ -77,7 +77,14 @@ export function setupAuthInterceptor(
       throw error;
     }
     const oldAuthData = _authData;
-    await refreshTokenLock.acquireLock(lockKey, lockAcquiringTimeout);
+    const isAcquired = await refreshTokenLock.acquireLock(
+      lockKey,
+      lockAcquiringTimeout,
+    );
+    if (!isAcquired) {
+      return;
+    }
+
     try {
       if (oldAuthData !== _authData) {
         return;
@@ -85,11 +92,14 @@ export function setupAuthInterceptor(
 
       const authData = await refreshAuthCall(_authData);
       setAuthData(authData);
-    } catch (e) {
+    } catch (e: any) {
       if (Axios.isAxiosError(e)) {
         if (e.response?.status === 400) {
           setAuthData(null);
         }
+      }
+      if (e.message === 'Login_Failed') {
+        setAuthData(null);
       }
 
       throw e;
