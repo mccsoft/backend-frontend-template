@@ -100,7 +100,13 @@ namespace MccSoft.WebApi.Patching
                             // ReSharper disable once PossibleNullReferenceException
                             // enumerable is IList
                             foreach (var o in enumerable)
-                                if (o.GetType().HasDefaultConstructor())
+                            {
+                                var enumerableElementType = o.GetType();
+                                if (
+                                    !enumerableElementType.IsValueType
+                                    && !enumerableElementType.IsPrimitive
+                                    && enumerableElementType.HasDefaultConstructor()
+                                )
                                 {
                                     var newObject = Activator.CreateInstance(
                                         propertyType.GetTFromListT()!
@@ -116,6 +122,7 @@ namespace MccSoft.WebApi.Patching
                                     // newEnumerable is IList
                                     (newEnumerable as IList).Add(o);
                                 }
+                            }
 
                             propertyInObjectToUpdate.SetValue(objectToUpdate, newEnumerable);
                         }
