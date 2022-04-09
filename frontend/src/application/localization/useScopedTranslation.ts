@@ -8,7 +8,7 @@ import {
 
 /*
 Allows to specify the initial path of all translations returned by the function.
-E.g. useScopedTranslation('Page.Login'). All translations will start with 'hl7.mapping.*'
+E.g. useScopedTranslation('Page.Login'). All translations will start with 'Page.Login.*'
  */
 export function useScopedTranslation<
   N extends Namespace,
