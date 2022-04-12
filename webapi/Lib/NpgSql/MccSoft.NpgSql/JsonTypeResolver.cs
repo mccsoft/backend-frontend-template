@@ -57,7 +57,7 @@ class JsonOverrideTypeHandlerResolverFactory : TypeHandlerResolverFactory
         public override NpgsqlTypeHandler? ResolveByClrType(Type type)
             // You can add any user-defined CLR types which you want mapped to jsonb
             =>
-            _jsonbHandler;
+            type == typeof(System.Int32) ? null : _jsonbHandler;
 
         public override TypeMappingInfo? GetMappingByDataTypeName(string dataTypeName) => null; // Let the built-in resolver do this
     }

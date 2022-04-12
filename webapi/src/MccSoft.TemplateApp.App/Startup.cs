@@ -171,7 +171,6 @@ namespace MccSoft.TemplateApp.App
             RunMigration(app.ApplicationServices);
             app.UseOpenIdDictApplicationsFromConfiguration().GetAwaiter().GetResult();
             UseHangfire(app);
-
             app.UseRouting();
 
             app.UseRequestLocalization(
@@ -501,6 +500,7 @@ namespace MccSoft.TemplateApp.App
                             new PostgreSqlStorageOptions()
                             {
                                 DistributedLockTimeout = TimeSpan.FromSeconds(20),
+                                PrepareSchemaIfNecessary = true,
                             }
                         )
             );
