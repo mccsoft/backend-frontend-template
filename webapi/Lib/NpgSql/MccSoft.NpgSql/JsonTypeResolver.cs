@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Text.Json;
 using MccSoft.LowLevelPrimitives.Serialization.DateOnlyConverters;
 using Npgsql;
@@ -57,7 +58,7 @@ class JsonOverrideTypeHandlerResolverFactory : TypeHandlerResolverFactory
         public override NpgsqlTypeHandler? ResolveByClrType(Type type)
             // You can add any user-defined CLR types which you want mapped to jsonb
             =>
-            type == typeof(System.Int32) ? null : _jsonbHandler;
+            type.IsPrimitive || type.IsAssignableTo(typeof(IEnumerable)) ? null : _jsonbHandler;
 
         public override TypeMappingInfo? GetMappingByDataTypeName(string dataTypeName) => null; // Let the built-in resolver do this
     }
