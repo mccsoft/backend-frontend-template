@@ -98,7 +98,11 @@ export function setupAuthInterceptor(
           setAuthData(null);
         }
       }
-      if (e.message === 'Login_Failed') {
+      if (
+        e.message === 'Login_Failed' ||
+        e.message === 'Login_User_Locked' ||
+        e.message === 'Login_Unknown_Failure'
+      ) {
         setAuthData(null);
       }
 
