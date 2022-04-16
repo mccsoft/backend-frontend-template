@@ -15,12 +15,18 @@ import arrowDownIcon from 'assets/icons/arrow-down.svg';
 
 const styles = require('./ComboBoxInput.module.scss');
 
-type Props<D extends unknown = unknown> = {
+export type ComboBoxInputProps<D extends unknown = unknown> = {
   options: D[];
+  allowFreeform?: boolean;
+  autoComplete?: 'on' | 'off';
+  dropdownMaxWidth?: number;
+  dropdownWidth?: number;
+  useComboBoxAsMenuWidth?: boolean;
   labelFunction?: (item: D) => string;
   idFunction?: (item: D) => string;
   label?: string;
   value?: D | null;
+  defaultValue?: D | null;
   rootClassName?: string;
   disabled?: boolean;
   emptyLabel?: string;
@@ -34,7 +40,9 @@ type Props<D extends unknown = unknown> = {
   virtualized?: boolean;
 };
 
-export function ComboBoxInput<D extends unknown = unknown>(props: Props<D>) {
+export function ComboBoxInput<D extends unknown = unknown>(
+  props: ComboBoxInputProps<D>,
+) {
   const {
     rootClassName,
     options,
@@ -167,16 +175,21 @@ export function ComboBoxInput<D extends unknown = unknown>(props: Props<D>) {
   return (
     <div className={clsx(styles.rootContainer, rootClassName)} style={style}>
       <Component
-        autoComplete={'on'}
-        allowFreeform={true}
+        autoComplete={props.autoComplete ?? 'on'}
+        allowFreeform={props.allowFreeform}
+        dropdownMaxWidth={props.dropdownMaxWidth}
+        dropdownWidth={props.dropdownWidth}
         options={optionList}
         placeholder={placeholder}
         onChange={onChange}
         text={label || ''}
+        defaultSelectedKey={
+          props.defaultValue ? getValueForOption(props.defaultValue) : undefined
+        }
         selectedKey={knownKey ? getValueForOption(value) : undefined}
         styles={dropdownStyles}
         caretDownButtonStyles={caretDownButtonStyles}
-        useComboBoxAsMenuWidth={true}
+        useComboBoxAsMenuWidth={props.useComboBoxAsMenuWidth}
         comboBoxOptionStyles={comboBoxOptionStyles}
         iconButtonProps={iconButtonProps}
         calloutProps={calloutProps}
