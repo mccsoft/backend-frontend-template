@@ -13,7 +13,7 @@ import { AppLink } from 'components/uikit/buttons/AppLink';
 import { ProductType } from 'services/api/api-client';
 import { useScopedTranslation } from 'application/localization/useScopedTranslation';
 
-const styles = require('./UiKitPage.module.scss');
+import styles from './UiKitPage.module.scss';
 
 type UiKitForm = {
   dropDown: ProductType;

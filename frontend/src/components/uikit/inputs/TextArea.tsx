@@ -4,7 +4,7 @@ import TextareaAutosize, {
   TextareaAutosizeProps,
 } from 'react-textarea-autosize';
 
-const styles = require('./TextArea.module.scss');
+import styles from './TextArea.module.scss';
 
 type Props = TextareaAutosizeProps & {
   hasFixedSize?: boolean;

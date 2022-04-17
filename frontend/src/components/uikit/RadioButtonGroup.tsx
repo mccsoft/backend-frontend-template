@@ -6,7 +6,7 @@ import { RadioButton } from './RadioButton';
 import { Input } from './inputs/Input';
 import { createId } from './type-utils';
 
-const styles = require('./RadioButtonGroup.module.scss');
+import styles from './RadioButtonGroup.module.scss';
 
 type Props<D, V extends keyof PickFieldsWithType<D, string | number | null>> = {
   options: D[];
@@ -32,7 +32,7 @@ type RadioButtonGroupOption = {
 
 export function RadioButtonGroup<
   D,
-  V extends keyof PickFieldsWithType<D, string | number | null>
+  V extends keyof PickFieldsWithType<D, string | number | null>,
 >(props: Props<D, V>) {
   const {
     rootClassName,
@@ -50,12 +50,12 @@ export function RadioButtonGroup<
   } = props;
 
   const getLabelForOption = useCallback(
-    (option: D) => (option[labelField] as any) as string,
+    (option: D) => option[labelField] as any as string,
     [],
   );
 
   const getValueForOption = useCallback(
-    (option: D) => option && ((option[valueField] as any) as string | number),
+    (option: D) => option && (option[valueField] as any as string | number),
     [],
   );
 
@@ -77,7 +77,7 @@ export function RadioButtonGroup<
           selectedOption &&
           options.find(
             (option) =>
-              ((option[valueField] as any) as string | number) ===
+              (option[valueField] as any as string | number) ===
               selectedOption.key,
           );
         const newVar: D | null = foundOption || null;

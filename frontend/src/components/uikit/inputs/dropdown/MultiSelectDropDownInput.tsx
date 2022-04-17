@@ -12,9 +12,9 @@ import clsx from 'clsx';
 import { CheckBox } from '../../CheckBox';
 import arrowDownIcon from 'assets/icons/arrow-down.svg';
 
-const styles = require('./DropDownInput.module.scss');
+import styles from './DropDownInput.module.scss';
 
-export type MultiSelectDropDownInputProps<D extends unknown = unknown> = {
+export type MultiSelectDropDownInputProps<D> = {
   options: D[];
   labelFunction?: (item: D) => string;
   idFunction?: (item: D) => string;
@@ -34,7 +34,7 @@ type DropdownItemWithOption<D> = {
   optionObject: D;
 } & IDropdownOption;
 
-export function MultiSelectDropDownInput<D extends unknown = unknown>(
+export function MultiSelectDropDownInput<D>(
   props: MultiSelectDropDownInputProps<D>,
 ) {
   const {

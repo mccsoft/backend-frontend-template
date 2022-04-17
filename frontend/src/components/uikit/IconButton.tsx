@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import clsx from 'clsx';
 
-const styles = require('./IconButton.module.scss');
+import styles from './IconButton.module.scss';
 
 export interface IconButtonProps {
   icon: string;

@@ -3,7 +3,7 @@ import ReactPaginate from 'react-paginate';
 
 import { ReactComponent as PreviousPageIcon } from 'assets/icons/left.svg';
 import { ReactComponent as NextPageIcon } from 'assets/icons/right.svg';
-const styles = require('./TablePagination.module.scss');
+import styles from './TablePagination.module.scss';
 
 // const items = [10, 20, 50];
 

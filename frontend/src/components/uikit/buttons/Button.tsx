@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { CSSProperties } from 'react';
 import * as React from 'react';
 
-const styles = require('./Button.module.scss');
+import styles from './Button.module.scss';
 
 export enum ButtonWidth {
   Content = 'content',

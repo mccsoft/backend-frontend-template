@@ -2,9 +2,9 @@ import clsx from 'clsx';
 import { convertToErrorString } from 'helpers/form/useErrorHandler';
 import React from 'react';
 import { JLottie } from 'components/animations/JLottie';
+import styles from './Loading.module.scss';
 
-const animationData = require('assets/animations/9629-loading.json');
-const styles = require('./Loading.module.scss');
+import animationData from 'assets/animations/9629-loading.json';
 
 const defaultOptions = {
   loop: true,

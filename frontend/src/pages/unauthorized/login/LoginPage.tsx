@@ -48,7 +48,7 @@ export const LoginPage: React.FC = () => {
   );
   return (
     <Loading loading={form.formState.isSubmitting}>
-      <Grid container justify={'center'}>
+      <Grid container justifyContent={'center'}>
         <Grid item xs={12} md={6} lg={4}>
           <form onSubmit={form.handleSubmitDefault}>
             <Field title={i18n.t('login_field')}>

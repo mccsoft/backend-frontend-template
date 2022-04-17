@@ -3,7 +3,7 @@ import React, { FC, useCallback, useMemo } from 'react';
 import clsx from 'clsx';
 import { ComboBoxInput } from 'components/uikit/inputs/dropdown/ComboBoxInput';
 
-const styles = require('./TimePicker.module.scss');
+import styles from './TimePicker.module.scss';
 
 export type TimePickerProps = {
   minTimeInMills?: number;

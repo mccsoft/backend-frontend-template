@@ -3,7 +3,7 @@ import { ReactComponent as EyeShow } from 'assets/auth/eye-show.svg';
 import clsx from 'clsx';
 import React, { KeyboardEventHandler, Ref, useState } from 'react';
 
-const styles = require('./Input.module.scss');
+import styles from './Input.module.scss';
 
 export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   containerRef?: Ref<HTMLDivElement>;

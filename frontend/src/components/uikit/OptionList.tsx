@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import React from 'react';
 import { PickFieldsWithType } from './type-utils';
 
-const styles = require('./OptionList.module.scss');
+import styles from './OptionList.module.scss';
 
 interface OptionListProps<D> {
   visible: boolean;
@@ -15,14 +15,8 @@ interface OptionListProps<D> {
 }
 
 export function OptionList<D>(props: OptionListProps<D>) {
-  const {
-    visible,
-    labelField,
-    options,
-    onClick,
-    className,
-    elementRef,
-  } = props;
+  const { visible, labelField, options, onClick, className, elementRef } =
+    props;
 
   if (!visible) {
     return null;

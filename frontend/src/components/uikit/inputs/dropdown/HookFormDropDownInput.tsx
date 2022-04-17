@@ -11,10 +11,10 @@ import {
   RegisterOptions,
 } from 'react-hook-form';
 
-type HookFormProps<
-  D extends unknown = unknown,
-  TFieldValues extends FieldValues = FieldValues,
-> = Omit<DropDownInputProps<D>, 'onSelectedOptionChanged'> & {
+type HookFormProps<D, TFieldValues extends FieldValues = FieldValues> = Omit<
+  DropDownInputProps<D>,
+  'onSelectedOptionChanged'
+> & {
   name: Path<TFieldValues>;
   control: Control<TFieldValues>;
   rules?: Exclude<RegisterOptions, 'valueAsDate' | 'setValueAs'>;
@@ -23,7 +23,7 @@ type HookFormProps<
 };
 
 export function HookFormDropDownInput<
-  D extends unknown = unknown,
+  D,
   TFieldValues extends FieldValues = FieldValues,
 >(props: HookFormProps<D, TFieldValues>) {
   return (

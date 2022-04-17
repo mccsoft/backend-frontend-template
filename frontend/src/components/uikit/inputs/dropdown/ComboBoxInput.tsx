@@ -13,9 +13,9 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import arrowDownIcon from 'assets/icons/arrow-down.svg';
 
-const styles = require('./ComboBoxInput.module.scss');
+import styles from './ComboBoxInput.module.scss';
 
-export type ComboBoxInputProps<D extends unknown = unknown> = {
+export type ComboBoxInputProps<D> = {
   options: D[];
   allowFreeform?: boolean;
   autoComplete?: 'on' | 'off';
@@ -40,9 +40,7 @@ export type ComboBoxInputProps<D extends unknown = unknown> = {
   virtualized?: boolean;
 };
 
-export function ComboBoxInput<D extends unknown = unknown>(
-  props: ComboBoxInputProps<D>,
-) {
+export function ComboBoxInput<D>(props: ComboBoxInputProps<D>) {
   const {
     rootClassName,
     options,

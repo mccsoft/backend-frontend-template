@@ -5,7 +5,7 @@ import { ButtonColor } from './buttons/Button';
 import clsx from 'clsx';
 import { ReactComponent as HintIcon } from 'assets/icons/i.svg';
 
-const styles = require('./Field.module.scss');
+import styles from './Field.module.scss';
 
 export interface FieldProps {
   title: string;

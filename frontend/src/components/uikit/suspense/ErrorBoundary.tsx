@@ -5,7 +5,7 @@ import { useLocation } from 'react-router';
 import { Button } from '../buttons/Button';
 import React from 'react';
 
-const styles = require('./Loading.module.scss');
+import styles from './Loading.module.scss';
 
 type ErrorBoundaryFallbackProps = {
   error: Error;

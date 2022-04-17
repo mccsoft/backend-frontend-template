@@ -15,7 +15,7 @@ import {
 import { Language, languages } from '../../application/localization/locales';
 import { useTranslation } from 'react-i18next';
 import { setAuthData } from '../../helpers/interceptors/auth/auth-interceptor';
-const styles = require('./RootPage.module.scss');
+import styles from './RootPage.module.scss';
 
 export const RootPage: React.FC = () => {
   const dispatch = useAppDispatch();

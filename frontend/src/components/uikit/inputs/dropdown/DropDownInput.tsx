@@ -10,9 +10,9 @@ import { CSSProperties, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import arrowDownIcon from 'assets/icons/arrow-down.svg';
 
-const styles = require('./DropDownInput.module.scss');
+import styles from './DropDownInput.module.scss';
 
-export type DropDownInputProps<D extends unknown = unknown> = {
+export type DropDownInputProps<D> = {
   options: D[];
   customOptions?: Array<CustomOption>;
   disabledField?: (item: D) => boolean;
@@ -57,9 +57,7 @@ type DropDownOption = IDropdownOption &
       }
   );
 
-export function DropDownInput<D extends unknown = unknown>(
-  props: DropDownInputProps<D>,
-) {
+export function DropDownInput<D>(props: DropDownInputProps<D>) {
   const {
     rootClassName,
     options,

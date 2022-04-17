@@ -17,7 +17,7 @@ import { ProductListItemDto } from 'services/api/api-client';
 import { StringParam, useQueryParams } from 'use-query-params';
 import { localFormat } from '../../../helpers/date-helpers';
 import { useScopedTranslation } from '../../../application/localization/useScopedTranslation';
-const styles = require('./ProductListPage.module.scss');
+import styles from './ProductListPage.module.scss';
 
 export const ProductListPage: React.FC = () => {
   const i18n = useScopedTranslation('Page.Products.list');

@@ -8,10 +8,7 @@ import {
 } from 'react-hook-form';
 import { ComboBoxInput, ComboBoxInputProps } from './ComboBoxInput';
 
-type HookFormProps<
-  D extends unknown = unknown,
-  TFieldValues extends FieldValues = FieldValues,
-> = Omit<
+type HookFormProps<D, TFieldValues extends FieldValues = FieldValues> = Omit<
   ComboBoxInputProps<D>,
   'onSelectedOptionChanged' | 'onValueChanged'
 > & {
@@ -23,7 +20,7 @@ type HookFormProps<
 };
 
 export function HookFormComboBoxInput<
-  D extends unknown = unknown,
+  D,
   TFieldValues extends FieldValues = FieldValues,
 >(props: HookFormProps<D, TFieldValues>) {
   return (
