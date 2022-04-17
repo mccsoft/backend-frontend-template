@@ -4482,7 +4482,7 @@ __metadata:
     cross-env: 7.0.3
     customize-cra: 1.0.0
     date-fns: 2.28.0
-    dotenv: ^10.0.0
+    dotenv: ^16.0.0
     eslint-config-prettier: 8.3.0
     eslint-config-react-app: ^6.0.0
     eslint-plugin-import: 2.23.4
@@ -4535,6 +4535,7 @@ __metadata:
     typescript: 4.6.3
     use-query-params: ^1.2.3
     vite: ^2.9.5
+    vite-plugin-environment: 1.1.1
     vite-plugin-react-svg: 0.2.0
     vite-plugin-svgr: 1.1.0
     vite-tsconfig-paths: 3.4.1
@@ -8571,6 +8572,13 @@ __metadata:
   version: 10.0.0
   resolution: "dotenv@npm:10.0.0"
   checksum: f412c5fe8c24fbe313d302d2500e247ba8a1946492db405a4de4d30dd0eb186a88a43f13c958c5a7de303938949c4231c56994f97d05c4bc1f22478d631b4005
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^16.0.0":
+  version: 16.0.0
+  resolution: "dotenv@npm:16.0.0"
+  checksum: 664cebb51f0a9a1d1b930f51f0271e72e26d62feaecc9dc03df39453dd494b4e724809ca480fb3ec3213382b1ed3f791aaeb83569a137f9329ce58efd4853dbf
   languageName: node
   linkType: hard
 
@@ -18847,6 +18855,15 @@ typescript@4.6.3:
   version: 1.1.2
   resolution: "vary@npm:1.1.2"
   checksum: ae0123222c6df65b437669d63dfa8c36cee20a504101b2fcd97b8bf76f91259c17f9f2b4d70a1e3c6bbcee7f51b28392833adb6b2770b23b01abec84e369660b
+  languageName: node
+  linkType: hard
+
+"vite-plugin-environment@npm:1.1.1":
+  version: 1.1.1
+  resolution: "vite-plugin-environment@npm:1.1.1"
+  peerDependencies:
+    vite: ^2.7
+  checksum: a2da9dba5d2e12f86639588452008d103f9e27e8fc76380d0d2e7968adc34a2588a041ffb8965e7018547696c5b81f51399aacadfee588758440bb2b3d450054
   languageName: node
   linkType: hard
 

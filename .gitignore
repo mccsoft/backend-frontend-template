@@ -348,3 +348,4 @@ fabric.properties
 /scripts/.env.base
 /.yarn/*
 !/.yarn/releases
+/frontend/dist/
