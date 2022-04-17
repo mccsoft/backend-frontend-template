@@ -9,6 +9,7 @@ import * as React from 'react';
 import {
   ComponentType,
   lazy,
+  PropsWithChildren,
   Suspense,
   useCallback,
   useMemo,
@@ -81,9 +82,9 @@ export function lazyRetry<T extends ComponentType<any>>(
   return RetryWrapper as any;
 }
 
-export const QuerySuspenseErrorWrapper: React.FC<{ reset?: () => void }> = (
-  props,
-) => {
+export const QuerySuspenseErrorWrapper: React.FC<
+  PropsWithChildren<{ reset?: () => void }>
+> = (props) => {
   const result: any = (
     <QueryErrorResetBoundary>
       {({ reset }) => (

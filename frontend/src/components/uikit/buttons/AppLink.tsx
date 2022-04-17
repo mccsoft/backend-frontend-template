@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import * as React from 'react';
 import { ButtonColor } from './Button';
 import { Link } from 'react-router-dom';
+import { PropsWithChildren } from 'react';
 
 const styles = require('./AppLink.module.scss');
 
@@ -20,7 +21,7 @@ export type LinkProps = {
     }
 );
 
-export const AppLink: React.FC<LinkProps> = (props) => {
+export const AppLink: React.FC<PropsWithChildren<LinkProps>> = (props) => {
   const { color, className, disabled, icon, children, ...rest } = {
     ...defaultProps,
     ...props,
