@@ -37,4 +37,7 @@ export default defineConfig({
       localsConvention: 'camelCase',
     },
   },
+  build: {
+    outDir: 'build',
+  },
 });
