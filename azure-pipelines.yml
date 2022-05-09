@@ -16,7 +16,7 @@ stages:
         steps:
           - task: NodeTool@0
             inputs:
-              versionSpec: '14.x'
+              versionSpec: '16.x'
             displayName: 'Install Node.js'
 
           - task: UseDotNet@2
@@ -58,20 +58,26 @@ stages:
               npm --no-git-tag-version version $(BUILD_NUMBER) --allow-same-version
             displayName: 'set version'
 
+          - script: |
+              cd scripts/integresql
+              docker-compose up -d
+            displayName: 'run integresql'
+
+
           - task: DotNetCoreCLI@2
             inputs:
               command: 'test'
-              arguments: --no-restore --collect:"XPlat Code Coverage" -c Release
+              arguments: --no-restore -c Release
               projects: 'webapi/tests/*/*.csproj'
               publishTestResults: true
             displayName: 'dotnet test'
 
-          - script: |
-              mkdir ./cobertura
-              find '$(Agent.TempDirectory)' -name 'coverage.cobertura.xml' -exec cp --backup=numbered -t ./cobertura {} +
-              cd ./cobertura
-              for f in *~*~; do mv "$f" "$(echo "$f" | sed -r 's/(.*)\.~([0-9]+)~/\2\1/')"; done;
-            displayName: 'copy coverage files'
+#          - script: |
+#              mkdir ./cobertura
+#              find '$(Agent.TempDirectory)' -name 'coverage.cobertura.xml' -exec cp --backup=numbered -t ./cobertura {} +
+#              cd ./cobertura
+#              for f in *~*~; do mv "$f" "$(echo "$f" | sed -r 's/(.*)\.~([0-9]+)~/\2\1/')"; done;
+#            displayName: 'copy coverage files'
 
           - script: |
               cd ./webapi
@@ -79,8 +85,8 @@ stages:
               dotnet reportgenerator -reports:../cobertura/* -targetdir:../cobertura/report -sourcedirs:./ -assemblyfilters:+MccSoft.TemplateApp.App\;+MccSoft.TemplateApp.Common\;+MccSoft.TemplateApp.Domain
             displayName: 'generate coverage report'
 
-          - publish: './cobertura'
-            artifact: 'backend-coverage'
+#          - publish: './cobertura'
+#            artifact: 'backend-coverage'
 
           - task: PublishTestResults@2
             inputs:
