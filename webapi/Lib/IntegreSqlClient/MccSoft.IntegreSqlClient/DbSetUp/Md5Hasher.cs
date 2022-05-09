@@ -7,7 +7,7 @@ namespace MccSoft.IntegreSqlClient.DbSetUp;
 public class Md5Hasher
 {
     /// <summary>
-    /// Creates MD5 hash of given <see cref="input"/>
+    /// Creates MD5 hash of given <paramref name="input"/>
     /// </summary>
     public static string CreateMD5(string input)
     {

@@ -1,7 +1,15 @@
 ﻿using MccSoft.Testing.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MccSoft.Testing
 {

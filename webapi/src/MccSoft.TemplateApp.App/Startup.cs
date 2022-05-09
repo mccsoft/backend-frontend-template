@@ -101,7 +101,10 @@ namespace MccSoft.TemplateApp.App
                 }
             );
             ConfigureContainer(services);
+
             ConfigureDatabase(services);
+            services.AddDomainEventsWithMediatR(typeof(Startup), typeof(LogDomainEventHandler));
+
             ConfigureAuth(services);
             AddI18Next(services);
             services.UseUtcEverywhere();
@@ -168,8 +171,7 @@ namespace MccSoft.TemplateApp.App
 
             app.UseCors("mypolicy");
 
-            RunMigration(app.ApplicationServices);
-            app.UseOpenIdDictApplicationsFromConfiguration().GetAwaiter().GetResult();
+            RunMigration(app);
             UseHangfire(app);
             app.UseRouting();
 
@@ -391,8 +393,6 @@ namespace MccSoft.TemplateApp.App
 
         protected virtual void ConfigureDatabase(IServiceCollection services)
         {
-            services.AddDomainEventsWithMediatR(typeof(Startup), typeof(LogDomainEventHandler));
-
             services
                 .AddEntityFrameworkNpgsql()
                 .AddDbContext<TemplateAppDbContext>(
@@ -688,8 +688,9 @@ namespace MccSoft.TemplateApp.App
             services.AddAuthorization();
         }
 
-        protected virtual void RunMigration(IServiceProvider container)
+        protected virtual void RunMigration(IApplicationBuilder app)
         {
+            IServiceProvider container = app.ApplicationServices;
             using var scope = container.CreateScope();
 
             var context = scope.ServiceProvider.GetRequiredService<TemplateAppDbContext>();
@@ -714,6 +715,11 @@ namespace MccSoft.TemplateApp.App
                     .GetAwaiter()
                     .GetResult();
             }
+
+            app.UseOpenIdDictApplicationsFromConfiguration()
+                .ConfigureAwait(false)
+                .GetAwaiter()
+                .GetResult();
         }
 
         protected virtual void AddGlobalFilters(MvcOptions options)

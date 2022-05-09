@@ -20,6 +20,7 @@ public class IntegreSqlClient
     /// IntegreURI, e.g. 'http://localhost:5000/api/v1/'.
     /// 'api/v1' should be included in the URI!
     /// </param>
+    /// <param name="logger">Logger</param>
     public IntegreSqlClient(Uri integreUri, ILogger<IntegreSqlClient> logger = null)
     {
         _logger = logger;

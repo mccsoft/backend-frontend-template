@@ -23,9 +23,12 @@ namespace MccSoft.TemplateApp.ComponentTests.Infrastructure
 
         protected override void UseHangfire(IApplicationBuilder app) { }
 
-        protected override void RunMigration(IServiceProvider container)
+        protected override void RunMigration(IApplicationBuilder container)
         {
-            container.InitializeSqliteDb<TemplateAppDbContext>();
+            if (Configuration.GetValue<bool>("DisableSeed"))
+                return;
+
+            base.RunMigration(container);
         }
 
         protected override void UseSignOutLockedUser(IApplicationBuilder app) { }

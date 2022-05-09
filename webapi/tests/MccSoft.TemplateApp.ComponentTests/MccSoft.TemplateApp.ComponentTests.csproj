@@ -3,7 +3,7 @@
   <PropertyGroup>
   <TargetFramework>net6.0</TargetFramework>
     <IsPackable>false</IsPackable>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -35,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Lib\IntegreSqlClient\MccSoft.IntegreSqlClient\MccSoft.IntegreSqlClient.csproj" />
     <ProjectReference Include="..\..\Lib\Testing\MccSoft.Testing\MccSoft.Testing.csproj" />
     <ProjectReference Include="..\..\src\MccSoft.TemplateApp.App\MccSoft.TemplateApp.App.csproj" />
     <ProjectReference Include="..\..\src\MccSoft.TemplateApp.Http\MccSoft.TemplateApp.Http.csproj" />

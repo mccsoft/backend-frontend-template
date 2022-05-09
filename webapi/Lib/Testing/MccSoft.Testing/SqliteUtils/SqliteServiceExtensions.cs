@@ -15,23 +15,14 @@ namespace MccSoft.Testing.SqliteUtils
         /// </summary>
         /// <typeparam name="TDbContext">The type of the DB context.</typeparam>
         /// <param name="services">The service collection.</param>
-        /// <param name="dbId">
-        /// A unique identifier of the DB to create. Usually, a random string.
-        /// </param>
+        /// <param name="connectionString">Connection string</param>
         /// <param name="configureDbContextOptions">Action to configure options of DbContextBuilder</param>
         public static void AddSqliteInMemory<TDbContext>(
             this IServiceCollection services,
-            string dbId,
+            string connectionString,
             Action<DbContextOptionsBuilder, IServiceProvider>? configureDbContextOptions = null
         ) where TDbContext : DbContext
         {
-            string connectionString =
-                $"DataSource=file:memdb{dbId}?mode=memory&cache=shared;Pooling=false";
-            services.AddSingleton(
-                new SqliteConnectionHolder.ConnectionString { Str = connectionString }
-            );
-            services.AddSingleton<SqliteConnectionHolder>();
-
             // Cannot use a shared Sqlite connection as other tests do, because we create
             // transactions in parallel threads, and Sqlite fails with error
             // "SqliteConnection does not support nested transactions".
