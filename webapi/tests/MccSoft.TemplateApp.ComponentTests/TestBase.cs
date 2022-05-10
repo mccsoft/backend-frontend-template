@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Hangfire;
 using MccSoft.AdminService.ComponentTests.Infrastructure;
 using MccSoft.IntegreSqlClient;
-using MccSoft.IntegreSqlClient.DbSetUp;
+using MccSoft.IntegreSqlClient.DatabaseInitialization;
 using MccSoft.TemplateApp.ComponentTests.Infrastructure;
 using MccSoft.TemplateApp.Http;
 using MccSoft.TemplateApp.Persistence;

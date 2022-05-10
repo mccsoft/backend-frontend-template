@@ -1,5 +1,5 @@
 ﻿#nullable enable
-namespace MccSoft.IntegreSqlClient.DbSetUp;
+namespace MccSoft.IntegreSqlClient.DatabaseInitialization;
 
 /// <summary>
 /// Overrides certain connection string settings returned from IntegreSQL.

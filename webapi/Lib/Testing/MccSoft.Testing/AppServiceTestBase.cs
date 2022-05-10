@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MccSoft.IntegreSqlClient;
-using MccSoft.IntegreSqlClient.DbSetUp;
+using MccSoft.IntegreSqlClient.DatabaseInitialization;
 using MccSoft.LowLevelPrimitives;
 using MccSoft.NpgSql;
 using MccSoft.Testing.SqliteUtils;

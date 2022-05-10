@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace MccSoft.IntegreSqlClient.DbSetUp;
+namespace MccSoft.IntegreSqlClient.DatabaseInitialization;
 
 public interface IDatabaseInitializer : IDisposable
 {

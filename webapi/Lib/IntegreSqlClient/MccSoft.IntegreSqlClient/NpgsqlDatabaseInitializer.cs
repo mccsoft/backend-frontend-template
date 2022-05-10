@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
-using MccSoft.IntegreSqlClient.DbSetUp;
+using MccSoft.IntegreSqlClient.DatabaseInitialization;
 using MccSoft.IntegreSqlClient.Dto;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using MccSoft.IntegreSqlClient.DbSetUp;
+using MccSoft.IntegreSqlClient.DatabaseInitialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace MccSoft.IntegreSqlClient;

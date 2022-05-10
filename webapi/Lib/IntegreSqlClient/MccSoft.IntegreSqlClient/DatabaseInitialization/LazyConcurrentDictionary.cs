@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Threading;
 
-namespace MccSoft.IntegreSqlClient.DbSetUp;
+namespace MccSoft.IntegreSqlClient.DatabaseInitialization;
 
 public class LazyConcurrentDictionary<TKey, TValue>
 {

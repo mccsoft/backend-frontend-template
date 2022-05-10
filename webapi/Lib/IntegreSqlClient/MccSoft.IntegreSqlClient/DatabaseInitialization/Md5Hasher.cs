@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace MccSoft.IntegreSqlClient.DbSetUp;
+namespace MccSoft.IntegreSqlClient.DatabaseInitialization;
 
 public class Md5Hasher
 {

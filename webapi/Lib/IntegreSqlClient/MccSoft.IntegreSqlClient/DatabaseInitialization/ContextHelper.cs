@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
-namespace MccSoft.IntegreSqlClient.DbSetUp;
+namespace MccSoft.IntegreSqlClient.DatabaseInitialization;
 
 public class ContextHelper
 {
