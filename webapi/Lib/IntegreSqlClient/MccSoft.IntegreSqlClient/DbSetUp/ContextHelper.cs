@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace MccSoft.IntegreSqlClient.DbSetUp;
 
@@ -47,5 +48,12 @@ public class ContextHelper
             new DbContextOptionsBuilder<T>().UseNpgsql(connectionString).Options
         );
         return dbContext;
+    }
+
+    internal static void ReloadTypesForEnumSupport(DbContext context)
+    {
+        var conn = (NpgsqlConnection)context.Database.GetDbConnection();
+        conn.Open();
+        conn.ReloadTypes();
     }
 }

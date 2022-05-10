@@ -43,6 +43,9 @@ public abstract class BaseDatabaseInitializer : IDatabaseInitializer
                 var dbContext = ContextHelper.CreateDbContext<TDbContext>(
                     connectionString: connectionString
                 );
+                dbContext.Database.EnsureCreated();
+                ContextHelper.ReloadTypesForEnumSupport(dbContext);
+
                 await (databaseSeeding?.SeedingFunction?.Invoke(dbContext) ?? Task.CompletedTask);
             }
         );

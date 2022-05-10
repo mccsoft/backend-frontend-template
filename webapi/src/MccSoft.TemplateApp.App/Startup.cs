@@ -696,9 +696,7 @@ namespace MccSoft.TemplateApp.App
             var context = scope.ServiceProvider.GetRequiredService<TemplateAppDbContext>();
             context.Database.Migrate();
 
-            var conn = (NpgsqlConnection)context.Database.GetDbConnection();
-            conn.Open();
-            conn.ReloadTypes();
+            context.ReloadTypesForEnumSupport();
 
             DefaultUserSeeder seeder =
                 scope.ServiceProvider.GetRequiredService<DefaultUserSeeder>();

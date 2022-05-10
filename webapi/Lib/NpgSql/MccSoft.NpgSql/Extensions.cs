@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
 
 namespace MccSoft.NpgSql
 {
@@ -9,6 +11,13 @@ namespace MccSoft.NpgSql
             services
                 .AddScoped(typeof(TransactionLogger<>))
                 .AddScoped(typeof(PostgresRetryHelper<,>));
+        }
+
+        public static void ReloadTypesForEnumSupport(this DbContext context)
+        {
+            var conn = (NpgsqlConnection)context.Database.GetDbConnection();
+            conn.Open();
+            conn.ReloadTypes();
         }
     }
 }

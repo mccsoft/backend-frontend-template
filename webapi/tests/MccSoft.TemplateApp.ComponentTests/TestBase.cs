@@ -99,8 +99,7 @@ namespace MccSoft.TemplateApp.ComponentTests
         )
         {
             var connectionString = await _databaseInitializer.GetConnectionString(
-                "3"
-                    + databaseSeedingOptions.Name
+                databaseSeedingOptions.Name
                     + ContextHelper.GetLastMigrationName<TemplateAppDbContext>(),
                 async (connectionString) =>
                 {
