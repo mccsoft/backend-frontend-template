@@ -79,11 +79,11 @@ stages:
 #              for f in *~*~; do mv "$f" "$(echo "$f" | sed -r 's/(.*)\.~([0-9]+)~/\2\1/')"; done;
 #            displayName: 'copy coverage files'
 
-          - script: |
-              cd ./webapi
-              dotnet tool restore
-              dotnet reportgenerator -reports:../cobertura/* -targetdir:../cobertura/report -sourcedirs:./ -assemblyfilters:+MccSoft.TemplateApp.App\;+MccSoft.TemplateApp.Common\;+MccSoft.TemplateApp.Domain
-            displayName: 'generate coverage report'
+#          - script: |
+#              cd ./webapi
+#              dotnet tool restore
+#              dotnet reportgenerator -reports:../cobertura/* -targetdir:../cobertura/report -sourcedirs:./ -assemblyfilters:+MccSoft.TemplateApp.App\;+MccSoft.TemplateApp.Common\;+MccSoft.TemplateApp.Domain
+#            displayName: 'generate coverage report'
 
 #          - publish: './cobertura'
 #            artifact: 'backend-coverage'
