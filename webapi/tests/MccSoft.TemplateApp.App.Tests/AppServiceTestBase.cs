@@ -31,9 +31,9 @@ namespace MccSoft.TemplateApp.App.Tests
                 {
                     db.Users.Add(_defaultUser = new User("default@test.test"));
                     db.SaveChanges();
-                    _userAccessorMock.Setup(x => x.GetUserId()).Returns(_defaultUser.Id);
                 }
             );
+            _userAccessorMock.Setup(x => x.GetUserId()).Returns(_defaultUser.Id);
             PostgresSerialization.AdjustDateOnlySerialization();
             Audit.Core.Configuration.AuditDisabled = true;
         }

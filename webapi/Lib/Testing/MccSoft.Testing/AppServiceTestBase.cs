@@ -61,11 +61,10 @@ namespace MccSoft.Testing
             IDatabaseInitializer databaseInitializer = usePostgres
                 ? new NpgsqlDatabaseInitializer()
                 : new SqliteDatabaseInitializer();
-            var connectionString = databaseInitializer
-                .GetConnectionStringUsingEnsureCreated<TDbContext>(null)
-                .ConfigureAwait(false)
-                .GetAwaiter()
-                .GetResult();
+
+            // var connectionString = TaskUtils.RunSynchronously(
+            //     () => databaseInitializer.GetConnectionStringUsingEnsureCreated<TDbContext>(null)
+            // );
 
             _userAccessorMock = new Mock<IUserAccessor>();
             _userAccessorMock.Setup(x => x.GetUserId()).Returns("123");
