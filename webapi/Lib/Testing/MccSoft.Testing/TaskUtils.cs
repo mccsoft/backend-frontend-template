@@ -27,7 +27,18 @@ namespace MccSoft.Testing
         {
             // The workaround for xUnit deadlock is to explicitly schedule the task
             // to the thread pool, avoiding xUnit's sync context.
-            return Task.Run(work).GetAwaiter().GetResult();
+            return Task.Run(work).ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+
+        public static void RunSynchronously(Func<Task> work)
+        {
+            RunSynchronously(
+                async () =>
+                {
+                    await work();
+                    return true;
+                }
+            );
         }
     }
 }

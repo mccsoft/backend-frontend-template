@@ -12,6 +12,7 @@ using MccSoft.IntegreSqlClient.DatabaseInitialization;
 using MccSoft.TemplateApp.ComponentTests.Infrastructure;
 using MccSoft.TemplateApp.Http;
 using MccSoft.TemplateApp.Persistence;
+using MccSoft.Testing;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
@@ -45,12 +46,12 @@ namespace MccSoft.TemplateApp.ComponentTests
                 Host = "localhost",
                 Port = 5434,
             };
-            CreateApplicationWithAdvancedSeeding(
-                    new AdvancedDatabaseSeedingOptions("WithSeeding", () => Task.CompletedTask)
-                )
-                .ConfigureAwait(false)
-                .GetAwaiter()
-                .GetResult();
+            TaskUtils.RunSynchronously(
+                () =>
+                    CreateApplicationWithAdvancedSeeding(
+                        new AdvancedDatabaseSeedingOptions("WithSeeding", () => Task.CompletedTask)
+                    )
+            );
         }
 
         /// <summary>
