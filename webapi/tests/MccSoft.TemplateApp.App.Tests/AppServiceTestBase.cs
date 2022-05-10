@@ -16,7 +16,7 @@ namespace MccSoft.TemplateApp.App.Tests
     /// The base class for application service test classes.
     /// </summary>
     /// <typeparam name="TService">The type of the service under test.</typeparam>
-    public class AppServiceTestBase<TService> : AppServiceTest<TService, TemplateAppDbContext>
+    public class AppServiceTestBase<TService> : AppServiceTestBase<TService, TemplateAppDbContext>
     {
         protected Mock<IBackgroundJobClient> _backgroundJobClient;
         private User _defaultUser;

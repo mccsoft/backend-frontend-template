@@ -761,6 +761,18 @@ namespace MccSoft.TemplateApp.Http.Generated
         {
             return ExternalCallbackGETAsync(parameters.remoteError, parameters.originalQuery, cancellationToken);
         }
+
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task AuthorizeGETAsync(OpenIdAuthorizationClientAuthorizeGETParametersDto parameters)
+        {
+            return AuthorizeGETAsync(parameters, System.Threading.CancellationToken.None);
+        }
+
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public System.Threading.Tasks.Task AuthorizeGETAsync(OpenIdAuthorizationClientAuthorizeGETParametersDto parameters, System.Threading.CancellationToken cancellationToken)
+        {
+            return AuthorizeGETAsync(parameters.provider, parameters.reauthenticateWithAnotherProviderIfAlreadyLoggedIn, cancellationToken);
+        }
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task ExternalCallbackGETAsync(string remoteError, string originalQuery);
 
@@ -776,18 +788,18 @@ namespace MccSoft.TemplateApp.Http.Generated
         System.Threading.Tasks.Task ExternalCallbackPOSTAsync(string remoteError, string originalQuery, System.Threading.CancellationToken cancellationToken);
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task AuthorizeGETAsync();
+        System.Threading.Tasks.Task AuthorizeGETAsync(string provider, bool? reauthenticateWithAnotherProviderIfAlreadyLoggedIn);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task AuthorizeGETAsync(System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task AuthorizeGETAsync(string provider, bool? reauthenticateWithAnotherProviderIfAlreadyLoggedIn, System.Threading.CancellationToken cancellationToken);
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task AuthorizePOSTAsync();
+        System.Threading.Tasks.Task AuthorizePOSTAsync(string provider, bool? reauthenticateWithAnotherProviderIfAlreadyLoggedIn);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task AuthorizePOSTAsync(System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task AuthorizePOSTAsync(string provider, bool? reauthenticateWithAnotherProviderIfAlreadyLoggedIn, System.Threading.CancellationToken cancellationToken);
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task ExchangeAsync();
@@ -804,6 +816,14 @@ namespace MccSoft.TemplateApp.Http.Generated
         public string remoteError { get; set; }
 
         public string originalQuery { get; set; }
+    }
+
+    public partial class OpenIdAuthorizationClientAuthorizeGETParametersDto
+    {
+
+        public string provider { get; set; }
+
+        public bool? reauthenticateWithAnotherProviderIfAlreadyLoggedIn { get; set; }
     }
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class OpenIdAuthorizationClient : BaseClient, IOpenIdAuthorizationClient
@@ -1009,17 +1029,26 @@ namespace MccSoft.TemplateApp.Http.Generated
         }
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task AuthorizeGETAsync()
+        public virtual System.Threading.Tasks.Task AuthorizeGETAsync(string provider, bool? reauthenticateWithAnotherProviderIfAlreadyLoggedIn)
         {
-            return AuthorizeGETAsync(System.Threading.CancellationToken.None);
+            return AuthorizeGETAsync(provider, reauthenticateWithAnotherProviderIfAlreadyLoggedIn, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task AuthorizeGETAsync(System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task AuthorizeGETAsync(string provider, bool? reauthenticateWithAnotherProviderIfAlreadyLoggedIn, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/connect/authorize");
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/connect/authorize?");
+            if (provider != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("provider") + "=").Append(System.Uri.EscapeDataString(ConvertToString(provider, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (reauthenticateWithAnotherProviderIfAlreadyLoggedIn != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("reauthenticateWithAnotherProviderIfAlreadyLoggedIn") + "=").Append(System.Uri.EscapeDataString(ConvertToString(reauthenticateWithAnotherProviderIfAlreadyLoggedIn, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            urlBuilder_.Length--;
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1085,17 +1114,26 @@ namespace MccSoft.TemplateApp.Http.Generated
         }
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task AuthorizePOSTAsync()
+        public virtual System.Threading.Tasks.Task AuthorizePOSTAsync(string provider, bool? reauthenticateWithAnotherProviderIfAlreadyLoggedIn)
         {
-            return AuthorizePOSTAsync(System.Threading.CancellationToken.None);
+            return AuthorizePOSTAsync(provider, reauthenticateWithAnotherProviderIfAlreadyLoggedIn, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task AuthorizePOSTAsync(System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task AuthorizePOSTAsync(string provider, bool? reauthenticateWithAnotherProviderIfAlreadyLoggedIn, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/connect/authorize");
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/connect/authorize?");
+            if (provider != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("provider") + "=").Append(System.Uri.EscapeDataString(ConvertToString(provider, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (reauthenticateWithAnotherProviderIfAlreadyLoggedIn != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("reauthenticateWithAnotherProviderIfAlreadyLoggedIn") + "=").Append(System.Uri.EscapeDataString(ConvertToString(reauthenticateWithAnotherProviderIfAlreadyLoggedIn, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            urlBuilder_.Length--;
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1349,6 +1387,18 @@ namespace MccSoft.TemplateApp.Http.Generated
         public System.Threading.Tasks.Task ExternalCallbackGETAsync(OpenIdAuthorizationClientExternalCallbackGETParametersDto parameters, System.Threading.CancellationToken cancellationToken)
         {
             return ExternalCallbackGETAsync(parameters.remoteError, parameters.originalQuery, cancellationToken);
+        }
+
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public System.Threading.Tasks.Task AuthorizeGETAsync(OpenIdAuthorizationClientAuthorizeGETParametersDto parameters)
+        {
+            return AuthorizeGETAsync(parameters, System.Threading.CancellationToken.None);
+        }
+
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public System.Threading.Tasks.Task AuthorizeGETAsync(OpenIdAuthorizationClientAuthorizeGETParametersDto parameters, System.Threading.CancellationToken cancellationToken)
+        {
+            return AuthorizeGETAsync(parameters.provider, parameters.reauthenticateWithAnotherProviderIfAlreadyLoggedIn, cancellationToken);
         }
     }
 

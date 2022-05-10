@@ -16,7 +16,7 @@ namespace MccSoft.Testing
     /// <summary>
     /// A helper test class. Inherit from it to use <see cref="MotherFactory"/>.
     /// </summary>
-    public class ComponentTestBase<TDbContext, TStartup> : TestBase
+    public class ComponentTestBase<TDbContext, TStartup> : TestBase<TDbContext>
         where TDbContext : DbContext
         where TStartup : class
     {
@@ -66,44 +66,11 @@ namespace MccSoft.Testing
             return TestScope.ServiceProvider.GetRequiredService<T>();
         }
 
-        #region WithDbContext
-
-        protected void WithDbContext(Action<TDbContext> action)
+        protected override TDbContext CreateDbContext()
         {
-            using var scope = TestServer.Host.Services.CreateScope();
+            IServiceScope scope = TestServer.Host.Services.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<TDbContext>();
-            action(db);
+            return db;
         }
-
-        protected T WithDbContext<T>(Func<TDbContext, T> action)
-        {
-            using var scope = TestServer.Host.Services.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<TDbContext>();
-            var result = action(db);
-
-            return result;
-        }
-
-        protected async Task<T> WithDbContext<T>(Func<TDbContext, Task<T>> action)
-        {
-            using var scope = TestServer.Host.Services.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<TDbContext>();
-            return await action(db);
-        }
-
-        protected async Task WithDbContext(Func<TDbContext, Task> action)
-        {
-            await WithDbContext(
-                async (dbContext) =>
-                {
-                    await action(dbContext);
-                    return true;
-                }
-            );
-        }
-
-        #endregion
-
-
     }
 }

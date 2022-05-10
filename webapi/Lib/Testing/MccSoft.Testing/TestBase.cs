@@ -1,22 +1,15 @@
 ﻿using MccSoft.Testing.Infrastructure;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace MccSoft.Testing
 {
     /// <summary>
-    /// A helper test class. Inherit from it to use <see cref="MotherFactory"/>.
+    /// A helper test class. Inherit from it to use <see cref="MotherFactory"/> and DbContext utilities.
     /// </summary>
-    public class TestBase
+    public abstract class TestBase<TDbContext> where TDbContext : DbContext
     {
         /// <summary>
         /// The entity factory.
@@ -34,22 +27,38 @@ namespace MccSoft.Testing
         /// </summary>
         public static MotherFactory an = null;
 
-        /// <summary>
-        /// Waits that message was consumed
-        /// </summary>
-        /// <param name="taskCompletionSource">CompletionSource which definies then the message was consumed</param>
-        /// <param name="timeout">Timeout in ms</param>
-        protected virtual async Task WaitForResultConsumed(
-            TaskCompletionSource<bool> taskCompletionSource,
-            int timeout = 1000
-        )
+        #region WithDbContext
+
+        protected abstract TDbContext CreateDbContext();
+
+        protected void WithDbContext(Action<TDbContext> action)
         {
-            var taskList = new List<Task> { taskCompletionSource.Task, Task.Delay(timeout) };
-            var finishedTask = await Task.WhenAny(taskList);
-            if (!(finishedTask is Task<bool>))
-            {
-                throw new Exception("Timeout: Message was not consumed");
-            }
+            var db = CreateDbContext();
+            action(db);
         }
+
+        protected T WithDbContext<T>(Func<TDbContext, T> action)
+        {
+            var db = CreateDbContext();
+            var result = action(db);
+
+            return result;
+        }
+
+        protected async Task<T> WithDbContext<T>(Func<TDbContext, Task<T>> action)
+        {
+            var db = CreateDbContext();
+            return await action(db);
+        }
+
+        protected async Task WithDbContext(Func<TDbContext, Task> action)
+        {
+            var db = CreateDbContext();
+            await action(db);
+        }
+
+        #endregion
+
+
     }
 }
