@@ -144,6 +144,11 @@ public class NpgsqlDatabaseInitializer : BaseDatabaseInitializer
         options.UseNpgsql(connectionString);
     }
 
+    protected override void PerformBasicSeedingOperations(DbContext dbContext)
+    {
+        ContextHelper.ReloadTypesForEnumSupport(dbContext);
+    }
+
     private string GetConnectionString(Config databaseConfig, string hash, int id)
     {
         if (UseMd5Hash)

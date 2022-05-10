@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MccSoft.IntegreSqlClient;
+using MccSoft.IntegreSqlClient.DbSetUp;
 using MccSoft.LowLevelPrimitives;
 using MccSoft.NpgSql;
 using MccSoft.Testing.SqliteUtils;
@@ -55,6 +57,12 @@ namespace MccSoft.Testing
             Func<DbContextOptions<TDbContext>, IUserAccessor, TDbContext> dbContextFactory
         )
         {
+            var usePostgres = true;
+            IDatabaseInitializer databaseInitializer = usePostgres
+                ? new NpgsqlDatabaseInitializer()
+                : new SqliteDatabaseInitializer();
+            databaseInitializer.GetConnectionStringUsingEnsureCreated<TDbContext>(null);
+
             _userAccessorMock = new Mock<IUserAccessor>();
             _userAccessorMock.Setup(x => x.GetUserId()).Returns("123");
             _userAccessorMock.Setup(x => x.IsHttpContextAvailable).Returns(true);

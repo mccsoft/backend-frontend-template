@@ -44,12 +44,14 @@ public abstract class BaseDatabaseInitializer : IDatabaseInitializer
                     connectionString: connectionString
                 );
                 dbContext.Database.EnsureCreated();
-                ContextHelper.ReloadTypesForEnumSupport(dbContext);
+                PerformBasicSeedingOperations(dbContext);
 
                 await (databaseSeeding?.SeedingFunction?.Invoke(dbContext) ?? Task.CompletedTask);
             }
         );
     }
+
+    protected abstract void PerformBasicSeedingOperations(DbContext dbContext);
 
     public virtual void Dispose() { }
 }

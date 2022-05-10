@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\HttpClientExtension\MccSoft.HttpClientExtension\MccSoft.HttpClientExtension.csproj" />
+    <ProjectReference Include="..\..\IntegreSqlClient\MccSoft.IntegreSqlClient\MccSoft.IntegreSqlClient.csproj" />
     <ProjectReference Include="..\..\Logging\MccSoft.Logging\MccSoft.Logging.csproj" />
     <ProjectReference Include="..\..\LowLevelPrimitives\MccSoft.LowLevelPrimitives\MccSoft.LowLevelPrimitives.csproj" />
     <ProjectReference Include="..\..\NpgSql\MccSoft.NpgSql\MccSoft.NpgSql.csproj" />

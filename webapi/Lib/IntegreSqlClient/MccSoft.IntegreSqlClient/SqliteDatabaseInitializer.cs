@@ -85,6 +85,8 @@ public class SqliteDatabaseInitializer : BaseDatabaseInitializer
         return connectionString;
     }
 
+    protected override void PerformBasicSeedingOperations(DbContext dbContext) { }
+
     public override void Dispose()
     {
         base.Dispose();
