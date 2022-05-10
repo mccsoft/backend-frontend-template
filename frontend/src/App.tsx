@@ -37,7 +37,7 @@ setupAuthInterceptor(
 axios.interceptors.request.use(injectLanguageInterceptor);
 axios.interceptors.request.use(sessionAxiosInterceptor);
 
-if (process.env.NODE_ENV === 'production') {
+if (import.meta.env.PROD) {
   Sentry.init({
     dsn: sentryDsn(),
     integrations: [new Integrations.BrowserTracing()],
