@@ -1,7 +1,10 @@
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using Hangfire;
+using MccSoft.IntegreSqlClient.DatabaseInitialization;
 using MccSoft.NpgSql;
+using MccSoft.PersistenceHelpers;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Persistence;
 using MccSoft.Testing;
@@ -21,19 +24,34 @@ namespace MccSoft.TemplateApp.App.Tests
         protected Mock<IBackgroundJobClient> _backgroundJobClient;
         private User _defaultUser;
 
-        public AppServiceTestBase()
-            : base((options, userAccessor) => new TemplateAppDbContext(options, userAccessor))
+        public AppServiceTestBase(TestDatabaseType testDatabaseType = TestDatabaseType.Postgres)
+            : base(
+                testDatabaseType,
+                (options, userAccessor) => new TemplateAppDbContext(options, userAccessor),
+                new BasicDatabaseSeedingOptions<TemplateAppDbContext>(
+                    "DefaultUser",
+                    async db =>
+                    {
+                        db.Users.Add(new User("default@test.test"));
+                        await db.SaveChangesAsync();
+                    }
+                )
+            )
         {
+            if (testDatabaseType != TestDatabaseType.None)
+            {
+                WithDbContext(
+                    db =>
+                    {
+                        _defaultUser = db.Users.First(x => x.Email == "default@test.test");
+                    }
+                );
+                _userAccessorMock.Setup(x => x.GetUserId()).Returns(_defaultUser.Id);
+            }
+
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
-            WithDbContext(
-                db =>
-                {
-                    db.Users.Add(_defaultUser = new User("default@test.test"));
-                    db.SaveChanges();
-                }
-            );
-            _userAccessorMock.Setup(x => x.GetUserId()).Returns(_defaultUser.Id);
+
             PostgresSerialization.AdjustDateOnlySerialization();
             Audit.Core.Configuration.AuditDisabled = true;
         }

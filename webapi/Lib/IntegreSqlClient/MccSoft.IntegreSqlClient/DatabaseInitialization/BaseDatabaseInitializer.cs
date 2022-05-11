@@ -41,6 +41,7 @@ public abstract class BaseDatabaseInitializer : IDatabaseInitializer
             async (connectionString) =>
             {
                 var dbContext = ContextHelper.CreateDbContext<TDbContext>(
+                    useProvider: this,
                     connectionString: connectionString
                 );
                 dbContext.Database.EnsureCreated();

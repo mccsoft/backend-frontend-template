@@ -48,36 +48,61 @@ namespace MccSoft.Testing
 
         protected readonly Mock<IUserAccessor> _userAccessorMock;
 
+        private readonly TestDatabaseType _databaseType;
+        private readonly IDatabaseInitializer _databaseInitializer;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AppServiceTestBase{TService,TDbContext}" />
         /// class with the specified DbContext factory.
         /// </summary>
+        /// <param name="databaseType">Type of database to use in tests</param>
         /// <param name="dbContextFactory">A function that creates a DbContext.</param>
+        /// <param name="basicDatabaseSeedingOptions">Additional database seeding (beside EnsureCreated)</param>
         protected AppServiceTestBase(
-            Func<DbContextOptions<TDbContext>, IUserAccessor, TDbContext> dbContextFactory
+            TestDatabaseType databaseType,
+            Func<DbContextOptions<TDbContext>, IUserAccessor, TDbContext> dbContextFactory,
+            BasicDatabaseSeedingOptions<TDbContext> basicDatabaseSeedingOptions = null
         )
         {
-            var usePostgres = true;
-            IDatabaseInitializer databaseInitializer = usePostgres
-                ? new NpgsqlDatabaseInitializer()
-                : new SqliteDatabaseInitializer();
+            _databaseType = databaseType;
+            _dbContextFactory = dbContextFactory;
 
-            // var connectionString = TaskUtils.RunSynchronously(
-            //     () => databaseInitializer.GetConnectionStringUsingEnsureCreated<TDbContext>(null)
-            // );
+            _databaseInitializer = databaseType switch
+            {
+                TestDatabaseType.None => null,
+                TestDatabaseType.Postgres => new NpgsqlDatabaseInitializer(),
+                TestDatabaseType.Sqlite => new SqliteDatabaseInitializer(),
+                _ => throw new ArgumentOutOfRangeException(nameof(databaseType), databaseType, null)
+            };
+            NpgsqlDatabaseInitializer.ConnectionStringOverride = new ConnectionStringOverride()
+            {
+                Host = "localhost",
+                Port = 5434,
+            };
+
+            string connectionString =
+                _databaseInitializer == null
+                    ? null
+                    : TaskUtils.RunSynchronously(
+                          () =>
+                              _databaseInitializer.GetConnectionStringUsingEnsureCreated<TDbContext>(
+                                  basicDatabaseSeedingOptions
+                              )
+                      );
 
             _userAccessorMock = new Mock<IUserAccessor>();
             _userAccessorMock.Setup(x => x.GetUserId()).Returns("123");
             _userAccessorMock.Setup(x => x.IsHttpContextAvailable).Returns(true);
 
-            _dbContextFactory = dbContextFactory;
+            if (databaseType != TestDatabaseType.None)
+            {
+                // Its ok to call virtual methods because its just init the builder and doesn't use members.
+                // ReSharper disable VirtualMemberCallInConstructor
+                _builder = GetBuilder(connectionString ?? "");
 
-            // Its ok to call virtual methods because its just init the builder and doesn't use members.
-            // ReSharper disable VirtualMemberCallInConstructor
-            _builder = GetBuilder();
-
-            EnsureDbCreated();
-            // ReSharper restore VirtualMemberCallInConstructor
+                EnsureDbCreated();
+                // ReSharper restore VirtualMemberCallInConstructor
+            }
         }
 
         public void Dispose()
@@ -97,17 +122,17 @@ namespace MccSoft.Testing
         /// <summary>
         /// Returns the DbContextOptionsBuilder
         /// </summary>
-        protected virtual DbContextOptionsBuilder<TDbContext> GetBuilder()
+        /// <param name="connectionString"></param>
+        protected virtual DbContextOptionsBuilder<TDbContext> GetBuilder(string connectionString)
         {
-            var connection = new SqliteConnection("DataSource=:memory:");
-            connection.Open();
+            var builder = new DbContextOptionsBuilder<TDbContext>();
+            _databaseInitializer.UseProvider(builder, connectionString);
 
-            return new DbContextOptionsBuilder<TDbContext>()
-                .UseSqlite(connection)
+            builder
                 .UseLoggerFactory(LoggerFactory)
                 .EnableSensitiveDataLogging()
-                .ReplaceService<IModelCustomizer, ModelCustomizerWithPatchedDateTimeOffset>()
                 .EnableDetailedErrors();
+            return builder;
         }
 
         /// <summary>
@@ -129,6 +154,8 @@ namespace MccSoft.Testing
             Func<PostgresRetryHelper<TDbContext, TService>, TDbContext, TService> action
         )
         {
+            if (_databaseType == TestDatabaseType.None)
+                return action(null, null);
             return action(CreatePostgresRetryHelper<TService>(), GetLongLivingDbContext());
         }
 

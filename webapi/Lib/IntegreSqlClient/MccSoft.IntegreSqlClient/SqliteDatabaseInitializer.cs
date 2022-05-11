@@ -81,7 +81,8 @@ public class SqliteDatabaseInitializer : BaseDatabaseInitializer
 
     private string GetConnectionString(string fileName)
     {
-        string connectionString = $"DataSource={fileName}?mode=memory&cache=shared;Pooling=false";
+        var fullPath = Path.GetFullPath(fileName);
+        string connectionString = $"Data Source={fullPath};Pooling=false";
         return connectionString;
     }
 

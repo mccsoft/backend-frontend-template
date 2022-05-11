@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MccSoft.IntegreSqlClient.DatabaseInitialization;
 
-public interface IDatabaseInitializer : IDisposable
+public interface IDatabaseInitializer : IDisposable, IUseProvider
 {
     /// <summary>
     /// Returns a connection string to be used in the test.

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
@@ -15,12 +16,13 @@ public class ContextHelper
     public static string GetLastMigrationName<T>(Func<DbContextOptions<T>, T> factoryMethod = null)
         where T : DbContext
     {
-        var dbContext = CreateDbContext(factoryMethod);
+        var dbContext = CreateDbContext(new NpgsqlDatabaseInitializer(), factoryMethod);
         var assemblyMigrations = dbContext.Database.GetMigrations();
         return assemblyMigrations.Last();
     }
 
     internal static T CreateDbContext<T>(
+        IUseProvider useProvider,
         Func<DbContextOptions<T>, T> factoryMethod = null,
         string connectionString = "Server=any"
     ) where T : DbContext
@@ -44,16 +46,20 @@ public class ContextHelper
             }
         };
 
-        var dbContext = factoryMethod(
-            new DbContextOptionsBuilder<T>().UseNpgsql(connectionString).Options
-        );
+        var optionsBuilder = new DbContextOptionsBuilder<T>();
+        useProvider?.UseProvider(optionsBuilder, connectionString);
+        var dbContext = factoryMethod(optionsBuilder.Options);
         return dbContext;
     }
 
     internal static void ReloadTypesForEnumSupport(DbContext context)
     {
         var conn = (NpgsqlConnection)context.Database.GetDbConnection();
-        conn.Open();
+        if (conn.State != ConnectionState.Open)
+        {
+            conn.Open();
+        }
+
         conn.ReloadTypes();
     }
 }

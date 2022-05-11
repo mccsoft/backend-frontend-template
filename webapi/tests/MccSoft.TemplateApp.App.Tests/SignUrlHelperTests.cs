@@ -1,21 +1,15 @@
 using System.Security.Claims;
-using System.Threading.Tasks;
 using FluentAssertions;
-using MccSoft.TemplateApp.App.Features.Products;
-using MccSoft.TemplateApp.App.Services.Authentication;
-using MccSoft.TemplateApp.App.Utils;
-using MccSoft.TemplateApp.TestUtils.Factories;
+using MccSoft.Testing;
 using MccSoft.WebApi.SignedUrl;
-using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
-using Moq;
 using Xunit;
 
 namespace MccSoft.TemplateApp.App.Tests
 {
     public class SignUrlHelperTests : AppServiceTestBase<SignUrlHelper>
     {
-        public SignUrlHelperTests()
+        public SignUrlHelperTests() : base(TestDatabaseType.None)
         {
             Sut = InitializeService(
                 (retryHelper, db) =>
