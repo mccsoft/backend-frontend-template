@@ -29,9 +29,9 @@ public class SqliteDatabaseInitializer : BaseDatabaseInitializer
     /// </summary>
     public static bool UseMd5Hash = true;
 
-    public static bool DeleteDatabasesWhenDisposed = true;
+    public static bool DeleteDatabaseFilesWhenDisposed = true;
 
-    private List<string> _testDatabaseFilenames = new();
+    private readonly List<string> _testDatabaseFilenames = new();
 
     public override async Task<string> GetConnectionString(
         string databaseHash,
@@ -91,7 +91,7 @@ public class SqliteDatabaseInitializer : BaseDatabaseInitializer
     public override void Dispose()
     {
         base.Dispose();
-        if (DeleteDatabasesWhenDisposed)
+        if (DeleteDatabaseFilesWhenDisposed)
         {
             _testDatabaseFilenames.ForEach(x => File.Delete(x));
         }

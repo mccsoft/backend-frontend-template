@@ -231,6 +231,7 @@ namespace MccSoft.Testing
         protected virtual void DisposeImpl()
         {
             _dbContext?.Dispose();
+            _databaseInitializer?.Dispose();
             LoggerFactory.Dispose();
         }
 
