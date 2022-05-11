@@ -38,13 +38,6 @@ public interface IDatabaseInitializer : IDisposable, IUseProvider
     Task ReturnDatabase(string connectionString);
 
     /// <summary>
-    /// Calls options.UseNpgsql(<paramref name="connectionString"/>) or options.UseSqlite(<paramref name="connectionString"/>)
-    /// depending on database provider initializer works with.
-    /// Helps build the common WebApplicationFactory creation code which only requires IDatabaseInitializer.
-    /// </summary>
-    void UseProvider(DbContextOptionsBuilder options, string connectionString);
-
-    /// <summary>
     /// Creates connectionString using <see cref="GetConnectionStringUsingEnsureCreated"/>.
     /// Calls options.UseNpgsql() or options.UseSqlite() depending on database provider initializer works with.
     /// Helps build the common WebApplicationFactory creation code which only requires IDatabaseInitializer

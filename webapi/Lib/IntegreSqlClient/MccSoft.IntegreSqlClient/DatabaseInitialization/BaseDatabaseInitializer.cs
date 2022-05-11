@@ -42,7 +42,8 @@ public abstract class BaseDatabaseInitializer : IDatabaseInitializer
             {
                 await using var dbContext = ContextHelper.CreateDbContext<TDbContext>(
                     useProvider: this,
-                    connectionString: connectionString
+                    connectionString: connectionString,
+                    factoryMethod: databaseSeeding?.DbContextFactory
                 );
                 dbContext.Database.EnsureCreated();
                 PerformBasicSeedingOperations(dbContext);
