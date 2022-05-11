@@ -40,7 +40,7 @@ public abstract class BaseDatabaseInitializer : IDatabaseInitializer
                 + typeof(TDbContext).Assembly.FullName,
             async (connectionString) =>
             {
-                var dbContext = ContextHelper.CreateDbContext<TDbContext>(
+                await using var dbContext = ContextHelper.CreateDbContext<TDbContext>(
                     useProvider: this,
                     connectionString: connectionString
                 );
