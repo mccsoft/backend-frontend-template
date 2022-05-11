@@ -13,7 +13,7 @@ namespace MccSoft.TemplateApp.App.Tests
     {
         private readonly DateTimeProvider _time = new();
 
-        public ProductServiceTests() : base(TestDatabaseType.Postgres)
+        public ProductServiceTests() : base(TestDatabaseType.Sqlite)
         {
             var logger = new NullLogger<ProductService>();
 
