@@ -14,6 +14,12 @@ stages:
           vmImage: ubuntu-latest
 
         steps:
+
+          - script: |
+              cd scripts/integresql
+              docker-compose up -d
+            displayName: 'run integresql'
+
           - task: NodeTool@0
             inputs:
               versionSpec: '16.x'
@@ -57,11 +63,6 @@ stages:
           - script: |
               npm --no-git-tag-version version $(BUILD_NUMBER) --allow-same-version
             displayName: 'set version'
-
-          - script: |
-              cd scripts/integresql
-              docker-compose up -d
-            displayName: 'run integresql'
 
 
           - task: DotNetCoreCLI@2
