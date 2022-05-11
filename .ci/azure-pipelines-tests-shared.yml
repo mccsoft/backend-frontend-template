@@ -1,0 +1,26 @@
+# Shared steps to test everything within repository.
+steps:
+  - task: UseDotNet@2
+    displayName: 'Use .NET Core sdk 6'
+    inputs:
+      packageType: sdk
+      version: 6.x
+
+  - template: ./azure-pipelines-cache-template.yml
+
+  - script: |
+      yarn typecheck
+    displayName: 'yarn typecheck'
+
+  - script: |
+      cd scripts/integresql
+      docker-compose up -d
+    displayName: 'run integresql'
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'test'
+      arguments:
+      projects: 'webapi/tests/*/*.csproj'
+      publishTestResults: true
+    displayName: 'dotnet test'

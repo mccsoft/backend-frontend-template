@@ -1,0 +1,38 @@
+steps:
+
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '16.x'
+    displayName: 'Install Node.js'
+
+  - task: UseDotNet@2
+    inputs:
+      packageType: 'sdk'
+      version: '6.x'
+
+#  - task: Cache@2
+#    inputs:
+#      key: 'yarn-cache|$(Agent.OS)|./yarn.lock'
+#      path: $(Build.SourcesDirectory)/.yarn/cache
+#    displayName: Cache yarn cache
+#    continueOnError: true
+
+  - task: Cache@2
+    inputs:
+      key: 'node_modules|root|$(Agent.OS)|./yarn.lock'
+      path: $(Build.SourcesDirectory)/node_modules
+      cacheHitVar: NODE_MODULES_CACHE_RESTORED
+    displayName: Cache npm packages
+    continueOnError: true
+
+  - task: Cache@2
+    inputs:
+      key: 'node_modules|frontend|$(Agent.OS)|./yarn.lock'
+      path: $(Build.SourcesDirectory)/frontend/node_modules
+    displayName: Cache frontend npm packages
+    continueOnError: true
+
+  - script: |
+      yarn install --immutable
+    condition: ne(variables.NODE_MODULES_CACHE_RESTORED, 'true')
+    displayName: 'yarn install'
