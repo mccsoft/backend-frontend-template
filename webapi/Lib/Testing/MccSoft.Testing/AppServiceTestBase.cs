@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MccSoft.IntegreSqlClient;
-using MccSoft.IntegreSqlClient.DatabaseInitialization;
+using MccSoft.IntegreSql.EF;
+using MccSoft.IntegreSql.EF.DatabaseInitialization;
 using MccSoft.LowLevelPrimitives;
 using MccSoft.NpgSql;
-using MccSoft.Testing.SqliteUtils;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Logging.Debug;
@@ -70,25 +67,17 @@ namespace MccSoft.Testing
             _databaseInitializer = databaseType switch
             {
                 TestDatabaseType.None => null,
-                TestDatabaseType.Postgres => new NpgsqlDatabaseInitializer(),
+                TestDatabaseType.Postgres
+                  => new NpgsqlDatabaseInitializer(
+                      connectionStringOverride: new() { Host = "localhost", Port = 5434, }
+                  ),
                 TestDatabaseType.Sqlite => new SqliteDatabaseInitializer(),
                 _ => throw new ArgumentOutOfRangeException(nameof(databaseType), databaseType, null)
             };
-            NpgsqlDatabaseInitializer.ConnectionStringOverride = new ConnectionStringOverride()
-            {
-                Host = "localhost",
-                Port = 5434,
-            };
 
-            string connectionString =
-                _databaseInitializer == null
-                    ? null
-                    : TaskUtils.RunSynchronously(
-                          () =>
-                              _databaseInitializer.GetConnectionStringUsingEnsureCreated<TDbContext>(
-                                  basicDatabaseSeedingOptions
-                              )
-                      );
+            string connectionString = _databaseInitializer?.CreateDatabaseGetConnectionStringSync(
+                basicDatabaseSeedingOptions
+            );
 
             _userAccessorMock = new Mock<IUserAccessor>();
             _userAccessorMock.Setup(x => x.GetUserId()).Returns("123");
@@ -123,7 +112,7 @@ namespace MccSoft.Testing
         /// Returns the DbContextOptionsBuilder
         /// </summary>
         /// <param name="connectionString"></param>
-        protected virtual DbContextOptionsBuilder<TDbContext> GetBuilder(string connectionString)
+        public virtual DbContextOptionsBuilder<TDbContext> GetBuilder(string connectionString)
         {
             var builder = new DbContextOptionsBuilder<TDbContext>();
             _databaseInitializer.UseProvider(builder, connectionString);

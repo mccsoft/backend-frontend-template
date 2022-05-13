@@ -7,2783 +7,2230 @@
 //----------------------
 // ReSharper disable InconsistentNaming
 
-import axios, {
-  AxiosError,
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosResponse,
-  CancelToken,
-} from 'axios';
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
 
 export class ProductClient {
-  private instance: AxiosInstance;
-  private baseUrl: string;
-  protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
-    undefined;
+    private instance: AxiosInstance;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-  constructor(baseUrl?: string, instance?: AxiosInstance) {
-    this.instance = instance ? instance : axios.create();
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
 
-    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
-  }
+        this.instance = instance ? instance : axios.create();
 
-  create(
-    dto: CreateProductDto,
-    cancelToken?: CancelToken | undefined,
-  ): Promise<ProductDto> {
-    let url_ = this.baseUrl + '/api/products';
-    url_ = url_.replace(/[?&]$/, '');
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
 
-    const content_ = JSON.stringify(dto);
-
-    let options_ = <AxiosRequestConfig>{
-      data: content_,
-      method: 'POST',
-      url: url_,
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
-        }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processCreate(_response);
-      });
-  }
-
-  protected processCreate(response: AxiosResponse): Promise<ProductDto> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
     }
-    if (status === 400) {
-      const _responseText = response.data;
-      let result400: any = null;
-      let resultData400 = _responseText;
-      result400 = ValidationProblemDetails.fromJS(resultData400);
-      return throwException(
-        'A server side error occurred.',
-        status,
-        _responseText,
-        _headers,
-        result400,
-      );
-    } else if (status === 200) {
-      const _responseText = response.data;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = ProductDto.fromJS(resultData200);
-      return Promise.resolve<ProductDto>(result200);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+
+    create(dto: CreateProductDto , cancelToken?: CancelToken | undefined): Promise<ProductDto> {
+        let url_ = this.baseUrl + "/api/products";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(dto);
+
+        let options_ = <AxiosRequestConfig>{
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processCreate(_response);
+        });
     }
-    return Promise.resolve<ProductDto>(null as any);
-  }
 
-  delete(
-    id?: number | undefined,
-    cancelToken?: CancelToken | undefined,
-  ): Promise<void> {
-    let url_ = this.baseUrl + '/api/products?';
-    if (id === null) throw new Error("The parameter 'id' cannot be null.");
-    else if (id !== undefined)
-      url_ += 'id=' + encodeURIComponent('' + id) + '&';
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_ = <AxiosRequestConfig>{
-      method: 'DELETE',
-      url: url_,
-      headers: {},
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
+    protected processCreate(response: AxiosResponse): Promise<ProductDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
         }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processDelete(_response);
-      });
-  }
+        if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
 
-  protected processDelete(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
+        } else if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = ProductDto.fromJS(resultData200);
+            return Promise.resolve<ProductDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-      }
+        return Promise.resolve<ProductDto>(null as any);
     }
-    if (status === 400) {
-      const _responseText = response.data;
-      let result400: any = null;
-      let resultData400 = _responseText;
-      result400 = ValidationProblemDetails.fromJS(resultData400);
-      return throwException(
-        'A server side error occurred.',
-        status,
-        _responseText,
-        _headers,
-        result400,
-      );
-    } else if (status === 200) {
-      const _responseText = response.data;
-      return Promise.resolve<void>(null as any);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+
+    delete(id?: number | undefined , cancelToken?: CancelToken | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/products?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "DELETE",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processDelete(_response);
+        });
     }
-    return Promise.resolve<void>(null as any);
-  }
 
-  /**
-   * @param search (optional)
-   * @param productType (optional)
-   * @param lastStockUpdatedAt (optional)
-   * @param offset (optional) Offset of list.
-   * @param limit (optional) Number of requested records.
-   * @param sortBy (optional) Field name for sorting in DB.
-   * @param sortOrder (optional) Sort direction. Ascending or Descending.
-   */
-  search(
-    search?: string | null | undefined,
-    productType?: ProductType | null | undefined,
-    lastStockUpdatedAt?: Date | null | undefined,
-    offset?: number | null | undefined,
-    limit?: number | null | undefined,
-    sortBy?: string | null | undefined,
-    sortOrder?: SortOrder | undefined,
-    cancelToken?: CancelToken | undefined,
-  ): Promise<PagedResultOfProductListItemDto> {
-    let url_ = this.baseUrl + '/api/products?';
-    if (search !== undefined && search !== null)
-      url_ += 'Search=' + encodeURIComponent('' + search) + '&';
-    if (productType !== undefined && productType !== null)
-      url_ += 'ProductType=' + encodeURIComponent('' + productType) + '&';
-    if (lastStockUpdatedAt !== undefined && lastStockUpdatedAt !== null)
-      url_ +=
-        'LastStockUpdatedAt=' +
-        encodeURIComponent(
-          lastStockUpdatedAt ? '' + formatDate(lastStockUpdatedAt) : '',
-        ) +
-        '&';
-    if (offset !== undefined && offset !== null)
-      url_ += 'Offset=' + encodeURIComponent('' + offset) + '&';
-    if (limit !== undefined && limit !== null)
-      url_ += 'Limit=' + encodeURIComponent('' + limit) + '&';
-    if (sortBy !== undefined && sortBy !== null)
-      url_ += 'SortBy=' + encodeURIComponent('' + sortBy) + '&';
-    if (sortOrder === null)
-      throw new Error("The parameter 'sortOrder' cannot be null.");
-    else if (sortOrder !== undefined)
-      url_ += 'SortOrder=' + encodeURIComponent('' + sortOrder) + '&';
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_ = <AxiosRequestConfig>{
-      method: 'GET',
-      url: url_,
-      headers: {
-        Accept: 'application/json',
-      },
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
+    protected processDelete(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
         }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processSearch(_response);
-      });
-  }
+        if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
 
-  protected processSearch(
-    response: AxiosResponse,
-  ): Promise<PagedResultOfProductListItemDto> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
+        } else if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-      }
+        return Promise.resolve<void>(null as any);
     }
-    if (status === 400) {
-      const _responseText = response.data;
-      let result400: any = null;
-      let resultData400 = _responseText;
-      result400 = ValidationProblemDetails.fromJS(resultData400);
-      return throwException(
-        'A server side error occurred.',
-        status,
-        _responseText,
-        _headers,
-        result400,
-      );
-    } else if (status === 200) {
-      const _responseText = response.data;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = PagedResultOfProductListItemDto.fromJS(resultData200);
-      return Promise.resolve<PagedResultOfProductListItemDto>(result200);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+
+    /**
+     * @param search (optional) 
+     * @param productType (optional) 
+     * @param lastStockUpdatedAt (optional) 
+     * @param offset (optional) Offset of list.
+     * @param limit (optional) Number of requested records.
+     * @param sortBy (optional) Field name for sorting in DB.
+     * @param sortOrder (optional) Sort direction. Ascending or Descending.
+     */
+    search(search?: string | null | undefined, productType?: ProductType | null | undefined, lastStockUpdatedAt?: Date | null | undefined, offset?: number | null | undefined, limit?: number | null | undefined, sortBy?: string | null | undefined, sortOrder?: SortOrder | undefined , cancelToken?: CancelToken | undefined): Promise<PagedResultOfProductListItemDto> {
+        let url_ = this.baseUrl + "/api/products?";
+        if (search !== undefined && search !== null)
+            url_ += "Search=" + encodeURIComponent("" + search) + "&";
+        if (productType !== undefined && productType !== null)
+            url_ += "ProductType=" + encodeURIComponent("" + productType) + "&";
+        if (lastStockUpdatedAt !== undefined && lastStockUpdatedAt !== null)
+            url_ += "LastStockUpdatedAt=" + encodeURIComponent(lastStockUpdatedAt ? "" + formatDate(lastStockUpdatedAt) : "") + "&";
+        if (offset !== undefined && offset !== null)
+            url_ += "Offset=" + encodeURIComponent("" + offset) + "&";
+        if (limit !== undefined && limit !== null)
+            url_ += "Limit=" + encodeURIComponent("" + limit) + "&";
+        if (sortBy !== undefined && sortBy !== null)
+            url_ += "SortBy=" + encodeURIComponent("" + sortBy) + "&";
+        if (sortOrder === null)
+            throw new Error("The parameter 'sortOrder' cannot be null.");
+        else if (sortOrder !== undefined)
+            url_ += "SortOrder=" + encodeURIComponent("" + sortOrder) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processSearch(_response);
+        });
     }
-    return Promise.resolve<PagedResultOfProductListItemDto>(null as any);
-  }
 
-  patch(
-    id: number,
-    dto: PatchProductDto,
-    cancelToken?: CancelToken | undefined,
-  ): Promise<ProductDto> {
-    let url_ = this.baseUrl + '/api/products/{id}';
-    if (id === undefined || id === null)
-      throw new Error("The parameter 'id' must be defined.");
-    url_ = url_.replace('{id}', encodeURIComponent('' + id));
-    url_ = url_.replace(/[?&]$/, '');
-
-    const content_ = JSON.stringify(dto);
-
-    let options_ = <AxiosRequestConfig>{
-      data: content_,
-      method: 'PATCH',
-      url: url_,
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
+    protected processSearch(response: AxiosResponse): Promise<PagedResultOfProductListItemDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
         }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processPatch(_response);
-      });
-  }
+        if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
 
-  protected processPatch(response: AxiosResponse): Promise<ProductDto> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
+        } else if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = PagedResultOfProductListItemDto.fromJS(resultData200);
+            return Promise.resolve<PagedResultOfProductListItemDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-      }
+        return Promise.resolve<PagedResultOfProductListItemDto>(null as any);
     }
-    if (status === 400) {
-      const _responseText = response.data;
-      let result400: any = null;
-      let resultData400 = _responseText;
-      result400 = ValidationProblemDetails.fromJS(resultData400);
-      return throwException(
-        'A server side error occurred.',
-        status,
-        _responseText,
-        _headers,
-        result400,
-      );
-    } else if (status === 200) {
-      const _responseText = response.data;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = ProductDto.fromJS(resultData200);
-      return Promise.resolve<ProductDto>(result200);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+
+    patch(id: number, dto: PatchProductDto , cancelToken?: CancelToken | undefined): Promise<ProductDto> {
+        let url_ = this.baseUrl + "/api/products/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(dto);
+
+        let options_ = <AxiosRequestConfig>{
+            data: content_,
+            method: "PATCH",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processPatch(_response);
+        });
     }
-    return Promise.resolve<ProductDto>(null as any);
-  }
 
-  get(id: number, cancelToken?: CancelToken | undefined): Promise<ProductDto> {
-    let url_ = this.baseUrl + '/api/products/{id}';
-    if (id === undefined || id === null)
-      throw new Error("The parameter 'id' must be defined.");
-    url_ = url_.replace('{id}', encodeURIComponent('' + id));
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_ = <AxiosRequestConfig>{
-      method: 'GET',
-      url: url_,
-      headers: {
-        Accept: 'application/json',
-      },
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
+    protected processPatch(response: AxiosResponse): Promise<ProductDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
         }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processGet(_response);
-      });
-  }
+        if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
 
-  protected processGet(response: AxiosResponse): Promise<ProductDto> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
+        } else if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = ProductDto.fromJS(resultData200);
+            return Promise.resolve<ProductDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-      }
+        return Promise.resolve<ProductDto>(null as any);
     }
-    if (status === 400) {
-      const _responseText = response.data;
-      let result400: any = null;
-      let resultData400 = _responseText;
-      result400 = ValidationProblemDetails.fromJS(resultData400);
-      return throwException(
-        'A server side error occurred.',
-        status,
-        _responseText,
-        _headers,
-        result400,
-      );
-    } else if (status === 200) {
-      const _responseText = response.data;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = ProductDto.fromJS(resultData200);
-      return Promise.resolve<ProductDto>(result200);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+
+    get(id: number , cancelToken?: CancelToken | undefined): Promise<ProductDto> {
+        let url_ = this.baseUrl + "/api/products/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGet(_response);
+        });
     }
-    return Promise.resolve<ProductDto>(null as any);
-  }
+
+    protected processGet(response: AxiosResponse): Promise<ProductDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+
+        } else if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = ProductDto.fromJS(resultData200);
+            return Promise.resolve<ProductDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ProductDto>(null as any);
+    }
 }
 type SearchProductQueryParameters = {
-  search?: string | null | null;
-  productType?: ProductType | null | null;
-  lastStockUpdatedAt?: Date | null | null;
-  offset?: number | null | null;
-  limit?: number | null | null;
-  sortBy?: string | null | null;
-  sortOrder?: SortOrder | null;
+      search?: string | null | null;
+      productType?: ProductType | null | null;
+      lastStockUpdatedAt?: Date | null | null;
+      offset?: number | null | null;
+      limit?: number | null | null;
+      sortBy?: string | null | null;
+      sortOrder?: SortOrder | null;
 };
 
 type GetProductQueryParameters = {
-  id: number;
+      id: number;
 };
 
-export class ProductQuery {
-  get baseUrl() {
-    return getBaseUrl() ?? '' + 'http://localhost';
-  }
+export class ProductQuery{
 
-  static get Client() {
-    return createClient(ProductClient);
-  }
+    get baseUrl() {
+      return getBaseUrl() ?? '' + 'http://localhost';
+    }
 
-  static get Url() {
-    return new ProductQuery();
-  }
+    static get Client() {
+        return createClient(ProductClient);
+    }
 
-  search(
-    search?: string | null | undefined,
-    productType?: ProductType | null | undefined,
-    lastStockUpdatedAt?: Date | null | undefined,
-    offset?: number | null | undefined,
-    limit?: number | null | undefined,
-    sortBy?: string | null | undefined,
-    sortOrder?: SortOrder | undefined,
-  ): string {
-    let url_ = this.baseUrl + '/api/products?';
+    static get Url() {
+        return new ProductQuery();
+    }
+    
+
+    search(search?: string | null | undefined, productType?: ProductType | null | undefined, lastStockUpdatedAt?: Date | null | undefined, offset?: number | null | undefined, limit?: number | null | undefined, sortBy?: string | null | undefined, sortOrder?: SortOrder | undefined): string {
+      let url_ = this.baseUrl + "/api/products?";
     if (search !== undefined && search !== null)
-      url_ += 'Search=' + encodeURIComponent('' + search) + '&';
+        url_ += "Search=" + encodeURIComponent("" + search) + "&";
     if (productType !== undefined && productType !== null)
-      url_ += 'ProductType=' + encodeURIComponent('' + productType) + '&';
+        url_ += "ProductType=" + encodeURIComponent("" + productType) + "&";
     if (lastStockUpdatedAt !== undefined && lastStockUpdatedAt !== null)
-      url_ +=
-        'LastStockUpdatedAt=' +
-        encodeURIComponent(
-          lastStockUpdatedAt ? '' + formatDate(lastStockUpdatedAt) : '',
-        ) +
-        '&';
+        url_ += "LastStockUpdatedAt=" + encodeURIComponent(lastStockUpdatedAt ? "" + formatDate(lastStockUpdatedAt) : "") + "&";
     if (offset !== undefined && offset !== null)
-      url_ += 'Offset=' + encodeURIComponent('' + offset) + '&';
+        url_ += "Offset=" + encodeURIComponent("" + offset) + "&";
     if (limit !== undefined && limit !== null)
-      url_ += 'Limit=' + encodeURIComponent('' + limit) + '&';
+        url_ += "Limit=" + encodeURIComponent("" + limit) + "&";
     if (sortBy !== undefined && sortBy !== null)
-      url_ += 'SortBy=' + encodeURIComponent('' + sortBy) + '&';
+        url_ += "SortBy=" + encodeURIComponent("" + sortBy) + "&";
     if (sortOrder === null)
-      throw new Error("The parameter 'sortOrder' cannot be null.");
+        throw new Error("The parameter 'sortOrder' cannot be null.");
     else if (sortOrder !== undefined)
-      url_ += 'SortOrder=' + encodeURIComponent('' + sortOrder) + '&';
-    url_ = url_.replace(/[?&]$/, '');
-    return url_;
-  }
-
-  static searchDefaultOptions?: UseQueryOptions<
-    PagedResultOfProductListItemDto,
-    unknown,
-    PagedResultOfProductListItemDto
-  > = {};
-  public static searchQueryKey(dto: SearchProductQueryParameters): QueryKey;
-  public static searchQueryKey(
-    search?: string | null | undefined,
-    productType?: ProductType | null | undefined,
-    lastStockUpdatedAt?: Date | null | undefined,
-    offset?: number | null | undefined,
-    limit?: number | null | undefined,
-    sortBy?: string | null | undefined,
-    sortOrder?: SortOrder | undefined,
-  ): QueryKey;
-  public static searchQueryKey(...params: any[]): QueryKey {
-    if (params.length === 1 && isParameterObject(params[0])) {
-      const {
-        search,
-        productType,
-        lastStockUpdatedAt,
-        offset,
-        limit,
-        sortBy,
-        sortOrder,
-      } = params[0] as SearchProductQueryParameters;
-
-      return removeUndefinedFromArrayTail([
-        'ProductClient',
-        'search',
-        search as any,
-        productType as any,
-        lastStockUpdatedAt as any,
-        offset as any,
-        limit as any,
-        sortBy as any,
-        sortOrder as any,
-      ]);
-    } else {
-      return removeUndefinedFromArrayTail([
-        'ProductClient',
-        'search',
-        ...params,
-      ]);
-    }
-  }
-
-  private static search(context: QueryFunctionContext) {
-    return ProductQuery.Client.search(
-      context.queryKey[2] as string | null | undefined,
-      context.queryKey[3] as ProductType | null | undefined,
-      context.queryKey[4] as Date | null | undefined,
-      context.queryKey[5] as number | null | undefined,
-      context.queryKey[6] as number | null | undefined,
-      context.queryKey[7] as string | null | undefined,
-      context.queryKey[8] as SortOrder | undefined,
-    );
-  }
-
-  static useSearchQuery<
-    TSelectData = PagedResultOfProductListItemDto,
-    TError = unknown,
-  >(
-    dto: SearchProductQueryParameters,
-    options?: UseQueryOptions<
-      PagedResultOfProductListItemDto,
-      TError,
-      TSelectData
-    >,
-  ): UseQueryResult<TSelectData, TError>;
-  /**
-   * @param search (optional)
-   * @param productType (optional)
-   * @param lastStockUpdatedAt (optional)
-   * @param offset (optional) Offset of list.
-   * @param limit (optional) Number of requested records.
-   * @param sortBy (optional) Field name for sorting in DB.
-   * @param sortOrder (optional) Sort direction. Ascending or Descending.
-   */
-  static useSearchQuery<
-    TSelectData = PagedResultOfProductListItemDto,
-    TError = unknown,
-  >(
-    search?: string | null | undefined,
-    productType?: ProductType | null | undefined,
-    lastStockUpdatedAt?: Date | null | undefined,
-    offset?: number | null | undefined,
-    limit?: number | null | undefined,
-    sortBy?: string | null | undefined,
-    sortOrder?: SortOrder | undefined,
-    options?: UseQueryOptions<
-      PagedResultOfProductListItemDto,
-      TError,
-      TSelectData
-    >,
-  ): UseQueryResult<TSelectData, TError>;
-  static useSearchQuery<
-    TSelectData = PagedResultOfProductListItemDto,
-    TError = unknown,
-  >(...params: any[]): UseQueryResult<TSelectData, TError> {
-    let options:
-      | UseQueryOptions<PagedResultOfProductListItemDto, TError, TSelectData>
-      | undefined = undefined;
-    let search: any = undefined;
-    let productType: any = undefined;
-    let lastStockUpdatedAt: any = undefined;
-    let offset: any = undefined;
-    let limit: any = undefined;
-    let sortBy: any = undefined;
-    let sortOrder: any = undefined;
-
-    if (params.length > 0) {
-      if (isParameterObject(params[0])) {
-        ({
-          search,
-          productType,
-          lastStockUpdatedAt,
-          offset,
-          limit,
-          sortBy,
-          sortOrder,
-        } = params[0] as SearchProductQueryParameters);
-        options = params[1];
-      } else {
-        [
-          search,
-          productType,
-          lastStockUpdatedAt,
-          offset,
-          limit,
-          sortBy,
-          sortOrder,
-          options,
-        ] = params;
-      }
+        url_ += "SortOrder=" + encodeURIComponent("" + sortOrder) + "&";
+    url_ = url_.replace(/[?&]$/, "");
+      return url_;
     }
 
-    return useQuery<PagedResultOfProductListItemDto, TError, TSelectData>({
-      queryFn: ProductQuery.search,
-      queryKey: ProductQuery.searchQueryKey(
-        search,
-        productType,
-        lastStockUpdatedAt,
-        offset,
-        limit,
-        sortBy,
-        sortOrder,
-      ),
-      ...(ProductQuery.searchDefaultOptions as unknown as UseQueryOptions<
-        PagedResultOfProductListItemDto,
-        TError,
-        TSelectData
-      >),
-      ...options,
-    });
-  }
-  /**
-   * @param search (optional)
-   * @param productType (optional)
-   * @param lastStockUpdatedAt (optional)
-   * @param offset (optional) Offset of list.
-   * @param limit (optional) Number of requested records.
-   * @param sortBy (optional) Field name for sorting in DB.
-   * @param sortOrder (optional) Sort direction. Ascending or Descending.
-   */
-  static setSearchData(
-    queryClient: QueryClient,
-    updater: (
-      data: PagedResultOfProductListItemDto | undefined,
-    ) => PagedResultOfProductListItemDto,
-    search?: string | null | undefined,
-    productType?: ProductType | null | undefined,
-    lastStockUpdatedAt?: Date | null | undefined,
-    offset?: number | null | undefined,
-    limit?: number | null | undefined,
-    sortBy?: string | null | undefined,
-    sortOrder?: SortOrder | undefined,
-  ) {
-    queryClient.setQueryData(
-      ProductQuery.searchQueryKey(
-        search,
-        productType,
-        lastStockUpdatedAt,
-        offset,
-        limit,
-        sortBy,
-        sortOrder,
-      ),
-      updater,
-    );
-  }
+    static searchDefaultOptions?: UseQueryOptions<PagedResultOfProductListItemDto, unknown, PagedResultOfProductListItemDto> = {};
+    public static searchQueryKey(dto: SearchProductQueryParameters): QueryKey;
+    public static searchQueryKey(search?: string | null | undefined,productType?: ProductType | null | undefined,lastStockUpdatedAt?: Date | null | undefined,offset?: number | null | undefined,limit?: number | null | undefined,sortBy?: string | null | undefined,sortOrder?: SortOrder | undefined): QueryKey;
+    public static searchQueryKey(...params: any[]): QueryKey {
+        if (params.length === 1 && isParameterObject(params[0])) {
+            const { search, productType, lastStockUpdatedAt, offset, limit, sortBy, sortOrder,  } = params[0] as SearchProductQueryParameters;
 
-  /**
-   * @param search (optional)
-   * @param productType (optional)
-   * @param lastStockUpdatedAt (optional)
-   * @param offset (optional) Offset of list.
-   * @param limit (optional) Number of requested records.
-   * @param sortBy (optional) Field name for sorting in DB.
-   * @param sortOrder (optional) Sort direction. Ascending or Descending.
-   */
-  static setSearchDataByQueryId(
-    queryClient: QueryClient,
-    queryKey: QueryKey,
-    updater: (
-      data: PagedResultOfProductListItemDto | undefined,
-    ) => PagedResultOfProductListItemDto,
-  ) {
-    queryClient.setQueryData(queryKey, updater);
-  }
+            return removeUndefinedFromArrayTail([
+                'ProductClient',
+                'search',
+                search as any,
+                productType as any,
+                lastStockUpdatedAt as any,
+                offset as any,
+                limit as any,
+                sortBy as any,
+                sortOrder as any,
 
-  get(id: number): string {
-    let url_ = this.baseUrl + '/api/products/{id}';
+            ]);
+        } else {
+            return removeUndefinedFromArrayTail([
+                'ProductClient',
+                'search',
+                ...params
+            ]);
+        }
+    }
+
+    private static search(context: QueryFunctionContext) {
+        return ProductQuery.Client.search(
+                context.queryKey[2] as string | null | undefined, 
+                context.queryKey[3] as ProductType | null | undefined, 
+                context.queryKey[4] as Date | null | undefined, 
+                context.queryKey[5] as number | null | undefined, 
+                context.queryKey[6] as number | null | undefined, 
+                context.queryKey[7] as string | null | undefined, 
+                context.queryKey[8] as SortOrder | undefined
+            );
+    }
+
+    static useSearchQuery<TSelectData = PagedResultOfProductListItemDto, TError = unknown>(dto: SearchProductQueryParameters, options?: UseQueryOptions<PagedResultOfProductListItemDto, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+    /**
+     * @param search (optional) 
+     * @param productType (optional) 
+     * @param lastStockUpdatedAt (optional) 
+     * @param offset (optional) Offset of list.
+     * @param limit (optional) Number of requested records.
+     * @param sortBy (optional) Field name for sorting in DB.
+     * @param sortOrder (optional) Sort direction. Ascending or Descending.
+     */
+    static useSearchQuery<TSelectData = PagedResultOfProductListItemDto, TError = unknown>(search?: string | null | undefined, productType?: ProductType | null | undefined, lastStockUpdatedAt?: Date | null | undefined, offset?: number | null | undefined, limit?: number | null | undefined, sortBy?: string | null | undefined, sortOrder?: SortOrder | undefined, options?: UseQueryOptions<PagedResultOfProductListItemDto, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+    static useSearchQuery<TSelectData = PagedResultOfProductListItemDto, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
+
+        let options: UseQueryOptions<PagedResultOfProductListItemDto, TError, TSelectData> | undefined = undefined;
+        let search: any = undefined;
+        let productType: any = undefined;
+        let lastStockUpdatedAt: any = undefined;
+        let offset: any = undefined;
+        let limit: any = undefined;
+        let sortBy: any = undefined;
+        let sortOrder: any = undefined;
+        
+        if (params.length > 0) {
+            if (isParameterObject(params[0])) {
+                ({ search, productType, lastStockUpdatedAt, offset, limit, sortBy, sortOrder,  } = params[0] as SearchProductQueryParameters);
+                options = params[1];
+            } else {
+                [search, productType, lastStockUpdatedAt, offset, limit, sortBy, sortOrder,  options] = params;
+            }
+        }
+    
+
+        return useQuery<PagedResultOfProductListItemDto, TError, TSelectData>({
+            queryFn: ProductQuery.search,
+            queryKey: ProductQuery.searchQueryKey(search, productType, lastStockUpdatedAt, offset, limit, sortBy, sortOrder),
+            ...ProductQuery.searchDefaultOptions as unknown as UseQueryOptions<PagedResultOfProductListItemDto, TError, TSelectData>,
+            ...options,
+        });
+    }
+    /**
+     * @param search (optional) 
+     * @param productType (optional) 
+     * @param lastStockUpdatedAt (optional) 
+     * @param offset (optional) Offset of list.
+     * @param limit (optional) Number of requested records.
+     * @param sortBy (optional) Field name for sorting in DB.
+     * @param sortOrder (optional) Sort direction. Ascending or Descending.
+     */
+    static setSearchData(queryClient: QueryClient, updater: (data: PagedResultOfProductListItemDto | undefined) => PagedResultOfProductListItemDto, search?: string | null | undefined, productType?: ProductType | null | undefined, lastStockUpdatedAt?: Date | null | undefined, offset?: number | null | undefined, limit?: number | null | undefined, sortBy?: string | null | undefined, sortOrder?: SortOrder | undefined) {
+        queryClient.setQueryData(ProductQuery.searchQueryKey(search, productType, lastStockUpdatedAt, offset, limit, sortBy, sortOrder),
+            updater
+        );
+    }
+
+    /**
+     * @param search (optional) 
+     * @param productType (optional) 
+     * @param lastStockUpdatedAt (optional) 
+     * @param offset (optional) Offset of list.
+     * @param limit (optional) Number of requested records.
+     * @param sortBy (optional) Field name for sorting in DB.
+     * @param sortOrder (optional) Sort direction. Ascending or Descending.
+     */
+    static setSearchDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: PagedResultOfProductListItemDto | undefined) => PagedResultOfProductListItemDto) {
+        queryClient.setQueryData(queryKey, updater);
+    }
+      
+
+    get(id: number): string {
+      let url_ = this.baseUrl + "/api/products/{id}";
     if (id === undefined || id === null)
-      throw new Error("The parameter 'id' must be defined.");
-    url_ = url_.replace('{id}', encodeURIComponent('' + id));
-    url_ = url_.replace(/[?&]$/, '');
-    return url_;
-  }
-
-  static getDefaultOptions?: UseQueryOptions<ProductDto, unknown, ProductDto> =
-    {};
-  public static getQueryKey(id: number): QueryKey;
-  public static getQueryKey(...params: any[]): QueryKey {
-    if (params.length === 1 && isParameterObject(params[0])) {
-      const { id } = params[0] as GetProductQueryParameters;
-
-      return removeUndefinedFromArrayTail(['ProductClient', 'get', id as any]);
-    } else {
-      return removeUndefinedFromArrayTail(['ProductClient', 'get', ...params]);
-    }
-  }
-
-  private static get(context: QueryFunctionContext) {
-    return ProductQuery.Client.get(context.queryKey[2] as number);
-  }
-
-  static useGetQuery<TSelectData = ProductDto, TError = unknown>(
-    dto: GetProductQueryParameters,
-    options?: UseQueryOptions<ProductDto, TError, TSelectData>,
-  ): UseQueryResult<TSelectData, TError>;
-  static useGetQuery<TSelectData = ProductDto, TError = unknown>(
-    id: number,
-    options?: UseQueryOptions<ProductDto, TError, TSelectData>,
-  ): UseQueryResult<TSelectData, TError>;
-  static useGetQuery<TSelectData = ProductDto, TError = unknown>(
-    ...params: any[]
-  ): UseQueryResult<TSelectData, TError> {
-    let options: UseQueryOptions<ProductDto, TError, TSelectData> | undefined =
-      undefined;
-    let id: any = undefined;
-
-    if (params.length > 0) {
-      if (isParameterObject(params[0])) {
-        ({ id } = params[0] as GetProductQueryParameters);
-        options = params[1];
-      } else {
-        [id, options] = params;
-      }
+        throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+      return url_;
     }
 
-    return useQuery<ProductDto, TError, TSelectData>({
-      queryFn: ProductQuery.get,
-      queryKey: ProductQuery.getQueryKey(id),
-      ...(ProductQuery.getDefaultOptions as unknown as UseQueryOptions<
-        ProductDto,
-        TError,
-        TSelectData
-      >),
-      ...options,
-    });
-  }
-  static setGetData(
-    queryClient: QueryClient,
-    updater: (data: ProductDto | undefined) => ProductDto,
-    id: number,
-  ) {
-    queryClient.setQueryData(ProductQuery.getQueryKey(id), updater);
-  }
+    static getDefaultOptions?: UseQueryOptions<ProductDto, unknown, ProductDto> = {};
+    public static getQueryKey(id: number): QueryKey;
+    public static getQueryKey(...params: any[]): QueryKey {
+        if (params.length === 1 && isParameterObject(params[0])) {
+            const { id,  } = params[0] as GetProductQueryParameters;
 
-  static setGetDataByQueryId(
-    queryClient: QueryClient,
-    queryKey: QueryKey,
-    updater: (data: ProductDto | undefined) => ProductDto,
-  ) {
-    queryClient.setQueryData(queryKey, updater);
-  }
-}
+            return removeUndefinedFromArrayTail([
+                'ProductClient',
+                'get',
+                id as any,
+
+            ]);
+        } else {
+            return removeUndefinedFromArrayTail([
+                'ProductClient',
+                'get',
+                ...params
+            ]);
+        }
+    }
+
+    private static get(context: QueryFunctionContext) {
+        return ProductQuery.Client.get(
+                context.queryKey[2] as number
+            );
+    }
+
+    static useGetQuery<TSelectData = ProductDto, TError = unknown>(dto: GetProductQueryParameters, options?: UseQueryOptions<ProductDto, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+    static useGetQuery<TSelectData = ProductDto, TError = unknown>(id: number, options?: UseQueryOptions<ProductDto, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+    static useGetQuery<TSelectData = ProductDto, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
+
+        let options: UseQueryOptions<ProductDto, TError, TSelectData> | undefined = undefined;
+        let id: any = undefined;
+        
+        if (params.length > 0) {
+            if (isParameterObject(params[0])) {
+                ({ id,  } = params[0] as GetProductQueryParameters);
+                options = params[1];
+            } else {
+                [id,  options] = params;
+            }
+        }
+    
+
+        return useQuery<ProductDto, TError, TSelectData>({
+            queryFn: ProductQuery.get,
+            queryKey: ProductQuery.getQueryKey(id),
+            ...ProductQuery.getDefaultOptions as unknown as UseQueryOptions<ProductDto, TError, TSelectData>,
+            ...options,
+        });
+    }
+    static setGetData(queryClient: QueryClient, updater: (data: ProductDto | undefined) => ProductDto, id: number) {
+        queryClient.setQueryData(ProductQuery.getQueryKey(id),
+            updater
+        );
+    }
+
+    static setGetDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: ProductDto | undefined) => ProductDto) {
+        queryClient.setQueryData(queryKey, updater);
+    }
+    }
 
 export class OpenIdAuthorizationClient {
-  private instance: AxiosInstance;
-  private baseUrl: string;
-  protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
-    undefined;
+    private instance: AxiosInstance;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-  constructor(baseUrl?: string, instance?: AxiosInstance) {
-    this.instance = instance ? instance : axios.create();
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
 
-    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
-  }
+        this.instance = instance ? instance : axios.create();
 
-  externalCallbackGET(
-    remoteError?: string | null | undefined,
-    originalQuery?: string | null | undefined,
-    cancelToken?: CancelToken | undefined,
-  ): Promise<void> {
-    let url_ = this.baseUrl + '/connect/authorize/callback?';
-    if (remoteError !== undefined && remoteError !== null)
-      url_ += 'remoteError=' + encodeURIComponent('' + remoteError) + '&';
-    if (originalQuery !== undefined && originalQuery !== null)
-      url_ += 'originalQuery=' + encodeURIComponent('' + originalQuery) + '&';
-    url_ = url_.replace(/[?&]$/, '');
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
 
-    let options_ = <AxiosRequestConfig>{
-      method: 'GET',
-      url: url_,
-      headers: {},
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
-        }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processExternalCallbackGET(_response);
-      });
-  }
-
-  protected processExternalCallbackGET(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
     }
-    if (status === 400) {
-      const _responseText = response.data;
-      let result400: any = null;
-      let resultData400 = _responseText;
-      result400 = ValidationProblemDetails.fromJS(resultData400);
-      return throwException(
-        'A server side error occurred.',
-        status,
-        _responseText,
-        _headers,
-        result400,
-      );
-    } else if (status === 200) {
-      const _responseText = response.data;
-      return Promise.resolve<void>(null as any);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+
+    externalCallbackGET(remoteError?: string | null | undefined, originalQuery?: string | null | undefined , cancelToken?: CancelToken | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/connect/authorize/callback?";
+        if (remoteError !== undefined && remoteError !== null)
+            url_ += "remoteError=" + encodeURIComponent("" + remoteError) + "&";
+        if (originalQuery !== undefined && originalQuery !== null)
+            url_ += "originalQuery=" + encodeURIComponent("" + originalQuery) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processExternalCallbackGET(_response);
+        });
     }
-    return Promise.resolve<void>(null as any);
-  }
 
-  externalCallbackPOST(
-    remoteError?: string | null | undefined,
-    originalQuery?: string | null | undefined,
-    cancelToken?: CancelToken | undefined,
-  ): Promise<void> {
-    let url_ = this.baseUrl + '/connect/authorize/callback?';
-    if (remoteError !== undefined && remoteError !== null)
-      url_ += 'remoteError=' + encodeURIComponent('' + remoteError) + '&';
-    if (originalQuery !== undefined && originalQuery !== null)
-      url_ += 'originalQuery=' + encodeURIComponent('' + originalQuery) + '&';
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_ = <AxiosRequestConfig>{
-      method: 'POST',
-      url: url_,
-      headers: {},
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
+    protected processExternalCallbackGET(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
         }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processExternalCallbackPOST(_response);
-      });
-  }
+        if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
 
-  protected processExternalCallbackPOST(
-    response: AxiosResponse,
-  ): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
+        } else if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-      }
+        return Promise.resolve<void>(null as any);
     }
-    if (status === 400) {
-      const _responseText = response.data;
-      let result400: any = null;
-      let resultData400 = _responseText;
-      result400 = ValidationProblemDetails.fromJS(resultData400);
-      return throwException(
-        'A server side error occurred.',
-        status,
-        _responseText,
-        _headers,
-        result400,
-      );
-    } else if (status === 200) {
-      const _responseText = response.data;
-      return Promise.resolve<void>(null as any);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+
+    externalCallbackPOST(remoteError?: string | null | undefined, originalQuery?: string | null | undefined , cancelToken?: CancelToken | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/connect/authorize/callback?";
+        if (remoteError !== undefined && remoteError !== null)
+            url_ += "remoteError=" + encodeURIComponent("" + remoteError) + "&";
+        if (originalQuery !== undefined && originalQuery !== null)
+            url_ += "originalQuery=" + encodeURIComponent("" + originalQuery) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processExternalCallbackPOST(_response);
+        });
     }
-    return Promise.resolve<void>(null as any);
-  }
 
-  authorizeGET(
-    provider?: string | null | undefined,
-    reauthenticateWithAnotherProviderIfAlreadyLoggedIn?: boolean | undefined,
-    cancelToken?: CancelToken | undefined,
-  ): Promise<void> {
-    let url_ = this.baseUrl + '/connect/authorize?';
-    if (provider !== undefined && provider !== null)
-      url_ += 'provider=' + encodeURIComponent('' + provider) + '&';
-    if (reauthenticateWithAnotherProviderIfAlreadyLoggedIn === null)
-      throw new Error(
-        "The parameter 'reauthenticateWithAnotherProviderIfAlreadyLoggedIn' cannot be null.",
-      );
-    else if (reauthenticateWithAnotherProviderIfAlreadyLoggedIn !== undefined)
-      url_ +=
-        'reauthenticateWithAnotherProviderIfAlreadyLoggedIn=' +
-        encodeURIComponent(
-          '' + reauthenticateWithAnotherProviderIfAlreadyLoggedIn,
-        ) +
-        '&';
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_ = <AxiosRequestConfig>{
-      method: 'GET',
-      url: url_,
-      headers: {},
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
+    protected processExternalCallbackPOST(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
         }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processAuthorizeGET(_response);
-      });
-  }
+        if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
 
-  protected processAuthorizeGET(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
+        } else if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-      }
+        return Promise.resolve<void>(null as any);
     }
-    if (status === 400) {
-      const _responseText = response.data;
-      let result400: any = null;
-      let resultData400 = _responseText;
-      result400 = ValidationProblemDetails.fromJS(resultData400);
-      return throwException(
-        'A server side error occurred.',
-        status,
-        _responseText,
-        _headers,
-        result400,
-      );
-    } else if (status === 200) {
-      const _responseText = response.data;
-      return Promise.resolve<void>(null as any);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+
+    authorizeGET(provider?: string | null | undefined, reauthenticateWithAnotherProviderIfAlreadyLoggedIn?: boolean | undefined , cancelToken?: CancelToken | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/connect/authorize?";
+        if (provider !== undefined && provider !== null)
+            url_ += "provider=" + encodeURIComponent("" + provider) + "&";
+        if (reauthenticateWithAnotherProviderIfAlreadyLoggedIn === null)
+            throw new Error("The parameter 'reauthenticateWithAnotherProviderIfAlreadyLoggedIn' cannot be null.");
+        else if (reauthenticateWithAnotherProviderIfAlreadyLoggedIn !== undefined)
+            url_ += "reauthenticateWithAnotherProviderIfAlreadyLoggedIn=" + encodeURIComponent("" + reauthenticateWithAnotherProviderIfAlreadyLoggedIn) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processAuthorizeGET(_response);
+        });
     }
-    return Promise.resolve<void>(null as any);
-  }
 
-  authorizePOST(
-    provider?: string | null | undefined,
-    reauthenticateWithAnotherProviderIfAlreadyLoggedIn?: boolean | undefined,
-    cancelToken?: CancelToken | undefined,
-  ): Promise<void> {
-    let url_ = this.baseUrl + '/connect/authorize?';
-    if (provider !== undefined && provider !== null)
-      url_ += 'provider=' + encodeURIComponent('' + provider) + '&';
-    if (reauthenticateWithAnotherProviderIfAlreadyLoggedIn === null)
-      throw new Error(
-        "The parameter 'reauthenticateWithAnotherProviderIfAlreadyLoggedIn' cannot be null.",
-      );
-    else if (reauthenticateWithAnotherProviderIfAlreadyLoggedIn !== undefined)
-      url_ +=
-        'reauthenticateWithAnotherProviderIfAlreadyLoggedIn=' +
-        encodeURIComponent(
-          '' + reauthenticateWithAnotherProviderIfAlreadyLoggedIn,
-        ) +
-        '&';
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_ = <AxiosRequestConfig>{
-      method: 'POST',
-      url: url_,
-      headers: {},
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
+    protected processAuthorizeGET(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
         }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processAuthorizePOST(_response);
-      });
-  }
+        if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
 
-  protected processAuthorizePOST(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
+        } else if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-      }
+        return Promise.resolve<void>(null as any);
     }
-    if (status === 400) {
-      const _responseText = response.data;
-      let result400: any = null;
-      let resultData400 = _responseText;
-      result400 = ValidationProblemDetails.fromJS(resultData400);
-      return throwException(
-        'A server side error occurred.',
-        status,
-        _responseText,
-        _headers,
-        result400,
-      );
-    } else if (status === 200) {
-      const _responseText = response.data;
-      return Promise.resolve<void>(null as any);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+
+    authorizePOST(provider?: string | null | undefined, reauthenticateWithAnotherProviderIfAlreadyLoggedIn?: boolean | undefined , cancelToken?: CancelToken | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/connect/authorize?";
+        if (provider !== undefined && provider !== null)
+            url_ += "provider=" + encodeURIComponent("" + provider) + "&";
+        if (reauthenticateWithAnotherProviderIfAlreadyLoggedIn === null)
+            throw new Error("The parameter 'reauthenticateWithAnotherProviderIfAlreadyLoggedIn' cannot be null.");
+        else if (reauthenticateWithAnotherProviderIfAlreadyLoggedIn !== undefined)
+            url_ += "reauthenticateWithAnotherProviderIfAlreadyLoggedIn=" + encodeURIComponent("" + reauthenticateWithAnotherProviderIfAlreadyLoggedIn) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processAuthorizePOST(_response);
+        });
     }
-    return Promise.resolve<void>(null as any);
-  }
 
-  exchange(cancelToken?: CancelToken | undefined): Promise<void> {
-    let url_ = this.baseUrl + '/connect/token';
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_ = <AxiosRequestConfig>{
-      method: 'POST',
-      url: url_,
-      headers: {},
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
+    protected processAuthorizePOST(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
         }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processExchange(_response);
-      });
-  }
+        if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
 
-  protected processExchange(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
+        } else if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-      }
+        return Promise.resolve<void>(null as any);
     }
-    if (status === 400) {
-      const _responseText = response.data;
-      let result400: any = null;
-      let resultData400 = _responseText;
-      result400 = ValidationProblemDetails.fromJS(resultData400);
-      return throwException(
-        'A server side error occurred.',
-        status,
-        _responseText,
-        _headers,
-        result400,
-      );
-    } else if (status === 200) {
-      const _responseText = response.data;
-      return Promise.resolve<void>(null as any);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+
+    exchange(  cancelToken?: CancelToken | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/connect/token";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processExchange(_response);
+        });
     }
-    return Promise.resolve<void>(null as any);
-  }
+
+    protected processExchange(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+
+        } else if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
 }
 type ExternalCallbackGETOpenIdAuthorizationQueryParameters = {
-  remoteError?: string | null | null;
-  originalQuery?: string | null | null;
+      remoteError?: string | null | null;
+      originalQuery?: string | null | null;
 };
 
 type AuthorizeGETOpenIdAuthorizationQueryParameters = {
-  provider?: string | null | null;
-  reauthenticateWithAnotherProviderIfAlreadyLoggedIn?: boolean | null;
+      provider?: string | null | null;
+      reauthenticateWithAnotherProviderIfAlreadyLoggedIn?: boolean | null;
 };
 
-export class OpenIdAuthorizationQuery {
-  get baseUrl() {
-    return getBaseUrl() ?? '' + 'http://localhost';
-  }
+export class OpenIdAuthorizationQuery{
 
-  static get Client() {
-    return createClient(OpenIdAuthorizationClient);
-  }
+    get baseUrl() {
+      return getBaseUrl() ?? '' + 'http://localhost';
+    }
 
-  static get Url() {
-    return new OpenIdAuthorizationQuery();
-  }
+    static get Client() {
+        return createClient(OpenIdAuthorizationClient);
+    }
 
-  externalCallbackGET(
-    remoteError?: string | null | undefined,
-    originalQuery?: string | null | undefined,
-  ): string {
-    let url_ = this.baseUrl + '/connect/authorize/callback?';
+    static get Url() {
+        return new OpenIdAuthorizationQuery();
+    }
+
+    externalCallbackGET(remoteError?: string | null | undefined, originalQuery?: string | null | undefined): string {
+      let url_ = this.baseUrl + "/connect/authorize/callback?";
     if (remoteError !== undefined && remoteError !== null)
-      url_ += 'remoteError=' + encodeURIComponent('' + remoteError) + '&';
+        url_ += "remoteError=" + encodeURIComponent("" + remoteError) + "&";
     if (originalQuery !== undefined && originalQuery !== null)
-      url_ += 'originalQuery=' + encodeURIComponent('' + originalQuery) + '&';
-    url_ = url_.replace(/[?&]$/, '');
-    return url_;
-  }
-
-  static externalCallbackGETDefaultOptions?: UseQueryOptions<
-    void,
-    unknown,
-    void
-  > = {};
-  public static externalCallbackGETQueryKey(
-    dto: ExternalCallbackGETOpenIdAuthorizationQueryParameters,
-  ): QueryKey;
-  public static externalCallbackGETQueryKey(
-    remoteError?: string | null | undefined,
-    originalQuery?: string | null | undefined,
-  ): QueryKey;
-  public static externalCallbackGETQueryKey(...params: any[]): QueryKey {
-    if (params.length === 1 && isParameterObject(params[0])) {
-      const { remoteError, originalQuery } =
-        params[0] as ExternalCallbackGETOpenIdAuthorizationQueryParameters;
-
-      return removeUndefinedFromArrayTail([
-        'OpenIdAuthorizationClient',
-        'externalCallbackGET',
-        remoteError as any,
-        originalQuery as any,
-      ]);
-    } else {
-      return removeUndefinedFromArrayTail([
-        'OpenIdAuthorizationClient',
-        'externalCallbackGET',
-        ...params,
-      ]);
-    }
-  }
-
-  private static externalCallbackGET(context: QueryFunctionContext) {
-    return OpenIdAuthorizationQuery.Client.externalCallbackGET(
-      context.queryKey[2] as string | null | undefined,
-      context.queryKey[3] as string | null | undefined,
-    );
-  }
-
-  static useExternalCallbackGETQuery<TSelectData = void, TError = unknown>(
-    dto: ExternalCallbackGETOpenIdAuthorizationQueryParameters,
-    options?: UseQueryOptions<void, TError, TSelectData>,
-  ): UseQueryResult<TSelectData, TError>;
-  static useExternalCallbackGETQuery<TSelectData = void, TError = unknown>(
-    remoteError?: string | null | undefined,
-    originalQuery?: string | null | undefined,
-    options?: UseQueryOptions<void, TError, TSelectData>,
-  ): UseQueryResult<TSelectData, TError>;
-  static useExternalCallbackGETQuery<TSelectData = void, TError = unknown>(
-    ...params: any[]
-  ): UseQueryResult<TSelectData, TError> {
-    let options: UseQueryOptions<void, TError, TSelectData> | undefined =
-      undefined;
-    let remoteError: any = undefined;
-    let originalQuery: any = undefined;
-
-    if (params.length > 0) {
-      if (isParameterObject(params[0])) {
-        ({ remoteError, originalQuery } =
-          params[0] as ExternalCallbackGETOpenIdAuthorizationQueryParameters);
-        options = params[1];
-      } else {
-        [remoteError, originalQuery, options] = params;
-      }
+        url_ += "originalQuery=" + encodeURIComponent("" + originalQuery) + "&";
+    url_ = url_.replace(/[?&]$/, "");
+      return url_;
     }
 
-    return useQuery<void, TError, TSelectData>({
-      queryFn: OpenIdAuthorizationQuery.externalCallbackGET,
-      queryKey: OpenIdAuthorizationQuery.externalCallbackGETQueryKey(
-        remoteError,
-        originalQuery,
-      ),
-      ...(OpenIdAuthorizationQuery.externalCallbackGETDefaultOptions as unknown as UseQueryOptions<
-        void,
-        TError,
-        TSelectData
-      >),
-      ...options,
-    });
-  }
-  static setExternalCallbackGETData(
-    queryClient: QueryClient,
-    updater: (data: void | undefined) => void,
-    remoteError?: string | null | undefined,
-    originalQuery?: string | null | undefined,
-  ) {
-    queryClient.setQueryData(
-      OpenIdAuthorizationQuery.externalCallbackGETQueryKey(
-        remoteError,
-        originalQuery,
-      ),
-      updater,
-    );
-  }
+    static externalCallbackGETDefaultOptions?: UseQueryOptions<void, unknown, void> = {};
+    public static externalCallbackGETQueryKey(dto: ExternalCallbackGETOpenIdAuthorizationQueryParameters): QueryKey;
+    public static externalCallbackGETQueryKey(remoteError?: string | null | undefined,originalQuery?: string | null | undefined): QueryKey;
+    public static externalCallbackGETQueryKey(...params: any[]): QueryKey {
+        if (params.length === 1 && isParameterObject(params[0])) {
+            const { remoteError, originalQuery,  } = params[0] as ExternalCallbackGETOpenIdAuthorizationQueryParameters;
 
-  static setExternalCallbackGETDataByQueryId(
-    queryClient: QueryClient,
-    queryKey: QueryKey,
-    updater: (data: void | undefined) => void,
-  ) {
-    queryClient.setQueryData(queryKey, updater);
-  }
+            return removeUndefinedFromArrayTail([
+                'OpenIdAuthorizationClient',
+                'externalCallbackGET',
+                remoteError as any,
+                originalQuery as any,
 
-  authorizeGET(
-    provider?: string | null | undefined,
-    reauthenticateWithAnotherProviderIfAlreadyLoggedIn?: boolean | undefined,
-  ): string {
-    let url_ = this.baseUrl + '/connect/authorize?';
+            ]);
+        } else {
+            return removeUndefinedFromArrayTail([
+                'OpenIdAuthorizationClient',
+                'externalCallbackGET',
+                ...params
+            ]);
+        }
+    }
+
+    private static externalCallbackGET(context: QueryFunctionContext) {
+        return OpenIdAuthorizationQuery.Client.externalCallbackGET(
+                context.queryKey[2] as string | null | undefined, 
+                context.queryKey[3] as string | null | undefined
+            );
+    }
+
+    static useExternalCallbackGETQuery<TSelectData = void, TError = unknown>(dto: ExternalCallbackGETOpenIdAuthorizationQueryParameters, options?: UseQueryOptions<void, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+    static useExternalCallbackGETQuery<TSelectData = void, TError = unknown>(remoteError?: string | null | undefined, originalQuery?: string | null | undefined, options?: UseQueryOptions<void, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+    static useExternalCallbackGETQuery<TSelectData = void, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
+
+        let options: UseQueryOptions<void, TError, TSelectData> | undefined = undefined;
+        let remoteError: any = undefined;
+        let originalQuery: any = undefined;
+        
+        if (params.length > 0) {
+            if (isParameterObject(params[0])) {
+                ({ remoteError, originalQuery,  } = params[0] as ExternalCallbackGETOpenIdAuthorizationQueryParameters);
+                options = params[1];
+            } else {
+                [remoteError, originalQuery,  options] = params;
+            }
+        }
+    
+
+        return useQuery<void, TError, TSelectData>({
+            queryFn: OpenIdAuthorizationQuery.externalCallbackGET,
+            queryKey: OpenIdAuthorizationQuery.externalCallbackGETQueryKey(remoteError, originalQuery),
+            ...OpenIdAuthorizationQuery.externalCallbackGETDefaultOptions as unknown as UseQueryOptions<void, TError, TSelectData>,
+            ...options,
+        });
+    }
+    static setExternalCallbackGETData(queryClient: QueryClient, updater: (data: void | undefined) => void, remoteError?: string | null | undefined, originalQuery?: string | null | undefined) {
+        queryClient.setQueryData(OpenIdAuthorizationQuery.externalCallbackGETQueryKey(remoteError, originalQuery),
+            updater
+        );
+    }
+
+    static setExternalCallbackGETDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: void | undefined) => void) {
+        queryClient.setQueryData(queryKey, updater);
+    }
+      
+
+    authorizeGET(provider?: string | null | undefined, reauthenticateWithAnotherProviderIfAlreadyLoggedIn?: boolean | undefined): string {
+      let url_ = this.baseUrl + "/connect/authorize?";
     if (provider !== undefined && provider !== null)
-      url_ += 'provider=' + encodeURIComponent('' + provider) + '&';
+        url_ += "provider=" + encodeURIComponent("" + provider) + "&";
     if (reauthenticateWithAnotherProviderIfAlreadyLoggedIn === null)
-      throw new Error(
-        "The parameter 'reauthenticateWithAnotherProviderIfAlreadyLoggedIn' cannot be null.",
-      );
+        throw new Error("The parameter 'reauthenticateWithAnotherProviderIfAlreadyLoggedIn' cannot be null.");
     else if (reauthenticateWithAnotherProviderIfAlreadyLoggedIn !== undefined)
-      url_ +=
-        'reauthenticateWithAnotherProviderIfAlreadyLoggedIn=' +
-        encodeURIComponent(
-          '' + reauthenticateWithAnotherProviderIfAlreadyLoggedIn,
-        ) +
-        '&';
-    url_ = url_.replace(/[?&]$/, '');
-    return url_;
-  }
-
-  static authorizeGETDefaultOptions?: UseQueryOptions<void, unknown, void> = {};
-  public static authorizeGETQueryKey(
-    dto: AuthorizeGETOpenIdAuthorizationQueryParameters,
-  ): QueryKey;
-  public static authorizeGETQueryKey(
-    provider?: string | null | undefined,
-    reauthenticateWithAnotherProviderIfAlreadyLoggedIn?: boolean | undefined,
-  ): QueryKey;
-  public static authorizeGETQueryKey(...params: any[]): QueryKey {
-    if (params.length === 1 && isParameterObject(params[0])) {
-      const { provider, reauthenticateWithAnotherProviderIfAlreadyLoggedIn } =
-        params[0] as AuthorizeGETOpenIdAuthorizationQueryParameters;
-
-      return removeUndefinedFromArrayTail([
-        'OpenIdAuthorizationClient',
-        'authorizeGET',
-        provider as any,
-        reauthenticateWithAnotherProviderIfAlreadyLoggedIn as any,
-      ]);
-    } else {
-      return removeUndefinedFromArrayTail([
-        'OpenIdAuthorizationClient',
-        'authorizeGET',
-        ...params,
-      ]);
-    }
-  }
-
-  private static authorizeGET(context: QueryFunctionContext) {
-    return OpenIdAuthorizationQuery.Client.authorizeGET(
-      context.queryKey[2] as string | null | undefined,
-      context.queryKey[3] as boolean | undefined,
-    );
-  }
-
-  static useAuthorizeGETQuery<TSelectData = void, TError = unknown>(
-    dto: AuthorizeGETOpenIdAuthorizationQueryParameters,
-    options?: UseQueryOptions<void, TError, TSelectData>,
-  ): UseQueryResult<TSelectData, TError>;
-  static useAuthorizeGETQuery<TSelectData = void, TError = unknown>(
-    provider?: string | null | undefined,
-    reauthenticateWithAnotherProviderIfAlreadyLoggedIn?: boolean | undefined,
-    options?: UseQueryOptions<void, TError, TSelectData>,
-  ): UseQueryResult<TSelectData, TError>;
-  static useAuthorizeGETQuery<TSelectData = void, TError = unknown>(
-    ...params: any[]
-  ): UseQueryResult<TSelectData, TError> {
-    let options: UseQueryOptions<void, TError, TSelectData> | undefined =
-      undefined;
-    let provider: any = undefined;
-    let reauthenticateWithAnotherProviderIfAlreadyLoggedIn: any = undefined;
-
-    if (params.length > 0) {
-      if (isParameterObject(params[0])) {
-        ({ provider, reauthenticateWithAnotherProviderIfAlreadyLoggedIn } =
-          params[0] as AuthorizeGETOpenIdAuthorizationQueryParameters);
-        options = params[1];
-      } else {
-        [
-          provider,
-          reauthenticateWithAnotherProviderIfAlreadyLoggedIn,
-          options,
-        ] = params;
-      }
+        url_ += "reauthenticateWithAnotherProviderIfAlreadyLoggedIn=" + encodeURIComponent("" + reauthenticateWithAnotherProviderIfAlreadyLoggedIn) + "&";
+    url_ = url_.replace(/[?&]$/, "");
+      return url_;
     }
 
-    return useQuery<void, TError, TSelectData>({
-      queryFn: OpenIdAuthorizationQuery.authorizeGET,
-      queryKey: OpenIdAuthorizationQuery.authorizeGETQueryKey(
-        provider,
-        reauthenticateWithAnotherProviderIfAlreadyLoggedIn,
-      ),
-      ...(OpenIdAuthorizationQuery.authorizeGETDefaultOptions as unknown as UseQueryOptions<
-        void,
-        TError,
-        TSelectData
-      >),
-      ...options,
-    });
-  }
-  static setAuthorizeGETData(
-    queryClient: QueryClient,
-    updater: (data: void | undefined) => void,
-    provider?: string | null | undefined,
-    reauthenticateWithAnotherProviderIfAlreadyLoggedIn?: boolean | undefined,
-  ) {
-    queryClient.setQueryData(
-      OpenIdAuthorizationQuery.authorizeGETQueryKey(
-        provider,
-        reauthenticateWithAnotherProviderIfAlreadyLoggedIn,
-      ),
-      updater,
-    );
-  }
+    static authorizeGETDefaultOptions?: UseQueryOptions<void, unknown, void> = {};
+    public static authorizeGETQueryKey(dto: AuthorizeGETOpenIdAuthorizationQueryParameters): QueryKey;
+    public static authorizeGETQueryKey(provider?: string | null | undefined,reauthenticateWithAnotherProviderIfAlreadyLoggedIn?: boolean | undefined): QueryKey;
+    public static authorizeGETQueryKey(...params: any[]): QueryKey {
+        if (params.length === 1 && isParameterObject(params[0])) {
+            const { provider, reauthenticateWithAnotherProviderIfAlreadyLoggedIn,  } = params[0] as AuthorizeGETOpenIdAuthorizationQueryParameters;
 
-  static setAuthorizeGETDataByQueryId(
-    queryClient: QueryClient,
-    queryKey: QueryKey,
-    updater: (data: void | undefined) => void,
-  ) {
-    queryClient.setQueryData(queryKey, updater);
-  }
-}
+            return removeUndefinedFromArrayTail([
+                'OpenIdAuthorizationClient',
+                'authorizeGET',
+                provider as any,
+                reauthenticateWithAnotherProviderIfAlreadyLoggedIn as any,
+
+            ]);
+        } else {
+            return removeUndefinedFromArrayTail([
+                'OpenIdAuthorizationClient',
+                'authorizeGET',
+                ...params
+            ]);
+        }
+    }
+
+    private static authorizeGET(context: QueryFunctionContext) {
+        return OpenIdAuthorizationQuery.Client.authorizeGET(
+                context.queryKey[2] as string | null | undefined, 
+                context.queryKey[3] as boolean | undefined
+            );
+    }
+
+    static useAuthorizeGETQuery<TSelectData = void, TError = unknown>(dto: AuthorizeGETOpenIdAuthorizationQueryParameters, options?: UseQueryOptions<void, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+    static useAuthorizeGETQuery<TSelectData = void, TError = unknown>(provider?: string | null | undefined, reauthenticateWithAnotherProviderIfAlreadyLoggedIn?: boolean | undefined, options?: UseQueryOptions<void, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+    static useAuthorizeGETQuery<TSelectData = void, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
+
+        let options: UseQueryOptions<void, TError, TSelectData> | undefined = undefined;
+        let provider: any = undefined;
+        let reauthenticateWithAnotherProviderIfAlreadyLoggedIn: any = undefined;
+        
+        if (params.length > 0) {
+            if (isParameterObject(params[0])) {
+                ({ provider, reauthenticateWithAnotherProviderIfAlreadyLoggedIn,  } = params[0] as AuthorizeGETOpenIdAuthorizationQueryParameters);
+                options = params[1];
+            } else {
+                [provider, reauthenticateWithAnotherProviderIfAlreadyLoggedIn,  options] = params;
+            }
+        }
+    
+
+        return useQuery<void, TError, TSelectData>({
+            queryFn: OpenIdAuthorizationQuery.authorizeGET,
+            queryKey: OpenIdAuthorizationQuery.authorizeGETQueryKey(provider, reauthenticateWithAnotherProviderIfAlreadyLoggedIn),
+            ...OpenIdAuthorizationQuery.authorizeGETDefaultOptions as unknown as UseQueryOptions<void, TError, TSelectData>,
+            ...options,
+        });
+    }
+    static setAuthorizeGETData(queryClient: QueryClient, updater: (data: void | undefined) => void, provider?: string | null | undefined, reauthenticateWithAnotherProviderIfAlreadyLoggedIn?: boolean | undefined) {
+        queryClient.setQueryData(OpenIdAuthorizationQuery.authorizeGETQueryKey(provider, reauthenticateWithAnotherProviderIfAlreadyLoggedIn),
+            updater
+        );
+    }
+
+    static setAuthorizeGETDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: void | undefined) => void) {
+        queryClient.setQueryData(queryKey, updater);
+    }
+        }
 
 export class SignUrlClient {
-  private instance: AxiosInstance;
-  private baseUrl: string;
-  protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
-    undefined;
+    private instance: AxiosInstance;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-  constructor(baseUrl?: string, instance?: AxiosInstance) {
-    this.instance = instance ? instance : axios.create();
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
 
-    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
-  }
+        this.instance = instance ? instance : axios.create();
 
-  getSignature(cancelToken?: CancelToken | undefined): Promise<string> {
-    let url_ = this.baseUrl + '/api/sign-url/signature';
-    url_ = url_.replace(/[?&]$/, '');
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
 
-    let options_ = <AxiosRequestConfig>{
-      method: 'GET',
-      url: url_,
-      headers: {
-        Accept: 'application/json',
-      },
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
-        }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processGetSignature(_response);
-      });
-  }
-
-  protected processGetSignature(response: AxiosResponse): Promise<string> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
     }
-    if (status === 400) {
-      const _responseText = response.data;
-      let result400: any = null;
-      let resultData400 = _responseText;
-      result400 = ValidationProblemDetails.fromJS(resultData400);
-      return throwException(
-        'A server side error occurred.',
-        status,
-        _responseText,
-        _headers,
-        result400,
-      );
-    } else if (status === 200) {
-      const _responseText = response.data;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = resultData200 !== undefined ? resultData200 : <any>null;
 
-      return Promise.resolve<string>(result200);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+    getSignature(  cancelToken?: CancelToken | undefined): Promise<string> {
+        let url_ = this.baseUrl + "/api/sign-url/signature";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetSignature(_response);
+        });
     }
-    return Promise.resolve<string>(null as any);
-  }
 
-  setSignatureCookie(cancelToken?: CancelToken | undefined): Promise<void> {
-    let url_ = this.baseUrl + '/api/sign-url/signature/cookie';
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_ = <AxiosRequestConfig>{
-      method: 'GET',
-      url: url_,
-      headers: {},
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
+    protected processGetSignature(response: AxiosResponse): Promise<string> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
         }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processSetSignatureCookie(_response);
-      });
-  }
+        if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
 
-  protected processSetSignatureCookie(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
+        } else if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return Promise.resolve<string>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-      }
+        return Promise.resolve<string>(null as any);
     }
-    if (status === 400) {
-      const _responseText = response.data;
-      let result400: any = null;
-      let resultData400 = _responseText;
-      result400 = ValidationProblemDetails.fromJS(resultData400);
-      return throwException(
-        'A server side error occurred.',
-        status,
-        _responseText,
-        _headers,
-        result400,
-      );
-    } else if (status === 200) {
-      const _responseText = response.data;
-      return Promise.resolve<void>(null as any);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+
+    setSignatureCookie(  cancelToken?: CancelToken | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/sign-url/signature/cookie";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processSetSignatureCookie(_response);
+        });
     }
-    return Promise.resolve<void>(null as any);
-  }
+
+    protected processSetSignatureCookie(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+
+        } else if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
 }
-export class SignUrlQuery {
-  get baseUrl() {
-    return getBaseUrl() ?? '' + 'http://localhost';
-  }
+export class SignUrlQuery{
 
-  static get Client() {
-    return createClient(SignUrlClient);
-  }
+    get baseUrl() {
+      return getBaseUrl() ?? '' + 'http://localhost';
+    }
 
-  static get Url() {
-    return new SignUrlQuery();
-  }
+    static get Client() {
+        return createClient(SignUrlClient);
+    }
 
-  getSignature(): string {
-    let url_ = this.baseUrl + '/api/sign-url/signature';
-    url_ = url_.replace(/[?&]$/, '');
-    return url_;
-  }
+    static get Url() {
+        return new SignUrlQuery();
+    }
 
-  static getSignatureDefaultOptions?: UseQueryOptions<string, unknown, string> =
-    {};
-  public static getSignatureQueryKey(): QueryKey;
-  public static getSignatureQueryKey(...params: any[]): QueryKey {
-    return removeUndefinedFromArrayTail(['SignUrlClient', 'getSignature']);
-  }
+    getSignature(): string {
+      let url_ = this.baseUrl + "/api/sign-url/signature";
+    url_ = url_.replace(/[?&]$/, "");
+      return url_;
+    }
 
-  private static getSignature() {
-    return SignUrlQuery.Client.getSignature();
-  }
+    static getSignatureDefaultOptions?: UseQueryOptions<string, unknown, string> = {};
+    public static getSignatureQueryKey(): QueryKey;
+    public static getSignatureQueryKey(...params: any[]): QueryKey {
+        return removeUndefinedFromArrayTail([
+            'SignUrlClient',
+            'getSignature',
+            ]);
+    }
 
-  static useGetSignatureQuery<TSelectData = string, TError = unknown>(
-    options?: UseQueryOptions<string, TError, TSelectData>,
-  ): UseQueryResult<TSelectData, TError>;
-  static useGetSignatureQuery<TSelectData = string, TError = unknown>(
-    ...params: any[]
-  ): UseQueryResult<TSelectData, TError> {
-    let options: UseQueryOptions<string, TError, TSelectData> | undefined =
-      undefined;
+    private static getSignature() {
+        return SignUrlQuery.Client.getSignature(
+            );
+    }
 
-    options = params[0] as any;
+    static useGetSignatureQuery<TSelectData = string, TError = unknown>(options?: UseQueryOptions<string, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+    static useGetSignatureQuery<TSelectData = string, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
 
-    return useQuery<string, TError, TSelectData>({
-      queryFn: SignUrlQuery.getSignature,
-      queryKey: SignUrlQuery.getSignatureQueryKey(),
-      ...(SignUrlQuery.getSignatureDefaultOptions as unknown as UseQueryOptions<
-        string,
-        TError,
-        TSelectData
-      >),
-      ...options,
-    });
-  }
-  static setGetSignatureData(
-    queryClient: QueryClient,
-    updater: (data: string | undefined) => string,
-  ) {
-    queryClient.setQueryData(SignUrlQuery.getSignatureQueryKey(), updater);
-  }
+        let options: UseQueryOptions<string, TError, TSelectData> | undefined = undefined;
+        
 
-  static setGetSignatureDataByQueryId(
-    queryClient: QueryClient,
-    queryKey: QueryKey,
-    updater: (data: string | undefined) => string,
-  ) {
-    queryClient.setQueryData(queryKey, updater);
-  }
+        options = params[0] as any;
+    
 
-  setSignatureCookie(): string {
-    let url_ = this.baseUrl + '/api/sign-url/signature/cookie';
-    url_ = url_.replace(/[?&]$/, '');
-    return url_;
-  }
+        return useQuery<string, TError, TSelectData>({
+            queryFn: SignUrlQuery.getSignature,
+            queryKey: SignUrlQuery.getSignatureQueryKey(),
+            ...SignUrlQuery.getSignatureDefaultOptions as unknown as UseQueryOptions<string, TError, TSelectData>,
+            ...options,
+        });
+    }
+    static setGetSignatureData(queryClient: QueryClient, updater: (data: string | undefined) => string, ) {
+        queryClient.setQueryData(SignUrlQuery.getSignatureQueryKey(),
+            updater
+        );
+    }
 
-  static setSignatureCookieDefaultOptions?: UseQueryOptions<
-    void,
-    unknown,
-    void
-  > = {};
-  public static setSignatureCookieQueryKey(): QueryKey;
-  public static setSignatureCookieQueryKey(...params: any[]): QueryKey {
-    return removeUndefinedFromArrayTail([
-      'SignUrlClient',
-      'setSignatureCookie',
-    ]);
-  }
+    static setGetSignatureDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: string | undefined) => string) {
+        queryClient.setQueryData(queryKey, updater);
+    }
+    
 
-  private static setSignatureCookie() {
-    return SignUrlQuery.Client.setSignatureCookie();
-  }
+    setSignatureCookie(): string {
+      let url_ = this.baseUrl + "/api/sign-url/signature/cookie";
+    url_ = url_.replace(/[?&]$/, "");
+      return url_;
+    }
 
-  static useSetSignatureCookieQuery<TSelectData = void, TError = unknown>(
-    options?: UseQueryOptions<void, TError, TSelectData>,
-  ): UseQueryResult<TSelectData, TError>;
-  static useSetSignatureCookieQuery<TSelectData = void, TError = unknown>(
-    ...params: any[]
-  ): UseQueryResult<TSelectData, TError> {
-    let options: UseQueryOptions<void, TError, TSelectData> | undefined =
-      undefined;
+    static setSignatureCookieDefaultOptions?: UseQueryOptions<void, unknown, void> = {};
+    public static setSignatureCookieQueryKey(): QueryKey;
+    public static setSignatureCookieQueryKey(...params: any[]): QueryKey {
+        return removeUndefinedFromArrayTail([
+            'SignUrlClient',
+            'setSignatureCookie',
+            ]);
+    }
 
-    options = params[0] as any;
+    private static setSignatureCookie() {
+        return SignUrlQuery.Client.setSignatureCookie(
+            );
+    }
 
-    return useQuery<void, TError, TSelectData>({
-      queryFn: SignUrlQuery.setSignatureCookie,
-      queryKey: SignUrlQuery.setSignatureCookieQueryKey(),
-      ...(SignUrlQuery.setSignatureCookieDefaultOptions as unknown as UseQueryOptions<
-        void,
-        TError,
-        TSelectData
-      >),
-      ...options,
-    });
-  }
-  static setSetSignatureCookieData(
-    queryClient: QueryClient,
-    updater: (data: void | undefined) => void,
-  ) {
-    queryClient.setQueryData(
-      SignUrlQuery.setSignatureCookieQueryKey(),
-      updater,
-    );
-  }
+    static useSetSignatureCookieQuery<TSelectData = void, TError = unknown>(options?: UseQueryOptions<void, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+    static useSetSignatureCookieQuery<TSelectData = void, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
 
-  static setSetSignatureCookieDataByQueryId(
-    queryClient: QueryClient,
-    queryKey: QueryKey,
-    updater: (data: void | undefined) => void,
-  ) {
-    queryClient.setQueryData(queryKey, updater);
-  }
-}
+        let options: UseQueryOptions<void, TError, TSelectData> | undefined = undefined;
+        
+
+        options = params[0] as any;
+    
+
+        return useQuery<void, TError, TSelectData>({
+            queryFn: SignUrlQuery.setSignatureCookie,
+            queryKey: SignUrlQuery.setSignatureCookieQueryKey(),
+            ...SignUrlQuery.setSignatureCookieDefaultOptions as unknown as UseQueryOptions<void, TError, TSelectData>,
+            ...options,
+        });
+    }
+    static setSetSignatureCookieData(queryClient: QueryClient, updater: (data: void | undefined) => void, ) {
+        queryClient.setQueryData(SignUrlQuery.setSignatureCookieQueryKey(),
+            updater
+        );
+    }
+
+    static setSetSignatureCookieDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: void | undefined) => void) {
+        queryClient.setQueryData(queryKey, updater);
+    }
+    }
 
 export class TestDataClient {
-  private instance: AxiosInstance;
-  private baseUrl: string;
-  protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
-    undefined;
+    private instance: AxiosInstance;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-  constructor(baseUrl?: string, instance?: AxiosInstance) {
-    this.instance = instance ? instance : axios.create();
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
 
-    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
-  }
+        this.instance = instance ? instance : axios.create();
 
-  /**
-   * Demonstrates an error response.
-   */
-  throwError(cancelToken?: CancelToken | undefined): Promise<string> {
-    let url_ = this.baseUrl + '/error-test';
-    url_ = url_.replace(/[?&]$/, '');
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
 
-    let options_ = <AxiosRequestConfig>{
-      method: 'GET',
-      url: url_,
-      headers: {
-        Accept: 'application/json',
-      },
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
-        }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processThrowError(_response);
-      });
-  }
-
-  protected processThrowError(response: AxiosResponse): Promise<string> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
     }
-    if (status === 400) {
-      const _responseText = response.data;
-      let result400: any = null;
-      let resultData400 = _responseText;
-      result400 = ValidationProblemDetails.fromJS(resultData400);
-      return throwException(
-        'A server side error occurred.',
-        status,
-        _responseText,
-        _headers,
-        result400,
-      );
-    } else if (status === 200) {
-      const _responseText = response.data;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = resultData200 !== undefined ? resultData200 : <any>null;
 
-      return Promise.resolve<string>(result200);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+    /**
+     * Demonstrates an error response.
+     */
+    throwError(  cancelToken?: CancelToken | undefined): Promise<string> {
+        let url_ = this.baseUrl + "/error-test";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processThrowError(_response);
+        });
     }
-    return Promise.resolve<string>(null as any);
-  }
 
-  /**
-   * Sends a dummy email
-   */
-  sendEmail(cancelToken?: CancelToken | undefined): Promise<string> {
-    let url_ = this.baseUrl + '/send-email';
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_ = <AxiosRequestConfig>{
-      method: 'POST',
-      url: url_,
-      headers: {
-        Accept: 'application/json',
-      },
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
+    protected processThrowError(response: AxiosResponse): Promise<string> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
         }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processSendEmail(_response);
-      });
-  }
+        if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
 
-  protected processSendEmail(response: AxiosResponse): Promise<string> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
+        } else if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return Promise.resolve<string>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-      }
+        return Promise.resolve<string>(null as any);
     }
-    if (status === 400) {
-      const _responseText = response.data;
-      let result400: any = null;
-      let resultData400 = _responseText;
-      result400 = ValidationProblemDetails.fromJS(resultData400);
-      return throwException(
-        'A server side error occurred.',
-        status,
-        _responseText,
-        _headers,
-        result400,
-      );
-    } else if (status === 200) {
-      const _responseText = response.data;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = resultData200 !== undefined ? resultData200 : <any>null;
 
-      return Promise.resolve<string>(result200);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+    /**
+     * Sends a dummy email
+     */
+    sendEmail(  cancelToken?: CancelToken | undefined): Promise<string> {
+        let url_ = this.baseUrl + "/send-email";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "POST",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processSendEmail(_response);
+        });
     }
-    return Promise.resolve<string>(null as any);
-  }
 
-  /**
-   * Tests RequiredOrUndefined attribute
-   */
-  patch(
-    dto: TestPatchDto,
-    cancelToken?: CancelToken | undefined,
-  ): Promise<string> {
-    let url_ = this.baseUrl + '/patch';
-    url_ = url_.replace(/[?&]$/, '');
-
-    const content_ = JSON.stringify(dto);
-
-    let options_ = <AxiosRequestConfig>{
-      data: content_,
-      method: 'POST',
-      url: url_,
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
+    protected processSendEmail(response: AxiosResponse): Promise<string> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
         }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processPatch(_response);
-      });
-  }
+        if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
 
-  protected processPatch(response: AxiosResponse): Promise<string> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
+        } else if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return Promise.resolve<string>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-      }
+        return Promise.resolve<string>(null as any);
     }
-    if (status === 400) {
-      const _responseText = response.data;
-      let result400: any = null;
-      let resultData400 = _responseText;
-      result400 = ValidationProblemDetails.fromJS(resultData400);
-      return throwException(
-        'A server side error occurred.',
-        status,
-        _responseText,
-        _headers,
-        result400,
-      );
-    } else if (status === 200) {
-      const _responseText = response.data;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = resultData200 !== undefined ? resultData200 : <any>null;
 
-      return Promise.resolve<string>(result200);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+    /**
+     * Tests RequiredOrUndefined attribute
+     */
+    patch(dto: TestPatchDto , cancelToken?: CancelToken | undefined): Promise<string> {
+        let url_ = this.baseUrl + "/patch";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(dto);
+
+        let options_ = <AxiosRequestConfig>{
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processPatch(_response);
+        });
     }
-    return Promise.resolve<string>(null as any);
-  }
 
-  /**
-   * Try this in browser with language set to DE
-   * @param a (optional)
-   */
-  formData(
-    a?: number | undefined,
-    cancelToken?: CancelToken | undefined,
-  ): Promise<string> {
-    let url_ = this.baseUrl + '/formdata';
-    url_ = url_.replace(/[?&]$/, '');
-
-    const content_ = new FormData();
-    if (a === null || a === undefined)
-      throw new Error("The parameter 'a' cannot be null.");
-    else content_.append('A', a.toString());
-
-    let options_ = <AxiosRequestConfig>{
-      data: content_,
-      method: 'POST',
-      url: url_,
-      headers: {
-        Accept: 'application/json',
-      },
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
+    protected processPatch(response: AxiosResponse): Promise<string> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
         }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processFormData(_response);
-      });
-  }
+        if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
 
-  protected processFormData(response: AxiosResponse): Promise<string> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
+        } else if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return Promise.resolve<string>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-      }
+        return Promise.resolve<string>(null as any);
     }
-    if (status === 400) {
-      const _responseText = response.data;
-      let result400: any = null;
-      let resultData400 = _responseText;
-      result400 = ValidationProblemDetails.fromJS(resultData400);
-      return throwException(
-        'A server side error occurred.',
-        status,
-        _responseText,
-        _headers,
-        result400,
-      );
-    } else if (status === 200) {
-      const _responseText = response.data;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = resultData200 !== undefined ? resultData200 : <any>null;
 
-      return Promise.resolve<string>(result200);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+    /**
+     * Try this in browser with language set to DE
+     * @param a (optional) 
+     */
+    formData(a?: number | undefined , cancelToken?: CancelToken | undefined): Promise<string> {
+        let url_ = this.baseUrl + "/formdata";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (a === null || a === undefined)
+            throw new Error("The parameter 'a' cannot be null.");
+        else
+            content_.append("A", a.toString());
+
+        let options_ = <AxiosRequestConfig>{
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processFormData(_response);
+        });
     }
-    return Promise.resolve<string>(null as any);
-  }
+
+    protected processFormData(response: AxiosResponse): Promise<string> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+
+        } else if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return Promise.resolve<string>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<string>(null as any);
+    }
 }
-export class TestDataQuery {
-  get baseUrl() {
-    return getBaseUrl() ?? '' + 'http://localhost';
-  }
+export class TestDataQuery{
 
-  static get Client() {
-    return createClient(TestDataClient);
-  }
+    get baseUrl() {
+      return getBaseUrl() ?? '' + 'http://localhost';
+    }
 
-  static get Url() {
-    return new TestDataQuery();
-  }
+    static get Client() {
+        return createClient(TestDataClient);
+    }
 
-  throwError(): string {
-    let url_ = this.baseUrl + '/error-test';
-    url_ = url_.replace(/[?&]$/, '');
-    return url_;
-  }
+    static get Url() {
+        return new TestDataQuery();
+    }
 
-  static throwErrorDefaultOptions?: UseQueryOptions<string, unknown, string> =
-    {};
-  public static throwErrorQueryKey(): QueryKey;
-  public static throwErrorQueryKey(...params: any[]): QueryKey {
-    return removeUndefinedFromArrayTail(['TestDataClient', 'throwError']);
-  }
+    throwError(): string {
+      let url_ = this.baseUrl + "/error-test";
+    url_ = url_.replace(/[?&]$/, "");
+      return url_;
+    }
 
-  private static throwError() {
-    return TestDataQuery.Client.throwError();
-  }
+    static throwErrorDefaultOptions?: UseQueryOptions<string, unknown, string> = {};
+    public static throwErrorQueryKey(): QueryKey;
+    public static throwErrorQueryKey(...params: any[]): QueryKey {
+        return removeUndefinedFromArrayTail([
+            'TestDataClient',
+            'throwError',
+            ]);
+    }
 
-  /**
-   * Demonstrates an error response.
-   */
-  static useThrowErrorQuery<TSelectData = string, TError = unknown>(
-    options?: UseQueryOptions<string, TError, TSelectData>,
-  ): UseQueryResult<TSelectData, TError>;
-  static useThrowErrorQuery<TSelectData = string, TError = unknown>(
-    ...params: any[]
-  ): UseQueryResult<TSelectData, TError> {
-    let options: UseQueryOptions<string, TError, TSelectData> | undefined =
-      undefined;
+    private static throwError() {
+        return TestDataQuery.Client.throwError(
+            );
+    }
 
-    options = params[0] as any;
+    /**
+     * Demonstrates an error response.
+     */
+    static useThrowErrorQuery<TSelectData = string, TError = unknown>(options?: UseQueryOptions<string, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+    static useThrowErrorQuery<TSelectData = string, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
 
-    return useQuery<string, TError, TSelectData>({
-      queryFn: TestDataQuery.throwError,
-      queryKey: TestDataQuery.throwErrorQueryKey(),
-      ...(TestDataQuery.throwErrorDefaultOptions as unknown as UseQueryOptions<
-        string,
-        TError,
-        TSelectData
-      >),
-      ...options,
-    });
-  }
-  /**
-   * Demonstrates an error response.
-   */
-  static setThrowErrorData(
-    queryClient: QueryClient,
-    updater: (data: string | undefined) => string,
-  ) {
-    queryClient.setQueryData(TestDataQuery.throwErrorQueryKey(), updater);
-  }
+        let options: UseQueryOptions<string, TError, TSelectData> | undefined = undefined;
+        
 
-  /**
-   * Demonstrates an error response.
-   */
-  static setThrowErrorDataByQueryId(
-    queryClient: QueryClient,
-    queryKey: QueryKey,
-    updater: (data: string | undefined) => string,
-  ) {
-    queryClient.setQueryData(queryKey, updater);
-  }
-}
+        options = params[0] as any;
+    
+
+        return useQuery<string, TError, TSelectData>({
+            queryFn: TestDataQuery.throwError,
+            queryKey: TestDataQuery.throwErrorQueryKey(),
+            ...TestDataQuery.throwErrorDefaultOptions as unknown as UseQueryOptions<string, TError, TSelectData>,
+            ...options,
+        });
+    }
+    /**
+     * Demonstrates an error response.
+     */
+    static setThrowErrorData(queryClient: QueryClient, updater: (data: string | undefined) => string, ) {
+        queryClient.setQueryData(TestDataQuery.throwErrorQueryKey(),
+            updater
+        );
+    }
+
+    /**
+     * Demonstrates an error response.
+     */
+    static setThrowErrorDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: string | undefined) => string) {
+        queryClient.setQueryData(queryKey, updater);
+    }
+          }
 
 export class VersionClient {
-  private instance: AxiosInstance;
-  private baseUrl: string;
-  protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
-    undefined;
+    private instance: AxiosInstance;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-  constructor(baseUrl?: string, instance?: AxiosInstance) {
-    this.instance = instance ? instance : axios.create();
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
 
-    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
-  }
+        this.instance = instance ? instance : axios.create();
 
-  /**
-   * Gets the version of the service.
-   * @return A string representing the version.
-   */
-  version(cancelToken?: CancelToken | undefined): Promise<string> {
-    let url_ = this.baseUrl + '/api';
-    url_ = url_.replace(/[?&]$/, '');
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
 
-    let options_ = <AxiosRequestConfig>{
-      method: 'GET',
-      url: url_,
-      headers: {
-        Accept: 'application/json',
-      },
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
-        }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processVersion(_response);
-      });
-  }
-
-  protected processVersion(response: AxiosResponse): Promise<string> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
     }
-    if (status === 400) {
-      const _responseText = response.data;
-      let result400: any = null;
-      let resultData400 = _responseText;
-      result400 = ValidationProblemDetails.fromJS(resultData400);
-      return throwException(
-        'A server side error occurred.',
-        status,
-        _responseText,
-        _headers,
-        result400,
-      );
-    } else if (status === 200) {
-      const _responseText = response.data;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = resultData200 !== undefined ? resultData200 : <any>null;
 
-      return Promise.resolve<string>(result200);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+    /**
+     * Gets the version of the service.
+     * @return A string representing the version.
+     */
+    version(  cancelToken?: CancelToken | undefined): Promise<string> {
+        let url_ = this.baseUrl + "/api";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processVersion(_response);
+        });
     }
-    return Promise.resolve<string>(null as any);
-  }
+
+    protected processVersion(response: AxiosResponse): Promise<string> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+
+        } else if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return Promise.resolve<string>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<string>(null as any);
+    }
 }
-export class VersionQuery {
-  get baseUrl() {
-    return getBaseUrl() ?? '' + 'http://localhost';
-  }
+export class VersionQuery{
 
-  static get Client() {
-    return createClient(VersionClient);
-  }
+    get baseUrl() {
+      return getBaseUrl() ?? '' + 'http://localhost';
+    }
 
-  static get Url() {
-    return new VersionQuery();
-  }
+    static get Client() {
+        return createClient(VersionClient);
+    }
 
-  version(): string {
-    let url_ = this.baseUrl + '/api';
-    url_ = url_.replace(/[?&]$/, '');
-    return url_;
-  }
+    static get Url() {
+        return new VersionQuery();
+    }
 
-  static versionDefaultOptions?: UseQueryOptions<string, unknown, string> = {};
-  public static versionQueryKey(): QueryKey;
-  public static versionQueryKey(...params: any[]): QueryKey {
-    return removeUndefinedFromArrayTail(['VersionClient', 'version']);
-  }
+    version(): string {
+      let url_ = this.baseUrl + "/api";
+    url_ = url_.replace(/[?&]$/, "");
+      return url_;
+    }
 
-  private static version() {
-    return VersionQuery.Client.version();
-  }
+    static versionDefaultOptions?: UseQueryOptions<string, unknown, string> = {};
+    public static versionQueryKey(): QueryKey;
+    public static versionQueryKey(...params: any[]): QueryKey {
+        return removeUndefinedFromArrayTail([
+            'VersionClient',
+            'version',
+            ]);
+    }
 
-  /**
-   * Gets the version of the service.
-   * @return A string representing the version.
-   */
-  static useVersionQuery<TSelectData = string, TError = unknown>(
-    options?: UseQueryOptions<string, TError, TSelectData>,
-  ): UseQueryResult<TSelectData, TError>;
-  static useVersionQuery<TSelectData = string, TError = unknown>(
-    ...params: any[]
-  ): UseQueryResult<TSelectData, TError> {
-    let options: UseQueryOptions<string, TError, TSelectData> | undefined =
-      undefined;
+    private static version() {
+        return VersionQuery.Client.version(
+            );
+    }
 
-    options = params[0] as any;
+    /**
+     * Gets the version of the service.
+     * @return A string representing the version.
+     */
+    static useVersionQuery<TSelectData = string, TError = unknown>(options?: UseQueryOptions<string, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+    static useVersionQuery<TSelectData = string, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
 
-    return useQuery<string, TError, TSelectData>({
-      queryFn: VersionQuery.version,
-      queryKey: VersionQuery.versionQueryKey(),
-      ...(VersionQuery.versionDefaultOptions as unknown as UseQueryOptions<
-        string,
-        TError,
-        TSelectData
-      >),
-      ...options,
-    });
-  }
-  /**
-   * Gets the version of the service.
-   * @return A string representing the version.
-   */
-  static setVersionData(
-    queryClient: QueryClient,
-    updater: (data: string | undefined) => string,
-  ) {
-    queryClient.setQueryData(VersionQuery.versionQueryKey(), updater);
-  }
+        let options: UseQueryOptions<string, TError, TSelectData> | undefined = undefined;
+        
 
-  /**
-   * Gets the version of the service.
-   * @return A string representing the version.
-   */
-  static setVersionDataByQueryId(
-    queryClient: QueryClient,
-    queryKey: QueryKey,
-    updater: (data: string | undefined) => string,
-  ) {
-    queryClient.setQueryData(queryKey, updater);
-  }
-}
+        options = params[0] as any;
+    
+
+        return useQuery<string, TError, TSelectData>({
+            queryFn: VersionQuery.version,
+            queryKey: VersionQuery.versionQueryKey(),
+            ...VersionQuery.versionDefaultOptions as unknown as UseQueryOptions<string, TError, TSelectData>,
+            ...options,
+        });
+    }
+    /**
+     * Gets the version of the service.
+     * @return A string representing the version.
+     */
+    static setVersionData(queryClient: QueryClient, updater: (data: string | undefined) => string, ) {
+        queryClient.setQueryData(VersionQuery.versionQueryKey(),
+            updater
+        );
+    }
+
+    /**
+     * Gets the version of the service.
+     * @return A string representing the version.
+     */
+    static setVersionDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: string | undefined) => string) {
+        queryClient.setQueryData(queryKey, updater);
+    }
+    }
 
 export class ProblemDetails implements IProblemDetails {
-  type?: string | null;
-  title?: string | null;
-  status?: number | null;
-  detail?: string | null;
-  instance?: string | null;
-  extensions?: { [key: string]: any };
+    type?: string | null;
+    title?: string | null;
+    status?: number | null;
+    detail?: string | null;
+    instance?: string | null;
+    extensions?: { [key: string]: any; };
 
-  constructor(data?: IProblemDetails) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      this.type = _data['type'];
-      this.title = _data['title'];
-      this.status = _data['status'];
-      this.detail = _data['detail'];
-      this.instance = _data['instance'];
-      if (_data['extensions']) {
-        this.extensions = {} as any;
-        for (let key in _data['extensions']) {
-          if (_data['extensions'].hasOwnProperty(key))
-            (<any>this.extensions)![key] = _data['extensions'][key];
+    constructor(data?: IProblemDetails) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
         }
-      }
     }
-  }
 
-  static fromJS(data: any): ProblemDetails {
-    data = typeof data === 'object' ? data : {};
-    let result = new ProblemDetails();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['type'] = this.type;
-    data['title'] = this.title;
-    data['status'] = this.status;
-    data['detail'] = this.detail;
-    data['instance'] = this.instance;
-    if (this.extensions) {
-      data['extensions'] = {};
-      for (let key in this.extensions) {
-        if (this.extensions.hasOwnProperty(key))
-          (<any>data['extensions'])[key] = this.extensions[key];
-      }
+    init(_data?: any) {
+        if (_data) {
+            this.type = _data["type"];
+            this.title = _data["title"];
+            this.status = _data["status"];
+            this.detail = _data["detail"];
+            this.instance = _data["instance"];
+            if (_data["extensions"]) {
+                this.extensions = {} as any;
+                for (let key in _data["extensions"]) {
+                    if (_data["extensions"].hasOwnProperty(key))
+                        (<any>this.extensions)![key] = _data["extensions"][key];
+                }
+            }
+        }
     }
-    return data;
-  }
+
+    static fromJS(data: any): ProblemDetails {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProblemDetails();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["type"] = this.type;
+        data["title"] = this.title;
+        data["status"] = this.status;
+        data["detail"] = this.detail;
+        data["instance"] = this.instance;
+        if (this.extensions) {
+            data["extensions"] = {};
+            for (let key in this.extensions) {
+                if (this.extensions.hasOwnProperty(key))
+                    (<any>data["extensions"])[key] = this.extensions[key];
+            }
+        }
+        return data;
+    }
 }
 
 export interface IProblemDetails {
-  type?: string | null;
-  title?: string | null;
-  status?: number | null;
-  detail?: string | null;
-  instance?: string | null;
-  extensions?: { [key: string]: any };
+    type?: string | null;
+    title?: string | null;
+    status?: number | null;
+    detail?: string | null;
+    instance?: string | null;
+    extensions?: { [key: string]: any; };
 }
 
-export class HttpValidationProblemDetails
-  extends ProblemDetails
-  implements IHttpValidationProblemDetails
-{
-  errors?: { [key: string]: string[] };
+export class HttpValidationProblemDetails extends ProblemDetails implements IHttpValidationProblemDetails {
+    errors?: { [key: string]: string[]; };
 
-  constructor(data?: IHttpValidationProblemDetails) {
-    super(data);
-  }
+    constructor(data?: IHttpValidationProblemDetails) {
+        super(data);
+    }
 
-  init(_data?: any) {
-    super.init(_data);
-    if (_data) {
-      if (_data['errors']) {
-        this.errors = {} as any;
-        for (let key in _data['errors']) {
-          if (_data['errors'].hasOwnProperty(key))
-            (<any>this.errors)![key] =
-              _data['errors'][key] !== undefined ? _data['errors'][key] : [];
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (_data["errors"]) {
+                this.errors = {} as any;
+                for (let key in _data["errors"]) {
+                    if (_data["errors"].hasOwnProperty(key))
+                        (<any>this.errors)![key] = _data["errors"][key] !== undefined ? _data["errors"][key] : [];
+                }
+            }
         }
-      }
     }
-  }
 
-  static fromJS(data: any): HttpValidationProblemDetails {
-    data = typeof data === 'object' ? data : {};
-    let result = new HttpValidationProblemDetails();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    if (this.errors) {
-      data['errors'] = {};
-      for (let key in this.errors) {
-        if (this.errors.hasOwnProperty(key))
-          (<any>data['errors'])[key] = this.errors[key];
-      }
+    static fromJS(data: any): HttpValidationProblemDetails {
+        data = typeof data === 'object' ? data : {};
+        let result = new HttpValidationProblemDetails();
+        result.init(data);
+        return result;
     }
-    super.toJSON(data);
-    return data;
-  }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (this.errors) {
+            data["errors"] = {};
+            for (let key in this.errors) {
+                if (this.errors.hasOwnProperty(key))
+                    (<any>data["errors"])[key] = this.errors[key];
+            }
+        }
+        super.toJSON(data);
+        return data;
+    }
 }
 
 export interface IHttpValidationProblemDetails extends IProblemDetails {
-  errors?: { [key: string]: string[] };
+    errors?: { [key: string]: string[]; };
 }
 
-export class ValidationProblemDetails
-  extends HttpValidationProblemDetails
-  implements IValidationProblemDetails
-{
-  errors?: { [key: string]: string[] };
+export class ValidationProblemDetails extends HttpValidationProblemDetails implements IValidationProblemDetails {
+    errors?: { [key: string]: string[]; };
 
-  constructor(data?: IValidationProblemDetails) {
-    super(data);
-  }
+    constructor(data?: IValidationProblemDetails) {
+        super(data);
+    }
 
-  init(_data?: any) {
-    super.init(_data);
-    if (_data) {
-      if (_data['errors']) {
-        this.errors = {} as any;
-        for (let key in _data['errors']) {
-          if (_data['errors'].hasOwnProperty(key))
-            (<any>this.errors)![key] =
-              _data['errors'][key] !== undefined ? _data['errors'][key] : [];
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (_data["errors"]) {
+                this.errors = {} as any;
+                for (let key in _data["errors"]) {
+                    if (_data["errors"].hasOwnProperty(key))
+                        (<any>this.errors)![key] = _data["errors"][key] !== undefined ? _data["errors"][key] : [];
+                }
+            }
         }
-      }
     }
-  }
 
-  static fromJS(data: any): ValidationProblemDetails {
-    data = typeof data === 'object' ? data : {};
-    let result = new ValidationProblemDetails();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    if (this.errors) {
-      data['errors'] = {};
-      for (let key in this.errors) {
-        if (this.errors.hasOwnProperty(key))
-          (<any>data['errors'])[key] = this.errors[key];
-      }
+    static fromJS(data: any): ValidationProblemDetails {
+        data = typeof data === 'object' ? data : {};
+        let result = new ValidationProblemDetails();
+        result.init(data);
+        return result;
     }
-    super.toJSON(data);
-    return data;
-  }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (this.errors) {
+            data["errors"] = {};
+            for (let key in this.errors) {
+                if (this.errors.hasOwnProperty(key))
+                    (<any>data["errors"])[key] = this.errors[key];
+            }
+        }
+        super.toJSON(data);
+        return data;
+    }
 }
 
-export interface IValidationProblemDetails
-  extends IHttpValidationProblemDetails {
-  errors?: { [key: string]: string[] };
+export interface IValidationProblemDetails extends IHttpValidationProblemDetails {
+    errors?: { [key: string]: string[]; };
 }
 
 export class ProductDto implements IProductDto {
-  id!: number;
-  title!: string;
-  productType!: ProductType;
-  lastStockUpdatedAt!: Date;
+    id!: number;
+    title!: string;
+    productType!: ProductType;
+    lastStockUpdatedAt!: Date;
 
-  constructor(data?: IProductDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
+    constructor(data?: IProductDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
-  }
 
-  init(_data?: any) {
-    if (_data) {
-      this.id = _data['id'];
-      this.title = _data['title'];
-      this.productType = _data['productType'];
-      this.lastStockUpdatedAt = _data['lastStockUpdatedAt']
-        ? parseDateOnly(_data['lastStockUpdatedAt'].toString())
-        : <any>undefined;
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.title = _data["title"];
+            this.productType = _data["productType"];
+            this.lastStockUpdatedAt = _data["lastStockUpdatedAt"] ? parseDateOnly(_data["lastStockUpdatedAt"].toString()) : <any>undefined;
+        }
     }
-  }
 
-  static fromJS(data: any): ProductDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new ProductDto();
-    result.init(data);
-    return result;
-  }
+    static fromJS(data: any): ProductDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProductDto();
+        result.init(data);
+        return result;
+    }
 
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['productType'] = this.productType;
-    data['lastStockUpdatedAt'] = this.lastStockUpdatedAt
-      ? formatDate(this.lastStockUpdatedAt)
-      : <any>undefined;
-    return data;
-  }
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        data["productType"] = this.productType;
+        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : <any>undefined;
+        return data;
+    }
 }
 
 export interface IProductDto {
-  id: number;
-  title: string;
-  productType: ProductType;
-  lastStockUpdatedAt: Date;
+    id: number;
+    title: string;
+    productType: ProductType;
+    lastStockUpdatedAt: Date;
 }
 
 export enum ProductType {
-  Undefined = 'Undefined',
-  Auto = 'Auto',
-  Electronic = 'Electronic',
-  Other = 'Other',
+    Undefined = "Undefined",
+    Auto = "Auto",
+    Electronic = "Electronic",
+    Other = "Other",
 }
 
 export class CreateProductDto implements ICreateProductDto {
-  title!: string;
-  productType!: ProductType;
-  lastStockUpdatedAt!: Date;
+    title!: string;
+    productType!: ProductType;
+    lastStockUpdatedAt!: Date;
 
-  constructor(data?: ICreateProductDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
+    constructor(data?: ICreateProductDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
-  }
 
-  init(_data?: any) {
-    if (_data) {
-      this.title = _data['title'];
-      this.productType = _data['productType'];
-      this.lastStockUpdatedAt = _data['lastStockUpdatedAt']
-        ? parseDateOnly(_data['lastStockUpdatedAt'].toString())
-        : <any>undefined;
+    init(_data?: any) {
+        if (_data) {
+            this.title = _data["title"];
+            this.productType = _data["productType"];
+            this.lastStockUpdatedAt = _data["lastStockUpdatedAt"] ? parseDateOnly(_data["lastStockUpdatedAt"].toString()) : <any>undefined;
+        }
     }
-  }
 
-  static fromJS(data: any): CreateProductDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new CreateProductDto();
-    result.init(data);
-    return result;
-  }
+    static fromJS(data: any): CreateProductDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateProductDto();
+        result.init(data);
+        return result;
+    }
 
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['title'] = this.title;
-    data['productType'] = this.productType;
-    data['lastStockUpdatedAt'] = this.lastStockUpdatedAt
-      ? formatDate(this.lastStockUpdatedAt)
-      : <any>undefined;
-    return data;
-  }
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["title"] = this.title;
+        data["productType"] = this.productType;
+        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : <any>undefined;
+        return data;
+    }
 }
 
 export interface ICreateProductDto {
-  title: string;
-  productType: ProductType;
-  lastStockUpdatedAt: Date;
+    title: string;
+    productType: ProductType;
+    lastStockUpdatedAt: Date;
 }
 
 export class PatchProductDto implements IPatchProductDto {
-  title?: string;
-  productType?: ProductType;
-  lastStockUpdatedAt?: Date;
+    title?: string;
+    productType?: ProductType;
+    lastStockUpdatedAt?: Date;
 
-  constructor(data?: IPatchProductDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
+    constructor(data?: IPatchProductDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
-  }
 
-  init(_data?: any) {
-    if (_data) {
-      this.title = _data['title'];
-      this.productType = _data['productType'];
-      this.lastStockUpdatedAt = _data['lastStockUpdatedAt']
-        ? parseDateOnly(_data['lastStockUpdatedAt'].toString())
-        : <any>undefined;
+    init(_data?: any) {
+        if (_data) {
+            this.title = _data["title"];
+            this.productType = _data["productType"];
+            this.lastStockUpdatedAt = _data["lastStockUpdatedAt"] ? parseDateOnly(_data["lastStockUpdatedAt"].toString()) : <any>undefined;
+        }
     }
-  }
 
-  static fromJS(data: any): PatchProductDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new PatchProductDto();
-    result.init(data);
-    return result;
-  }
+    static fromJS(data: any): PatchProductDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PatchProductDto();
+        result.init(data);
+        return result;
+    }
 
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['title'] = this.title;
-    data['productType'] = this.productType;
-    data['lastStockUpdatedAt'] = this.lastStockUpdatedAt
-      ? formatDate(this.lastStockUpdatedAt)
-      : <any>undefined;
-    return data;
-  }
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["title"] = this.title;
+        data["productType"] = this.productType;
+        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : <any>undefined;
+        return data;
+    }
 }
 
 export interface IPatchProductDto {
-  title?: string;
-  productType?: ProductType;
-  lastStockUpdatedAt?: Date;
+    title?: string;
+    productType?: ProductType;
+    lastStockUpdatedAt?: Date;
 }
 
-export class PagedResultOfProductListItemDto
-  implements IPagedResultOfProductListItemDto
-{
-  data!: ProductListItemDto[];
-  totalCount!: number;
+export class PagedResultOfProductListItemDto implements IPagedResultOfProductListItemDto {
+    data!: ProductListItemDto[];
+    totalCount!: number;
 
-  constructor(data?: IPagedResultOfProductListItemDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
+    constructor(data?: IPagedResultOfProductListItemDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.data = [];
+        }
     }
-    if (!data) {
-      this.data = [];
-    }
-  }
 
-  init(_data?: any) {
-    if (_data) {
-      if (Array.isArray(_data['data'])) {
-        this.data = [] as any;
-        for (let item of _data['data'])
-          this.data!.push(ProductListItemDto.fromJS(item));
-      }
-      this.totalCount = _data['totalCount'];
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(ProductListItemDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
     }
-  }
 
-  static fromJS(data: any): PagedResultOfProductListItemDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new PagedResultOfProductListItemDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    if (Array.isArray(this.data)) {
-      data['data'] = [];
-      for (let item of this.data) data['data'].push(item.toJSON());
+    static fromJS(data: any): PagedResultOfProductListItemDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PagedResultOfProductListItemDto();
+        result.init(data);
+        return result;
     }
-    data['totalCount'] = this.totalCount;
-    return data;
-  }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data;
+    }
 }
 
 export interface IPagedResultOfProductListItemDto {
-  data: ProductListItemDto[];
-  totalCount: number;
+    data: ProductListItemDto[];
+    totalCount: number;
 }
 
 export class ProductListItemDto implements IProductListItemDto {
-  id!: number;
-  title!: string;
-  productType!: ProductType;
-  lastStockUpdatedAt!: Date;
+    id!: number;
+    title!: string;
+    productType!: ProductType;
+    lastStockUpdatedAt!: Date;
 
-  constructor(data?: IProductListItemDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
+    constructor(data?: IProductListItemDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
-  }
 
-  init(_data?: any) {
-    if (_data) {
-      this.id = _data['id'];
-      this.title = _data['title'];
-      this.productType = _data['productType'];
-      this.lastStockUpdatedAt = _data['lastStockUpdatedAt']
-        ? parseDateOnly(_data['lastStockUpdatedAt'].toString())
-        : <any>undefined;
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.title = _data["title"];
+            this.productType = _data["productType"];
+            this.lastStockUpdatedAt = _data["lastStockUpdatedAt"] ? parseDateOnly(_data["lastStockUpdatedAt"].toString()) : <any>undefined;
+        }
     }
-  }
 
-  static fromJS(data: any): ProductListItemDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new ProductListItemDto();
-    result.init(data);
-    return result;
-  }
+    static fromJS(data: any): ProductListItemDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProductListItemDto();
+        result.init(data);
+        return result;
+    }
 
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['productType'] = this.productType;
-    data['lastStockUpdatedAt'] = this.lastStockUpdatedAt
-      ? formatDate(this.lastStockUpdatedAt)
-      : <any>undefined;
-    return data;
-  }
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        data["productType"] = this.productType;
+        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : <any>undefined;
+        return data;
+    }
 }
 
 export interface IProductListItemDto {
-  id: number;
-  title: string;
-  productType: ProductType;
-  lastStockUpdatedAt: Date;
+    id: number;
+    title: string;
+    productType: ProductType;
+    lastStockUpdatedAt: Date;
 }
 
 export enum SortOrder {
-  Asc = 'Asc',
-  Desc = 'Desc',
+    Asc = "Asc",
+    Desc = "Desc",
 }
 
 export class TestPatchDto implements ITestPatchDto {
-  value!: string;
+    value!: string;
 
-  constructor(data?: ITestPatchDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
+    constructor(data?: ITestPatchDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
-  }
 
-  init(_data?: any) {
-    if (_data) {
-      this.value = _data['value'];
+    init(_data?: any) {
+        if (_data) {
+            this.value = _data["value"];
+        }
     }
-  }
 
-  static fromJS(data: any): TestPatchDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new TestPatchDto();
-    result.init(data);
-    return result;
-  }
+    static fromJS(data: any): TestPatchDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TestPatchDto();
+        result.init(data);
+        return result;
+    }
 
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['value'] = this.value;
-    return data;
-  }
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["value"] = this.value;
+        return data;
+    }
 }
 
 export interface ITestPatchDto {
-  value: string;
+    value: string;
 }
 
 function formatDate(d: Date) {
-  return (
-    d.getFullYear() +
-    '-' +
-    (d.getMonth() < 9 ? '0' + (d.getMonth() + 1) : d.getMonth() + 1) +
-    '-' +
-    (d.getDate() < 10 ? '0' + d.getDate() : d.getDate())
-  );
+    return d.getFullYear() + '-' + 
+        (d.getMonth() < 9 ? ('0' + (d.getMonth()+1)) : (d.getMonth()+1)) + '-' +
+        (d.getDate() < 10 ? ('0' + d.getDate()) : d.getDate());
 }
 
 export class ApiException extends Error {
-  message: string;
-  status: number;
-  response: string;
-  headers: { [key: string]: any };
-  result: any;
+    message: string;
+    status: number;
+    response: string;
+    headers: { [key: string]: any; };
+    result: any;
 
-  constructor(
-    message: string,
-    status: number,
-    response: string,
-    headers: { [key: string]: any },
-    result: any,
-  ) {
-    super();
+    constructor(message: string, status: number, response: string, headers: { [key: string]: any; }, result: any) {
+        super();
 
-    this.message = message;
-    this.status = status;
-    this.response = response;
-    this.headers = headers;
-    this.result = result;
-  }
+        this.message = message;
+        this.status = status;
+        this.response = response;
+        this.headers = headers;
+        this.result = result;
+    }
 
-  protected isApiException = true;
+    protected isApiException = true;
 
-  static isApiException(obj: any): obj is ApiException {
-    return obj.isApiException === true;
-  }
+    static isApiException(obj: any): obj is ApiException {
+        return obj.isApiException === true;
+    }
 }
 
-function throwException(
-  message: string,
-  status: number,
-  response: string,
-  headers: { [key: string]: any },
-  result?: any,
-): any {
-  if (result !== null && result !== undefined) throw result;
-  else throw new ApiException(message, status, response, headers, null);
+function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): any {
+    if (result !== null && result !== undefined)
+        throw result;
+    else
+        throw new ApiException(message, status, response, headers, null);
 }
 
 function isAxiosError(obj: any | undefined): obj is AxiosError {
-  return obj && obj.isAxiosError === true;
+    return obj && obj.isAxiosError === true;
 }
 
-import {
-  useQuery,
-  UseQueryResult,
-  QueryFunctionContext,
-  UseQueryOptions,
-  QueryClient,
-  QueryKey,
-} from 'react-query';
+import { useQuery, UseQueryResult, QueryFunctionContext, UseQueryOptions, QueryClient, QueryKey } from 'react-query';
 
 function removeUndefinedFromArrayTail<T>(arr: T[]): T[] {
-  let lastDefinedValueIndex = arr.length - 1;
-  while (lastDefinedValueIndex >= 0) {
-    if (arr[lastDefinedValueIndex] === undefined) {
-      lastDefinedValueIndex--;
-    } else {
-      break;
+    let lastDefinedValueIndex = arr.length - 1;
+    while (lastDefinedValueIndex >= 0) {
+        if (arr[lastDefinedValueIndex] === undefined) {
+            lastDefinedValueIndex--;
+        } else {
+            break;
+        }
     }
-  }
-  return lastDefinedValueIndex === arr.length - 1
-    ? arr
-    : arr.slice(0, lastDefinedValueIndex + 1);
+    return lastDefinedValueIndex === arr.length - 1 ? arr : arr.slice(0, lastDefinedValueIndex + 1);
 }
 
 /*
@@ -2792,18 +2239,16 @@ function removeUndefinedFromArrayTail<T>(arr: T[]): T[] {
   Returns false if parameter is number/string/boolean/Date or Array
 */
 function isParameterObject(param: unknown) {
-  if (param === null || param === undefined) return false;
-  if (param instanceof Array) return false;
-  const isObject = typeof param === 'object';
-  if (!isObject) return false;
-  if (param instanceof Date) return false;
-  return true;
+    if (param === null || param === undefined) return false;
+    if (param instanceof Array) return false;
+    const isObject = typeof param === 'object';
+    if (!isObject) return false;
+    if (param instanceof Date) return false;
+    return true;
 }
 
-type ClientFactoryFunction = <T>(type: new (...params: any[]) => T) => T;
-let _clientFactoryFunction: ClientFactoryFunction = <T>(
-  type: new (...params: any[]) => T,
-) => {
+type ClientFactoryFunction = <T>(type: (new (...params: any[]) => T)) => T;
+let _clientFactoryFunction: ClientFactoryFunction = <T>(type: (new (...params: any[]) => T)) => {
   const params = [_baseUrl, _axiosFactory()];
   return new type(...params);
 };
@@ -2824,7 +2269,7 @@ export function getClientFactory() {
 /*
   Function that will be called from `useQuery...` methods to get a client of certain type
 */
-function createClient<T>(type: new () => T) {
+function createClient<T>(type: (new () => T)) {
   return _clientFactoryFunction(type);
 }
 
@@ -2858,6 +2303,7 @@ export function setAxiosFactory(factory: () => AxiosInstance) {
 }
 
 function parseDateOnly(s: string) {
-  const date = new Date(s);
-  return new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+    const date = new Date(s);
+    return new Date(date.getTime() + 
+        date.getTimezoneOffset() * 60000);
 }

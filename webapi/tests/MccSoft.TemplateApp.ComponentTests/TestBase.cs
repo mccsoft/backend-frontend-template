@@ -1,26 +1,22 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Net.Http;
 using System.Security.Claims;
-using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
 using MccSoft.AdminService.ComponentTests.Infrastructure;
-using MccSoft.IntegreSqlClient;
-using MccSoft.IntegreSqlClient.DatabaseInitialization;
+using MccSoft.IntegreSql.EF;
+using MccSoft.IntegreSql.EF.DatabaseInitialization;
 using MccSoft.TemplateApp.ComponentTests.Infrastructure;
 using MccSoft.TemplateApp.Http;
 using MccSoft.TemplateApp.Persistence;
-using MccSoft.Testing;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Moq;
 using NeinLinq;
+using TaskUtils = MccSoft.Testing.TaskUtils;
 
 namespace MccSoft.TemplateApp.ComponentTests
 {
@@ -39,13 +35,10 @@ namespace MccSoft.TemplateApp.ComponentTests
         {
             _usePostgres = usePostgres;
             _databaseInitializer = _usePostgres
-                ? new NpgsqlDatabaseInitializer()
+                ? new NpgsqlDatabaseInitializer(
+                      connectionStringOverride: new() { Host = "localhost", Port = 5434, }
+                  )
                 : new SqliteDatabaseInitializer();
-            NpgsqlDatabaseInitializer.ConnectionStringOverride = new ConnectionStringOverride()
-            {
-                Host = "localhost",
-                Port = 5434,
-            };
             TaskUtils.RunSynchronously(
                 () =>
                     CreateApplicationWithAdvancedSeeding(
@@ -99,21 +92,22 @@ namespace MccSoft.TemplateApp.ComponentTests
             AdvancedDatabaseSeedingOptions databaseSeedingOptions
         )
         {
-            var connectionString = await _databaseInitializer.GetConnectionString(
-                databaseSeedingOptions.Name
-                    + ContextHelper.GetLastMigrationName<TemplateAppDbContext>(),
-                async (connectionString) =>
-                {
-                    CreateApplication(
-                        (options) =>
-                        {
-                            _databaseInitializer.UseProvider(options, connectionString);
-                        },
-                        enableSeedingInStartup: true
-                    );
-                    await databaseSeedingOptions.SeedingFunction();
-                }
-            );
+            var connectionString =
+                await _databaseInitializer.CreateDatabaseGetConnectionStringAdvanced(
+                    databaseSeedingOptions.Name
+                        + ContextHelper.GetLastMigrationName<TemplateAppDbContext>(),
+                    async (connectionString) =>
+                    {
+                        CreateApplication(
+                            (options) =>
+                            {
+                                _databaseInitializer.UseProvider(options, connectionString);
+                            },
+                            enableSeedingInStartup: true
+                        );
+                        await databaseSeedingOptions.SeedingFunction();
+                    }
+                );
 
             CreateApplication(
                 (options) =>
