@@ -166,54 +166,6 @@ namespace MccSoft.Testing
         }
 
         /// <summary>
-        /// Provides access to a short-lived DbContext, independent from the service DbContext,
-        /// but sharing the same DB.
-        /// Should be used to prepare data and make assertions.
-        /// </summary>
-        /// <param name="action">The action to execute with the DbContext.</param>
-        protected void WithDbContext(Action<TDbContext> action)
-        {
-            using TDbContext db = CreateDbContext();
-            action(db);
-        }
-
-        /// <summary>
-        /// Provides access to a short-lived DbContext, independent from the service DbContext,
-        /// but sharing the same DB.
-        /// Should be used to prepare data and make assertions.
-        /// </summary>
-        /// <param name="action">The action to execute with the DbContext.</param>
-        protected T WithDbContext<T>(Func<TDbContext, T> action)
-        {
-            using TDbContext db = CreateDbContext();
-            return action(db);
-        }
-
-        /// <summary>
-        /// Provides access to a short-lived DbContext, independent from the service DbContext,
-        /// but sharing the same DB.
-        /// Should be used to prepare data and make assertions.
-        /// </summary>
-        /// <param name="action">The action to execute with the DbContext.</param>
-        protected async Task WithDbContextAsync(Func<TDbContext, Task> action)
-        {
-            await using TDbContext db = CreateDbContext();
-            await action(db);
-        }
-
-        /// <summary>
-        /// Provides access to a short-lived DbContext, independent from the service DbContext,
-        /// but sharing the same DB.
-        /// Should be used to prepare data and make assertions.
-        /// </summary>
-        /// <param name="action">The action to execute with the DbContext.</param>
-        protected async Task<T> WithDbContextAsync<T>(Func<TDbContext, Task<T>> action)
-        {
-            await using TDbContext db = CreateDbContext();
-            return await action(db);
-        }
-
-        /// <summary>
         /// Override this method to dispose of expensive resources created in descendants
         /// of this class. Always call the base method.
         /// </summary>
