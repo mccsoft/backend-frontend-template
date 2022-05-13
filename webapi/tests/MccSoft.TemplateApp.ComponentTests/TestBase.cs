@@ -39,12 +39,23 @@ namespace MccSoft.TemplateApp.ComponentTests
                       connectionStringOverride: new() { Host = "localhost", Port = 5434, }
                   )
                 : new SqliteDatabaseInitializer();
-            TaskUtils.RunSynchronously(
-                () =>
-                    CreateApplicationWithAdvancedSeeding(
-                        new AdvancedDatabaseSeedingOptions("WithSeeding", () => Task.CompletedTask)
-                    )
+
+            var connectionString = _databaseInitializer.CreateDatabaseGetConnectionStringSync(
+                new DatabaseSeedingOptions<TemplateAppDbContext>(
+                    Name: nameof(TestBase),
+                    SeedingFunction: async (dbContext) =>
+                    {
+                        CreateWebApplicationFactory(
+                            dbContext.Database.GetConnectionString()!,
+                            enableSeedingInStartup: true
+                        );
+                        await Task.CompletedTask;
+                    },
+                    DisableEnsureCreated: true
+                )
             );
+
+            CreateWebApplicationFactory(connectionString);
         }
 
         /// <summary>
@@ -59,66 +70,8 @@ namespace MccSoft.TemplateApp.ComponentTests
             AuthenticationClient = new AuthenticationClient(Client);
         }
 
-        #region CreateApplication
-
-        /// <summary>
-        /// Creates Web application (i.e. TestServer, Client, etc.) using custom database seeding function.
-        /// Works fast because database seeding is only done once and database is cached after that.
-        /// </summary>
-        /// <param name="databaseSeedingOptions"></param>
-        private void CreateApplicationWithBasicSeeding(
-            BasicDatabaseSeedingOptions<TemplateAppDbContext>? databaseSeedingOptions = null
-        )
-        {
-            CreateApplication(
-                options =>
-                {
-                    _databaseInitializer.UseProvider(options, databaseSeedingOptions);
-                },
-                enableSeedingInStartup: true
-            );
-        }
-
-        protected record AdvancedDatabaseSeedingOptions(string Name, Func<Task> SeedingFunction);
-
-        /// <summary>
-        /// This is similar to <see cref="CreateApplicationWithBasicSeeding"/>, but we assume that seeding function here
-        /// is quite complex and calls backend API during seeding (thus, it requires
-        /// <see cref="TestServer"/> and <see cref="Client"/> to be initialized).
-        /// Use in advanced scenarios, for simple ones prefer passing <see cref="BasicDatabaseSeedingOptions{TDbContext}"/> to TestBase constructor!
-        /// </summary>
-        /// <param name="databaseSeedingOptions"></param>
-        protected async Task CreateApplicationWithAdvancedSeeding(
-            AdvancedDatabaseSeedingOptions databaseSeedingOptions
-        )
-        {
-            var connectionString =
-                await _databaseInitializer.CreateDatabaseGetConnectionStringAdvanced(
-                    databaseSeedingOptions.Name
-                        + ContextHelper.GetLastMigrationName<TemplateAppDbContext>(),
-                    async (connectionString) =>
-                    {
-                        CreateApplication(
-                            (options) =>
-                            {
-                                _databaseInitializer.UseProvider(options, connectionString);
-                            },
-                            enableSeedingInStartup: true
-                        );
-                        await databaseSeedingOptions.SeedingFunction();
-                    }
-                );
-
-            CreateApplication(
-                (options) =>
-                {
-                    _databaseInitializer.UseProvider(options, connectionString);
-                }
-            );
-        }
-
-        private CustomWebApplicationFactory CreateApplication(
-            Action<DbContextOptionsBuilder> configureDatabaseOptions,
+        private CustomWebApplicationFactory CreateWebApplicationFactory(
+            string connectionString,
             bool enableSeedingInStartup = false
         )
         {
@@ -127,12 +80,11 @@ namespace MccSoft.TemplateApp.ComponentTests
                 {
                     ConfigureServices(services);
                     services.AddDbContext<TemplateAppDbContext>(
-                        opt =>
+                        options =>
                         {
-                            configureDatabaseOptions(opt);
-
-                            opt.WithLambdaInjection();
-                            opt.UseOpenIddict();
+                            _databaseInitializer.UseProvider(options, connectionString);
+                            options.WithLambdaInjection();
+                            options.UseOpenIddict();
                         },
                         contextLifetime: ServiceLifetime.Scoped,
                         optionsLifetime: ServiceLifetime.Singleton
@@ -146,9 +98,6 @@ namespace MccSoft.TemplateApp.ComponentTests
             InitializeGlobalVariables(application);
             return application;
         }
-
-        #endregion
-
 
         /// <summary>
         /// If you'd like to stub authorized user with certain Id you could do it like:

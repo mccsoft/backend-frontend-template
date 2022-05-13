@@ -58,7 +58,7 @@ namespace MccSoft.Testing
         protected AppServiceTestBase(
             TestDatabaseType databaseType,
             Func<DbContextOptions<TDbContext>, IUserAccessor, TDbContext> dbContextFactory,
-            BasicDatabaseSeedingOptions<TDbContext> basicDatabaseSeedingOptions = null
+            DatabaseSeedingOptions<TDbContext> basicDatabaseSeedingOptions = null
         )
         {
             _databaseType = databaseType;

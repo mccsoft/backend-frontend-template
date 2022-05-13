@@ -35,7 +35,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Lib\IntegreSqlClient\MccSoft.IntegreSqlClient\MccSoft.IntegreSqlClient.csproj" />
     <ProjectReference Include="..\..\Lib\Testing\MccSoft.Testing\MccSoft.Testing.csproj" />
     <ProjectReference Include="..\..\src\MccSoft.TemplateApp.App\MccSoft.TemplateApp.App.csproj" />
     <ProjectReference Include="..\..\src\MccSoft.TemplateApp.Http\MccSoft.TemplateApp.Http.csproj" />

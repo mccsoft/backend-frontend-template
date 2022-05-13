@@ -19,12 +19,11 @@
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
     <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="3.1.1" />
-    <PackageReference Include="MccSoft.IntegreSql.EF" Version="0.8.2" />
+    <PackageReference Include="MccSoft.IntegreSql.EF" Version="0.8.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\HttpClientExtension\MccSoft.HttpClientExtension\MccSoft.HttpClientExtension.csproj" />
-    <ProjectReference Include="..\..\IntegreSqlClient\MccSoft.IntegreSqlClient\MccSoft.IntegreSqlClient.csproj" />
     <ProjectReference Include="..\..\Logging\MccSoft.Logging\MccSoft.Logging.csproj" />
     <ProjectReference Include="..\..\LowLevelPrimitives\MccSoft.LowLevelPrimitives\MccSoft.LowLevelPrimitives.csproj" />
     <ProjectReference Include="..\..\NpgSql\MccSoft.NpgSql\MccSoft.NpgSql.csproj" />

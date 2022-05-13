@@ -27,9 +27,9 @@ namespace MccSoft.TemplateApp.App.Tests
             : base(
                 testDatabaseType,
                 (options, userAccessor) => new TemplateAppDbContext(options, userAccessor),
-                new BasicDatabaseSeedingOptions<TemplateAppDbContext>(
-                    "DefaultUser",
-                    async db =>
+                new DatabaseSeedingOptions<TemplateAppDbContext>(
+                    Name: "DefaultUser",
+                    SeedingFunction: async db =>
                     {
                         db.Users.Add(new User("default@test.test"));
                         await db.SaveChangesAsync();
