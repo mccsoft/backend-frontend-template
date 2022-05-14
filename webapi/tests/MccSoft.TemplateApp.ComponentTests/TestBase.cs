@@ -10,13 +10,11 @@ using MccSoft.TemplateApp.ComponentTests.Infrastructure;
 using MccSoft.TemplateApp.Http;
 using MccSoft.TemplateApp.Persistence;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Moq;
 using NeinLinq;
-using TaskUtils = MccSoft.Testing.TaskUtils;
 
 namespace MccSoft.TemplateApp.ComponentTests
 {
@@ -30,6 +28,7 @@ namespace MccSoft.TemplateApp.ComponentTests
 
         private readonly bool _usePostgres = false;
         private readonly IDatabaseInitializer _databaseInitializer;
+        private readonly string _connectionString;
 
         protected TestBase(bool usePostgres = true)
         {
@@ -40,7 +39,7 @@ namespace MccSoft.TemplateApp.ComponentTests
                   )
                 : new SqliteDatabaseInitializer();
 
-            var connectionString = _databaseInitializer.CreateDatabaseGetConnectionStringSync(
+            _connectionString = _databaseInitializer.CreateDatabaseGetConnectionStringSync(
                 new DatabaseSeedingOptions<TemplateAppDbContext>(
                     Name: nameof(TestBase),
                     SeedingFunction: async (dbContext) =>
@@ -55,7 +54,7 @@ namespace MccSoft.TemplateApp.ComponentTests
                 )
             );
 
-            CreateWebApplicationFactory(connectionString);
+            CreateWebApplicationFactory(_connectionString);
         }
 
         /// <summary>
@@ -116,6 +115,7 @@ namespace MccSoft.TemplateApp.ComponentTests
         public void Dispose()
         {
             TestScope.Dispose();
+            _databaseInitializer.RemoveDatabase(_connectionString);
             _databaseInitializer.Dispose();
             // Do not dispose of TestServer, it is disposed together with the applicationFactory.
         }

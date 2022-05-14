@@ -172,7 +172,7 @@ namespace MccSoft.Testing
         protected virtual void DisposeImpl()
         {
             _dbContext?.Dispose();
-            _databaseInitializer?.Dispose();
+            _databaseInitializer?.RemoveDatabase(CreateDbContext().Database.GetConnectionString());
             LoggerFactory.Dispose();
         }
 
