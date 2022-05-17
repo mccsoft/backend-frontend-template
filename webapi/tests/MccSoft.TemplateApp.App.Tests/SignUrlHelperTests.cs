@@ -9,7 +9,7 @@ namespace MccSoft.TemplateApp.App.Tests
 {
     public class SignUrlHelperTests : AppServiceTestBase<SignUrlHelper>
     {
-        public SignUrlHelperTests() : base(TestDatabaseType.None)
+        public SignUrlHelperTests() : base(null)
         {
             Sut = InitializeService(
                 (retryHelper, db) =>

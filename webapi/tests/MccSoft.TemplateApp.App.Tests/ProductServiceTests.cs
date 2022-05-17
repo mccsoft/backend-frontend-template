@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using FluentAssertions;
+using MccSoft.IntegreSql.EF.DatabaseInitialization;
 using MccSoft.TemplateApp.App.Features.Products;
 using MccSoft.TemplateApp.App.Utils;
 using MccSoft.TemplateApp.TestUtils.Factories;
@@ -13,7 +14,7 @@ namespace MccSoft.TemplateApp.App.Tests
     {
         private readonly DateTimeProvider _time = new();
 
-        public ProductServiceTests() : base(TestDatabaseType.Postgres)
+        public ProductServiceTests() : base(DatabaseType.Postgres)
         {
             var logger = new NullLogger<ProductService>();
 

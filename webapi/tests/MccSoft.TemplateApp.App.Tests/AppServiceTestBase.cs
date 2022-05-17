@@ -23,7 +23,7 @@ namespace MccSoft.TemplateApp.App.Tests
         protected Mock<IBackgroundJobClient> _backgroundJobClient;
         private User _defaultUser;
 
-        public AppServiceTestBase(TestDatabaseType testDatabaseType = TestDatabaseType.Postgres)
+        public AppServiceTestBase(DatabaseType? testDatabaseType = DatabaseType.Postgres)
             : base(
                 testDatabaseType,
                 (options, userAccessor) => new TemplateAppDbContext(options, userAccessor),
@@ -37,7 +37,7 @@ namespace MccSoft.TemplateApp.App.Tests
                 )
             )
         {
-            if (testDatabaseType != TestDatabaseType.None)
+            if (testDatabaseType != null)
             {
                 WithDbContext(
                     db =>

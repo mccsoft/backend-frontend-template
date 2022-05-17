@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using MccSoft.IntegreSql.EF;
 using MccSoft.IntegreSql.EF.DatabaseInitialization;
 using MccSoft.LowLevelPrimitives;
 using MccSoft.NpgSql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Logging.Debug;
 using Moq;
 
@@ -45,7 +42,7 @@ namespace MccSoft.Testing
 
         protected readonly Mock<IUserAccessor> _userAccessorMock;
 
-        private readonly TestDatabaseType _databaseType;
+        private readonly DatabaseType? _databaseType;
         private readonly IDatabaseInitializer _databaseInitializer;
 
         /// <summary>
@@ -56,7 +53,7 @@ namespace MccSoft.Testing
         /// <param name="dbContextFactory">A function that creates a DbContext.</param>
         /// <param name="basicDatabaseSeedingOptions">Additional database seeding (beside EnsureCreated)</param>
         protected AppServiceTestBase(
-            TestDatabaseType databaseType,
+            DatabaseType? databaseType,
             Func<DbContextOptions<TDbContext>, IUserAccessor, TDbContext> dbContextFactory,
             DatabaseSeedingOptions<TDbContext> basicDatabaseSeedingOptions = null
         )
@@ -66,12 +63,12 @@ namespace MccSoft.Testing
 
             _databaseInitializer = databaseType switch
             {
-                TestDatabaseType.None => null,
-                TestDatabaseType.Postgres
+                null => null,
+                DatabaseType.Postgres
                   => new NpgsqlDatabaseInitializer(
                       connectionStringOverride: new() { Host = "localhost", Port = 5434, }
                   ),
-                TestDatabaseType.Sqlite => new SqliteDatabaseInitializer(),
+                DatabaseType.Sqlite => new SqliteDatabaseInitializer(),
                 _ => throw new ArgumentOutOfRangeException(nameof(databaseType), databaseType, null)
             };
 
@@ -83,7 +80,7 @@ namespace MccSoft.Testing
             _userAccessorMock.Setup(x => x.GetUserId()).Returns("123");
             _userAccessorMock.Setup(x => x.IsHttpContextAvailable).Returns(true);
 
-            if (databaseType != TestDatabaseType.None)
+            if (databaseType != null)
             {
                 // Its ok to call virtual methods because its just init the builder and doesn't use members.
                 // ReSharper disable VirtualMemberCallInConstructor
@@ -143,7 +140,7 @@ namespace MccSoft.Testing
             Func<PostgresRetryHelper<TDbContext, TService>, TDbContext, TService> action
         )
         {
-            if (_databaseType == TestDatabaseType.None)
+            if (_databaseType == null)
                 return action(null, null);
             return action(CreatePostgresRetryHelper<TService>(), GetLongLivingDbContext());
         }
@@ -156,12 +153,11 @@ namespace MccSoft.Testing
             TAnyService
         > CreatePostgresRetryHelper<TAnyService>()
         {
-            var loggerFactory = new NullLoggerFactory();
             return new PostgresRetryHelper<TDbContext, TAnyService>(
                 CreateDbContext(),
                 CreateDbContext,
-                loggerFactory,
-                new TransactionLogger<TAnyService>(SetupLogger<TAnyService>())
+                LoggerFactory,
+                new TransactionLogger<TAnyService>(LoggerFactory.CreateLogger<TAnyService>())
             );
         }
 
@@ -187,49 +183,8 @@ namespace MccSoft.Testing
         }
 
         /// <summary>
-        /// Gets the list of messages logged by <see cref="Sut"/>.
-        /// For proper registering of log messages, SUT must be configured
-        /// with the logger returned from <see cref="SetupLogger"/>.
-        /// </summary>
-        public List<LoggedMessage> LoggedMessages { get; } = new List<LoggedMessage>();
-
-        /// <summary>
         /// Gets the service being tested (System Under Test).
         /// </summary>
         protected TService Sut { get; set; }
-
-        /// <summary>
-        /// Gets a mocked logger that appends messages to <see cref="LoggedMessages"/>.
-        /// </summary>
-        public ILogger<TAnyService> SetupLogger<TAnyService>()
-        {
-            var loggerMock = new Mock<ILogger<TAnyService>>();
-            loggerMock
-                .Setup(
-                    logger =>
-                        logger.Log(
-                            It.IsAny<LogLevel>(),
-                            It.IsAny<EventId>(),
-                            It.IsAny<It.IsAnyType>(),
-                            It.IsAny<Exception>(),
-                            // https://github.com/dotnet/extensions/issues/1319
-                            (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()
-                        )
-                )
-                .Callback(
-                    (LogLevel level, EventId eId, object state, Exception ex, object formatter) =>
-                    {
-                        LoggedMessages.Add(
-                            new LoggedMessage
-                            {
-                                Level = level,
-                                LogValues = state as IReadOnlyList<KeyValuePair<string, object>>,
-                                Message = state.ToString()
-                            }
-                        );
-                    }
-                );
-            return loggerMock.Object;
-        }
     }
 }
