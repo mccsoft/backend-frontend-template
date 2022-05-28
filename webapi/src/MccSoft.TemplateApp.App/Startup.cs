@@ -244,8 +244,8 @@ namespace MccSoft.TemplateApp.App
                     if (hostEnvironment.IsDevelopment())
                     {
                         spa.Options.SourcePath = Path.GetFullPath("../../../frontend");
-                        spa.UseReactDevelopmentServer("npm-start");
-                        // spa.UseProxyToSpaDevelopmentServer("http://localhost:3148/");
+                        // spa.UseReactDevelopmentServer("npm-start");
+                        spa.UseProxyToSpaDevelopmentServer("http://localhost:3149/");
                     }
                     else
                     {
