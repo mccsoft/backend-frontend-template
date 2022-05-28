@@ -1,0 +1,63 @@
+.none-select {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.base-input {
+  /* !important is needed to be applied to MaterialUI components */
+  background-color: #fbfcfd !important;
+  border: 1px solid #d3dcea !important;
+  box-sizing: border-box !important;
+  border-radius: 2px !important;
+  width: 100%;
+  height: 40px;
+  font-family: Roboto, Sans-Serif;
+  font-size: 13px;
+  font-weight: normal;
+  font-style: normal;
+  color: #4f4f4f;
+  caret-color: #344966;
+}
+
+.inputErrorBorder, .base-input[data-error=true], .inputErrorBorder:focus-within, .inputErrorBorder:hover {
+  border: 1px solid #eb5757 !important;
+}
+
+.base-input:hover {
+  border: 1px solid #9cb1d3 !important;
+}
+
+.base-input:focus-within {
+  border: 1px solid #0e4195 !important;
+}
+
+.base-input:active {
+  border: 1px solid #0e4195 !important;
+}
+
+.base-input:disabled {
+  border: 1px solid #e9edf4 !important;
+  color: rgba(79, 79, 79, 0.3) !important;
+}
+
+.base-input::placeholder {
+  color: rgba(79, 79, 79, 0.5);
+}
+
+.base-input:focus::placeholder {
+  color: rgba(79, 79, 79, 0.2);
+}
+
+.inputErrorText {
+  width: 100%;
+  margin-top: 2px;
+  font-weight: normal;
+  font-size: 10px;
+  height: 12px;
+  color: rgba(235, 87, 87, 0.5);
+  margin-bottom: -14px;
+}
+
+/*# sourceMappingURL=frontend.css.map */

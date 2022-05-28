@@ -349,3 +349,4 @@ fabric.properties
 /.yarn/*
 !/.yarn/releases
 /frontend/dist/
+/frontend/stats.html

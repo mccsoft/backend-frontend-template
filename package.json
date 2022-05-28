@@ -4,14 +4,14 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "browser-tabs-lock": "^1.2.15",
-    "change-case": "^4.1.2",
+    "browser-tabs-lock": "1.2.15",
+    "change-case": "4.1.2",
     "concurrently": "5.2.0",
     "copyfiles": "2.3.0",
     "cross-env": "7.0.3",
-    "node-replace": "^0.3.3",
-    "prettier": "^2.4.1",
-    "renamer": "^3.0.2",
+    "node-replace": "0.3.3",
+    "prettier": "2.6.2",
+    "renamer": "3.0.2",
     "rimraf": "3.0.2",
     "yargs": "17.0.1"
   },
@@ -31,6 +31,7 @@
     "docker-build": "cross-env-shell docker build -t templateapp:latest templateapp:$npm_package_version -f publish/Dockerfile publish",
     "build-with-docker": "yarn build && yarn docker-build",
     "build": "yarn frontend typecheck && yarn build-dotnet && yarn build-frontend && yarn copy-frontend",
+    "postinstall": "cd webapi && dotnet tool restore",
     "run-csharpier": "cd webapi && dotnet csharpier .",
     "run-prettier": "prettier -w ."
   },

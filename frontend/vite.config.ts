@@ -3,6 +3,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import react from '@vitejs/plugin-react';
 import svgrPlugin from 'vite-plugin-svgr';
 import EnvironmentPlugin from 'vite-plugin-environment';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -14,6 +15,7 @@ export default defineConfig({
       REACT_APP_VERSION: process.env.npm_package_version,
     }),
     EnvironmentPlugin('all', { prefix: 'REACT_APP_' }),
+    visualizer(),
   ],
   server: {
     port: 3149,

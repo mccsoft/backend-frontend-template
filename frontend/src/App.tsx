@@ -40,8 +40,8 @@ axios.interceptors.request.use(sessionAxiosInterceptor);
 if (import.meta.env.PROD) {
   Sentry.init({
     dsn: sentryDsn(),
-    integrations: [new Integrations.BrowserTracing()],
-    tracesSampleRate: 1.0,
+    // integrations: [new Integrations.BrowserTracing()],
+    // tracesSampleRate: 1.0,
   });
 }
 
