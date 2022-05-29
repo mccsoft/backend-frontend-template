@@ -93,8 +93,8 @@
   },
   "scripts": {
     "start": "PORT=3149 vite",
-    "build": "vite build",
-    "build-scss-for-razor": "sass src/razor.scss ../webapi/src/MccSoft.TemplateApp.App/wwwroot/css/frontend.css",
+    "build": "vite build && yarn build-scss-for-razor",
+    "build-scss-for-razor": "sass --load-path=./ src/razor.scss ../webapi/src/MccSoft.TemplateApp.App/wwwroot/css/frontend.css",
     "typecheck": "tsc",
     "generate-api-clients": "concurrently \"yarn generate-api-client-axios\" \"yarn generate-api-client-dotnet\"",
     "generate-api-client-axios": "react-query-swagger openapi2tsclient /runtime:Net60 /input:http://localhost:48728/swagger/v1/swagger.json /output:src/services/api/api-client.ts /template:Axios /serviceHost:. /generateConstructorInterface:true /generateOptionalParameters:true /markOptionalProperties:true /nullValue:undefined /typeStyle:Class && yarn replace \"this\\.(\\\\w*?)\\.toISOString\\\\(\\\\) : <any>undefined\" \"this.\\$1.toISOString() : this.\\$1\" src/services/api/api-client.ts  && yarn replace \"\\\\| undefined;\" \"| null;\" src/services/api/api-client.ts",

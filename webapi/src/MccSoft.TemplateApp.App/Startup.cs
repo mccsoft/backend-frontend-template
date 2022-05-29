@@ -94,12 +94,10 @@ namespace MccSoft.TemplateApp.App
         public virtual void ConfigureServices(IServiceCollection services)
         {
             _logger.LogInformation($"Start {nameof(ConfigureServices)}");
-            services.AddMemoryCache(
-                options =>
-                {
-                    options.SizeLimit = null;
-                }
-            );
+            services.AddMemoryCache(options =>
+            {
+                options.SizeLimit = null;
+            });
             ConfigureContainer(services);
 
             ConfigureDatabase(services);
@@ -115,12 +113,10 @@ namespace MccSoft.TemplateApp.App
             JsonConvert.DefaultSettings = () =>
                 JsonSerializerSetup.SetupJson(new JsonSerializerSettings());
 
-            services.AddControllers(
-                opt =>
-                {
-                    AddGlobalFilters(opt);
-                }
-            );
+            services.AddControllers(opt =>
+            {
+                AddGlobalFilters(opt);
+            });
             services
                 .AddControllers()
                 .AddJsonOptions(
@@ -129,6 +125,11 @@ namespace MccSoft.TemplateApp.App
                 .AddNewtonsoftJson(
                     setupAction => JsonSerializerSetup.SetupJson(setupAction.SerializerSettings)
                 );
+
+            if (_webHostEnvironment.IsDevelopment())
+            {
+                services.AddRazorPages().AddRazorRuntimeCompilation();
+            }
 
             // ToDo this should be properly configured for Cloud scenario
             services.AddCors(
@@ -145,12 +146,10 @@ namespace MccSoft.TemplateApp.App
                     )
             );
 
-            services.AddSpaStaticFiles(
-                configuration =>
-                {
-                    configuration.RootPath = "wwwroot";
-                }
-            );
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "wwwroot";
+            });
             //
             // services
             //     .AddSingleton<HealthCheck, TemplateAppDbHealthCheck>()
@@ -175,22 +174,20 @@ namespace MccSoft.TemplateApp.App
             UseHangfire(app);
             app.UseRouting();
 
-            app.UseRequestLocalization(
-                options =>
-                {
-                    options.SupportedCultures = new[] { "en", "fr", "de" }
-                        .Select(
-                            lang =>
-                                new CultureInfo(lang)
-                                {
-                                    // we need to manually specify NumberFormat, because otherwise for DE browsers ASP.NET Core treats FormData 1.2 as 12.
-                                    NumberFormat = CultureInfo.InvariantCulture.NumberFormat,
-                                }
-                        )
-                        .ToList();
-                    options.SetDefaultCulture("en");
-                }
-            );
+            app.UseRequestLocalization(options =>
+            {
+                options.SupportedCultures = new[] { "en", "fr", "de" }
+                    .Select(
+                        lang =>
+                            new CultureInfo(lang)
+                            {
+                                // we need to manually specify NumberFormat, because otherwise for DE browsers ASP.NET Core treats FormData 1.2 as 12.
+                                NumberFormat = CultureInfo.InvariantCulture.NumberFormat,
+                            }
+                    )
+                    .ToList();
+                options.SetDefaultCulture("en");
+            });
             app.UseErrorHandling();
             app.UseRethrowErrorsFromPersistence();
 
@@ -216,43 +213,40 @@ namespace MccSoft.TemplateApp.App
 
             app.UseSerilog(hostEnvironment);
 
-            app.UseEndpoints(
-                endpoints =>
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapRazorPages();
+                endpoints.MapHealthChecks(_healthCheckUrl);
+            });
+            app.UseSpa(spa =>
+            {
+                // https://github.com/dotnet/aspnetcore/issues/3147#issuecomment-435617378
+                spa.Options.DefaultPageStaticFileOptions = new StaticFileOptions()
                 {
-                    endpoints.MapControllers();
-                    endpoints.MapHealthChecks(_healthCheckUrl);
-                }
-            );
-            app.UseSpa(
-                spa =>
-                {
-                    // https://github.com/dotnet/aspnetcore/issues/3147#issuecomment-435617378
-                    spa.Options.DefaultPageStaticFileOptions = new StaticFileOptions()
+                    OnPrepareResponse = ctx =>
                     {
-                        OnPrepareResponse = ctx =>
+                        // Do not cache implicit `/index.html`
+                        var headers = ctx.Context.Response.GetTypedHeaders();
+                        headers.CacheControl = new CacheControlHeaderValue
                         {
-                            // Do not cache implicit `/index.html`
-                            var headers = ctx.Context.Response.GetTypedHeaders();
-                            headers.CacheControl = new CacheControlHeaderValue
-                            {
-                                Public = true,
-                                MaxAge = TimeSpan.FromDays(0)
-                            };
-                        }
-                    };
+                            Public = true,
+                            MaxAge = TimeSpan.FromDays(0)
+                        };
+                    }
+                };
 
-                    if (hostEnvironment.IsDevelopment())
-                    {
-                        spa.Options.SourcePath = Path.GetFullPath("../../../frontend");
-                        // spa.UseReactDevelopmentServer("npm-start");
-                        spa.UseProxyToSpaDevelopmentServer("http://localhost:3149/");
-                    }
-                    else
-                    {
-                        spa.Options.SourcePath = "wwwroot";
-                    }
+                if (hostEnvironment.IsDevelopment())
+                {
+                    spa.Options.SourcePath = Path.GetFullPath("../../../frontend");
+                    // spa.UseReactDevelopmentServer("npm-start");
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:3149/");
                 }
-            );
+                else
+                {
+                    spa.Options.SourcePath = "wwwroot";
+                }
+            });
             _httpContextAccessor =
                 app.ApplicationServices.GetRequiredService<IHttpContextAccessor>();
             _logger.LogInformation("Service started.");
@@ -325,35 +319,31 @@ namespace MccSoft.TemplateApp.App
                 .UseEntityFramework(
                     config =>
                         config
-                            .UseDbContext(
-                                ev =>
+                            .UseDbContext(ev =>
+                            {
+                                // https://github.com/thepirat000/Audit.NET/issues/451
+                                // To support transactions rollback (e.g. PostgresRetryHelper) we need to use separate context for Audit entries
+                                // (otherwise there's an infinite cycle inside Audit.Net when transaction is rolled back and next transaction is committed).
+                                // But we also need to use the same transaction for audit logs as in the main context, to not save Audit logs from rolled back transactions.
+                                // So we create DBContext manually
+                                TemplateAppDbContext dbContext = (TemplateAppDbContext)
+                                    ev.EntityFrameworkEvent.GetDbContext();
+                                DatabaseFacade db = dbContext.Database;
+                                DbConnection conn = db.GetDbConnection();
+                                IDbContextTransaction tran = db.CurrentTransaction;
+                                TemplateAppDbContext auditContext = new TemplateAppDbContext(
+                                    new DbContextOptionsBuilder<TemplateAppDbContext>()
+                                        .UseNpgsql(conn)
+                                        .Options,
+                                    dbContext.UserAccessor
+                                );
+                                if (tran != null)
                                 {
-                                    // https://github.com/thepirat000/Audit.NET/issues/451
-                                    // To support transactions rollback (e.g. PostgresRetryHelper) we need to use separate context for Audit entries
-                                    // (otherwise there's an infinite cycle inside Audit.Net when transaction is rolled back and next transaction is committed).
-                                    // But we also need to use the same transaction for audit logs as in the main context, to not save Audit logs from rolled back transactions.
-                                    // So we create DBContext manually
-                                    TemplateAppDbContext dbContext =
-                                        (TemplateAppDbContext)ev.EntityFrameworkEvent.GetDbContext();
-                                    DatabaseFacade db = dbContext.Database;
-                                    DbConnection conn = db.GetDbConnection();
-                                    IDbContextTransaction tran = db.CurrentTransaction;
-                                    TemplateAppDbContext auditContext = new TemplateAppDbContext(
-                                        new DbContextOptionsBuilder<TemplateAppDbContext>()
-                                            .UseNpgsql(conn)
-                                            .Options,
-                                        dbContext.UserAccessor
-                                    );
-                                    if (tran != null)
-                                    {
-                                        auditContext.Database.UseTransaction(
-                                            tran.GetDbTransaction()
-                                        );
-                                    }
-
-                                    return auditContext;
+                                    auditContext.Database.UseTransaction(tran.GetDbTransaction());
                                 }
-                            )
+
+                                return auditContext;
+                            })
                             .AuditTypeMapper(x => x == typeof(AuditLog) ? null : typeof(AuditLog))
                             .AuditEntityAction<AuditLog>(
                                 (ev, entry, auditLog) =>
@@ -416,70 +406,62 @@ namespace MccSoft.TemplateApp.App
 
         protected virtual void AddSwagger(IServiceCollection services)
         {
-            services.AddOpenApiDocument(
-                options =>
+            services.AddOpenApiDocument(options =>
+            {
+                options.DocumentProcessors.Add(
+                    new SecurityDefinitionAppender(
+                        "JWT Token",
+                        new OpenApiSecurityScheme
+                        {
+                            Type = OpenApiSecuritySchemeType.ApiKey,
+                            Name = "Authorization",
+                            Description = "Copy 'Bearer ' + valid JWT token into field",
+                            In = OpenApiSecurityApiKeyLocation.Header
+                        }
+                    )
+                );
+
+                options.PostProcess = document =>
                 {
-                    options.DocumentProcessors.Add(
-                        new SecurityDefinitionAppender(
-                            "JWT Token",
-                            new OpenApiSecurityScheme
-                            {
-                                Type = OpenApiSecuritySchemeType.ApiKey,
-                                Name = "Authorization",
-                                Description = "Copy 'Bearer ' + valid JWT token into field",
-                                In = OpenApiSecurityApiKeyLocation.Header
-                            }
-                        )
-                    );
-
-                    options.PostProcess = document =>
+                    document.Info = new NSwag.OpenApiInfo
                     {
-                        document.Info = new NSwag.OpenApiInfo
-                        {
-                            Version = SwaggerOptions.Version,
-                            Title = SwaggerOptions.Title,
-                            Description = SwaggerOptions.Description,
-                            Contact = new NSwag.OpenApiContact
-                            {
-                                Email = SwaggerOptions.Contact.Email
-                            },
-                            License = new NSwag.OpenApiLicense
-                            {
-                                Name = SwaggerOptions.License.Name
-                            },
-                        };
+                        Version = SwaggerOptions.Version,
+                        Title = SwaggerOptions.Title,
+                        Description = SwaggerOptions.Description,
+                        Contact = new NSwag.OpenApiContact { Email = SwaggerOptions.Contact.Email },
+                        License = new NSwag.OpenApiLicense { Name = SwaggerOptions.License.Name },
                     };
+                };
 
-                    options.AddSecurity(
-                        "Bearer",
-                        new OpenApiSecurityScheme()
+                options.AddSecurity(
+                    "Bearer",
+                    new OpenApiSecurityScheme()
+                    {
+                        Type = OpenApiSecuritySchemeType.OAuth2,
+                        Description = "TemplateApp Authentication",
+                        Flow = OpenApiOAuth2Flow.Password,
+                        Flows = new NSwag.OpenApiOAuthFlows()
                         {
-                            Type = OpenApiSecuritySchemeType.OAuth2,
-                            Description = "TemplateApp Authentication",
-                            Flow = OpenApiOAuth2Flow.Password,
-                            Flows = new NSwag.OpenApiOAuthFlows()
+                            Password = new NSwag.OpenApiOAuthFlow()
                             {
-                                Password = new NSwag.OpenApiOAuthFlow()
+                                TokenUrl = "/connect/token",
+                                RefreshUrl = "/connect/token",
+                                AuthorizationUrl = "/connect/token",
+                                Scopes = new Dictionary<string, string>()
                                 {
-                                    TokenUrl = "/connect/token",
-                                    RefreshUrl = "/connect/token",
-                                    AuthorizationUrl = "/connect/token",
-                                    Scopes = new Dictionary<string, string>()
-                                    {
-                                        { "offline_access", "offline_access" },
-                                    }
+                                    { "offline_access", "offline_access" },
                                 }
                             }
                         }
-                    );
-                    options.OperationProcessors.Add(
-                        new AspNetCoreOperationSecurityScopeProcessor("Bearer")
-                    );
-                    options.SchemaProcessors.Add(new RequireValueTypesSchemaProcessor());
-                    //options.FlattenInheritanceHierarchy = true;
-                    options.GenerateEnumMappingDescription = true;
-                }
-            );
+                    }
+                );
+                options.OperationProcessors.Add(
+                    new AspNetCoreOperationSecurityScopeProcessor("Bearer")
+                );
+                options.SchemaProcessors.Add(new RequireValueTypesSchemaProcessor());
+                //options.FlattenInheritanceHierarchy = true;
+                options.GenerateEnumMappingDescription = true;
+            });
         }
 
         protected virtual void UseSignOutLockedUser(IApplicationBuilder app)
@@ -504,12 +486,10 @@ namespace MccSoft.TemplateApp.App
                             }
                         )
             );
-            services.AddHangfireServer(
-                options =>
-                {
-                    options.WorkerCount = 2;
-                }
-            );
+            services.AddHangfireServer(options =>
+            {
+                options.WorkerCount = 2;
+            });
         }
 
         protected virtual void UseHangfire(IApplicationBuilder app)
@@ -562,24 +542,20 @@ namespace MccSoft.TemplateApp.App
                 return;
             }
 
-            app.UseOpenApi(
-                options =>
+            app.UseOpenApi(options =>
+            {
+                options.Path = "/swagger/v1/swagger.json";
+            });
+            app.UseSwaggerUi3(options =>
+            {
+                options.Path = "/swagger";
+                options.DocumentPath = "/swagger/v1/swagger.json";
+                options.OAuth2Client = new OAuth2ClientSettings()
                 {
-                    options.Path = "/swagger/v1/swagger.json";
-                }
-            );
-            app.UseSwaggerUi3(
-                options =>
-                {
-                    options.Path = "/swagger";
-                    options.DocumentPath = "/swagger/v1/swagger.json";
-                    options.OAuth2Client = new OAuth2ClientSettings()
-                    {
-                        AppName = "swagger",
-                        Realm = "swagger",
-                    };
-                }
-            );
+                    AppName = "swagger",
+                    Realm = "swagger",
+                };
+            });
         }
 
         protected virtual void ConfigureAuth(IServiceCollection services)
@@ -587,101 +563,82 @@ namespace MccSoft.TemplateApp.App
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             services
-                .AddDefaultIdentity<User>(
-                    options =>
-                    {
-                        options.SignIn.RequireConfirmedAccount = false;
-                        options.Lockout.AllowedForNewUsers = false;
+                .AddDefaultIdentity<User>(options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = false;
+                    options.Lockout.AllowedForNewUsers = false;
 
-                        // configure password security rules
-                        Configuration.GetSection("OpenId:Password").Bind(options.Password);
-                    }
-                )
+                    // configure password security rules
+                    Configuration.GetSection("OpenId:Password").Bind(options.Password);
+                })
                 .AddErrorDescriber<LocalizableIdentityErrorDescriber>()
                 .AddRoles<IdentityRole>()
                 .AddRoleManager<RoleManager<IdentityRole>>()
                 .AddEntityFrameworkStores<TemplateAppDbContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddDefaultUI();
 
             // Configure Identity to use the same JWT claims as OpenIddict instead
             // of the legacy WS-Federation claims it uses by default (ClaimTypes),
             // which saves you from doing the mapping in your authorization controller.
-            services.Configure<IdentityOptions>(
-                options =>
-                {
-                    options.ClaimsIdentity.UserNameClaimType = OpenIddictConstants.Claims.Name;
-                    options.ClaimsIdentity.UserIdClaimType = OpenIddictConstants.Claims.Subject;
-                    options.ClaimsIdentity.RoleClaimType = OpenIddictConstants.Claims.Role;
-                    options.ClaimsIdentity.EmailClaimType = OpenIddictConstants.Claims.Email;
-                }
-            );
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.ClaimsIdentity.UserNameClaimType = OpenIddictConstants.Claims.Name;
+                options.ClaimsIdentity.UserIdClaimType = OpenIddictConstants.Claims.Subject;
+                options.ClaimsIdentity.RoleClaimType = OpenIddictConstants.Claims.Role;
+                options.ClaimsIdentity.EmailClaimType = OpenIddictConstants.Claims.Email;
+            });
 
             services
                 .AddOpenIddict()
-                .AddCore(
-                    options =>
-                    {
-                        options.UseEntityFrameworkCore().UseDbContext<TemplateAppDbContext>();
-                    }
-                )
+                .AddCore(options =>
+                {
+                    options.UseEntityFrameworkCore().UseDbContext<TemplateAppDbContext>();
+                })
                 .AddDefaultAuthorizationController()
                 .AddOpenIddictConfigurations(Configuration)
-                .AddServer(
-                    options =>
+                .AddServer(options =>
+                {
+                    options.DisableAccessTokenEncryption();
+
+                    if (_webHostEnvironment.IsDevelopment())
                     {
-                        options.DisableAccessTokenEncryption();
-
-                        if (_webHostEnvironment.IsDevelopment())
-                        {
-                            options.UseAspNetCore().DisableTransportSecurityRequirement();
-                        }
-
-                        options.AddSigningCertificateFromConfiguration(Configuration);
-                        options.AddEncryptionCertificateFromConfiguration(Configuration);
+                        options.UseAspNetCore().DisableTransportSecurityRequirement();
                     }
-                )
+
+                    options.AddSigningCertificateFromConfiguration(Configuration);
+                    options.AddEncryptionCertificateFromConfiguration(Configuration);
+                })
                 // Register the OpenIddict validation components.
-                .AddValidation(
-                    options =>
-                    {
-                        // Import the configuration from the local OpenIddict server instance.
-                        options.UseLocalServer();
+                .AddValidation(options =>
+                {
+                    // Import the configuration from the local OpenIddict server instance.
+                    options.UseLocalServer();
 
-                        // Register the ASP.NET Core host.
-                        options.UseAspNetCore();
-                    }
-                );
+                    // Register the ASP.NET Core host.
+                    options.UseAspNetCore();
+                });
 
             services
-                .AddAuthentication(
-                    options =>
-                    {
-                        options.DefaultAuthenticateScheme =
-                            OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
-                        options.DefaultChallengeScheme =
-                            OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
-                    }
-                )
-                .AddGoogle(
-                    options =>
-                    {
-                        Configuration.GetSection("ExternalAuthentication:Google").Bind(options);
-                    }
-                )
-                .AddFacebook(
-                    options =>
-                    {
-                        Configuration
-                            .GetSection("ExternalAuthentication")
-                            .Bind("Facebook", options);
-                    }
-                )
-                .AddMicrosoftAccount(
-                    options =>
-                    {
-                        Configuration.GetSection("ExternalAuthentication:Microsoft").Bind(options);
-                    }
-                );
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme =
+                        OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme =
+                        OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+                })
+                .AddGoogle(options =>
+                {
+                    Configuration.GetSection("ExternalAuthentication:Google").Bind(options);
+                })
+                .AddFacebook(options =>
+                {
+                    Configuration.GetSection("ExternalAuthentication").Bind("Facebook", options);
+                })
+                .AddMicrosoftAccount(options =>
+                {
+                    Configuration.GetSection("ExternalAuthentication:Microsoft").Bind(options);
+                });
 
             // Make OpenIddict a default Authorization policy
             // (so that you could use [Authorize] without specifying scheme

@@ -7,14 +7,17 @@ import { Loading } from 'components/uikit/suspense/Loading';
 import { useAdvancedForm } from 'helpers/form/useAdvancedForm';
 import { requiredRule } from 'helpers/form/react-hook-form-helper';
 import Logger from 'js-logger';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {
   handleLoginErrors,
   sendLoginRequest,
 } from 'helpers/interceptors/auth/auth-client';
 import Grid from '@material-ui/core/Grid';
 import { setAuthData } from '../../../helpers/interceptors/auth/auth-interceptor';
-import { openExternalLoginPopup } from '../openid/openid-manager';
+import {
+  openExternalLoginPopup,
+  redirectToLoginPage,
+} from '../openid/openid-manager';
 import styles from './LoginPage.module.scss';
 
 type LoginForm = {
@@ -34,6 +37,10 @@ async function loginViaExternalProvider(provider: string) {
 }
 
 export const LoginPage: React.FC = () => {
+  useEffect(() => {
+    redirectToLoginPage().catch((e) => console.error(e));
+  }, []);
+  return null;
   const i18n = useScopedTranslation('Page.Login');
   const form = useAdvancedForm<LoginForm>(
     useCallback(async (data) => {

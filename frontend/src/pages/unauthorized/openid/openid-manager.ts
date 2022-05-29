@@ -1,4 +1,4 @@
-import { UserManager, UserManagerSettings } from 'oidc-client-ts';
+import { User, UserManager, UserManagerSettings } from 'oidc-client-ts';
 import {
   authCallbackPath,
   backendUri,
@@ -6,6 +6,15 @@ import {
   redirectUri,
   scopes,
 } from './openid-settings';
+import Logger from 'js-logger';
+
+export type SuccessfulRedirectHandler = (user: User) => void;
+let _successfulRedirectHandler: SuccessfulRedirectHandler;
+export function setSuccessfulRedirectHandler(
+  handler: SuccessfulRedirectHandler,
+) {
+  _successfulRedirectHandler = handler;
+}
 
 function getClientSettings(): UserManagerSettings {
   return {
@@ -31,7 +40,7 @@ function getManager() {
 export async function openExternalLoginPopup(provider: string) {
   try {
     const user = await getManager().signinPopup({
-      extraQueryParams: { provider: provider },
+      extraQueryParams: { provider: provider, popup: true },
     } as any);
     return user;
   } catch (e) {
@@ -39,21 +48,47 @@ export async function openExternalLoginPopup(provider: string) {
   }
 }
 
-export function handleAuthenticationSignInPopupCallback() {
+export async function redirectToLoginPage() {
+  try {
+    const result = await getManager().signinRedirect();
+    console.log(result);
+  } catch (e) {
+    console.error('Error during redirect to authentication', e);
+  }
+}
+
+export function handleAuthenticationSignInCallback() {
   const url = window.location.pathname;
   const isOpenIdCallback = url.startsWith(authCallbackPath);
   if (isOpenIdCallback) {
-    completeAuthorization().catch((e) => console.error(e));
+    if (window.location.search.includes('popup')) {
+      completeAuthorizationPopup().catch((e) => console.error(e));
+    } else {
+      completeAuthorizationRedirect()
+        .then(_successfulRedirectHandler)
+        .catch((e) => console.error(e));
+
+      Logger.info('Logged in successfully');
+    }
     return true;
   }
   return false;
 }
 
-export async function completeAuthorization() {
+export async function completeAuthorizationPopup() {
   const user = new UserManager({
     redirect_uri: redirectUri,
     client_id: clientId,
     authority: backendUri,
   }).signinPopupCallback(window.location.href);
+  return user;
+}
+
+export async function completeAuthorizationRedirect() {
+  const user = new UserManager({
+    redirect_uri: redirectUri,
+    client_id: clientId,
+    authority: backendUri,
+  }).signinRedirectCallback(window.location.href);
   return user;
 }

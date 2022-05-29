@@ -30,6 +30,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Remove="logs\**" />
+    <None Remove="ScaffoldingReadMe.txt" />
+    <None Include="wwwroot\css\identity.css" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,25 +40,29 @@
     <PackageReference Include="Hangfire.Core" Version="1.7.28" />
     <PackageReference Include="Hangfire.Dashboard.BasicAuthorization" Version="1.0.2" />
     <PackageReference Include="Hangfire.PostgreSql" Version="1.9.7" />
-    <PackageReference Include="I18Next.Net" Version="0.7.1" />
-    <PackageReference Include="I18Next.Net.AspNetCore" Version="0.7.1" />
-    <PackageReference Include="I18Next.Net.Extensions" Version="0.7.1" />
+    <PackageReference Include="I18Next.Net" Version="1.0.0" />
+    <PackageReference Include="I18Next.Net.AspNetCore" Version="1.0.0" />
+    <PackageReference Include="I18Next.Net.Extensions" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="6.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="3.1.21" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="6.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="6.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="6.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.5" />
     <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.2.22" />
     <PackageReference Include="MiniProfiler.EntityFrameworkCore" Version="4.2.22" />
     <PackageReference Include="NeinLinq.EntityFrameworkCore" Version="6.0.0" />
@@ -71,7 +77,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
-    <PackageReference Include="Shaddix.OpenIddict.ExternalAuthentication" Version="1.1.2" />
+    <PackageReference Include="Shaddix.OpenIddict.ExternalAuthentication" Version="1.1.4" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.0" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.14" />
 
@@ -108,14 +114,58 @@
     </None>
     <None Remove="Statistics\Patient2.repx" />
     <Content Remove="logs\**" />
+    <Content Remove="Areas\Identity\Pages\Account\ResetPassword.cshtml" />
+    <Content Remove="Areas\Identity\Pages\Account\RegisterConfirmation.cshtml" />
+    <Content Remove="Areas\Identity\Pages\Account\ForgotPassword.cshtml" />
+    <Content Remove="Areas\Identity\Pages\Account\ConfirmEmailChange.cshtml" />
+    <Content Remove="Areas\Identity\Pages\Account\AccessDenied.cshtml" />
+    <Content Remove="Areas\Identity\Pages\Account\Manage\_ViewImports.cshtml" />
+    <Content Remove="Areas\Identity\Pages\Account\Manage\_ManageNav.cshtml" />
+    <Content Remove="Areas\Identity\Pages\Account\Manage\_Layout.cshtml" />
+    <Content Remove="Areas\Identity\Pages\Account\Manage\TwoFactorAuthentication.cshtml" />
+    <Content Remove="Areas\Identity\Pages\Account\Manage\ResetAuthenticator.cshtml" />
+    <Content Remove="Areas\Identity\Pages\Account\Manage\Index.cshtml" />
+    <Content Remove="Areas\Identity\Pages\Account\Manage\GenerateRecoveryCodes.cshtml" />
+    <Content Remove="Areas\Identity\Pages\Account\Manage\ExternalLogins.cshtml" />
+    <Content Remove="Areas\Identity\Pages\Account\Manage\DownloadPersonalData.cshtml" />
+    <Content Remove="Areas\Identity\Pages\Account\Manage\Disable2fa.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="Controllers\DocumentEditor\DocumentController.cs" />
     <Compile Remove="logs\**" />
+    <Compile Remove="Areas\Identity\Pages\Account\ResetPasswordConfirmation.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\ResetPassword.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\ResendEmailConfirmation.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\RegisterConfirmation.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\Register.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\Logout.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\Lockout.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\ForgotPasswordConfirmation.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\ForgotPassword.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\ConfirmEmailChange.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\ConfirmEmail.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\AccessDenied.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\Manage\TwoFactorAuthentication.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\Manage\ShowRecoveryCodes.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\Manage\SetPassword.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\Manage\ResetAuthenticator.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\Manage\PersonalData.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\Manage\ManageNavPages.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\Manage\Index.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\Manage\GenerateRecoveryCodes.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\Manage\ExternalLogins.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\Manage\EnableAuthenticator.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\Manage\Email.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\Manage\DownloadPersonalData.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\Manage\Disable2fa.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\Manage\DeletePersonalData.cshtml.cs" />
+    <Compile Remove="Areas\Identity\Pages\Account\Manage\ChangePassword.cshtml.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Identity\css" />
+    <Folder Include="Areas\Identity\Pages\Account\Manage" />
     <Folder Include="Dictionaries" />
   </ItemGroup>
 

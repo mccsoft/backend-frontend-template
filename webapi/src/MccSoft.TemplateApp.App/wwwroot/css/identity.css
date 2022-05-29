@@ -1,0 +1,49 @@
+.justify-center {
+  justify-content: center;
+}
+
+.grid-container {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+  flex: 1;
+}
+
+.align-flex-center {
+  align-items: center;
+  flex: 1 1;
+  display: flex;
+}
+
+form {
+  flex: 1;
+}
+
+.flex {
+  display: flex;
+  flex: 1;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+#external-account {
+  position: absolute;
+  margin-top: -55px;
+}
+
+.relative {
+  position: relative;
+}
+
+.social-login-form {
+  flex: unset;
+}
+
+.social-buttons-container {
+  justify-content: flex-end;
+  display: flex;
+  padding-right: 12px;
+}
