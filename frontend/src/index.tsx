@@ -21,7 +21,8 @@ ReactDOM.render(
           access_token: user.access_token,
           refresh_token: user.refresh_token!,
         });
-        window.location.href = '/';
+        window.location.href =
+          window.location.protocol + '//' + window.location.host;
       }}
     >
       <App />
