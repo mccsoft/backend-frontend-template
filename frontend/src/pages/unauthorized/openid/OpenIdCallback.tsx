@@ -1,7 +1,5 @@
 import React, { PropsWithChildren, useEffect } from 'react';
 import {
-  completeAuthorizationPopup,
-  completeAuthorizationRedirect,
   handleAuthenticationSignInCallback,
   setSuccessfulRedirectHandler,
   SuccessfulRedirectHandler,
@@ -14,7 +12,9 @@ export const OpenIdCallback: React.FC<
   const url = window.location.pathname;
   const isOpenIdCallback = url.startsWith(authCallbackPath);
   useEffect(() => {
-    handleAuthenticationSignInCallback();
+    if (isOpenIdCallback) {
+      handleAuthenticationSignInCallback();
+    }
   }, [isOpenIdCallback]);
   useEffect(() => {
     setSuccessfulRedirectHandler(props.successfulRedirectHandler);
