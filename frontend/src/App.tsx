@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { LanguageProvider } from './application/localization/LanguageProvider';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { PersistGate } from 'redux-persist/integration/react';
-import { AppRouter } from 'navigation/router';
+import { AppRouter } from 'pages/router';
 import axios from 'axios';
 import { QueryFactory } from './services/api';
 import * as Sentry from '@sentry/react';
