@@ -9,12 +9,6 @@ import {
 import Logger from 'js-logger';
 
 export type SuccessfulRedirectHandler = (user: User) => void;
-let _successfulRedirectHandler: SuccessfulRedirectHandler;
-export function setSuccessfulRedirectHandler(
-  handler: SuccessfulRedirectHandler,
-) {
-  _successfulRedirectHandler = handler;
-}
 
 function getClientSettings(): UserManagerSettings {
   return {
@@ -57,7 +51,9 @@ export async function redirectToLoginPage() {
   }
 }
 
-export function handleAuthenticationSignInCallback() {
+export function handleAuthenticationSignInCallback(
+  successCallback: (user: User) => void,
+) {
   const url = window.location.pathname;
   const isOpenIdCallback = url.startsWith(authCallbackPath);
   if (isOpenIdCallback) {
@@ -65,10 +61,13 @@ export function handleAuthenticationSignInCallback() {
       completeAuthorizationPopup().catch((e) => console.error(e));
     } else {
       completeAuthorizationRedirect()
-        .then(_successfulRedirectHandler)
-        .catch((e) => console.error(e));
-
-      Logger.info('Logged in successfully');
+        .then((user) => {
+          Logger.info('Logged in successfully');
+          successCallback(user);
+        })
+        .catch((e) => {
+          Logger.error('Error in completeAuthorizationRedirect', e);
+        });
     }
     return true;
   }

@@ -32,6 +32,21 @@ export default defineConfig({
         secure: false,
         ws: true,
       },
+      '/Identity': {
+        target: 'https://localhost:5001',
+        changeOrigin: true,
+        secure: false,
+        ws: true,
+      },
+      '/.well-known': {
+        target: 'https://localhost:5001',
+        changeOrigin: true,
+        secure: false,
+        ws: true,
+      },
+    },
+    hmr: {
+      host: 'localhost',
     },
   },
   css: {
