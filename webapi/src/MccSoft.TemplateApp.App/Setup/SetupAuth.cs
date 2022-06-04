@@ -23,12 +23,6 @@ public static class SetupAuth
         var services = builder.Services;
         var configuration = builder.Configuration;
 
-        // this is needed for OpenIdDict
-        services.AddMemoryCache(options =>
-        {
-            options.SizeLimit = null;
-        });
-
         JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
         services
