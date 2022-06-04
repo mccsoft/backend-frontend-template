@@ -39,7 +39,7 @@ namespace MccSoft.Mailing
         /// <returns></returns>
         public static IServiceCollection AddMailing(
             [NotNull] this IServiceCollection services,
-            IConfiguration configuration,
+            IConfigurationSection configuration,
             Func<EmailModelBase, EmailTemplateType, string> getEmailViewPath = null
         )
         {

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace MccSoft.AdminService.ComponentTests.Infrastructure
+namespace MccSoft.TemplateApp.ComponentTests.Infrastructure
 {
     public class TestAuthenticationOptions : AuthenticationSchemeOptions
     {
@@ -16,6 +16,7 @@ namespace MccSoft.AdminService.ComponentTests.Infrastructure
                 {
                     new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
                     new Claim(ClaimTypes.Name, "test"),
+                    new Claim("sub", "admin"),
                 },
                 "test"
             );

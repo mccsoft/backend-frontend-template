@@ -34,7 +34,12 @@ namespace MccSoft.TemplateApp.App.Middleware
                     httpContext.Response.ContentType = "application/json";
                     await httpContext.Response.WriteAsync(
                         JsonConvert.SerializeObject(
-                            new { Message = $"User {user?.UserName} is locked." }
+                            new
+                            {
+                                Message = user == null
+                                    ? $"User with id '{userId}' wasn't found."
+                                    : $"User '{user?.UserName}' is locked."
+                            }
                         )
                     );
                     return;

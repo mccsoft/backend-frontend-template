@@ -1,42 +1,45 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Hangfire;
-using MccSoft.AdminService.ComponentTests.Infrastructure;
 using MccSoft.IntegreSql.EF;
 using MccSoft.IntegreSql.EF.DatabaseInitialization;
+using MccSoft.TemplateApp.App.Setup;
 using MccSoft.TemplateApp.ComponentTests.Infrastructure;
 using MccSoft.TemplateApp.Http;
 using MccSoft.TemplateApp.Persistence;
+using MccSoft.Testing.Database;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Moq;
 using NeinLinq;
+using Xunit.Abstractions;
 
 namespace MccSoft.TemplateApp.ComponentTests
 {
-    public class TestBase
-        : Testing.ComponentTestBase<TemplateAppDbContext, TestStartup>,
-          IDisposable
+    public class TestBase : Testing.ComponentTestBase<TemplateAppDbContext, Program>, IDisposable
     {
         protected AuthenticationClient AuthenticationClient;
 
         protected Mock<IBackgroundJobClient> _backgroundJobClient;
 
+        private readonly ITestOutputHelper _outputHelper;
         private readonly bool _usePostgres = false;
         private readonly IDatabaseInitializer _databaseInitializer;
         private readonly string _connectionString;
 
-        protected TestBase(bool usePostgres = true)
+        protected TestBase(ITestOutputHelper outputHelper, bool usePostgres = true)
         {
+            _outputHelper = outputHelper;
             _usePostgres = usePostgres;
             _databaseInitializer = _usePostgres
                 ? new NpgsqlDatabaseInitializer(
-                      connectionStringOverride: new() { Host = "localhost", Port = 5434, }
-                  )
+                    connectionStringOverride: new() { Host = "localhost", Port = 5434, }
+                )
                 : new SqliteDatabaseInitializer();
 
             _connectionString = _databaseInitializer.CreateDatabaseGetConnectionStringSync(
@@ -46,7 +49,7 @@ namespace MccSoft.TemplateApp.ComponentTests
                     {
                         CreateWebApplicationFactory(
                             dbContext.Database.GetConnectionString()!,
-                            enableSeedingInStartup: true
+                            enableMigrations: true
                         );
                         await Task.CompletedTask;
                     },
@@ -62,22 +65,35 @@ namespace MccSoft.TemplateApp.ComponentTests
         /// It's a good place to initialize TestClient or some other global variables that will be used in tests
         /// </summary>
         protected override void InitializeGlobalVariables(
-            WebApplicationFactory<TestStartup> application
+            WebApplicationFactory<Program> application
         )
         {
             base.InitializeGlobalVariables(application);
             AuthenticationClient = new AuthenticationClient(Client);
         }
 
-        private CustomWebApplicationFactory CreateWebApplicationFactory(
+        private ComponentTestFixture CreateWebApplicationFactory(
             string connectionString,
-            bool enableSeedingInStartup = false
+            bool enableMigrations = false
         )
         {
-            CustomWebApplicationFactory application = new CustomWebApplicationFactory(
-                (services) =>
+            var envVariables = enableMigrations
+                ? null
+                : new Dictionary<string, string>
+                {
+                    { SetupDatabase.DisableMigrationOptionName, true.ToString() },
+                    { SetupHangfire.DisableHangfireOptionName, true.ToString() },
+                    { SetupAuth.DisableSignOutLockedUserMiddleware, true.ToString() },
+                };
+
+            ComponentTestFixture application = new ComponentTestFixture()
+            {
+                OutputHelper = _outputHelper,
+                OverrideServices = (services) =>
                 {
                     ConfigureServices(services);
+                    services.RemoveDbContextRegistration<TemplateAppDbContext>();
+
                     services.AddDbContext<TemplateAppDbContext>(
                         options =>
                         {
@@ -89,10 +105,8 @@ namespace MccSoft.TemplateApp.ComponentTests
                         optionsLifetime: ServiceLifetime.Singleton
                     );
                 },
-                enableSeedingInStartup
-                  ? null
-                  : new Dictionary<string, string> { { "DisableSeed", true.ToString() } }
-            );
+                EnvVariables = envVariables
+            };
 
             InitializeGlobalVariables(application);
             return application;

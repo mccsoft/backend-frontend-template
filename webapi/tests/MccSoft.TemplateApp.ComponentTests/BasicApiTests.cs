@@ -9,10 +9,8 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using MccSoft.TemplateApp.App;
-using MccSoft.TemplateApp.Http.Generated;
-using MccSoft.Testing;
 using MccSoft.WebApi.Patching.Models;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using NJsonSchema.CodeGeneration.TypeScript;
 using NSwag;
@@ -24,6 +22,8 @@ namespace MccSoft.TemplateApp.ComponentTests
 {
     public class BasicApiTests : TestBase
     {
+        public BasicApiTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
+
         [Fact]
         public async Task GetApiVersion_ReturnsVersionString()
         {
@@ -38,7 +38,7 @@ namespace MccSoft.TemplateApp.ComponentTests
         [Fact]
         public void AllControllersAreResolvable()
         {
-            var controllerTypes = typeof(Startup).Assembly
+            var controllerTypes = typeof(Program).Assembly
                 .GetTypes()
                 .Where(
                     x =>
@@ -48,7 +48,7 @@ namespace MccSoft.TemplateApp.ComponentTests
                         ) && !x.IsAbstract
                 );
 
-            using var scope = TestServer.Host.Services.CreateScope();
+            using var scope = TestServer.Services.CreateScope();
             foreach (Type controllerType in controllerTypes)
             {
                 // It will throw exception if any controller's dependency is not registered.
@@ -69,13 +69,11 @@ namespace MccSoft.TemplateApp.ComponentTests
                 "Export path for database schema export not found."
             );
 
-            WithDbContext(
-                context =>
-                {
-                    string dgmlStr = context.AsDgml();
-                    File.WriteAllText(exportPath, dgmlStr);
-                }
-            );
+            WithDbContext(context =>
+            {
+                string dgmlStr = context.AsDgml();
+                File.WriteAllText(exportPath, dgmlStr);
+            });
         }
 
         /// <summary>
@@ -199,7 +197,7 @@ namespace MccSoft.TemplateApp.ComponentTests
         [Fact]
         public void PatchRequest_AllFieldsMatch()
         {
-            var dtoTypes = typeof(Startup).Assembly
+            var dtoTypes = typeof(Program).Assembly
                 .GetTypes()
                 .Where(x => IsSubclassOfRawGeneric(typeof(PatchRequest<>), x))
                 .ToList();

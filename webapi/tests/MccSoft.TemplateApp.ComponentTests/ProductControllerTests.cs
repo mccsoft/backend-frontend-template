@@ -5,6 +5,7 @@ using FluentAssertions;
 using MccSoft.TemplateApp.Http.Generated;
 using MccSoft.TemplateApp.TestUtils.Factories;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace MccSoft.TemplateApp.ComponentTests
 {
@@ -12,7 +13,7 @@ namespace MccSoft.TemplateApp.ComponentTests
     {
         private readonly ProductClient _productClient;
 
-        public ProductTests()
+        public ProductTests(ITestOutputHelper outputHelper) : base(outputHelper)
         {
             _productClient = new ProductClient(Client);
         }
@@ -80,12 +81,10 @@ namespace MccSoft.TemplateApp.ComponentTests
 
             await _productClient.DeleteAsync(createdProduct.Id);
 
-            WithDbContext(
-                db =>
-                {
-                    db.Products.Should().HaveCount(0);
-                }
-            );
+            WithDbContext(db =>
+            {
+                db.Products.Should().HaveCount(0);
+            });
         }
     }
 }

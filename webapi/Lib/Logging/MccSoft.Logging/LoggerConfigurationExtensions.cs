@@ -6,7 +6,6 @@ using Destructurama;
 using IdentityModel;
 using MccSoft.HttpClientExtension;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
@@ -27,36 +26,34 @@ namespace MccSoft.Logging
         {
             if (!hostingEnvironment.IsEnvironment("Test"))
             {
-                app.UseSerilogRequestLogging(
-                    options =>
+                app.UseSerilogRequestLogging(options =>
+                {
+                    options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
                     {
-                        options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
-                        {
-                            diagnosticContext.Set(
-                                "UserId",
-                                httpContext.User?.Identity?.GetClaimValueOrNull(JwtClaimTypes.Id)
-                            );
-                            diagnosticContext.Set(
-                                "ClientSession",
-                                httpContext.Request?.Headers["ClientSession"].ToString()
-                            );
-                            diagnosticContext.Set(
-                                "ClientVersion",
-                                httpContext.Request?.Headers["ClientVersion"].ToString()
-                            );
-                            diagnosticContext.Set(
-                                "ClientPlatform",
-                                httpContext.Request?.Headers["ClientPlatform"].ToString()
-                            );
-                            diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value);
-                            diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
-                            diagnosticContext.Set(
-                                "RemoteIpAddress",
-                                httpContext.Connection.RemoteIpAddress
-                            );
-                        };
-                    }
-                );
+                        diagnosticContext.Set(
+                            "UserId",
+                            httpContext.User?.Identity?.GetClaimValueOrNull(JwtClaimTypes.Id)
+                        );
+                        diagnosticContext.Set(
+                            "ClientSession",
+                            httpContext.Request?.Headers["ClientSession"].ToString()
+                        );
+                        diagnosticContext.Set(
+                            "ClientVersion",
+                            httpContext.Request?.Headers["ClientVersion"].ToString()
+                        );
+                        diagnosticContext.Set(
+                            "ClientPlatform",
+                            httpContext.Request?.Headers["ClientPlatform"].ToString()
+                        );
+                        diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value);
+                        diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
+                        diagnosticContext.Set(
+                            "RemoteIpAddress",
+                            httpContext.Connection.RemoteIpAddress
+                        );
+                    };
+                });
             }
         }
 
@@ -69,7 +66,7 @@ namespace MccSoft.Logging
         /// <param name="fileLogDirectory">Path to folder to write file logs to</param>
         public static void ConfigureSerilog(
             this LoggerConfiguration loggerConfiguration,
-            IWebHostEnvironment hostingEnvironment,
+            IHostEnvironment hostingEnvironment,
             IConfiguration configuration,
             string fileLogDirectory = "logs"
         )
@@ -90,12 +87,10 @@ namespace MccSoft.Logging
             // Write errors that happen in the logger itself to the stderr and to a file, to enable two use cases:
             // 1. Immediately see lost (rejected by ES) messages in the output of `docker service logs service_name`.
             // 2. To keep errors related to lost messages in a file between service restarts.
-            SelfLog.Enable(
-                msg =>
-                {
-                    Console.Error.WriteLine(msg);
-                }
-            );
+            SelfLog.Enable(msg =>
+            {
+                Console.Error.WriteLine(msg);
+            });
 
             // Entry assembly is service App project, so version should be correct. If you'll replace it with
             // GetExecutingAssembly then you'll get version of Lmt.Logging library.
@@ -118,15 +113,13 @@ namespace MccSoft.Logging
                 loggerConfiguration.WriteTo.Logger(
                     lc =>
                         lc.ExcludeValidationErrors()
-                            .WriteTo.Sentry(
-                                s =>
-                                {
-                                    s.MinimumBreadcrumbLevel = LogEventLevel.Debug;
-                                    s.MinimumEventLevel = LogEventLevel.Error;
-                                    s.Dsn = sentryDsn;
-                                    s.AttachStacktrace = true;
-                                }
-                            )
+                            .WriteTo.Sentry(s =>
+                            {
+                                s.MinimumBreadcrumbLevel = LogEventLevel.Debug;
+                                s.MinimumEventLevel = LogEventLevel.Error;
+                                s.Dsn = sentryDsn;
+                                s.AttachStacktrace = true;
+                            })
                 );
             }
 

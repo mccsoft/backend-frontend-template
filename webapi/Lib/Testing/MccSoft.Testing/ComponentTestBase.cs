@@ -18,9 +18,6 @@ namespace MccSoft.Testing
         where TDbContext : DbContext
         where TStartup : class
     {
-        private const string _host = "localhost";
-        private const int _port = 5500;
-
         protected TestServer TestServer;
         protected HttpClient Client;
 
@@ -42,12 +39,13 @@ namespace MccSoft.Testing
             Client = application.CreateClient(
                 new WebApplicationFactoryClientOptions
                 {
-                    BaseAddress = new Uri($"http://{_host}:{_port}")
+                    BaseAddress = new Uri($"https://localhost")
                 }
             );
             Client.Timeout = TimeSpan.FromSeconds(300);
             TestServer = application.Server;
-            TestScope = TestServer.Host.Services.CreateScope();
+
+            TestScope = application.Services.CreateScope();
             Configuration = ResolveFromTestScope<IConfiguration>();
 
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
@@ -66,7 +64,7 @@ namespace MccSoft.Testing
 
         protected override TDbContext CreateDbContext()
         {
-            IServiceScope scope = TestServer.Host.Services.CreateScope();
+            IServiceScope scope = TestServer.Services.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<TDbContext>();
             return db;
         }
