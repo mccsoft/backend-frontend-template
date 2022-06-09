@@ -17,6 +17,7 @@ using NSwag;
 using NSwag.CodeGeneration.CSharp;
 using NSwag.CodeGeneration.TypeScript;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace MccSoft.TemplateApp.ComponentTests
 {

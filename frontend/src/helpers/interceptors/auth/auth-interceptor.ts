@@ -19,6 +19,9 @@ import {
 } from './auth-data';
 import SuperTokensLock from 'browser-tabs-lock';
 import { useEffect, useState } from 'react';
+import { signOutPopup } from 'pages/unauthorized/openid/openid-manager';
+import { RootStore } from 'application/redux-store';
+import { logoutAction } from 'application/redux-store/root-reducer';
 
 /*
  * this is a local storage key that will store the AuthData structure (containing access_token and refresh_token)
@@ -36,14 +39,23 @@ function setAuthDataVariable(data: AuthData | null) {
   window.localStorage.setItem(authDataKey, JSON.stringify(data));
 }
 
-export function setAuthData(data: Omit<AuthData, 'claims'> | null) {
-  if (data === null) {
-    _onLogout?.();
-    _logoutHandler();
-    setAuthDataVariable(null);
-    return;
-  }
+/*
+ * Function to be called from user-side (e.g. 'Log Out' button) to start log out process
+ */
+export async function logOut() {
+  await signOutPopup();
+  postServerLogOut();
+}
 
+/*
+ * Function that should be called after Server part of logout process has finished
+ */
+export function postServerLogOut() {
+  setAuthDataVariable(null);
+  _logoutHandler();
+}
+
+export function setAuthData(data: Omit<AuthData, 'claims'>) {
   const claims = decodeClaimsFromToken(data.access_token);
   setAuthDataVariable({ ...data, claims: claims });
 }
@@ -58,13 +70,10 @@ const refreshTokenLock = new SuperTokensLock();
 const lockKey = 'refresh_token_lock';
 const lockAcquiringTimeout = 10000;
 
-let _onLogout: (() => void) | undefined;
 export function setupAuthInterceptor(
   axios: AxiosInstance,
   refreshAuthCall: (authData: AuthData) => Promise<FetchLoginResponse>,
-  onLogout?: () => void,
 ) {
-  _onLogout = onLogout;
   window.addEventListener('storage', (e) => {
     if (e.storageArea === localStorage && e.key === authDataKey) {
       const authData = e.newValue ? JSON.parse(e.newValue) : null;
@@ -95,7 +104,7 @@ export function setupAuthInterceptor(
     } catch (e: any) {
       if (Axios.isAxiosError(e)) {
         if (e.response?.status === 400) {
-          setAuthData(null);
+          await logOut();
         }
       }
       if (
@@ -103,7 +112,7 @@ export function setupAuthInterceptor(
         e.message === 'Login_User_Locked' ||
         e.message === 'Login_Unknown_Failure'
       ) {
-        setAuthData(null);
+        await logOut();
       }
 
       throw e;
@@ -143,14 +152,14 @@ export function useAuth() {
   return auth;
 }
 
-let _logoutHandler = () => {
+let _logoutHandler: () => void | Promise<void> = () => {
   /* no action by default */
 };
 
-export function addLogoutHandler(handler: () => void) {
+export function addLogoutHandler(handler: () => void | Promise<void>) {
   const oldLogoutHandler = _logoutHandler;
-  _logoutHandler = () => {
-    oldLogoutHandler();
-    handler();
+  _logoutHandler = async () => {
+    await oldLogoutHandler();
+    await handler();
   };
 }

@@ -1,6 +1,6 @@
 import { sentryDsn } from 'application/constants/env-variables';
 import { Loading } from 'components/uikit/suspense/Loading';
-import React, { useMemo } from 'react';
+import React, { Suspense, useMemo } from 'react';
 import { Provider } from 'react-redux';
 import { LanguageProvider } from './application/localization/LanguageProvider';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -9,8 +9,6 @@ import { AppRouter } from 'pages/router';
 import axios from 'axios';
 import { QueryFactory } from './services/api';
 import * as Sentry from '@sentry/react';
-import { Integrations } from '@sentry/tracing';
-import { Suspense } from 'react';
 import { RootStore } from './application/redux-store';
 import { sessionAxiosInterceptor } from './helpers/interceptors/inject-session-interceptor';
 import { injectLanguageInterceptor } from './helpers/interceptors/inject-language-interceptor';
@@ -23,16 +21,13 @@ import { logoutAction } from './application/redux-store/root-reducer';
 
 QueryFactory.setAxiosFactory(() => axios);
 
-setupAuthInterceptor(
-  axios,
-  async (authData) => {
-    const result = await sendRefreshTokenRequest(authData.refresh_token);
-    return result;
-  },
-  () => {
-    RootStore.store.dispatch(logoutAction);
-  },
-);
+setupAuthInterceptor(axios, async (authData) => {
+  const result = await sendRefreshTokenRequest(authData.refresh_token);
+  return result;
+});
+addLogoutHandler(() => {
+  RootStore.store.dispatch(logoutAction);
+});
 axios.interceptors.request.use(injectLanguageInterceptor);
 axios.interceptors.request.use(sessionAxiosInterceptor);
 

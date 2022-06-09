@@ -4,10 +4,12 @@ import react from '@vitejs/plugin-react';
 import svgrPlugin from 'vite-plugin-svgr';
 import EnvironmentPlugin from 'vite-plugin-environment';
 import { visualizer } from 'rollup-plugin-visualizer';
+import mkcert from 'vite-plugin-mkcert';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    mkcert(),
     react(),
     tsconfigPaths(),
     svgrPlugin(),
@@ -18,35 +20,29 @@ export default defineConfig({
     visualizer(),
   ],
   server: {
-    port: 3149,
+    port: 5001,
+    https: true,
     proxy: {
       '/api': {
-        target: 'https://localhost:5001',
-        changeOrigin: true,
+        target: 'https://localhost:5003',
         secure: false,
-        ws: true,
       },
       '/connect': {
-        target: 'https://localhost:5001',
-        changeOrigin: true,
+        target: 'https://localhost:5003',
         secure: false,
-        ws: true,
       },
       '/Identity': {
-        target: 'https://localhost:5001',
-        changeOrigin: true,
+        target: 'https://localhost:5003',
         secure: false,
-        ws: true,
       },
       '/.well-known': {
-        target: 'https://localhost:5001',
-        changeOrigin: true,
+        target: 'https://localhost:5003',
         secure: false,
-        ws: true,
       },
-    },
-    hmr: {
-      host: 'localhost',
+      '/css': {
+        target: 'https://localhost:5003',
+        secure: false,
+      },
     },
   },
   css: {

@@ -34,7 +34,6 @@ public static class SetupAspNet
         if (builder.Environment.IsDevelopment())
         {
             services.AddRazorPages().AddRazorRuntimeCompilation();
-            services.AddSpaYarp();
         }
 
         services.AddHealthChecks();

@@ -5,7 +5,10 @@ import { App } from './App';
 import reportWebVitals from './reportWebVitals';
 import { formatISO } from 'date-fns';
 import { OpenIdCallback } from './pages/unauthorized/openid/OpenIdCallback';
-import { setAuthData } from './helpers/interceptors/auth/auth-interceptor';
+import {
+  postServerLogOut,
+  setAuthData,
+} from './helpers/interceptors/auth/auth-interceptor';
 
 //to send dates to backend in local timezone (not in UTC)
 Date.prototype.toISOString = function () {
@@ -16,13 +19,20 @@ Date.prototype.toISOString = function () {
 ReactDOM.render(
   <React.StrictMode>
     <OpenIdCallback
-      successfulRedirectHandler={(user) => {
+      signInRedirectHandler={(user) => {
         setAuthData({
           access_token: user.access_token,
           refresh_token: user.refresh_token!,
         });
         window.location.href =
           window.location.protocol + '//' + window.location.host;
+      }}
+      signOutRedirectHandler={() => {
+        /*
+         * This is only called if REDIRECT is used during sign out.
+         * Normally we use popup.
+         */
+        postServerLogOut();
       }}
     >
       <App />

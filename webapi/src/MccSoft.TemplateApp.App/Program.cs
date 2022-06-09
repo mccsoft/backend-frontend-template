@@ -3,9 +3,7 @@ using MccSoft.Logging;
 using MccSoft.Mailing;
 using MccSoft.PersistenceHelpers.DomainEvents;
 using MccSoft.TemplateApp.App;
-using MccSoft.TemplateApp.App.Middleware;
 using MccSoft.TemplateApp.App.Setup;
-using MccSoft.WebApi;
 using MccSoft.WebApi.Sentry;
 using MccSoft.WebApi.Serialization.ModelBinding;
 using Serilog;
@@ -24,7 +22,7 @@ builder.Host.UseSerilog(
     }
 );
 
-// this is needed for OpenIdDict and must go before .AddDatabase (before `opt.UseOpenIddict();`)
+// this is needed for OpenIdDict and must go before .AddDatabase ()
 builder.Services.AddMemoryCache(options =>
 {
     options.SizeLimit = null;
@@ -69,9 +67,7 @@ SetupLocalization.UseLocalization(app);
 
 SetupAspNet.UseFrontlineServices(app);
 
-// app.UseDefaultFiles();
-// app.UseStaticFiles();
-// app.UseSpaStaticFiles();
+app.UseStaticFiles();
 
 
 SetupAuth.UseAuth(app);
@@ -84,8 +80,6 @@ app.UseEndpoints(endpoints =>
     endpoints.MapHealthChecks("/health");
     endpoints.MapFallbackToFile("index.html");
 });
-
-app.UseSpaYarp();
 
 app.Logger.LogInformation("Service started.");
 SetupAudit.HttpContextAccessor = app.Services.GetRequiredService<IHttpContextAccessor>();

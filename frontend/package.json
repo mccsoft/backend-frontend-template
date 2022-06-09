@@ -87,12 +87,13 @@
     "typescript": "4.7.2",
     "vite": "2.9.9",
     "vite-plugin-environment": "1.1.1",
+    "vite-plugin-mkcert": "1.6.4",
     "vite-plugin-react-svg": "0.2.0",
     "vite-plugin-svgr": "1.1.0",
     "vite-tsconfig-paths": "3.4.1"
   },
   "scripts": {
-    "start": "PORT=3149 vite",
+    "start": "PORT=5001 vite",
     "build": "vite build && yarn build-scss-for-razor",
     "build-scss-for-razor": "sass --load-path=./ src/razor.scss ../webapi/src/MccSoft.TemplateApp.App/wwwroot/css/frontend.css",
     "typecheck": "tsc",

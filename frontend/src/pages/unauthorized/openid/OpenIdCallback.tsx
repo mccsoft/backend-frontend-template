@@ -1,22 +1,33 @@
 import React, { PropsWithChildren, useEffect, useRef } from 'react';
 import {
+  handleAuthenticationSignOutCallback,
   handleAuthenticationSignInCallback,
-  SuccessfulRedirectHandler,
+  SignInRedirectHandler,
+  SignOutRedirectHandler,
 } from './openid-manager';
-import { authCallbackPath } from './openid-settings';
+import { signInCallbackPath, signOutCallbackPath } from './openid-settings';
 
 export const OpenIdCallback: React.FC<
-  PropsWithChildren<{ successfulRedirectHandler: SuccessfulRedirectHandler }>
+  PropsWithChildren<{
+    signInRedirectHandler: SignInRedirectHandler;
+    signOutRedirectHandler: SignOutRedirectHandler;
+  }>
 > = (props) => {
   const url = window.location.pathname;
-  const isOpenIdCallback = url.startsWith(authCallbackPath);
+  const isAuthCallback = url.startsWith(signInCallbackPath);
+  const isSignOutCallback = url.startsWith(signOutCallbackPath);
   const isOpenIdHandled = useRef(false);
   useEffect(() => {
-    if (isOpenIdCallback && !isOpenIdHandled.current) {
+    if (isOpenIdHandled.current) return;
+    if (isAuthCallback) {
       isOpenIdHandled.current = true;
-      handleAuthenticationSignInCallback(props.successfulRedirectHandler);
+      handleAuthenticationSignInCallback(props.signInRedirectHandler);
     }
-  }, [isOpenIdCallback]);
-  if (isOpenIdCallback) return null;
+    if (isSignOutCallback) {
+      isOpenIdHandled.current = true;
+      handleAuthenticationSignOutCallback(props.signOutRedirectHandler);
+    }
+  }, [isAuthCallback, isSignOutCallback]);
+  if (isAuthCallback || isSignOutCallback) return null;
   return <>{props.children}</>;
 };

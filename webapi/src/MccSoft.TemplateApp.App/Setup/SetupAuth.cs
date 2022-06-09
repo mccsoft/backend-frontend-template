@@ -5,6 +5,7 @@ using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Persistence;
 using MccSoft.WebApi.SignedUrl;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
 using OpenIddict.Abstractions;
 using OpenIddict.Validation.AspNetCore;

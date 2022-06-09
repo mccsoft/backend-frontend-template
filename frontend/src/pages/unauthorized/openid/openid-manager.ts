@@ -1,21 +1,25 @@
 import { User, UserManager, UserManagerSettings } from 'oidc-client-ts';
 import {
-  authCallbackPath,
   backendUri,
   clientId,
-  redirectUri,
+  signInRedirectUri,
   scopes,
+  signOutRedirectUri,
+  signOutRedirectUriPopup,
 } from './openid-settings';
 import Logger from 'js-logger';
 
-export type SuccessfulRedirectHandler = (user: User) => void;
+export type SignInRedirectHandler = (user: User) => void;
+export type SignOutRedirectHandler = () => void;
 
 function getClientSettings(): UserManagerSettings {
   return {
     authority: backendUri,
     client_id: clientId,
-    redirect_uri: redirectUri,
-    post_logout_redirect_uri: backendUri,
+    redirect_uri: signInRedirectUri,
+    popup_redirect_uri: signInRedirectUri,
+    post_logout_redirect_uri: signOutRedirectUri,
+    popup_post_logout_redirect_uri: signOutRedirectUriPopup,
     response_type: 'code',
     filterProtocolClaims: true,
     loadUserInfo: false,
@@ -54,40 +58,57 @@ export async function redirectToLoginPage() {
 export function handleAuthenticationSignInCallback(
   successCallback: (user: User) => void,
 ) {
-  const url = window.location.pathname;
-  const isOpenIdCallback = url.startsWith(authCallbackPath);
-  if (isOpenIdCallback) {
-    if (window.location.search.includes('popup')) {
-      completeAuthorizationPopup().catch((e) => console.error(e));
-    } else {
-      completeAuthorizationRedirect()
-        .then((user) => {
-          Logger.info('Logged in successfully');
-          successCallback(user);
-        })
-        .catch((e) => {
-          Logger.error('Error in completeAuthorizationRedirect', e);
-        });
-    }
-    return true;
+  if (window.location.search.includes('popup')) {
+    completeAuthorizationPopup().catch((e) => console.error(e));
+  } else {
+    completeAuthorizationRedirect()
+      .then((user) => {
+        Logger.info('Logged in successfully');
+        successCallback(user);
+      })
+      .catch((e) => {
+        Logger.error('Error in completeAuthorizationRedirect', e);
+      });
   }
-  return false;
+  return true;
 }
 
 export async function completeAuthorizationPopup() {
-  const user = new UserManager({
-    redirect_uri: redirectUri,
-    client_id: clientId,
-    authority: backendUri,
-  }).signinPopupCallback(window.location.href);
+  const user = getManager().signinPopupCallback(window.location.href);
   return user;
 }
 
 export async function completeAuthorizationRedirect() {
-  const user = new UserManager({
-    redirect_uri: redirectUri,
-    client_id: clientId,
-    authority: backendUri,
-  }).signinRedirectCallback(window.location.href);
+  const user = getManager().signinRedirectCallback(window.location.href);
   return user;
+}
+
+export function handleAuthenticationSignOutCallback(
+  signOutCallback: () => void,
+) {
+  if (window.location.search.includes('popup')) {
+    getManager()
+      .signoutPopupCallback()
+      .catch((e) => console.error(e));
+  } else {
+    getManager()
+      .signoutRedirectCallback()
+      .then((user) => {
+        Logger.info('Signed out successfully');
+        signOutCallback();
+      })
+      .catch((e) => {
+        Logger.error('Error in handleAuthenticationLogoutCallback', e);
+      });
+  }
+}
+
+export async function signOutRedirect() {
+  await getManager().signoutRedirect();
+}
+
+export async function signOutPopup() {
+  await getManager().signoutPopup({
+    extraQueryParams: { popup: true },
+  });
 }

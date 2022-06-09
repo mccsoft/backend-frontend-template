@@ -14,7 +14,7 @@ import {
 } from '../../application/localization/localization';
 import { Language, languages } from '../../application/localization/locales';
 import { useTranslation } from 'react-i18next';
-import { setAuthData } from '../../helpers/interceptors/auth/auth-interceptor';
+import { logOut } from '../../helpers/interceptors/auth/auth-interceptor';
 import styles from './RootPage.module.scss';
 
 export const RootPage: React.FC = () => {
@@ -56,7 +56,7 @@ export const RootPage: React.FC = () => {
           <div className={styles.logOutWrapper}>
             <Button
               onClick={() => {
-                setAuthData(null);
+                logOut().catch((e) => console.error(e));
               }}
               title={'Log Out'}
             />
