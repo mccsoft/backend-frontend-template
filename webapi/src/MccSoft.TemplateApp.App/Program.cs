@@ -44,24 +44,6 @@ SetupAspNet.AddAspNet(builder);
 
 SetupSwagger.AddSwagger(builder.Services, builder.Configuration);
 
-//             // app.UseSpa(spa =>
-//             // {
-//             //     // https://github.com/dotnet/aspnetcore/issues/3147#issuecomment-435617378
-//             //     spa.Options.DefaultPageStaticFileOptions = new StaticFileOptions()
-//             //     {
-//             //         OnPrepareResponse = ctx =>
-//             //         {
-//             //             // Do not cache implicit `/index.html`
-//             //             var headers = ctx.Context.Response.GetTypedHeaders();
-//             //             headers.CacheControl = new CacheControlHeaderValue
-//             //             {
-//             //                 Public = true,
-//             //                 MaxAge = TimeSpan.FromDays(0)
-//             //             };
-//             //         }
-//             //     };
-//             // });
-
 // Set up your application-specific services here
 SetupServices.AddServices(builder.Services);
 
@@ -91,7 +73,7 @@ app.UseStaticFiles(
             headers.CacheControl = new CacheControlHeaderValue
             {
                 Public = true,
-                MaxAge = TimeSpan.FromDays(0)
+                MaxAge = TimeSpan.MaxValue
             };
         }
     }
@@ -105,7 +87,22 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
     endpoints.MapRazorPages();
     endpoints.MapHealthChecks("/health");
-    endpoints.MapFallbackToFile("index.html", new StaticFileOptions());
+    endpoints.MapFallbackToFile(
+        "index.html",
+        new StaticFileOptions()
+        {
+            OnPrepareResponse = ctx =>
+            {
+                // Do not cache implicit `/index.html`
+                var headers = ctx.Context.Response.GetTypedHeaders();
+                headers.CacheControl = new CacheControlHeaderValue
+                {
+                    Public = true,
+                    MaxAge = TimeSpan.FromTicks(0),
+                };
+            }
+        }
+    );
 });
 
 app.Logger.LogInformation("Service started.");
