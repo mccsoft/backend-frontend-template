@@ -6,6 +6,7 @@ using MccSoft.TemplateApp.App;
 using MccSoft.TemplateApp.App.Setup;
 using MccSoft.WebApi.Sentry;
 using MccSoft.WebApi.Serialization.ModelBinding;
+using Microsoft.Net.Http.Headers;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -61,11 +62,6 @@ SetupSwagger.AddSwagger(builder.Services, builder.Configuration);
 //             //     };
 //             // });
 
-// builder.Services.AddSpaStaticFiles(configuration =>
-// {
-//     configuration.RootPath = "wwwroot";
-// });
-
 // Set up your application-specific services here
 SetupServices.AddServices(builder.Services);
 
@@ -85,7 +81,21 @@ SetupLocalization.UseLocalization(app);
 
 SetupAspNet.UseFrontlineServices(app);
 
-app.UseStaticFiles();
+app.UseStaticFiles(
+    new StaticFileOptions()
+    {
+        OnPrepareResponse = ctx =>
+        {
+            // Do not cache implicit `/index.html`
+            var headers = ctx.Context.Response.GetTypedHeaders();
+            headers.CacheControl = new CacheControlHeaderValue
+            {
+                Public = true,
+                MaxAge = TimeSpan.FromDays(0)
+            };
+        }
+    }
+);
 
 SetupAuth.UseAuth(app);
 SetupSwagger.UseSwagger(app);
@@ -95,7 +105,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
     endpoints.MapRazorPages();
     endpoints.MapHealthChecks("/health");
-    endpoints.MapFallbackToFile("index.html");
+    endpoints.MapFallbackToFile("index.html", new StaticFileOptions());
 });
 
 app.Logger.LogInformation("Service started.");
