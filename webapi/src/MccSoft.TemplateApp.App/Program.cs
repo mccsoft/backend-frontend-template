@@ -43,6 +43,24 @@ SetupAspNet.AddAspNet(builder);
 
 SetupSwagger.AddSwagger(builder.Services, builder.Configuration);
 
+//             // app.UseSpa(spa =>
+//             // {
+//             //     // https://github.com/dotnet/aspnetcore/issues/3147#issuecomment-435617378
+//             //     spa.Options.DefaultPageStaticFileOptions = new StaticFileOptions()
+//             //     {
+//             //         OnPrepareResponse = ctx =>
+//             //         {
+//             //             // Do not cache implicit `/index.html`
+//             //             var headers = ctx.Context.Response.GetTypedHeaders();
+//             //             headers.CacheControl = new CacheControlHeaderValue
+//             //             {
+//             //                 Public = true,
+//             //                 MaxAge = TimeSpan.FromDays(0)
+//             //             };
+//             //         }
+//             //     };
+//             // });
+
 // builder.Services.AddSpaStaticFiles(configuration =>
 // {
 //     configuration.RootPath = "wwwroot";
@@ -68,7 +86,6 @@ SetupLocalization.UseLocalization(app);
 SetupAspNet.UseFrontlineServices(app);
 
 app.UseStaticFiles();
-
 
 SetupAuth.UseAuth(app);
 SetupSwagger.UseSwagger(app);

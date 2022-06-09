@@ -579,6 +579,108 @@ export class OpenIdAuthorizationClient {
 
     }
 
+    logoutGET(  cancelToken?: CancelToken | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/connect/logout";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processLogoutGET(_response);
+        });
+    }
+
+    protected processLogoutGET(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+
+        } else if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    logoutPOST(  cancelToken?: CancelToken | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/connect/logout";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processLogoutPOST(_response);
+        });
+    }
+
+    protected processLogoutPOST(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = ValidationProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+
+        } else if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
     externalCallbackGET(remoteError?: string | null | undefined, originalQuery?: string | null | undefined , cancelToken?: CancelToken | undefined): Promise<void> {
         let url_ = this.baseUrl + "/connect/authorize/callback?";
         if (remoteError !== undefined && remoteError !== null)
@@ -877,6 +979,53 @@ export class OpenIdAuthorizationQuery{
     static get Url() {
         return new OpenIdAuthorizationQuery();
     }
+
+    logoutGET(): string {
+      let url_ = this.baseUrl + "/connect/logout";
+    url_ = url_.replace(/[?&]$/, "");
+      return url_;
+    }
+
+    static logoutGETDefaultOptions?: UseQueryOptions<void, unknown, void> = {};
+    public static logoutGETQueryKey(): QueryKey;
+    public static logoutGETQueryKey(...params: any[]): QueryKey {
+        return removeUndefinedFromArrayTail([
+            'OpenIdAuthorizationClient',
+            'logoutGET',
+            ]);
+    }
+
+    private static logoutGET() {
+        return OpenIdAuthorizationQuery.Client.logoutGET(
+            );
+    }
+
+    static useLogoutGETQuery<TSelectData = void, TError = unknown>(options?: UseQueryOptions<void, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+    static useLogoutGETQuery<TSelectData = void, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
+
+        let options: UseQueryOptions<void, TError, TSelectData> | undefined = undefined;
+        
+
+        options = params[0] as any;
+    
+
+        return useQuery<void, TError, TSelectData>({
+            queryFn: OpenIdAuthorizationQuery.logoutGET,
+            queryKey: OpenIdAuthorizationQuery.logoutGETQueryKey(),
+            ...OpenIdAuthorizationQuery.logoutGETDefaultOptions as unknown as UseQueryOptions<void, TError, TSelectData>,
+            ...options,
+        });
+    }
+    static setLogoutGETData(queryClient: QueryClient, updater: (data: void | undefined) => void, ) {
+        queryClient.setQueryData(OpenIdAuthorizationQuery.logoutGETQueryKey(),
+            updater
+        );
+    }
+
+    static setLogoutGETDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: void | undefined) => void) {
+        queryClient.setQueryData(queryKey, updater);
+    }
+      
 
     externalCallbackGET(remoteError?: string | null | undefined, originalQuery?: string | null | undefined): string {
       let url_ = this.baseUrl + "/connect/authorize/callback?";

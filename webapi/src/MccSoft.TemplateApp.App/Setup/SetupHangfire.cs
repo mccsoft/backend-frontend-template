@@ -6,10 +6,15 @@ namespace MccSoft.TemplateApp.App.Setup;
 
 public static class SetupHangfire
 {
-    public const string DisableHangfireOptionName = nameof(DisableHangfireOptionName);
-
-    public static void AddHangfire(IServiceCollection services, string connectionString)
+    public static void AddHangfire(
+        IServiceCollection services,
+        string connectionString,
+        IConfiguration configuration
+    )
     {
+        if (configuration.GetSection("Hangfire").GetValue<bool>("Disable"))
+            return;
+
         services.AddHangfire(
             config =>
                 config
@@ -33,10 +38,8 @@ public static class SetupHangfire
 
     public static void UseHangfire(WebApplication app)
     {
-        if (app.Configuration.GetValue<bool>(DisableHangfireOptionName))
+        if (app.Configuration.GetSection("Hangfire").GetValue<bool>("Disable"))
             return;
-
-        // app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 2 });
 
         // var therapySyncJobSettings = Configuration.GetSection(nameof(TherapyDataSyncJobSettings))
         //     .Get<HangFireJobSettings>();

@@ -70,7 +70,7 @@ public static class SetupDatabase
             )
             .RegisterRetryHelper();
 
-        SetupHangfire.AddHangfire(services, connectionString);
+        SetupHangfire.AddHangfire(services, connectionString, configuration);
         AddSeeders(services, configuration);
         PostgresSerialization.AdjustDateOnlySerialization();
     }

@@ -82,7 +82,7 @@ namespace MccSoft.TemplateApp.ComponentTests
                 : new Dictionary<string, string>
                 {
                     { SetupDatabase.DisableMigrationOptionName, true.ToString() },
-                    { SetupHangfire.DisableHangfireOptionName, true.ToString() },
+                    { "Hangfire__Disable", true.ToString() },
                     { SetupAuth.DisableSignOutLockedUserMiddleware, true.ToString() },
                 };
 
