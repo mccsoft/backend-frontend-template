@@ -63,21 +63,7 @@ SetupLocalization.UseLocalization(app);
 
 SetupAspNet.UseFrontlineServices(app);
 
-app.UseStaticFiles(
-    new StaticFileOptions()
-    {
-        OnPrepareResponse = ctx =>
-        {
-            // Do not cache implicit `/index.html`
-            var headers = ctx.Context.Response.GetTypedHeaders();
-            headers.CacheControl = new CacheControlHeaderValue
-            {
-                Public = true,
-                MaxAge = TimeSpan.MaxValue
-            };
-        }
-    }
-);
+app.UseStaticFiles(SetupStaticFiles.CacheAll);
 
 SetupAuth.UseAuth(app);
 SetupSwagger.UseSwagger(app);
@@ -87,22 +73,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
     endpoints.MapRazorPages();
     endpoints.MapHealthChecks("/health");
-    endpoints.MapFallbackToFile(
-        "index.html",
-        new StaticFileOptions()
-        {
-            OnPrepareResponse = ctx =>
-            {
-                // Do not cache implicit `/index.html`
-                var headers = ctx.Context.Response.GetTypedHeaders();
-                headers.CacheControl = new CacheControlHeaderValue
-                {
-                    Public = true,
-                    MaxAge = TimeSpan.FromTicks(0),
-                };
-            }
-        }
-    );
+    endpoints.MapFallbackToFile("index.html", SetupStaticFiles.DoNotCache);
 });
 
 app.Logger.LogInformation("Service started.");
