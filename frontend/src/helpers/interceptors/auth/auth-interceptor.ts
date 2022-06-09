@@ -9,8 +9,7 @@
  * - when user is logged-in/logged-out call setAuthData(authData or null)
  * - use useIsAuthorized or useAuth hooks to get auth data.
  */
-import { AxiosInstance, AxiosRequestConfig } from 'axios';
-import Axios from 'axios';
+import Axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
 import {
   AuthData,
@@ -19,9 +18,7 @@ import {
 } from './auth-data';
 import SuperTokensLock from 'browser-tabs-lock';
 import { useEffect, useState } from 'react';
-import { signOutPopup } from 'pages/unauthorized/openid/openid-manager';
-import { RootStore } from 'application/redux-store';
-import { logoutAction } from 'application/redux-store/root-reducer';
+import { signOutRedirect } from 'pages/unauthorized/openid/openid-manager';
 
 /*
  * this is a local storage key that will store the AuthData structure (containing access_token and refresh_token)
@@ -31,6 +28,7 @@ const authDataKey = 'auth_data';
 let _authData: AuthData | null = JSON.parse(
   window.localStorage.getItem(authDataKey) || 'null',
 );
+
 function setAuthDataVariable(data: AuthData | null) {
   _authData = data;
   _setAuthFunctions.forEach((item) => {
@@ -43,8 +41,11 @@ function setAuthDataVariable(data: AuthData | null) {
  * Function to be called from user-side (e.g. 'Log Out' button) to start log out process
  */
 export async function logOut() {
-  await signOutPopup();
-  postServerLogOut();
+  await signOutRedirect();
+
+  // uncomment the code below if you'd like to use sign out via popup
+  // await signOutPopup();
+  // postServerLogOut();
 }
 
 /*
@@ -141,6 +142,7 @@ export async function injectAccessTokenInterceptor(config: AxiosRequestConfig) {
 export function useIsAuthorized() {
   return useAuth() !== null;
 }
+
 export function useAuth() {
   const [auth, setAuth] = useState<AuthData | null>(_authData);
   useEffect(() => {

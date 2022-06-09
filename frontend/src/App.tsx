@@ -18,6 +18,7 @@ import {
 } from './helpers/interceptors/auth/auth-interceptor';
 import { sendRefreshTokenRequest } from './helpers/interceptors/auth/auth-client';
 import { logoutAction } from './application/redux-store/root-reducer';
+import { backendUri } from './pages/unauthorized/openid/openid-settings';
 
 QueryFactory.setAxiosFactory(() => axios);
 
@@ -27,6 +28,7 @@ setupAuthInterceptor(axios, async (authData) => {
 });
 addLogoutHandler(() => {
   RootStore.store.dispatch(logoutAction);
+  window.history.pushState(null, '', backendUri);
 });
 axios.interceptors.request.use(injectLanguageInterceptor);
 axios.interceptors.request.use(sessionAxiosInterceptor);

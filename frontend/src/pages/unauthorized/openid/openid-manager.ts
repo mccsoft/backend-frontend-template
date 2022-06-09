@@ -10,7 +10,6 @@ import {
 import Logger from 'js-logger';
 
 export type SignInRedirectHandler = (user: User) => void;
-export type SignOutRedirectHandler = () => void;
 
 function getClientSettings(): UserManagerSettings {
   return {
