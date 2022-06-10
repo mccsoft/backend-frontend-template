@@ -9,13 +9,15 @@ import {
   handleAuthenticationSignOutCallback,
   handleAuthenticationSignInCallback,
   SignInRedirectHandler,
+  SignOutRedirectHandler,
 } from './openid-manager';
 import { signInCallbackPath, signOutCallbackPath } from './openid-settings';
-import { postServerLogOut } from 'helpers/interceptors/auth/auth-interceptor';
 
 export const OpenIdCallback: React.FC<
   PropsWithChildren<{
     signInRedirectHandler: SignInRedirectHandler;
+    signOutRedirectHandler: SignOutRedirectHandler;
+    loading?: React.ReactNode | undefined;
   }>
 > = (props) => {
   const url = window.location.pathname;
@@ -40,12 +42,14 @@ export const OpenIdCallback: React.FC<
     if (isSignOutCallback) {
       isOpenIdHandled.current = true;
       handleAuthenticationSignOutCallback(() => {
-        postServerLogOut();
+        props.signOutRedirectHandler();
         rerenderWhenRedirectCompletes();
       });
     }
   }, [isAuthCallback, isSignOutCallback]);
 
-  if (isAuthCallback || isSignOutCallback) return null;
+  if (isAuthCallback || isSignOutCallback)
+    return props.loading ? <>{props.loading}</> : null;
+
   return <>{props.children}</>;
 };

@@ -5,8 +5,12 @@ import { App } from './App';
 import reportWebVitals from './reportWebVitals';
 import { formatISO } from 'date-fns';
 import { OpenIdCallback } from './pages/unauthorized/openid/OpenIdCallback';
-import { setAuthData } from './helpers/interceptors/auth/auth-interceptor';
+import {
+  postServerLogOut,
+  setAuthData,
+} from './helpers/interceptors/auth/auth-interceptor';
 import { backendUri } from './pages/unauthorized/openid/openid-settings';
+import { Loading } from './components/uikit/suspense/Loading';
 
 //to send dates to backend in local timezone (not in UTC)
 Date.prototype.toISOString = function () {
@@ -24,6 +28,10 @@ ReactDOM.render(
         });
         window.history.pushState(null, '', backendUri);
       }}
+      signOutRedirectHandler={() => {
+        postServerLogOut();
+      }}
+      loading={<Loading loading={true} />}
     >
       <App />
     </OpenIdCallback>
