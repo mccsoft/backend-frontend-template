@@ -135,7 +135,7 @@ stages:
           runOnce:
             deploy:
               steps:
-                - template: scripts/azure-deploy-template.yml
+                - template: ./azure-deploy-template.yml
 
   - stage: TagProdSources
     dependsOn: DeployToProd
