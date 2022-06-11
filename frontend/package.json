@@ -93,7 +93,7 @@
     "vite-tsconfig-paths": "3.4.1"
   },
   "scripts": {
-    "start": "PORT=5001 vite",
+    "start": "vite",
     "build": "vite build && yarn build-scss-for-razor",
     "build-scss-for-razor": "sass --load-path=./ src/razor.scss ../webapi/src/MccSoft.TemplateApp.App/wwwroot/css/frontend.css",
     "typecheck": "tsc",
