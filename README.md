@@ -9,7 +9,7 @@ This is a template to set up a backend ASP.Net project with React frontend. You 
 
 Template contains:
 1. ASP.NET Core backend (.NET 6)
-   1. Identity Server authentication (with support for Social Networks authentication)
+   1. OpenIddict authentication (with support for Social Networks authentication)
    2. Guidance/example on how to structure backend
    3. Helpers for easy implementation of REST API for CRUD (with PATCH instead of UPDATE)
    4. Configured Domain events to apply DDD principles
@@ -55,9 +55,10 @@ Don't forget to change the favicons/tiles in `frontend/public` folder to the log
 
 ## How to set up CI/CD
 1. First of all, you need to create an email for your project. It will be needed for registering in 3rd party systems that the project will use (e.g. Sentry and Loggly)
-1. Go to Azure and create Pipeline. Specify `azure-pipelines.yml` as the source of pipeline.
-1. Give access for WRITING to Repo for your Pipeline. This is required for Tagging your sources when App is deployed. Instructions: https://elanderson.net/2020/04/azure-devops-pipelines-manual-tagging/
-1. Set up Container Registry to push images to.
+2. Go to Azure and create Pipeline. Specify `.ci/azure-pipelines.yml` as the source of pipeline.
+3. Give access for WRITING to Repo for your Pipeline. This is required for Tagging your sources when App is deployed. Instructions: https://elanderson.net/2020/04/azure-devops-pipelines-manual-tagging/
+   1. You could skip this step if git tags are not needed. In this case remove `TagProdSources` and `TagDevSources` from [.ci/azure-pipelines.yml](.ci/azure-pipelines.yml)
+4. Set up Container Registry to push images to.
    1. You could use GitLab Container Registry (since it's private and free)
       1. Register a user in GitLab (using project email)
       1. Create a personal access token with read/write access to container registry
@@ -65,9 +66,9 @@ Don't forget to change the favicons/tiles in `frontend/public` folder to the log
          ![image.png](/.attachments/image-53a3b5eb-9331-4403-a7d9-81d5a3a672f0.png)
       1. Add secret variable `DOCKER_TOKEN` to a pipeline containing created token
       1. Adjust `DOCKER_REGISTRY` and `DOCKER_USER` variables in pipeline.
-1. Run your pipeline. The first Stage (build) should pass.
-1. Disable Pipeline notifications in Azure (i.e. 'Run stage waiting for approval' and 'Manual validation Pending') https://dev.azure.com/mcctomsk/TemplateApp/_settings/notifications. Also disable them in your personal profile: https://dev.azure.com/mcctomsk/_usersSettings/notifications
-1. Pipeline contains 2 stages for deploying to DEV and PROD. You could add new deployment stages by copying existing once.
+5. Run your pipeline. The first Stage (build) should pass.
+6. Disable Pipeline notifications in Azure (i.e. 'Run stage waiting for approval' and 'Manual validation Pending') https://dev.azure.com/mcctomsk/TemplateApp/_settings/notifications. Also disable them in your personal profile: https://dev.azure.com/mcctomsk/_usersSettings/notifications
+7. Pipeline contains 2 stages for deploying to DEV and PROD. You could add new deployment stages by copying existing once.
 
 
 ## Set up Hosting server (Droplet on Digital Ocean)
