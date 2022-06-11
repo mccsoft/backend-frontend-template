@@ -91,38 +91,57 @@ async function renameFiles(replacements) {
 
 function changeFrontendPortNumber(port) {
   replace({
-    regex: /spa\.UseProxyToSpaDevelopmentServer\("http:\/\/localhost:\d+\/"\);/,
-    replacement: `spa.UseProxyToSpaDevelopmentServer("http://localhost:${port}/");`,
-    paths: ["./webapi/src/MccSoft.TemplateApp.App/Startup.cs"],
+    regex: /port: \d+/g,
+    replacement: `port: ${port}`,
+    paths: ["./frontend/vite.config.ts"],
     silent: true,
+    recursive: true,
   });
   replace({
-    regex: / PORT=\d+ /,
-    replacement: ` PORT=${port} `,
-    paths: ["./frontend/package.json"],
+    regex: /<SpaProxyServerUrl>https:\/\/localhost:\d+<\/SpaProxyServerUrl>/,
+    replacement: `<SpaProxyServerUrl>https://localhost:${port}</SpaProxyServerUrl>`,
+    paths: ["./webapi/src/MccSoft.TemplateApp.App/MccSoft.TemplateApp.App.csproj"],
     silent: true,
+    recursive: true,
+
   });
+  replace({
+    regex: /https:\/\/localhost:\d+\//g,
+    replacement: `https://localhost:${port}/`,
+    paths: ["./webapi/src/MccSoft.TemplateApp.App/appsettings.json"],
+    silent: true,
+    recursive: true,
+  });
+
 }
 
 function changeBackendPortNumber(port) {
   replace({
-    regex: /"Url": "http:\/\/\*:\d+"/,
-    replacement: `"Url": "http://*:${port}"`,
+    regex: /target: 'https:\/\/localhost:(\d+)',/g,
+    replacement: `target: 'https://localhost:${port}',`,
+    paths: [
+      "./frontend/vite.config.ts",
+    ],
+    silent: true,
+  });
+  replace({
+    regex: /"Url": "http:\/\/\*:\d+"/g,
+    replacement: `"Url": "http://*:${port + 1}"`,
     paths: [
       "./webapi/src/MccSoft.TemplateApp.App/appsettings.Development.json",
     ],
     silent: true,
   });
   replace({
-    regex: /"Url": "https:\/\/\*:\d+"/,
-    replacement: `"Url": "https://*:${port + 1}"`,
+    regex: /"Url": "https:\/\/\*:\d+"/g,
+    replacement: `"Url": "https://*:${port}"`,
     paths: [
       "./webapi/src/MccSoft.TemplateApp.App/appsettings.Development.json",
     ],
     silent: true,
   });
   replace({
-    regex: /"proxy": "http:\/\/localhost:\d+"/,
+    regex: /"proxy": "http:\/\/localhost:\d+"/g,
     replacement: `"proxy": "http://localhost:${port}"`,
     paths: ["./frontend/package.json"],
     silent: true,
