@@ -56,10 +56,11 @@ app.UseSerilog(app.Environment);
 app.Logger.LogSentryTestError("TemplateApp");
 
 await SetupDatabase.RunMigration(app);
-
 SetupHangfire.UseHangfire(app);
-SetupLocalization.UseLocalization(app);
 
+app.UseHttpsRedirection();
+
+SetupLocalization.UseLocalization(app);
 SetupAspNet.UseFrontlineServices(app);
 
 app.UseStaticFiles(SetupStaticFiles.CacheAll);
