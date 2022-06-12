@@ -6,6 +6,6 @@
 1. Create a personal access token with read/write access to container registry
 https://gitlab.com/-/profile/personal_access_tokens
 
-![](https://github.com/mcctomsk/backend-frontend-template/raw/master/.wiki/gitlab-access-token.png)
+![](images/gitlab-access-token.png)
 1. Add secret variable `DOCKER_TOKEN` to a pipeline containing created token
 1. Adjust `DOCKER_REGISTRY` and `DOCKER_USER` variables in pipeline.

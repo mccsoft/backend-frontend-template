@@ -6,14 +6,14 @@ So for exact details you could just take a look at [azure-pipelines.yml](https:/
 
 Build consists of 5 stages:
 
-![](https://github.com/mcctomsk/backend-frontend-template/raw/master/.wiki/ci-cd.png)
+![](images/ci-cd.png)
 
 1. The Build stage, which results in a Docker image pushed to some Container Registry (usually, GitLab).
 1. DeployToDev stage, which deploys the image to Dev stage. This Stage is run automatically once Build completes.
 1. TagDevSources which puts a `dev` tag on a Git Commit that was built and deployed.
 1. DeployToProd stage, which deploys the built image to Prod stage. This Stage requires Approvement from Project Administrator to be run. To start the deployment one needs to click on 'Retry Stage', and then 'Approve' in the confirmation window.
 
-![](https://github.com/mcctomsk/backend-frontend-template/raw/master/.wiki/ci-cd-approval.png)
+![](images/ci-cd-approval.png)
 1. TagProdSources puts a `prod` tag on Git Commit that was deployed. So you could actually know by looking at the Git Repo what's currently deployed to Dev and to Prod.
 
 Technically DeployToDev and DeployToProd are identical, the only difference is domain/PC to which image is deployed.
@@ -45,7 +45,7 @@ On that host we expect to see `~/.env.base` file with basic environment variable
 1. Runs `docker-compose up -d`.
 
 The default docker-compose runs the following Containers:
-1. Postgres container that runs your DB. On Production stages it's better NOT to use this, and use external managed Postgres instead. 
+1. Postgres container that runs your DB. On Production stages it's better NOT to use this, and use external managed Postgres instead.
 1. Main container that runs your backend/frontend (frontend was copied to `wwwroot` as part of the build).
 1. NGINX container that proxies everything to your Main container and also performs GZip/SSL termination. You could configure your nginx via [nginx](https://github.com/mcctomsk/backend-frontend-template/blob/master/nginx) folder in your repo.
 1. Acme container, which creates SSL certificates and injects them into the NGINX. Certificates are generated via Lets Encrypt.

@@ -16,7 +16,7 @@ So, how shall we decide what exactly to split? Let's proceed with step by step i
 # Step by step instructions
 1. ##Prepare the tools and gather the numbers for analisys
     1. Install the following development packages to help analyze the issue `yarn add --dev source-map-explorer @statoscope/webpack-plugin` (if you are using a MccSoft template, they are alredy installed).
-    1. Add 2 scripts to your `package.json` (again, in a template this is already done): 
+    1. Add 2 scripts to your `package.json` (again, in a template this is already done):
        ```
        "analyze-statoscope": "STATS=1 react-app-rewired build",
        "analyze-sourcemap-size": "source-map-explorer build/static/js/*.js"
@@ -36,5 +36,5 @@ But now both splitted pages will include their own copy of lodash! This makes `T
 
 
 Ideally, you'd want to reduce both of themcheck the size of your initial chunk. Most probably you will be interested in `vendor` chunk. This is the chunk that contains bundled 3rd party node_modules.
-![](https://github.com/mcctomsk/backend-frontend-template/raw/master/.wiki/statoscope-1.png)
-    1. 
+![](images/statoscope-1.png)
+    1.
