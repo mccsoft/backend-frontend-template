@@ -21,6 +21,7 @@
   "scripts": {
     "typecheck": "yarn frontend typecheck",
     "start": "yarn frontend start",
+    "start-remote": "yarn frontend start-remote",
     "generate-api-clients": "yarn frontend generate-api-clients",
     "rename": "node scripts/rename-script.js",
     "frontend": "yarn workspace @templateApp/frontend",

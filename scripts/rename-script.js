@@ -91,8 +91,8 @@ async function renameFiles(replacements) {
 
 function changeFrontendPortNumber(port) {
   replace({
-    regex: /port: \d+/g,
-    replacement: `port: ${port}`,
+    regex: /var frontendPort = process.env.PORT ?? \d+;/g,
+    replacement: `var frontendPort = process.env.PORT ?? ${port};`,
     paths: ["./frontend/vite.config.ts"],
     silent: true,
     recursive: true,
@@ -117,8 +117,8 @@ function changeFrontendPortNumber(port) {
 
 function changeBackendPortNumber(port) {
   replace({
-    regex: /target: 'https:\/\/localhost:(\d+)',/g,
-    replacement: `target: 'https://localhost:${port}',`,
+    regex: /https:\/\/localhost:(\d+)/g,
+    replacement: `https://localhost:${port}`,
     paths: [
       "./frontend/vite.config.ts",
     ],

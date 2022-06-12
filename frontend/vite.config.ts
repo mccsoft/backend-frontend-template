@@ -6,6 +6,9 @@ import EnvironmentPlugin from 'vite-plugin-environment';
 import { visualizer } from 'rollup-plugin-visualizer';
 import mkcert from 'vite-plugin-mkcert';
 
+var proxyTarget = process.env.BACKEND_URI ?? 'https://localhost:5003';
+var frontendPort = process.env.PORT ?? 5001;
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -20,28 +23,33 @@ export default defineConfig({
     visualizer(),
   ],
   server: {
-    port: 5001,
+    port: frontendPort,
     https: true,
     proxy: {
       '/api': {
-        target: 'https://localhost:5003',
+        target: proxyTarget,
         secure: false,
+        changeOrigin: true,
       },
       '/connect': {
-        target: 'https://localhost:5003',
+        target: proxyTarget,
         secure: false,
+        changeOrigin: true,
       },
       '/Identity': {
-        target: 'https://localhost:5003',
+        target: proxyTarget,
         secure: false,
+        changeOrigin: true,
       },
       '/.well-known': {
-        target: 'https://localhost:5003',
+        target: proxyTarget,
         secure: false,
+        changeOrigin: true,
       },
       '/css': {
-        target: 'https://localhost:5003',
+        target: proxyTarget,
         secure: false,
+        changeOrigin: true,
       },
     },
   },
