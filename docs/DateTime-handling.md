@@ -10,6 +10,13 @@
 This aligns with recommendations https://github.com/npgsql/npgsql/issues/2209#issuecomment-434823765
 >Working with timezone-aware databases is a headache. Whenever possible, we recommend that users go turtles UTC all the way down. That is, only convert from/to local time when displaying to a human user.
 
+# TL/DR
+- Use `DateOnly` if you want to store only the dates (independent of the TimeZone).
+- Use `DateTime` if you want to store Date with Time. It will be always in UTC on backend.
+- Never use `DateTimeOffset`.
+
+
+
 # Handling DateTime (with time)
 
 - Client need to send the datetime using local timezone, i.e. `2021-01-23T17:30:00+07:00` should be sent over http.
