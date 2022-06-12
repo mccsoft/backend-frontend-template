@@ -61,11 +61,9 @@ Don't forget to change the favicons/tiles in `frontend/public` folder to the log
 4. Set up Container Registry to push images to.
    1. You could use GitLab Container Registry (since it's private and free)
       1. Register a user in GitLab (using project email)
-      1. Create a personal access token with read/write access to container registry
-         https://gitlab.com/-/profile/personal_access_tokens
-         ![image.png](/.attachments/image-53a3b5eb-9331-4403-a7d9-81d5a3a672f0.png)
+      1. Create a personal access token with read/write access to container registry at https://gitlab.com/-/profile/personal_access_tokens
       1. Add secret variable `DOCKER_TOKEN` to a pipeline containing created token
-      1. Adjust `DOCKER_REGISTRY` and `DOCKER_USER` variables in pipeline.
+      1. Adjust `DOCKER_REGISTRY` (e.g. `registry.gitlab.com/mcctemplateapp1/main`) and `DOCKER_USER` (e.g. `mcc.template.app@gmail.com`) variables in pipeline.
 5. Run your pipeline. The first Stage (build) should pass.
 6. Disable Pipeline notifications in Azure (i.e. 'Run stage waiting for approval' and 'Manual validation Pending') https://dev.azure.com/mcctomsk/TemplateApp/_settings/notifications. Also disable them in your personal profile: https://dev.azure.com/mcctomsk/_usersSettings/notifications
 7. Pipeline contains 2 stages for deploying to DEV and PROD. You could add new deployment stages by copying existing once.
