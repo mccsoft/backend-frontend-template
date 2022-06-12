@@ -13,3 +13,4 @@
 8. Run `yarn install` from root folder of the repo. It will install JS libraries. You could run `yarn start-remote` to develop frontend locally pointing to the remote backend.
 9. Try to run the backend project (`webapi/MccSoft.TemplateApp.sln`) as usual (e.g. `F5` from Rider, assuming `MccSoft.TemplateApp.App` is a startup project). You should have backend+frontend If you run into issue, consult your teammate :)
 10. Go read about automated tests and set up [infrastructure for them](./Auto-tests.md). Run autotests locally, they should all be green.
+11. Read [Development Howto](./Development-Howto.md) to know more about day-to-day development.
