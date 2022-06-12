@@ -83,8 +83,8 @@ public static class SetupAspNet
     public static void UseFrontlineServices(IApplicationBuilder app)
     {
         UseForwardedHeaders(app);
-        app.UseCors(DefaultCorsPolicyName);
         app.UseRouting();
+        app.UseCors(DefaultCorsPolicyName);
 
         app.UseErrorHandling();
         app.UseRethrowErrorsFromPersistence();

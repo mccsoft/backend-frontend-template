@@ -6,7 +6,6 @@ using MccSoft.TemplateApp.App;
 using MccSoft.TemplateApp.App.Setup;
 using MccSoft.WebApi.Sentry;
 using MccSoft.WebApi.Serialization.ModelBinding;
-using Microsoft.Net.Http.Headers;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
