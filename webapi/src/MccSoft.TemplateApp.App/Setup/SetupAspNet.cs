@@ -38,22 +38,29 @@ public static class SetupAspNet
 
         services.AddHealthChecks();
 
-        AddCors(services);
+        AddCors(builder);
     }
 
-    public static void AddCors(IServiceCollection services)
+    private const string DefaultCorsPolicyName = "DefaultCorsPolicy";
+
+    public static void AddCors(WebApplicationBuilder builder)
     {
-        // ToDo this should be properly configured for Cloud scenario
-        services.AddCors(
+        string siteUrl = builder.Configuration.GetSection("General").GetValue<string>("SiteUrl");
+        string cors = builder.Configuration.GetSection("General").GetValue<string>("CORS");
+        string[] additionalOrigins = string.IsNullOrEmpty(cors)
+            ? new string[] { }
+            : cors.Split(",");
+
+        builder.Services.AddCors(
             x =>
                 x.AddPolicy(
-                    "mypolicy",
+                    DefaultCorsPolicyName,
                     configurePolicy =>
                         configurePolicy
                             .AllowAnyHeader()
                             .AllowAnyMethod()
                             .WithExposedHeaders("x-miniprofiler-ids")
-                            .SetIsOriginAllowed(hostName => true)
+                            .WithOrigins(additionalOrigins.Union(new[] { siteUrl }).ToArray())
                             .AllowCredentials()
                 )
         );
@@ -76,7 +83,7 @@ public static class SetupAspNet
     public static void UseFrontlineServices(IApplicationBuilder app)
     {
         UseForwardedHeaders(app);
-        app.UseCors("mypolicy");
+        app.UseCors(DefaultCorsPolicyName);
         app.UseRouting();
 
         app.UseErrorHandling();
