@@ -1,11 +1,13 @@
 # Authentication
 This project contains OpenIddict as an authentication server and JWT token provider.
 
+OpenIddict is set up using [OpenIddictExternalAuthentication](https://github.com/Shaddix/OpenIddictExternalAuthentication). Check their Readme for documentation.
+
 ## Authentication page / flow
 This project contains Razor-based authentication page.
 1. Authentication page is not a part of SPA, because Resource-Owner-Password-Flow (i.e. login/password pair entered on some arbitrary page and sent to server via http API call) is considered insecure.
 2. So to authenticate from SPA we need to use Auth-Code-Flow, and in this flow AuthenticationServer should have it's own UI (i.e. login form).
-4. You could reuse CSS classes/variables from SPA within authentication page. Check [razor.scss](frontend/src/razor.scss) that is compiled to [frontend.css](webapi/src/MccSoft.TemplateApp.App/wwwroot/css/frontend.css).
+3. You could reuse CSS classes/variables from SPA within authentication page. Check [razor.scss](frontend/src/razor.scss) that is compiled to [frontend.css](webapi/src/MccSoft.TemplateApp.App/wwwroot/css/frontend.css).
     1. Authentication page should have as little JS as possible, so it's not possible to inject malicious code into it.
 
 ### How to authenticate from SPA

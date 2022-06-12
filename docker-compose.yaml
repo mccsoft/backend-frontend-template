@@ -55,6 +55,7 @@ services:
       - vhost:/etc/nginx/vhost.d
       - html:/usr/share/nginx/html
       - certs:/etc/nginx/certs:ro
+      - ./nginx/logs:/var/log/nginx:rw
       - ./nginx/conf.d/proxy.conf:/etc/nginx/conf.d/proxy.conf:ro
       - ./nginx/conf.d/compression.conf:/etc/nginx/conf.d/compression.conf:ro
       - ./nginx/vhost.d/default_location:/etc/nginx/vhost.d/default_location:ro
