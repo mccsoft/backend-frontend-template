@@ -10,7 +10,7 @@ We use 4 standard HTTP methods, and usually each REST controller has at least th
 5. `DELETE /products/1` - deletes the product with given id
 
 ## HTTP PATCH implementation
-The idea of http PATCH method, is that it changes the object (just like a PUT method), but only changes the values that are actually passed, without setting all others to `null`.
+The idea of http [PATCH](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/PATCH) method, is that it changes the object (just like a PUT method), but only changes the values that are actually passed, without setting all others to `null`.
 
 For example, if we have a `Product` with the following values:
 ```json
@@ -26,6 +26,35 @@ and we send the following PATCH request:
   "lastStockUpdatedAt": "2022-02-01"
 }
 ```
-then only `lastStockUpdatedAt` field will actually be changed ([by definition](!!!TODO: ADD LINK HERE!!!), the `PUT` method should set `title` and `productType` to `null` in this case).
+then only `lastStockUpdatedAt` field will actually be changed ([by definition](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/PUT), the `PUT` method completely replace the resource, i.e. it should set `title` and `productType` to `null` in this case).
 
-// ToDo: copy blog post about HTTP PATCH here
+The behaviour of PATCH method is actually better, agile and backwards compatible. That is, if frontend wants to change a single field only, then the most intuitive way is to issue a PATCH request passing a single field only.
+
+### How to work with HTTP PATCH
+The easiest thing is to actually check the sources of [PatchProductDto](../webapi/src/MccSoft.TemplateApp.App/Features/Products/Dto/PatchProductDto.cs) and [Patch method of ProductService](../webapi/src/MccSoft.TemplateApp.App/Features/Products/Dto/PatchProductDto.cs).
+
+In short, you have to inherit your `PatchDto` from `PatchRequest<T>`. Then you define the properties that you would like to be patched via this method (you could define a subset of Entity properties, for example, you probably wouldn't want to change the `Password` field of a `User` via PATCH method).
+```csharp
+public class PatchProductDto : PatchRequest<Product>
+{
+    [MinLength(3)]
+    public string Title { get; set; }
+    public ProductType ProductType { get; set; }
+
+    public DateOnly LastStockUpdatedAt { get; set; }
+}
+```
+After that you can call `product.Update(productPatchDto)`, and it will change those properties of `product` that were passed in `productPatchDto`.
+
+For more details you could check an implementation of `Update` extension method in [PartialUpdateHelper](../webapi/Lib/WebApi/MccSoft.WebApi/Patching/PartialUpdateHelper.cs).
+
+#### Rationale
+The base PatchRequest class is needed for 2 things:
+1. To distinguish when property value is intentionally set to `null` (e.g. `{ "title": null }`) and when property value is not set (e.g. `{}`).
+   1. By default in both cases the value of `Title` property will be `null`.
+   2. But in case of `{ "title": null }` we want to change the value of `title` to `null`, in second case, we don't want to change it at all.
+   3. So, we customize the JSON deserialization procedure, and `PatchRequest` has a special method `IsFieldPresent` that returns `true` if the field was present in a request (first case), and `false` if it wasn't (second case).
+2. There's a test that verifies, that PatchDtos only contain the properties that exist in the Entity. That's helpful to avoid issues when you rename entity properties.
+   1. To add an exception for certain Dtos/fields just modify the test `PatchRequest_AllFieldsMatch` in [BasicApiTests.cs](../webapi/tests/MccSoft.TemplateApp.ComponentTests/BasicApiTests.cs).
+
+P.S. There's also a [blog post](https://www.arturdr.ru/net/realizacziya-http-patch-v-asp-net-core-3/) which talks about the same thing in russian.

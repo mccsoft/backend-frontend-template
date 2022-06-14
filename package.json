@@ -36,5 +36,5 @@
     "run-csharpier": "cd webapi && dotnet csharpier .",
     "run-prettier": "prettier -w ."
   },
-  "packageManager": "yarn@3.0.2"
+  "packageManager": "yarn@3.2.1"
 }

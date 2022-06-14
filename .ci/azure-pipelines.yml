@@ -24,7 +24,7 @@ stages:
           - template: ./azure-pipelines-tests-shared.yml
 
           - script: |
-              npm --no-git-tag-version version $(BUILD_NUMBER) --allow-same-version
+              yarn version $(BUILD_NUMBER)
             displayName: 'set version'
 
           - script: |
