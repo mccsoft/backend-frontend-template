@@ -348,5 +348,6 @@ fabric.properties
 /scripts/.env.base
 /.yarn/*
 !/.yarn/releases
+!/.yarn/plugins
 /frontend/dist/
 /frontend/stats.html
