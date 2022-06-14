@@ -3,7 +3,7 @@
 1. Take a task/feature, move it to 'In Progress' on the Board
 2. Create a branch for your feature/task
 3. Design a backend API interface
-   1. Try to use REST, but don't be too dogmatic. If non-REST interface suits better, go for it (but first make sure, that non-REST REALLY suits better and is more understandable)
+   1. Try to use [REST](./REST.md), but don't be too dogmatic. If non-REST interface suits better, go for it (but first make sure, that non-REST REALLY suits better and is more understandable)
    2. Discuss API with colleagues if in doubt
 4. Implement backend logic
 5. Autogenerate typescript client
@@ -38,7 +38,8 @@
 # Backend
 1. Do not use `Controllers` and `Services` folders. Rather create a folder in `Features` folder (with a name of your feature), and put your Controllers, Services and Dtos there.
    - it puts everything related to a feature in one place, which helps in refactoring and understanding
-2. Read about [DateTime handling](./DateTime-handling.md) in backend
+2. Try to use [REST API](./REST.md)
+3. Read about [DateTime handling](./DateTime-handling.md) in backend
 
 
 # Frontend

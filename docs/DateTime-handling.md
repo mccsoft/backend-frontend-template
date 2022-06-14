@@ -8,7 +8,7 @@
 **We only use DateTime class on backend (never use DateTimeOffset).**
 
 This aligns with recommendations https://github.com/npgsql/npgsql/issues/2209#issuecomment-434823765
->Working with timezone-aware databases is a headache. Whenever possible, we recommend that users go turtles UTC all the way down. That is, only convert from/to local time when displaying to a human user.
+>Working with timezone-aware databases is a headache. Whenever possible, we recommend that users go ~~turtles~~ UTC all the way down. That is, only convert from/to local time when displaying to a human user.
 
 # TL/DR
 - Use `DateOnly` if you want to store only the dates (independent of the TimeZone).
@@ -31,3 +31,8 @@ In this case everything is handled automatically (by `DateOnlyConverter`s and au
 
 # Handling DateTimeOffset
 We do NOT use DateTimeOffset at all.
+
+### Rationale
+PostgreSQL doesn't store timezone offset, and Npgsql requires that all DateTimeOffset have Zero offset (otherwise it throws an exception upon saving).
+So, if you always have to use Zero offset, using `DateTimeOffset` type doesn't make any sense and only brings confusion (because it seems like you could use different time zones, while in reality you could not).
+
