@@ -175,8 +175,14 @@ namespace MccSoft.TemplateApp.ComponentTests
             );
             var typescriptCode = typeScriptClientGenerator.GenerateFile();
 
+            // yarn replace "formatDate\\((.*?)\\) : <any>undefined" "formatDate($1) : $1" src/services/api/api-client.ts
             // && yarn replace \"this\\.(\\w*?)\\.toISOString\\(\\) : <any>undefined\" \"this.$1.toISOString() : this.$1\" app/api/api-client.ts
             // && yarn replace \"\\| undefined;\" \"| null;\"
+            typescriptCode = Regex.Replace(
+                typescriptCode,
+                @"formatDate\((\w*?)\) : <any>undefined",
+                "formatDate($1) : $1"
+            );
             typescriptCode = Regex.Replace(
                 typescriptCode,
                 @"this\.(\w*?)\.toISOString\(\) : <any>undefined",

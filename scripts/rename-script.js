@@ -115,10 +115,12 @@ function changeFrontendPortNumber(port) {
 
 }
 
-function changeBackendPortNumber(port) {
+function changeBackendPortNumber(httpsPort) {
+  const nonHttpsPort = httpsPort + 1;
+
   replace({
     regex: /https:\/\/localhost:(\d+)/g,
-    replacement: `https://localhost:${port}`,
+    replacement: `https://localhost:${httpsPort}`,
     paths: [
       "./frontend/vite.config.ts",
     ],
@@ -126,7 +128,7 @@ function changeBackendPortNumber(port) {
   });
   replace({
     regex: /"Url": "http:\/\/\*:\d+"/g,
-    replacement: `"Url": "http://*:${port + 1}"`,
+    replacement: `"Url": "http://*:${nonHttpsPort}"`,
     paths: [
       "./webapi/src/MccSoft.TemplateApp.App/appsettings.Development.json",
     ],
@@ -134,21 +136,21 @@ function changeBackendPortNumber(port) {
   });
   replace({
     regex: /"Url": "https:\/\/\*:\d+"/g,
-    replacement: `"Url": "https://*:${port}"`,
+    replacement: `"Url": "https://*:${httpsPort}"`,
     paths: [
       "./webapi/src/MccSoft.TemplateApp.App/appsettings.Development.json",
     ],
     silent: true,
   });
   replace({
-    regex: /"proxy": "http:\/\/localhost:\d+"/g,
-    replacement: `"proxy": "http://localhost:${port}"`,
+    regex: /"proxy": "https:\/\/localhost:\d+"/g,
+    replacement: `"proxy": "https://localhost:${httpsPort}"`,
     paths: ["./frontend/package.json"],
     silent: true,
   });
   replace({
-    regex: /\/input:http:\/\/localhost:\d+/g,
-    replacement: `/input:http://localhost:${port}`,
+    regex: /\/input:https:\/\/localhost:\d+/g,
+    replacement: `/input:https://localhost:${httpsPort}`,
     paths: ["./frontend/package.json"],
     silent: true,
   });
