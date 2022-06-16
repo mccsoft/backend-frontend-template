@@ -62,7 +62,7 @@ export const CreateProductPage: React.FC = () => {
                 errorText={form.formState.errors.productType?.message}
               />
             </Field>
-            <Field title={i18n.t('product_type')}>
+            <Field title={i18n.t('lastStockUpdatedAt')}>
               <HookFormDatePicker
                 name={'lastStockUpdatedAt'}
                 control={form.control}

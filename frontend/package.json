@@ -17,6 +17,7 @@
     "@types/react-table": "7.7.10",
     "axios": "0.26.1",
     "axios-auth-refresh": "3.2.2",
+    "browser-tabs-lock": "1.2.15",
     "clsx": "1.1.1",
     "concurrently": "6.5.1",
     "cross-env": "7.0.3",
