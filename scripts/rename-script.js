@@ -12,14 +12,14 @@ import {
 } from "change-case";
 
 const args = yargs(hideBin(process.argv))
-  .version("0.1")
-  .option("name", {
-    alias: "n",
-    type: "string",
-    description: "Name of the project (e.g. StudyApp)",
-  })
-  .demandOption(["name"])
-  .help().argv;
+    .version("0.1")
+    .option("name", {
+      alias: "n",
+      type: "string",
+      description: "Name of the project (e.g. StudyApp)",
+    })
+    .demandOption(["name"])
+    .help().argv;
 
 const projectName = args.name;
 console.log(`ProjectName: ${projectName}`);
@@ -34,27 +34,27 @@ const replacements = [
   {
     find: "templateApp",
     replace:
-      camelCase(projectName) /* converts 'ProjectName' to 'projectName'*/,
+        camelCase(projectName) /* converts 'ProjectName' to 'projectName'*/,
   },
   {
     find: "template-app",
     replace:
-      paramCase(projectName) /* converts 'projectName' to 'project-name' */,
+        paramCase(projectName) /* converts 'projectName' to 'project-name' */,
   },
   {
     find: "template_app",
     replace:
-      snakeCase(projectName) /* converts 'projectName' to 'project-name' */,
+        snakeCase(projectName) /* converts 'projectName' to 'project-name' */,
   },
   {
-    find: "Template App",
+    find: "TemplateApp",
     replace:
-      capitalCase(projectName) /* converts 'ProjectName' to 'Project Name' */,
+        capitalCase(projectName) /* converts 'ProjectName' to 'Project Name' */,
   },
   {
     find: "TEMPLATE_APP",
     replace:
-      constantCase(projectName) /* converts 'ProjectName' to 'Project Name' */,
+        constantCase(projectName) /* converts 'ProjectName' to 'Project Name' */,
   },
 ];
 
@@ -91,7 +91,7 @@ async function renameFiles(replacements) {
 
 function changeFrontendPortNumber(port) {
   replace({
-    regex: /var frontendPort = process.env.PORT ?? \d+;/g,
+    regex: /var frontendPort = process.env.PORT \?\? \d+;/g,
     replacement: `var frontendPort = process.env.PORT ?? ${port};`,
     paths: ["./frontend/vite.config.ts"],
     silent: true,
@@ -106,8 +106,8 @@ function changeFrontendPortNumber(port) {
 
   });
   replace({
-    regex: /https:\/\/localhost:\d+\//g,
-    replacement: `https://localhost:${port}/`,
+    regex: /https:\/\/localhost:\d+/g,
+    replacement: `https://localhost:${port}`,
     paths: ["./webapi/src/MccSoft.TemplateApp.App/appsettings.json"],
     silent: true,
     recursive: true,
@@ -143,8 +143,24 @@ function changeBackendPortNumber(httpsPort) {
     silent: true,
   });
   replace({
+    regex: /"https:\/\/localhost:\d+"/g,
+    replacement: `"https://localhost:${httpsPort}"`,
+    paths: [
+      "./webapi/src/MccSoft.TemplateApp.App/Properties/launchSettings.json",
+    ],
+    silent: true,
+  });
+  replace({
+    regex: /"https:\/\/\*:\d+"/g,
+    replacement: `"https://*:${httpsPort}"`,
+    paths: [
+      "./webapi/src/MccSoft.TemplateApp.App/Properties/launchSettings.json",
+    ],
+    silent: true,
+  });
+  replace({
     regex: /"proxy": "https:\/\/localhost:\d+"/g,
-    replacement: `"proxy": "https://localhost:${httpsPort}"`,
+    replacement: `"proxy": "http://localhost:${nonHttpsPort}"`,
     paths: ["./frontend/package.json"],
     silent: true,
   });
