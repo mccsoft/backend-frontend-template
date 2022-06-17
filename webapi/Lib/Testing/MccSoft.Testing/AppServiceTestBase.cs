@@ -65,9 +65,9 @@ namespace MccSoft.Testing
             {
                 null => null,
                 DatabaseType.Postgres
-                  => new NpgsqlDatabaseInitializer(
-                      connectionStringOverride: new() { Host = "localhost", Port = 5434, }
-                  ),
+                    => new NpgsqlDatabaseInitializer(
+                        connectionStringOverride: new() { Host = "localhost", Port = 5434, }
+                    ),
                 DatabaseType.Sqlite => new SqliteDatabaseInitializer(),
                 _ => throw new ArgumentOutOfRangeException(nameof(databaseType), databaseType, null)
             };

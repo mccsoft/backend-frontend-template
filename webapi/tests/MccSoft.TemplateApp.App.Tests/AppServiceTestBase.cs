@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -19,9 +20,11 @@ namespace MccSoft.TemplateApp.App.Tests
     /// </summary>
     /// <typeparam name="TService">The type of the service under test.</typeparam>
     public class AppServiceTestBase<TService> : AppServiceTestBase<TService, TemplateAppDbContext>
+        where TService : class
     {
         protected Mock<IBackgroundJobClient> _backgroundJobClient;
         private User _defaultUser;
+        protected ServiceProvider _serviceProvider;
 
         public AppServiceTestBase(DatabaseType? testDatabaseType = DatabaseType.Postgres)
             : base(
@@ -39,12 +42,10 @@ namespace MccSoft.TemplateApp.App.Tests
         {
             if (testDatabaseType != null)
             {
-                WithDbContext(
-                    db =>
-                    {
-                        _defaultUser = db.Users.First(x => x.Email == "default@test.test");
-                    }
-                );
+                WithDbContext(db =>
+                {
+                    _defaultUser = db.Users.First(x => x.Email == "default@test.test");
+                });
                 _userAccessorMock.Setup(x => x.GetUserId()).Returns(_defaultUser.Id);
             }
 
@@ -55,10 +56,23 @@ namespace MccSoft.TemplateApp.App.Tests
             Audit.Core.Configuration.AuditDisabled = true;
         }
 
-        protected ServiceCollection CreateServiceCollection(TemplateAppDbContext db)
+        protected TService InitializeService(
+            Action<IServiceCollection> configureRegistrations = null
+        )
+        {
+            var serviceCollection = CreateServiceCollection();
+            serviceCollection.AddTransient<TService>();
+            configureRegistrations?.Invoke(serviceCollection);
+
+            _serviceProvider = serviceCollection.BuildServiceProvider();
+
+            return _serviceProvider.GetRequiredService<TService>();
+        }
+
+        protected virtual ServiceCollection CreateServiceCollection()
         {
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddSingleton(db);
+            serviceCollection.AddScoped(x => CreateDbContext());
 
             serviceCollection.AddTransient(typeof(ILogger<>), typeof(NullLogger<>));
 
