@@ -1,9 +1,7 @@
-using System.Threading;
-using System.Threading.Tasks;
+using MccSoft.DomainHelpers.DomainEvents.Events;
 using MediatR;
-using Microsoft.Extensions.Logging;
 
-namespace MccSoft.DomainHelpers.DomainEvents.Events
+namespace MccSoft.TemplateApp.App.DomainEventHandlers
 {
     /// <summary>
     /// Handles <see cref="LogDomainEvent"/> and logs its content to standard logger.

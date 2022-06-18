@@ -201,6 +201,9 @@ namespace MccSoft.Testing
             return _serviceProvider.GetRequiredService<TService>();
         }
 
+        /// <summary>
+        /// Creates a service collection that you could resolve your System-Under-Test from.
+        /// </summary>
         protected virtual ServiceCollection CreateServiceCollection()
         {
             var serviceCollection = new ServiceCollection();

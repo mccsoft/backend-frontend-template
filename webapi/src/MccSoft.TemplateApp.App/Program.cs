@@ -3,6 +3,7 @@ using MccSoft.Logging;
 using MccSoft.Mailing;
 using MccSoft.PersistenceHelpers.DomainEvents;
 using MccSoft.TemplateApp.App;
+using MccSoft.TemplateApp.App.DomainEventHandlers;
 using MccSoft.TemplateApp.App.Setup;
 using MccSoft.WebApi.Sentry;
 using MccSoft.WebApi.Serialization.ModelBinding;

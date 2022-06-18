@@ -13,18 +13,7 @@ namespace MccSoft.TemplateApp.Domain
 
         public DateOnly LastStockUpdatedAt { get; set; }
 
-        public string Title
-        {
-            get => _title;
-            set
-            {
-                if (_title == value)
-                    return;
-
-                AddEvent(LogDomainEvent.Info("Title changed to {title}", value));
-                _title = value;
-            }
-        }
+        public string Title { get; set; }
 
         /// <summary>
         /// Needed for Entity Framework, keep empty.
