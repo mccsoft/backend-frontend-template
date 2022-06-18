@@ -22,9 +22,7 @@ namespace MccSoft.TemplateApp.App.Tests
     public class AppServiceTestBase<TService> : AppServiceTestBase<TService, TemplateAppDbContext>
         where TService : class
     {
-        protected Mock<IBackgroundJobClient> _backgroundJobClient;
         private User _defaultUser;
-        protected ServiceProvider _serviceProvider;
 
         public AppServiceTestBase(DatabaseType? testDatabaseType = DatabaseType.Postgres)
             : base(
@@ -56,28 +54,11 @@ namespace MccSoft.TemplateApp.App.Tests
             Audit.Core.Configuration.AuditDisabled = true;
         }
 
-        protected TService InitializeService(
-            Action<IServiceCollection> configureRegistrations = null
-        )
+        protected override ServiceCollection CreateServiceCollection()
         {
-            var serviceCollection = CreateServiceCollection();
-            serviceCollection.AddTransient<TService>();
-            configureRegistrations?.Invoke(serviceCollection);
+            var serviceCollection = base.CreateServiceCollection();
 
-            _serviceProvider = serviceCollection.BuildServiceProvider();
-
-            return _serviceProvider.GetRequiredService<TService>();
-        }
-
-        protected virtual ServiceCollection CreateServiceCollection()
-        {
-            var serviceCollection = new ServiceCollection();
-            serviceCollection.AddScoped(x => CreateDbContext());
-
-            serviceCollection.AddTransient(typeof(ILogger<>), typeof(NullLogger<>));
-
-            _backgroundJobClient = new Mock<IBackgroundJobClient>();
-            serviceCollection.AddSingleton(_backgroundJobClient.Object);
+            // Here you could register more project-specific types in a service collection
 
             return serviceCollection;
         }

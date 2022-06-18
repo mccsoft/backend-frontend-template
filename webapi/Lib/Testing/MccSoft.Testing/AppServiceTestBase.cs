@@ -1,10 +1,13 @@
 ﻿using System;
+using Hangfire;
 using MccSoft.IntegreSql.EF;
 using MccSoft.IntegreSql.EF.DatabaseInitialization;
 using MccSoft.LowLevelPrimitives;
 using MccSoft.NpgSql;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Logging.Debug;
 using Moq;
 
@@ -26,6 +29,7 @@ namespace MccSoft.Testing
     /// </remarks>
     public class AppServiceTestBase<TService, TDbContext> : TestBase<TDbContext>, IDisposable
         where TDbContext : DbContext, ITransactionFactory
+        where TService : class
     {
         protected readonly ILoggerFactory LoggerFactory = new LoggerFactory(
             new[] { new DebugLoggerProvider() }
@@ -44,6 +48,8 @@ namespace MccSoft.Testing
 
         private readonly DatabaseType? _databaseType;
         private readonly IDatabaseInitializer _databaseInitializer;
+        protected ServiceProvider _serviceProvider;
+        private Mock<IBackgroundJobClient> _backgroundJobClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AppServiceTestBase{TService,TDbContext}" />
@@ -180,6 +186,32 @@ namespace MccSoft.Testing
         protected override TDbContext CreateDbContext()
         {
             return _dbContextFactory(_builder.Options, _userAccessorMock.Object);
+        }
+
+        protected TService InitializeService(
+            Action<IServiceCollection> configureRegistrations = null
+        )
+        {
+            var serviceCollection = CreateServiceCollection();
+            serviceCollection.AddTransient<TService>();
+            configureRegistrations?.Invoke(serviceCollection);
+
+            _serviceProvider = serviceCollection.BuildServiceProvider();
+
+            return _serviceProvider.GetRequiredService<TService>();
+        }
+
+        protected virtual ServiceCollection CreateServiceCollection()
+        {
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddScoped(x => CreateDbContext());
+
+            serviceCollection.AddTransient(typeof(ILogger<>), typeof(NullLogger<>));
+
+            _backgroundJobClient = new Mock<IBackgroundJobClient>();
+            serviceCollection.AddSingleton(_backgroundJobClient.Object);
+
+            return serviceCollection;
         }
 
         /// <summary>
