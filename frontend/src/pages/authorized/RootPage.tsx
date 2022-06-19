@@ -16,6 +16,7 @@ import { Language, languages } from '../../application/localization/locales';
 import { useTranslation } from 'react-i18next';
 import { logOut } from '../../helpers/interceptors/auth/auth-interceptor';
 import styles from './RootPage.module.scss';
+import Logger from 'js-logger';
 
 export const RootPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -56,7 +57,7 @@ export const RootPage: React.FC = () => {
           <div className={styles.logOutWrapper}>
             <Button
               onClick={() => {
-                logOut().catch((e) => console.error(e));
+                logOut().catch((e) => Logger.error(e));
               }}
               title={'Log Out'}
             />

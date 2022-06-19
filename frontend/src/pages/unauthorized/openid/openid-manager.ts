@@ -42,16 +42,16 @@ export async function openExternalLoginPopup(provider: string) {
     } as any);
     return user;
   } catch (e) {
-    console.error('Error during external authentication', e);
+    Logger.error('Error during external authentication', e);
   }
 }
 
 export async function redirectToLoginPage() {
   try {
-    const result = await getManager().signinRedirect();
-    console.log(result);
+    Logger.info('Redirecting to login page');
+    await getManager().signinRedirect();
   } catch (e) {
-    console.error('Error during redirect to authentication', e);
+    Logger.error('Error during redirect to authentication', e);
   }
 }
 
@@ -59,7 +59,7 @@ export function handleAuthenticationSignInCallback(
   successCallback: (user: User) => void,
 ) {
   if (window.location.search.includes('popup')) {
-    completeAuthorizationPopup().catch((e) => console.error(e));
+    completeAuthorizationPopup().catch((e) => Logger.error(e));
   } else {
     completeAuthorizationRedirect()
       .then((user) => {

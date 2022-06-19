@@ -63,15 +63,10 @@ public static class SetupAuth
             .AddOpenIddictConfigurations(configuration)
             .AddServer(options =>
             {
-                options.DisableAccessTokenEncryption();
-
-                if (builder.Environment.IsDevelopment())
-                {
-                    options.UseAspNetCore().DisableTransportSecurityRequirement();
-                }
-
-                options.AddSigningCertificateFromConfiguration(configuration);
-                options.AddEncryptionCertificateFromConfiguration(configuration);
+                options
+                    .DisableAccessTokenEncryption()
+                    .AddSigningCertificateFromConfiguration(configuration)
+                    .AddEncryptionCertificateFromConfiguration(configuration);
             })
             // Register the OpenIddict validation components.
             .AddValidation(options =>

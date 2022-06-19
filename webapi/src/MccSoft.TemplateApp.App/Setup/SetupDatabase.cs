@@ -38,12 +38,18 @@ public static class SetupDatabase
             await seeder.SeedUser(defaultUser.UserName, defaultUser.Password);
         }
 
-        await app.UseOpenIdDictApplicationsFromConfiguration().ConfigureAwait(false);
+        app.UseOpenIdDictApplicationsFromConfiguration();
     }
 
     public static void AddDatabase(IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+        // this is needed for OpenIdDict and must go before .UseOpenIddict()
+        services.AddMemoryCache(options =>
+        {
+            options.SizeLimit = null;
+        });
 
         services
             .AddEntityFrameworkNpgsql()

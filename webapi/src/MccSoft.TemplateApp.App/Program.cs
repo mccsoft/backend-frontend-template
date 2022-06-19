@@ -23,12 +23,6 @@ builder.Host.UseSerilog(
     }
 );
 
-// this is needed for OpenIdDict and must go before .AddDatabase ()
-builder.Services.AddMemoryCache(options =>
-{
-    options.SizeLimit = null;
-});
-
 SetupDatabase.AddDatabase(builder.Services, builder.Configuration);
 SetupAudit.ConfigureAudit(builder.Services, builder.Configuration);
 builder.Services.AddDomainEventsWithMediatR(typeof(Program), typeof(LogDomainEventHandler));
