@@ -38,7 +38,8 @@ public static class SetupDatabase
             await seeder.SeedUser(defaultUser.UserName, defaultUser.Password);
         }
 
-        app.UseOpenIdDictApplicationsFromConfiguration();
+        string siteUrl = app.Configuration.GetSection("General").GetValue<string>("SiteUrl");
+        app.UseOpenIdDictApplicationsFromConfiguration(options => options.SetPublicUrl(siteUrl));
     }
 
     public static void AddDatabase(IServiceCollection services, IConfiguration configuration)
