@@ -6,7 +6,6 @@ using MccSoft.TemplateApp.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using NeinLinq;
-using Shaddix.OpenIddict.ExternalAuthentication.Infrastructure;
 
 namespace MccSoft.TemplateApp.App.Setup;
 
@@ -37,9 +36,6 @@ public static class SetupDatabase
         {
             await seeder.SeedUser(defaultUser.UserName, defaultUser.Password);
         }
-
-        string siteUrl = app.Configuration.GetSection("General").GetValue<string>("SiteUrl");
-        app.UseOpenIdDictApplicationsFromConfiguration(options => options.SetPublicUrl(siteUrl));
     }
 
     public static void AddDatabase(IServiceCollection services, IConfiguration configuration)

@@ -52,6 +52,7 @@ public static class SetupAuth
             options.ClaimsIdentity.RoleClaimType = OpenIddictConstants.Claims.Role;
             options.ClaimsIdentity.EmailClaimType = OpenIddictConstants.Claims.Email;
         });
+        string siteUrl = configuration.GetSection("General").GetValue<string>("SiteUrl");
 
         services
             .AddOpenIddict()
@@ -59,8 +60,12 @@ public static class SetupAuth
             {
                 options.UseEntityFrameworkCore().UseDbContext<TemplateAppDbContext>();
             })
-            .AddDefaultAuthorizationController()
-            .AddOpenIddictConfigurations(configuration)
+            .AddDefaultAuthorizationController(
+                options =>
+                    options
+                        .SetPublicUrl(siteUrl)
+                        .SetConfiguration(configuration.GetSection("OpenId"))
+            )
             .AddServer(options =>
             {
                 options
