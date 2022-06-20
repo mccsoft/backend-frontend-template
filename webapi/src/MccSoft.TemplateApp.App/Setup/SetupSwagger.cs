@@ -18,17 +18,24 @@ public static class SetupSwagger
         var swaggerOptions = configuration.GetSwaggerOptions();
         services.AddOpenApiDocument(options =>
         {
-            options.DocumentProcessors.Add(
-                new SecurityDefinitionAppender(
-                    "JWT Token",
-                    new OpenApiSecurityScheme
-                    {
-                        Type = OpenApiSecuritySchemeType.ApiKey,
-                        Name = "Authorization",
-                        Description = "Copy 'Bearer ' + valid JWT token into field",
-                        In = OpenApiSecurityApiKeyLocation.Header
-                    }
-                )
+            options.AddSecurity(
+                "Bearer",
+                new OpenApiSecurityScheme()
+                {
+                    Type = OpenApiSecuritySchemeType.OpenIdConnect,
+                    OpenIdConnectUrl = "/.well-known/openid-configuration",
+                    Flow = OpenApiOAuth2Flow.Application,
+                }
+            );
+            options.AddSecurity(
+                "JWT Token",
+                new OpenApiSecurityScheme()
+                {
+                    Type = OpenApiSecuritySchemeType.ApiKey,
+                    Name = "Authorization",
+                    Description = "Copy 'Bearer ' + valid JWT token into field",
+                    In = OpenApiSecurityApiKeyLocation.Header
+                }
             );
 
             options.PostProcess = document =>
@@ -42,34 +49,10 @@ public static class SetupSwagger
                     License = new OpenApiLicense { Name = swaggerOptions.License.Name },
                 };
             };
-
-            options.AddSecurity(
-                "Bearer",
-                new OpenApiSecurityScheme()
-                {
-                    Type = OpenApiSecuritySchemeType.OAuth2,
-                    Description = "TemplateApp Authentication",
-                    Flow = OpenApiOAuth2Flow.Password,
-                    Flows = new OpenApiOAuthFlows()
-                    {
-                        Password = new OpenApiOAuthFlow()
-                        {
-                            TokenUrl = "/connect/token",
-                            RefreshUrl = "/connect/token",
-                            AuthorizationUrl = "/connect/token",
-                            Scopes = new Dictionary<string, string>()
-                            {
-                                { "offline_access", "offline_access" },
-                            }
-                        }
-                    }
-                }
-            );
             options.OperationProcessors.Add(
                 new AspNetCoreOperationSecurityScopeProcessor("Bearer")
             );
             options.SchemaProcessors.Add(new RequireValueTypesSchemaProcessor());
-            //options.FlattenInheritanceHierarchy = true;
             options.GenerateEnumMappingDescription = true;
         });
     }
@@ -94,6 +77,9 @@ public static class SetupSwagger
             {
                 AppName = "swagger",
                 Realm = "swagger",
+                ClientId = "web_client",
+                ClientSecret = "",
+                UsePkceWithAuthorizationCodeGrant = true,
             };
         });
     }

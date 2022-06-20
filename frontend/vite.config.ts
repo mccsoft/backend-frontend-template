@@ -36,6 +36,11 @@ export default defineConfig({
         secure: false,
         changeOrigin: true,
       },
+      '/swagger': {
+        target: proxyTarget,
+        secure: false,
+        changeOrigin: true,
+      },
       '/Identity': {
         target: proxyTarget,
         secure: false,
