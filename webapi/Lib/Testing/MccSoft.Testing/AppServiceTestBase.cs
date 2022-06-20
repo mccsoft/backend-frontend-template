@@ -207,9 +207,12 @@ namespace MccSoft.Testing
         protected virtual ServiceCollection CreateServiceCollection()
         {
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddScoped(x => CreateDbContext());
+            serviceCollection
+                .AddScoped(x => CreateDbContext())
+                .AddSingleton<Func<TDbContext>>(CreateDbContext)
+                .RegisterRetryHelper();
 
-            serviceCollection.AddTransient(typeof(ILogger<>), typeof(NullLogger<>));
+            serviceCollection.AddTransient(typeof(ILogger<>), typeof(NullLogger<>)).AddLogging();
 
             _backgroundJobClient = new Mock<IBackgroundJobClient>();
             serviceCollection.AddSingleton(_backgroundJobClient.Object);

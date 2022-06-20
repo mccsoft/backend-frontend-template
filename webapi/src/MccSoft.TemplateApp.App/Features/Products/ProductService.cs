@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using MccSoft.NpgSql;
 using MccSoft.TemplateApp.App.Features.Products.Dto;
 using MccSoft.TemplateApp.App.Utils;
 using MccSoft.TemplateApp.Domain;
@@ -15,33 +16,32 @@ namespace MccSoft.TemplateApp.App.Features.Products
     public class ProductService
     {
         private readonly TemplateAppDbContext _dbContext;
+        private readonly PostgresRetryHelper<TemplateAppDbContext, ProductService> _retryHelper;
 
-        public ProductService(TemplateAppDbContext dbContext)
+        public ProductService(
+            TemplateAppDbContext dbContext,
+            PostgresRetryHelper<TemplateAppDbContext, ProductService> retryHelper
+        )
         {
             _dbContext = dbContext;
+            _retryHelper = retryHelper;
         }
 
         public async Task<ProductDto> Create(CreateProductDto dto)
         {
-            var productId = await _dbContext.Database
-                .CreateExecutionStrategy()
-                .ExecuteAsync(
-                    async () =>
-                    {
-                        await using var transaction = _dbContext.BeginTransaction();
-                        var product = new Product(dto.Title)
-                        {
-                            ProductType = dto.ProductType,
-                            LastStockUpdatedAt = dto.LastStockUpdatedAt
-                        };
-                        _dbContext.Products.Add(product);
+            var productId = await _retryHelper.RetryInTransactionAsync(async db =>
+            {
+                var product = new Product(dto.Title)
+                {
+                    ProductType = dto.ProductType,
+                    LastStockUpdatedAt = dto.LastStockUpdatedAt
+                };
+                db.Products.Add(product);
 
-                        await _dbContext.SaveChangesAsync();
-                        transaction.Commit();
+                await db.SaveChangesAsync();
 
-                        return product.Id;
-                    }
-                );
+                return product.Id;
+            });
             return await Get(productId);
         }
 
