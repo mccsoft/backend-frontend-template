@@ -18,24 +18,18 @@ namespace MccSoft.TemplateApp.App.Features.Products
         }
 
         [HttpPost("")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400, Type = typeof(ValidationProblemDetails))]
         public async Task<ProductDto> Create(CreateProductDto dto)
         {
             return await _productService.Create(dto);
         }
 
         [HttpPatch("{id:int}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400, Type = typeof(ValidationProblemDetails))]
         public async Task<ProductDto> Patch(int id, [FromBody] PatchProductDto dto)
         {
             return await _productService.Patch(id, dto);
         }
 
         [HttpDelete("")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400, Type = typeof(ValidationProblemDetails))]
         public async Task Delete(int id)
         {
             await _productService.Delete(id);
