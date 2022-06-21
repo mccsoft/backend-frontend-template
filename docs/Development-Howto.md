@@ -2,6 +2,7 @@
 # Day-to-day development workflow
 1. Take a task/feature, move it to 'In Progress' on the Board
 2. Create a branch for your feature/task
+   1. Feature branches are generally named like 'feature/12345-add-sorting-to-products', where '12345' is the Id of your Task/UserStory with short description of what it does
 3. Design a backend API interface
    1. Try to use [REST](./REST.md), but don't be too dogmatic. If non-REST interface suits better, go for it (but first make sure, that non-REST REALLY suits better and is more understandable)
    2. Discuss API with colleagues if in doubt
@@ -19,7 +20,7 @@
 # Development principles
 1. Common sense above all. If some principle/rule goes against the common sense, don't do it, ask colleagues why/what-to-do.
 2. We tend to use a lot of [Trunk-based-development](https://trunkbaseddevelopment.com) principles
-   1. Create a branch per task/feature/functionality, create a Pull Request when finished, merge **using squash** when PR is approved and tests are green.
+   1. Create a branch per task/feature/functionality (branch name is like `feature/12345-add-sorting-to-products` where 12345 is the Id of your Task/UserStory), create a Pull Request when finished, merge **using squash** when PR is approved and tests are green.
       1. Some small changes could be pushed to master directly (with over-the-shoulder code review)
    2. We try to keep branches short-lived (e.g. 1-week is too long) & pull requests small (big PRs are hard to review)
    3. We run autotests for feature-branches (so wait for them to be green before merging your PR)
