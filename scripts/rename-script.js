@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 import Renamer from "renamer";
 import yargs from "yargs";
+import fs from "fs";
 import { hideBin } from "yargs/helpers";
 import replace from "node-replace";
 import {
   camelCase,
-  capitalCase,
   constantCase,
   paramCase,
+  pascalCase,
   snakeCase,
 } from "change-case";
 
@@ -49,7 +50,7 @@ const replacements = [
   {
     find: "TemplateApp",
     replace:
-        capitalCase(projectName) /* converts 'ProjectName' to 'Project Name' */,
+        pascalCase(projectName) /* converts 'ProjectName' to 'ProjectName' */,
   },
   {
     find: "TEMPLATE_APP",
@@ -62,6 +63,7 @@ await changeFrontendPortNumber(frontendPortNumber);
 await changeBackendPortNumber(backendPortNumber);
 await changePasswordsInAppsettings();
 
+await fs.rename('webapi/.idea/.idea.MccSoft.TemplateApp', `webapi/.idea/.idea.MccSoft.${pascalCase(projectName)}`, ()=>{})
 await renameFiles(replacements);
 await replaceInFiles(replacements);
 
