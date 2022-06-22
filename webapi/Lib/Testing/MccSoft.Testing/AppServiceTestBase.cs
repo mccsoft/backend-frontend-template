@@ -83,7 +83,6 @@ namespace MccSoft.Testing
             );
 
             _userAccessorMock = new Mock<IUserAccessor>();
-            _userAccessorMock.Setup(x => x.GetUserId()).Returns("123");
             _userAccessorMock.Setup(x => x.IsHttpContextAvailable).Returns(true);
 
             if (databaseType != null)
@@ -213,6 +212,7 @@ namespace MccSoft.Testing
                 .RegisterRetryHelper();
 
             serviceCollection.AddTransient(typeof(ILogger<>), typeof(NullLogger<>)).AddLogging();
+            serviceCollection.AddSingleton(_userAccessorMock.Object);
 
             _backgroundJobClient = new Mock<IBackgroundJobClient>();
             serviceCollection.AddSingleton(_backgroundJobClient.Object);

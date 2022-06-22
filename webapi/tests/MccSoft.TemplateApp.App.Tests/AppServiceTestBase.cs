@@ -22,7 +22,7 @@ namespace MccSoft.TemplateApp.App.Tests
     public class AppServiceTestBase<TService> : AppServiceTestBase<TService, TemplateAppDbContext>
         where TService : class
     {
-        private User _defaultUser;
+        protected User _defaultUser;
 
         public AppServiceTestBase(DatabaseType? testDatabaseType = DatabaseType.Postgres)
             : base(

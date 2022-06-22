@@ -11,6 +11,13 @@ namespace MccSoft.TemplateApp.Domain
         public int Id { get; set; }
         public ProductType ProductType { get; set; }
 
+        /// <summary>
+        /// This is just to show how to get the userId in the Service.
+        /// You should NOT add this field to every entity (unless explicitly needed)
+        /// </summary>
+        public User CreatedByUser { get; set; }
+        public string CreatedByUserId { get; set; }
+
         public DateOnly LastStockUpdatedAt { get; set; }
 
         public string Title { get; set; }

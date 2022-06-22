@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using MccSoft.LowLevelPrimitives;
 using MccSoft.NpgSql;
 using MccSoft.TemplateApp.App.Features.Products.Dto;
 using MccSoft.TemplateApp.App.Utils;
@@ -17,24 +18,32 @@ namespace MccSoft.TemplateApp.App.Features.Products
     {
         private readonly TemplateAppDbContext _dbContext;
         private readonly PostgresRetryHelper<TemplateAppDbContext, ProductService> _retryHelper;
+        private readonly IUserAccessor _userAccessor;
 
         public ProductService(
             TemplateAppDbContext dbContext,
-            PostgresRetryHelper<TemplateAppDbContext, ProductService> retryHelper
+            PostgresRetryHelper<TemplateAppDbContext, ProductService> retryHelper,
+            IUserAccessor userAccessor
         )
         {
             _dbContext = dbContext;
             _retryHelper = retryHelper;
+            _userAccessor = userAccessor;
         }
 
         public async Task<ProductDto> Create(CreateProductDto dto)
         {
+            // could be used if needed
+            var userId = _userAccessor.GetUserId();
+
             var productId = await _retryHelper.RetryInTransactionAsync(async db =>
             {
+                var user = await db.Users.GetOne(User.HasId(userId));
                 var product = new Product(dto.Title)
                 {
                     ProductType = dto.ProductType,
-                    LastStockUpdatedAt = dto.LastStockUpdatedAt
+                    LastStockUpdatedAt = dto.LastStockUpdatedAt,
+                    CreatedByUser = user,
                 };
                 db.Products.Add(product);
 

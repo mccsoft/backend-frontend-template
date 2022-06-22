@@ -8,6 +8,7 @@ using MccSoft.IntegreSql.EF;
 using MccSoft.IntegreSql.EF.DatabaseInitialization;
 using MccSoft.TemplateApp.App.Setup;
 using MccSoft.TemplateApp.ComponentTests.Infrastructure;
+using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Http;
 using MccSoft.TemplateApp.Persistence;
 using MccSoft.Testing.Database;
@@ -17,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Moq;
 using NeinLinq;
+using OpenIddict.Abstractions;
 using Xunit.Abstractions;
 
 namespace MccSoft.TemplateApp.ComponentTests
@@ -31,6 +33,7 @@ namespace MccSoft.TemplateApp.ComponentTests
         private readonly bool _usePostgres = false;
         private readonly IDatabaseInitializer _databaseInitializer;
         private readonly string _connectionString;
+        protected User _defaultUser;
 
         protected TestBase(ITestOutputHelper outputHelper, bool usePostgres = true)
         {
@@ -70,6 +73,12 @@ namespace MccSoft.TemplateApp.ComponentTests
         {
             base.InitializeGlobalVariables(application);
             AuthenticationClient = new AuthenticationClient(Client);
+
+            var context = ResolveFromTestScope<TemplateAppDbContext>();
+            _defaultUser = context.Users.First(u => u.UserName == "admin");
+
+            Identity.RemoveClaims("sub");
+            Identity.AddClaim("sub", _defaultUser.Id);
         }
 
         private ComponentTestFixture CreateWebApplicationFactory(

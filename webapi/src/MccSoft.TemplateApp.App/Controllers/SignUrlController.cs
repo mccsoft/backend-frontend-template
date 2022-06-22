@@ -1,3 +1,4 @@
+using MccSoft.TemplateApp.App.Utils;
 using MccSoft.WebApi.SignedUrl;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -7,7 +8,7 @@ namespace MccSoft.TemplateApp.App.Controllers
 {
     [ApiController]
     [Route("api/sign-url")]
-    public class SignUrlController
+    public class SignUrlController : Controller
     {
         [HttpGet("signature")]
         [Authorize]

@@ -18,7 +18,7 @@ namespace MccSoft.TemplateApp.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("ProductVersion", "6.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "product_type", new[] { "undefined", "auto", "electronic", "other" });
@@ -74,6 +74,9 @@ namespace MccSoft.TemplateApp.Persistence.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CreatedByUserId")
+                        .HasColumnType("text");
+
                     b.Property<DateOnly>("LastStockUpdatedAt")
                         .HasColumnType("date");
 
@@ -84,6 +87,8 @@ namespace MccSoft.TemplateApp.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedByUserId");
 
                     b.ToTable("Products");
                 });
@@ -495,6 +500,15 @@ namespace MccSoft.TemplateApp.Persistence.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MccSoft.TemplateApp.Domain.Product", b =>
+                {
+                    b.HasOne("MccSoft.TemplateApp.Domain.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId");
+
+                    b.Navigation("CreatedByUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

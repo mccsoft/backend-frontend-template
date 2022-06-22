@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using MccSoft.TemplateApp.Http.Generated;
 using MccSoft.TemplateApp.TestUtils.Factories;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -27,6 +28,11 @@ namespace MccSoft.TemplateApp.ComponentTests
             );
 
             createdProduct.Title.Should().Be(title);
+            await WithDbContext(async db =>
+            {
+                var product = await db.Products.SingleAsync();
+                product.CreatedByUserId.Should().Be(_defaultUser.Id);
+            });
         }
 
         [Fact]

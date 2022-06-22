@@ -16,7 +16,7 @@ namespace MccSoft.TemplateApp.ComponentTests.Infrastructure
                 {
                     new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
                     new Claim(ClaimTypes.Name, "test"),
-                    new Claim("sub", "admin"),
+                    new Claim("sub", "admin-should-be-replaced-by-user-id"),
                 },
                 "test"
             );

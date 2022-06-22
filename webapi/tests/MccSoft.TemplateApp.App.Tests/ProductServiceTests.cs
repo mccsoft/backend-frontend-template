@@ -3,7 +3,7 @@ using FluentAssertions;
 using MccSoft.IntegreSql.EF.DatabaseInitialization;
 using MccSoft.TemplateApp.App.Features.Products;
 using MccSoft.TemplateApp.TestUtils.Factories;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace MccSoft.TemplateApp.App.Tests
@@ -20,6 +20,12 @@ namespace MccSoft.TemplateApp.App.Tests
         {
             var result = await Sut.Create(a.CreateProductDto("asd"));
             result.Title.Should().Be("asd");
+
+            await WithDbContext(async db =>
+            {
+                var product = await db.Products.SingleAsync();
+                product.CreatedByUserId.Should().Be(_defaultUser.Id);
+            });
         }
 
         [Fact]
