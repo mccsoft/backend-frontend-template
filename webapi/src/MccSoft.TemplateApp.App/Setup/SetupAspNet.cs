@@ -99,6 +99,13 @@ public static class SetupAspNet
                 | ForwardedHeaders.XForwardedProto
                 | ForwardedHeaders.XForwardedHost
         };
+        // These three subnets encapsulate the applicable Azure subnets. At the moment, it's not possible to narrow it down further.
+        // from https://docs.microsoft.com/en-us/azure/app-service/configure-language-dotnetcore?pivots=platform-linux
+        // forwardedHeadersOptions.KnownNetworks.Add(new IPNetwork(IPAddress.Parse("::ffff:10.0.0.0"), 104));
+        // forwardedHeadersOptions.KnownNetworks.Add(new IPNetwork(IPAddress.Parse("::ffff:192.168.0.0"), 112));
+        // forwardedHeadersOptions.KnownNetworks.Add(new IPNetwork(IPAddress.Parse("::ffff:172.16.0.0"), 108));
+        forwardedHeadersOptions.KnownNetworks.Clear();
+        forwardedHeadersOptions.KnownProxies.Clear();
 
         app.UseForwardedHeaders(forwardedHeadersOptions);
     }
