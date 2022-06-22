@@ -21,7 +21,7 @@ public static class SetupDatabase
         using var scope = app.Services.CreateScope();
 
         var context = scope.ServiceProvider.GetRequiredService<TemplateAppDbContext>();
-        context.Database.Migrate();
+        await context.Database.MigrateAsync();
 
         context.ReloadTypesForEnumSupport();
 
