@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { logOut } from '../../helpers/interceptors/auth/auth-interceptor';
 import styles from './RootPage.module.scss';
 import Logger from 'js-logger';
+import { ProductDetailsPage } from './products/details/ProductDetailsPage';
 
 export const RootPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -26,18 +27,21 @@ export const RootPage: React.FC = () => {
       <div className={styles.container}>
         <div className={styles.content}>
           <Routes>
-            <Route path={Links.Authorized.UiKit} element={<UiKitPage />} />
             <Route
-              path={Links.Authorized.CreateProduct}
+              path={Links.Authorized.UiKit.route}
+              element={<UiKitPage />}
+            />
+            <Route
+              path={Links.Authorized.CreateProduct.route}
               element={<CreateProductPage />}
             />
             <Route
-              path={Links.Authorized.ProductDetails()}
-              element={<CreateProductPage />}
-            />
-            <Route
-              path={Links.Authorized.Products}
+              path={Links.Authorized.Products.route}
               element={<ProductListPage />}
+            />
+            <Route
+              path={Links.Authorized.ProductDetails.route}
+              element={<ProductDetailsPage />}
             />
             <Route path={'/*'} element={<ProductListPage />} />
           </Routes>

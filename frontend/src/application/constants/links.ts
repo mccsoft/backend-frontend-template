@@ -1,12 +1,14 @@
+import { createLink } from 'application/constants/create-link';
+
 export const Links = {
   Unauthorized: {
-    Login: '/login',
+    Login: createLink('/login'),
   },
   Authorized: {
-    Dashboard: '/',
-    Products: '/products',
-    ProductDetails: (id?: number) => `/products/${id ?? ':id'}`,
-    CreateProduct: '/products/create',
-    UiKit: '/uikit',
+    Dashboard: createLink('/'),
+    Products: createLink('/products'),
+    ProductDetails: createLink('/products/:id'),
+    CreateProduct: createLink('/products/create'),
+    UiKit: createLink('/uikit'),
   },
 };

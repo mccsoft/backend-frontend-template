@@ -39,8 +39,14 @@ export const ProductListPage: React.FC = () => {
             accessor: 'title',
             Cell: ({ row }) => (
               <div>
-                {row.original.id}. {row.original.title} (
-                {row.original.productType}) -{' '}
+                <AppLink
+                  to={Links.Authorized.ProductDetails.link({
+                    id: row.original.id,
+                  })}
+                >
+                  {row.original.id}. {row.original.title}
+                </AppLink>{' '}
+                ({row.original.productType}) -{' '}
                 {localFormat(row.original.lastStockUpdatedAt, 'P')}
               </div>
             ),
@@ -73,11 +79,11 @@ export const ProductListPage: React.FC = () => {
       <div className={styles.navigation}>
         <AppLink
           color={ButtonColor.Primary}
-          to={Links.Authorized.CreateProduct}
+          to={Links.Authorized.CreateProduct.link()}
         >
           Create product
         </AppLink>
-        <AppLink color={ButtonColor.Primary} to={Links.Authorized.UiKit}>
+        <AppLink color={ButtonColor.Primary} to={Links.Authorized.UiKit.link()}>
           UiKit
         </AppLink>
       </div>

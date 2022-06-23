@@ -25,20 +25,22 @@ export const CreateProductPage: React.FC = () => {
   const i18n = useScopedTranslation('Page.Products.Create');
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-
   const form = useAdvancedForm<ICreateProductDto>(
     useCallback(async (data) => {
       await QueryFactory.ProductQuery.Client.create(new CreateProductDto(data));
       await queryClient.invalidateQueries(
         QueryFactory.ProductQuery.searchQueryKey(),
       );
-      navigate(Links.Authorized.Products);
+      navigate(Links.Authorized.Products.link());
     }, []),
   );
 
   return (
     <Loading loading={form.formState.isSubmitting}>
-      <AppLink color={ButtonColor.Primary} to={Links.Authorized.Products}>
+      <AppLink
+        color={ButtonColor.Primary}
+        to={Links.Authorized.Products.link()}
+      >
         Back
       </AppLink>
       <Grid container justifyContent={'center'}>

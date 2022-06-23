@@ -37,7 +37,10 @@ export const UiKitPage: React.FC = () => {
 
   return (
     <div>
-      <AppLink color={ButtonColor.Primary} to={Links.Authorized.Products}>
+      <AppLink
+        color={ButtonColor.Primary}
+        to={Links.Authorized.Products.link()}
+      >
         Back
       </AppLink>
       <form onSubmit={form.handleSubmitDefault} className={styles.main}>
