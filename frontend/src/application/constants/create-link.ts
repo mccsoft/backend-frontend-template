@@ -1,5 +1,5 @@
 import { ParamParseKey, PathMatch } from 'react-router/lib/router';
-import { useMatch, useParams } from 'react-router';
+import { generatePath, useMatch, useParams } from 'react-router';
 
 declare type Params<Key extends string = string> = {
   readonly [key in Key]: string | number;
@@ -41,21 +41,8 @@ export function createLink<
   return {
     route: (pattern as any)?.toString(),
     link: ((params?: Params<ParamKey> | undefined) => {
-      let patternWithValues = pattern.toString();
-
-      if (params) {
-        const sortedKeys = Object.keys(params).sort((a, b) =>
-          a.length > b.length ? -1 : 1,
-        );
-        for (const paramName of sortedKeys) {
-          console.log(paramName, (params as any)[paramName]);
-          patternWithValues = patternWithValues.replace(
-            ':' + paramName,
-            (params as any)[paramName]?.toString(),
-          );
-        }
-      }
-      return patternWithValues.replace('*', '');
+      const result = generatePath(pattern, params as any);
+      return result.replace('*', '');
     }) as any,
     useParams: useParams as any,
     useMatch: () => useMatch(pattern),
