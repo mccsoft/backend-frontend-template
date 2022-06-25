@@ -1,5 +1,6 @@
 import { ParamParseKey, PathMatch } from 'react-router/lib/router';
 import { generatePath, useMatch, useParams } from 'react-router';
+import { createSearchParams } from 'react-router-dom';
 
 declare type Params<Key extends string = string> = {
   readonly [key in Key]: string | number;
@@ -7,13 +8,19 @@ declare type Params<Key extends string = string> = {
 declare type StringParams<Key extends string = string> = {
   readonly [key in Key]: string;
 };
+declare type URLSearchParamsInit =
+  | string
+  | number
+  | [string, string | number]
+  | Record<string, string | string[] | number | number[]>
+  | URLSearchParams;
 
 declare type ParamsFunctionType<
   Path extends string,
   ParamKey extends string,
 > = Path extends `${infer Start}:${infer End}`
-  ? (params: Params<ParamKey>) => string
-  : () => string;
+  ? (params: Params<ParamKey>, search?: URLSearchParamsInit) => string
+  : (search?: URLSearchParamsInit) => string;
 
 export function createLink<
   ParamKey extends ParamParseKey<Path>,
@@ -40,8 +47,14 @@ export function createLink<
 } {
   return {
     route: (pattern as any)?.toString(),
-    link: ((params?: Params<ParamKey> | undefined) => {
-      const result = generatePath(pattern, params as any);
+    link: ((
+      params?: Params<ParamKey> | undefined,
+      search?: URLSearchParamsInit,
+    ) => {
+      let result = generatePath(pattern, params as any);
+      if (search) {
+        result = result + '?' + createSearchParams(search as any);
+      }
       return result.replace('*', '');
     }) as any,
     useParams: useParams as any,
