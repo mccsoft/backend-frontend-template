@@ -1,5 +1,5 @@
-import { ParamParseKey, PathPattern } from 'react-router/lib/router';
-import { useParams } from 'react-router';
+import { ParamParseKey, PathMatch } from 'react-router/lib/router';
+import { useMatch, useParams } from 'react-router';
 
 declare type Params<Key extends string = string> = {
   readonly [key in Key]: string | number;
@@ -30,16 +30,15 @@ export function createLink<
    */
   route: string;
   /*
-   * Use this when getting parameters inside of component via useMatch, e.g. useMatch(Links.Authorized.ProductDetails.pattern)
-   */
-  pattern: PathPattern<Path> | Path;
-  /*
-   * Use this when getting parameters inside of component via useParams, e.g. Links.Authorized.ProductDetails.useParams
+   * Use this as a strong-type replacement of useParams for the route
    */
   useParams: () => StringParams<ParamKey>;
+  /*
+   * Use this as a strong-type replacement of useMatch for the route
+   */
+  useMatch: () => PathMatch<ParamKey> | null;
 } {
   return {
-    pattern: pattern,
     route: (pattern as any)?.toString(),
     link: ((params?: Params<ParamKey> | undefined) => {
       let patternWithValues = pattern.toString();
@@ -56,8 +55,35 @@ export function createLink<
           );
         }
       }
-      return patternWithValues;
+      return patternWithValues.replace('*', '');
     }) as any,
     useParams: useParams as any,
+    useMatch: () => useMatch(pattern),
   };
+}
+
+export function parseIntOrThrow(t: string): number {
+  const result = parseInt(t);
+  if (isNaN(result)) {
+    throw new Error(`Passed string '${t}' was not a number`);
+  }
+  return result;
+}
+
+export function parseIntOrDefault(
+  t: string | undefined,
+  defaultValue: number,
+): number;
+export function parseIntOrDefault(t: string | undefined): number | undefined;
+export function parseIntOrDefault(
+  t: string | undefined,
+  defaultValue?: number,
+): number | undefined {
+  if (t === null || t === undefined) return defaultValue;
+
+  const result = parseInt(t);
+  if (isNaN(result)) {
+    return defaultValue;
+  }
+  return result;
 }

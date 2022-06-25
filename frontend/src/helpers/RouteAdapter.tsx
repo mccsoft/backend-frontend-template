@@ -11,20 +11,33 @@ type Location = To & {
  *
  * Pass this as the `ReactRouterRoute` prop to QueryParamProvider.
  */
-export const RouteAdapter = ({ children }: { children?: any }) => {
+export const RouteAdapter: React.FC<{ children?: React.ReactNode }> = ({
+  children,
+}) => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const adaptedHistory = React.useMemo(
     () => ({
-      replace(location: Location) {
-        navigate(location, { replace: true, state: location.state });
+      replace({ search, state }: Location) {
+        navigate(
+          { search: search as string },
+          {
+            replace: true,
+            state: state,
+          },
+        );
       },
-      push(location: Location) {
-        navigate(location, { replace: false, state: location.state });
+      push({ search, state }: Location) {
+        navigate(
+          { search: search as string },
+          { replace: false, state: state },
+        );
       },
     }),
     [navigate],
   );
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   return children({ history: adaptedHistory, location });
 };

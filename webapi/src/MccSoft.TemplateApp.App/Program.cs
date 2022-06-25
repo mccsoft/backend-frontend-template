@@ -71,7 +71,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapFallbackToFile("index.html", SetupStaticFiles.DoNotCache);
 });
 
-app.Logger.LogInformation("Service started.");
+app.Logger.LogInformation("Service started");
 SetupAudit.HttpContextAccessor = app.Services.GetRequiredService<IHttpContextAccessor>();
 
 app.Run();
