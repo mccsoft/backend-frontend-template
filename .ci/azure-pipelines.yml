@@ -25,6 +25,8 @@ stages:
 
           - script: |
               yarn version $(BUILD_NUMBER)
+              cd frontend
+              yarn version $(BUILD_NUMBER)
             displayName: 'set version'
 
           - script: |
