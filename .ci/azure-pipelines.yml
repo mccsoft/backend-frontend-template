@@ -38,10 +38,8 @@ stages:
               yarn copy-frontend
             displayName: 'build frontend'
 
-          - script: |
-              npx pkg ./node_modules/@import-meta-env/cli/bin/import-meta-env.js -t node16-linux -o import-meta-env
-              cp  ./import-meta-env ./publish/
-            displayName: 'package import-meta-env/cli'
+          - template: ./build-import-meta-env.yml
+
 
 #          - script: |
 #              mkdir ./cobertura

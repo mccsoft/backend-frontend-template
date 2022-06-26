@@ -1,0 +1,17 @@
+steps:
+  - task: Cache@2
+    inputs:
+      key: 'import-meta-env|./yarn.lock'
+      path: $(Build.SourcesDirectory)/import-meta-env
+      cacheHitVar: IMPORT_META_ENV_CACHE
+    displayName: Cache import-meta-env
+    continueOnError: true
+
+  - script: |
+      npx pkg ./node_modules/@import-meta-env/cli/bin/import-meta-env.js -t node16-linux -o import-meta-env
+    condition: ne(variables.IMPORT_META_ENV_CACHE, 'true')
+    displayName: 'package import-meta-env/cli'
+
+  - script: |
+      cp  ./import-meta-env ./publish/
+    displayName: 'package import-meta-env/cli'
