@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import react from '@vitejs/plugin-react';
 import svgrPlugin from 'vite-plugin-svgr';
-import EnvironmentPlugin from 'vite-plugin-environment';
+import ImportMetaEnvPlugin from '@import-meta-env/unplugin';
 import { visualizer } from 'rollup-plugin-visualizer';
 import mkcert from 'vite-plugin-mkcert';
 
@@ -16,14 +16,16 @@ export default defineConfig({
     react(),
     tsconfigPaths(),
     svgrPlugin(),
-    EnvironmentPlugin({
-      REACT_APP_VERSION: process.env.npm_package_version,
+    ImportMetaEnvPlugin.vite({
+      example: '.env',
     }),
-    EnvironmentPlugin('all', { prefix: 'REACT_APP_' }),
     visualizer(),
   ],
+  define: {
+    'build.REACT_APP_VERSION': `"${process.env.npm_package_version}"`,
+  },
   server: {
-    port: frontendPort,
+    port: frontendPort as number,
     https: true,
     proxy: {
       '/api': {
@@ -65,5 +67,6 @@ export default defineConfig({
   },
   build: {
     outDir: 'build',
+    sourcemap: true,
   },
 });

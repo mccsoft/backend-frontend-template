@@ -45,11 +45,13 @@
    3. [Detailed how to](./details/Filter-Sorting.md) is also available.
 4. According to [twelve-factor-app](https://12factor.net/config) principles, we allow overriding config parameters via environment variables at runtime.
    1. For backend you could easily override anything specified in `appsettings.json` using env. variables. E.g. `Email__Host=smtp.sendpulse.com`.
-   2. On the frontend we use `` library to be able to override variables at runtime (not at buildtime, as usual).
-      1. Use normal ways to access env. variables ([provided by vite](https://vitejs.dev/guide/env-and-mode.html#env-files)), e.g. `import.meta.env.REACT_APP_SENTRY_DSN`
-      2. Env. variables should have a prefix `REACT_APP`
-      3. When build, it will be written as '' in javascript bundle
-      4. On hosting machine, when Docker image starts it will run [inject-environment-variables-to-spa.sh](../webapi/src/MccSoft.TemplateApp.App/inject-environment-variables-to-spa.sh) which will replace the values in bundled JS according to what is defined at runtime.
+   2. For frontend you could add environment variables in several steps:
+      1. Add variable to [.env](../frontend/.env) file
+      2. Add variable **with type STRING** to [env.d.ts](../frontend/types/env.d.ts)
+      3. Use normal ways to access env. variables ([provided by vite](https://vitejs.dev/guide/env-and-mode.html#env-files)), e.g. `import.meta.env.REACT_APP_SENTRY_DSN`
+      4. Env. variables should have a prefix `REACT_APP`
+      5. We use [import-meta-env](https://github.com/iendeavor/import-meta-env) plugin so you could override these variables at runtime as well.
+      6. On hosting machine, when Docker image starts run `npx @import-meta-env/cli --example .env` which will use env. variables to override previously defined values.
 
 # Backend
 1. Do not use `Controllers` and `Services` folders. Rather create a folder in `Features` folder (with a name of your feature), and put your Controllers, Services and Dtos there.

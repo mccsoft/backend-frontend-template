@@ -13,9 +13,9 @@ COPY . /webapi
 RUN useradd dotnetuser --create-home --uid 1000 && \
     chown dotnetuser /webapi && \
     chown -R dotnetuser /webapi/wwwroot && \
-    chmod +x /webapi/inject-environment-variables-to-spa.sh
+    chmod +x /webapi/import-meta-env
 
 WORKDIR /webapi
 USER dotnetuser
-ENTRYPOINT ./inject-environment-variables-to-spa.sh && dotnet MccSoft.TemplateApp.App.dll
+ENTRYPOINT ./import-meta-env --example ./wwwroot/.env -o ./wwwroot/**/* && rm ./wwwroot/.env dotnet MccSoft.TemplateApp.App.dll
 EXPOSE 5000

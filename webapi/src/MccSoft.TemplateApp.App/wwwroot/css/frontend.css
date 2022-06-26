@@ -67,7 +67,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Montserrat", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #E5E5E5;
+  background-color: #e5e5e5;
 }
 
 html {
@@ -335,7 +335,7 @@ html {
 }
 
 .fullwidth-button {
-  padding: 8px 0;
+  padding: 8px 16px;
   width: 100%;
 }
 
