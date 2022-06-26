@@ -17,5 +17,5 @@ RUN useradd dotnetuser --create-home --uid 1000 && \
 
 WORKDIR /webapi
 USER dotnetuser
-ENTRYPOINT ./import-meta-env --example ./wwwroot/.env -o ./wwwroot/**/* && rm ./wwwroot/.env dotnet MccSoft.TemplateApp.App.dll
+ENTRYPOINT ./import-meta-env --example ./wwwroot/.env -o ./wwwroot/**/* && rm ./wwwroot/.env && dotnet MccSoft.TemplateApp.App.dll
 EXPOSE 5000
