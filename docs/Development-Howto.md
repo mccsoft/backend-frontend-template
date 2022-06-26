@@ -36,18 +36,33 @@
 7. Try to write self-documenting code (create good names for your classes/functions/variables). Comments should explain **why** you are doing something, not **what** are you doing (if you are going to write a comment like `/* attach device to a patient */`, just extract the code into a function named `AttachDeviceToPatient`)
    1. XML-comments to public functions/classes (if you are writing a library) are exceptions for this case.
 
+# General
+1. Try to use [REST API](./REST.md)
+2. Read about [DateTime handling](./DateTime-handling.md) in backend
+3. For pages with filters/sorting, store the filters in the URL.
+   1. It should be possible to copy the URL, send it to the colleague, and if he opens the page, he should see the same thing.
+   2. It should be possible to press F5 and see more-or-less the same result
+   3. [Detailed how to](./details/Filter-Sorting.md) is also available.
+4. According to [twelve-factor-app](https://12factor.net/config) principles, we allow overriding config parameters via environment variables at runtime.
+   1. For backend you could easily override anything specified in `appsettings.json` using env. variables. E.g. `Email__Host=smtp.sendpulse.com`.
+   2. On the frontend we use `` library to be able to override variables at runtime (not at buildtime, as usual).
+      1. Use normal ways to access env. variables ([provided by vite](https://vitejs.dev/guide/env-and-mode.html#env-files)), e.g. `import.meta.env.REACT_APP_SENTRY_DSN`
+      2. Env. variables should have a prefix `REACT_APP`
+      3. When build, it will be written as '' in javascript bundle
+      4. On hosting machine, when Docker image starts it will run [inject-environment-variables-to-spa.sh](../webapi/src/MccSoft.TemplateApp.App/inject-environment-variables-to-spa.sh) which will replace the values in bundled JS according to what is defined at runtime.
+
 # Backend
 1. Do not use `Controllers` and `Services` folders. Rather create a folder in `Features` folder (with a name of your feature), and put your Controllers, Services and Dtos there.
-   - it puts everything related to a feature in one place, which helps in refactoring and understanding
-2. Try to use [REST API](./REST.md)
-3. Read about [DateTime handling](./DateTime-handling.md) in backend
+  - it puts everything related to a feature in one place, which helps in refactoring and understanding
 
 
 # Frontend
 1. Use redux for client state only (and it's ok to not use redux at all :))
    1. Do not store Form state in redux (use `react-hook-form`)
    2. Do not store http-request-cache in redux (use `react-query`)
-2. For pages with filters, store the filters in the URL.
-   1. It should be possible to copy the URL, send it to the colleague, and if he opens the page, he should see the same thing.
-   2. It should be possible to press F5 and see more-or-less the same result
-
+2. Routing: we use [react-router v6](https://reactrouter.com/docs/en/v6/).
+   1. Define your route. We use a small [createLink](../frontend/src/application/constants/links.ts) wrapper to add typings to URLs.
+      1. Add e.g. `WorkItemDetails: createLink('/projects/:id')}`
+      2. Handle this route at [RootPage](../frontend/src/pages/authorized/RootPage.tsx) ```<Route path={Links.WorkItemDetails.route} element={<YOUR_PAGE_COMPONENT />} />```
+      3. Within the page component you could access URL parameters using `Links.WorkItemDetails.useParams()`
+   2. Optional parameters unfortunately are not supported. You have to define separate route for each optional parameter and `Links.WorkItemDetails.useMatch()` to get the values.
