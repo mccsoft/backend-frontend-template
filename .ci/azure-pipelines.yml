@@ -38,7 +38,7 @@ stages:
 
           - script: |
               npx pkg ./node_modules/@import-meta-env/cli/bin/import-meta-env.js -t node16-alpine -o import-meta-env
-              copy ./import-meta-env ./publish/
+              cp  ./import-meta-env ./publish/
             displayName: 'package import-meta-env/cli'
 
 #          - script: |
