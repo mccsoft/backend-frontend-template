@@ -5,7 +5,8 @@ trigger:
       - main
   paths:
     exclude:
-      - .ci/*
+      - docs/*
+
 
 variables:
   BUILD_NUMBER: 0.1.$(Build.BuildId)
@@ -35,7 +36,11 @@ stages:
 
           - script: |
               yarn build-frontend
+              ls frontend
               yarn copy-frontend
+              ls frontend
+              ls publish/wwwroot/
+              cp frontend/.env publish/wwwroot/
               ls publish/wwwroot/
               ls publish
             displayName: 'build frontend'
