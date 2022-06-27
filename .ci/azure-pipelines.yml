@@ -37,9 +37,11 @@ stages:
             displayName: 'build backend'
 
           - script: |
-              ls frontend
+              ls -la frontend
               yarn build-frontend
               yarn copy-frontend
+              ls -la frontend
+              ls -la publish/wwwroot
             displayName: 'build frontend'
 
           - template: ./build-import-meta-env.yml
