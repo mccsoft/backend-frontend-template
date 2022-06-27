@@ -36,6 +36,8 @@ stages:
           - script: |
               yarn build-frontend
               yarn copy-frontend
+              ls publish/wwwroot/
+              ls publish
             displayName: 'build frontend'
 
           - template: ./build-import-meta-env.yml

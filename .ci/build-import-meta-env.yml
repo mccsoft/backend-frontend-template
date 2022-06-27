@@ -8,7 +8,7 @@ steps:
     continueOnError: true
 
   - script: |
-      npx pkg ./node_modules/@import-meta-env/cli/bin/import-meta-env.js -t node16-linux -o import-meta/import-meta-env
+      npx pkg ./node_modules/@import-meta-env/cli/bin/import-meta-env.js -t node16-linux -o ./import-meta/import-meta-env
     condition: ne(variables.IMPORT_META_ENV_CACHE, 'true')
     displayName: 'package import-meta-env/cli'
 
