@@ -25,10 +25,8 @@ stages:
           - template: ./azure-pipelines-tests-shared.yml
 
           - script: |
-              ls frontend -la
-              yarn version $(BUILD_NUMBER)
+               yarn version $(BUILD_NUMBER)
               cd frontend
-              ls -la
               yarn version $(BUILD_NUMBER)
             displayName: 'set version'
 
@@ -37,11 +35,8 @@ stages:
             displayName: 'build backend'
 
           - script: |
-              ls -la frontend
               yarn build-frontend
               yarn copy-frontend
-              ls -la frontend
-              ls -la publish/wwwroot
             displayName: 'build frontend'
 
           - template: ./build-import-meta-env.yml
