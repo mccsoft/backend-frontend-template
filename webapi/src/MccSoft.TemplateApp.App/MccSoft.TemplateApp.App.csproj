@@ -140,33 +140,6 @@
   <ItemGroup>
     <Compile Remove="Controllers\DocumentEditor\DocumentController.cs" />
     <Compile Remove="logs\**" />
-    <Compile Remove="Areas\Identity\Pages\Account\ResetPasswordConfirmation.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\ResetPassword.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\ResendEmailConfirmation.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\RegisterConfirmation.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\Register.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\Logout.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\Lockout.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\ForgotPasswordConfirmation.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\ForgotPassword.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\ConfirmEmailChange.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\ConfirmEmail.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\AccessDenied.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\Manage\TwoFactorAuthentication.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\Manage\ShowRecoveryCodes.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\Manage\SetPassword.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\Manage\ResetAuthenticator.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\Manage\PersonalData.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\Manage\ManageNavPages.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\Manage\Index.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\Manage\GenerateRecoveryCodes.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\Manage\ExternalLogins.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\Manage\EnableAuthenticator.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\Manage\Email.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\Manage\DownloadPersonalData.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\Manage\Disable2fa.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\Manage\DeletePersonalData.cshtml.cs" />
-    <Compile Remove="Areas\Identity\Pages\Account\Manage\ChangePassword.cshtml.cs" />
   </ItemGroup>
 
   <ItemGroup>
