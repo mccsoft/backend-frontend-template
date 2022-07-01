@@ -16,6 +16,7 @@ public static class PostgresSerialization
         // We need this to support DateOnly within jsonb types
         // https://github.com/npgsql/efcore.pg/issues/1107
         var options = new JsonSerializerOptions { };
+
         options.Converters.Add(new DateOnlyConverter());
         NpgsqlConnection.GlobalTypeMapper.AddTypeResolverFactory(
             new JsonOverrideTypeHandlerResolverFactory(options)

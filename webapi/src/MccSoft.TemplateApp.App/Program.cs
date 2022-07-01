@@ -1,35 +1,15 @@
-using MccSoft.DomainHelpers.DomainEvents.Events;
 using MccSoft.Logging;
 using MccSoft.Mailing;
 using MccSoft.PersistenceHelpers.DomainEvents;
 using MccSoft.TemplateApp.App;
 using MccSoft.TemplateApp.App.DomainEventHandlers;
 using MccSoft.TemplateApp.App.Setup;
-using MccSoft.TemplateApp.Domain;
 using MccSoft.WebApi.Sentry;
 using MccSoft.WebApi.Serialization.ModelBinding;
 using Microsoft.AspNetCore.Authorization;
 using Serilog;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using MccSoft.TemplateApp.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString =
-    builder.Configuration.GetConnectionString("TemplateAppDbContextConnection")
-    ?? throw new InvalidOperationException(
-        "Connection string 'TemplateAppDbContextConnection' not found."
-    );
-
-builder.Services.AddDbContext<TemplateAppDbContext>(
-    options => options.UseSqlServer(connectionString)
-);
-;
-
-builder.Services
-    .AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<TemplateAppDbContext>();
-;
 
 builder.Configuration.AddJsonFile("appsettings.local.json", true).AddEnvironmentVariables();
 
