@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Logging.Debug;
 using Moq;
+using NeinLinq;
 
 namespace MccSoft.Testing
 {
@@ -120,6 +121,7 @@ namespace MccSoft.Testing
             _databaseInitializer.UseProvider(builder, connectionString);
 
             builder
+                .WithLambdaInjection()
                 .UseLoggerFactory(LoggerFactory)
                 .EnableSensitiveDataLogging()
                 .EnableDetailedErrors();

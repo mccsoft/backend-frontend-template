@@ -12,7 +12,7 @@ declare type URLSearchParamsInit =
   | string
   | number
   | [string, string | number]
-  | Record<string, string | string[] | number | number[]>
+  | Record<string, string | string[] | number | number[] | undefined | null>
   | URLSearchParams;
 
 declare type ParamsFunctionType<
@@ -33,9 +33,13 @@ export function createLink<
    */
   link: ParamsFunctionType<Path, ParamKey>;
   /*
-   * Use this when configuring routes, e.g. <Route path={Links.Authorized.ProductDetails.path} element={<ProductDetailsPage />} />
+   * Use this when configuring routes, e.g. <Route path={Links.Authorized.ProductDetails.route} element={<ProductDetailsPage />} />
    */
   route: string;
+  /*
+   * Use this when you need to match a route. Usually using it directly is not needed, consider using `useMatch` or `matchPath` instead.
+   */
+  pattern: Path;
   /*
    * Use this as a strong-type replacement of useParams for the route
    */
@@ -47,6 +51,7 @@ export function createLink<
 } {
   return {
     route: (pattern as any)?.toString(),
+    pattern: pattern,
     link: ((
       params?: Params<ParamKey> | undefined,
       search?: URLSearchParamsInit,
