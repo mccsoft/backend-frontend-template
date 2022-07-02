@@ -27,7 +27,5 @@ export const JLottie: React.FC<
   }, []);
   const [id] = useState(() => createId());
 
-  const [asd, zxc] = useState<string | undefined>('asd');
-  const qq = asd.toString();
   return <div ref={lottieDiv} id={id} {...rest} />;
 };
