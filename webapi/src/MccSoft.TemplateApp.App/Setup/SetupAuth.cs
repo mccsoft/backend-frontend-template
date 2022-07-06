@@ -24,7 +24,8 @@ public static class SetupAuth
         var services = builder.Services;
         var configuration = builder.Configuration;
 
-        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+        // uncommenting next line breaks AzureAD authentication (i.e. any external OpenId)
+        // JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
         services
             .AddDefaultIdentity<User>(options =>
@@ -97,11 +98,15 @@ public static class SetupAuth
             })
             .AddFacebook(options =>
             {
-                configuration.GetSection("ExternalAuthentication").Bind("Facebook", options);
+                configuration.GetSection("ExternalAuthentication:Facebook").Bind(options);
             })
             .AddMicrosoftAccount(options =>
             {
                 configuration.GetSection("ExternalAuthentication:Microsoft").Bind(options);
+            })
+            .AddOpenIdConnect(options =>
+            {
+                configuration.GetSection("ExternalAuthentication:AzureAd").Bind(options);
             });
 
         // Make OpenIddict a default Authorization policy

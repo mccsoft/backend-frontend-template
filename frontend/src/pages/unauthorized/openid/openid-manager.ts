@@ -25,6 +25,7 @@ function getClientSettings(): UserManagerSettings {
     loadUserInfo: false,
     scope: scopes,
     extraTokenParams: { scope: scopes },
+    automaticSilentRenew: false,
   };
 }
 let manager: UserManager | undefined;

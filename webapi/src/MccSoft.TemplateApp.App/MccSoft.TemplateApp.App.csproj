@@ -83,9 +83,7 @@
     </PackageReference>
     <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
     <PackageReference Include="Shaddix.OpenIddict.ExternalAuthentication" Version="2.0.2" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.0" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.14" />
-
     <PackageReference Include="OpenIddict.AspNetCore" Version="3.1.1" />
     <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="3.1.1" />
   </ItemGroup>
