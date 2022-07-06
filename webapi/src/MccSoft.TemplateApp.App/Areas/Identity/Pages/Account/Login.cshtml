@@ -52,7 +52,7 @@
         </form>
 
         <div class="social-buttons-container">
-          <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal social-login-form">
+          <form id="external-account" asp-controller="OpenIdAuthorization" asp-action="ExternalRedirect" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal social-login-form">
             <button type="submit" class="button default-button content-button" name="provider" value="Google" title="Log in using your Google account">Google</button>
             @* <div> *@
             @*   @foreach (var provider in Model.ExternalLogins) *@
