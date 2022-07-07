@@ -1,6 +1,8 @@
 ﻿using Hangfire;
 using Hangfire.Dashboard.BasicAuthorization;
 using Hangfire.PostgreSql;
+using MccSoft.TemplateApp.App.Jobs;
+using MccSoft.TemplateApp.App.Settings;
 
 namespace MccSoft.TemplateApp.App.Setup;
 
@@ -34,19 +36,24 @@ public static class SetupHangfire
         {
             options.WorkerCount = 2;
         });
+        services.RegisterHangfireJobs();
     }
 
     public static void UseHangfire(WebApplication app)
     {
-        if (app.Configuration.GetSection("Hangfire").GetValue<bool>("Disable"))
+        var appConfiguration = app.Configuration;
+        var recurringJobManager = app.Services.GetService<IRecurringJobManager>();
+
+        if (
+            recurringJobManager == null
+            || appConfiguration.GetSection("Hangfire").GetValue<bool>("Disable")
+        )
             return;
 
-        // var therapySyncJobSettings = Configuration.GetSection(nameof(TherapyDataSyncJobSettings))
-        //     .Get<HangFireJobSettings>();
-        // RecurringJob.AddOrUpdate<TherapyDataSyncJob>(
-        //     nameof(TherapyDataSyncJob),
-        //     job => job.Execute(),
-        //     therapySyncJobSettings.CronExpression);
+        // Configure your jobs here: Pass a Job and its settings inherited from HangFire Job Settings
+        appConfiguration.ConfigureJob<ProductDataLoggerJob, ProductDataLoggerJobSettings>(
+            recurringJobManager
+        );
 
         IConfigurationSection configurationSection = app.Configuration.GetSection("Hangfire");
         // In case you will need to debug/monitor tasks you can use Dashboard.
@@ -78,5 +85,28 @@ public static class SetupHangfire
                 }
             );
         }
+    }
+
+    private static void RegisterHangfireJobs(this IServiceCollection services)
+    {
+        // Add your custom JobServices for resolving them from DI.
+        services.AddScoped<ProductDataLoggerJob>();
+    }
+
+    private static void ConfigureJob<T, TOptions>(
+        this IConfiguration appConfiguration,
+        IRecurringJobManager recurringJobManager
+    )
+        where T : JobBase
+        where TOptions : HangFireJobSettings
+    {
+        var jobSettings = Activator.CreateInstance<TOptions>();
+        appConfiguration.GetSection(jobSettings.GetType().Name).Bind(jobSettings);
+
+        recurringJobManager.AddOrUpdate<T>(
+            typeof(T).Name,
+            job => job.Execute(),
+            jobSettings.CronExpression
+        );
     }
 }
