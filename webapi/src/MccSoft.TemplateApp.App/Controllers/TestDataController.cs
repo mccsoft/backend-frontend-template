@@ -44,24 +44,6 @@ namespace MccSoft.TemplateApp.App.Controllers
             return "OK";
         }
 
-        public class TestPatchDto : PatchRequest<object>
-        {
-            [DoNotPatch]
-            [RequiredOrMissing]
-            public string Value { get; set; }
-        }
-
-        /// <summary>
-        /// Tests RequiredOrUndefined attribute
-        /// </summary>
-        [AllowAnonymous]
-        [HttpPost]
-        [Route("patch")]
-        public string Patch(TestPatchDto dto)
-        {
-            return JsonConvert.SerializeObject(dto);
-        }
-
         public class MyFormData
         {
             public double A { get; set; }

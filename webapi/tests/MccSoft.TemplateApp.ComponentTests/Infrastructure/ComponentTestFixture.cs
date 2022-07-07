@@ -15,8 +15,8 @@ namespace MccSoft.TemplateApp.ComponentTests;
 public class ComponentTestFixture : WebApplicationFactory<Program>, ITestOutputHelperAccessor
 {
     public ITestOutputHelper OutputHelper { get; set; }
-    public Action<IServiceCollection> OverrideServices { get; set; }
-    public Dictionary<string, string> EnvVariables { get; set; }
+
+    private readonly List<Action<IWebHostBuilder>> _configurationActions = new();
 
     public ComponentTestFixture()
     {
@@ -24,20 +24,18 @@ public class ComponentTestFixture : WebApplicationFactory<Program>, ITestOutputH
         ClientOptions.BaseAddress = new Uri("https://localhost");
     }
 
+    public ComponentTestFixture Configure(Action<IWebHostBuilder> configureBuilder)
+    {
+        _configurationActions.Add(configureBuilder);
+        return this;
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         base.ConfigureWebHost(builder);
 
         builder.ConfigureLogging(loggingBuilder => loggingBuilder.ClearProviders().AddXUnit(this));
-        builder
-            .ConfigureAppConfiguration(
-                (_, config) =>
-                {
-                    if (EnvVariables != null)
-                        config.AddInMemoryCollection(EnvVariables);
-                }
-            )
-            .UseEnvironment("Test");
+        builder.UseEnvironment("Test");
 
         builder.UseSolutionRelativeContentRoot(
             solutionRelativePath: "src/MccSoft.TemplateApp.App",
@@ -53,8 +51,7 @@ public class ComponentTestFixture : WebApplicationFactory<Program>, ITestOutputH
                     options.DefaultChallengeScheme = TestAuthenticationOptions.Scheme;
                 })
                 .AddTestAuthentication(options => { });
-
-            OverrideServices?.Invoke(services);
         });
+        _configurationActions.ForEach(x => x.Invoke(builder));
     }
 }

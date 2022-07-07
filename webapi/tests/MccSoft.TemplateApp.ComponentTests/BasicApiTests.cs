@@ -86,8 +86,8 @@ namespace MccSoft.TemplateApp.ComponentTests
         {
             string exportPath = Path.GetTempFileName();
 
-            await SaveSwaggerJsonToFile(exportPath, null);
-            await GenerateTypescriptHttpClient(exportPath);
+            // await SaveSwaggerJsonToFile(exportPath, null);
+            // await GenerateTypescriptHttpClient(exportPath);
 
             await SaveSwaggerJsonToFile(exportPath, "https://localhost");
             await GenerateCSharpHttpClient(exportPath);

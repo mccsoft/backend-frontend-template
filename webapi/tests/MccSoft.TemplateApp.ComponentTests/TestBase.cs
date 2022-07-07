@@ -13,6 +13,7 @@ using MccSoft.TemplateApp.Http;
 using MccSoft.TemplateApp.Persistence;
 using MccSoft.Testing.Database;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -86,37 +87,42 @@ namespace MccSoft.TemplateApp.ComponentTests
             bool enableMigrations = false
         )
         {
-            var envVariables = enableMigrations
-                ? null
-                : new Dictionary<string, string>
-                {
-                    { SetupDatabase.DisableMigrationOptionName, true.ToString() },
-                    { "Hangfire__Disable", true.ToString() },
-                    { SetupAuth.DisableSignOutLockedUserMiddleware, true.ToString() },
-                };
-
             ComponentTestFixture application = new ComponentTestFixture()
             {
                 OutputHelper = _outputHelper,
-                OverrideServices = (services) =>
-                {
-                    ConfigureServices(services);
-                    services.RemoveDbContextRegistration<TemplateAppDbContext>();
-
-                    services.AddDbContext<TemplateAppDbContext>(
-                        options =>
+            }.Configure(builder =>
+            {
+                builder
+                    .ConfigureTestServices(
+                        (services) =>
                         {
-                            _databaseInitializer.UseProvider(options, connectionString);
-                            options.WithLambdaInjection();
-                            options.UseOpenIddict();
-                        },
-                        contextLifetime: ServiceLifetime.Scoped,
-                        optionsLifetime: ServiceLifetime.Singleton
-                    );
-                },
-                EnvVariables = envVariables
-            };
+                            ConfigureServices(services);
+                            services.RemoveDbContextRegistration<TemplateAppDbContext>();
 
+                            services.AddDbContext<TemplateAppDbContext>(
+                                options =>
+                                {
+                                    _databaseInitializer.UseProvider(options, connectionString);
+                                    options.WithLambdaInjection();
+                                    options.UseOpenIddict();
+                                },
+                                contextLifetime: ServiceLifetime.Scoped,
+                                optionsLifetime: ServiceLifetime.Singleton
+                            );
+                        }
+                    )
+                    .UseSetting("Swagger:Csharp", "true");
+            });
+            if (!enableMigrations)
+            {
+                application.Configure(
+                    builder =>
+                        builder
+                            .UseSetting(SetupDatabase.DisableMigrationOptionName, "true")
+                            .UseSetting("Hangfire__Disable", "true")
+                            .UseSetting(SetupAuth.DisableSignOutLockedUserMiddleware, "true")
+                );
+            }
             InitializeGlobalVariables(application);
             return application;
         }

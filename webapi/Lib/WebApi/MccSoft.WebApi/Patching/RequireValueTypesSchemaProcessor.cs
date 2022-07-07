@@ -16,13 +16,21 @@ namespace MccSoft.WebApi.Patching
     /// </summary>
     public class RequireValueTypesSchemaProcessor : ISchemaProcessor
     {
+        private readonly bool _makePatchRequestFieldsNullable;
         private static readonly Type _patchRequestType = typeof(IPatchRequest);
+
+        public RequireValueTypesSchemaProcessor(bool makePatchRequestFieldsNullable)
+        {
+            _makePatchRequestFieldsNullable = makePatchRequestFieldsNullable;
+        }
 
         public void Process(SchemaProcessorContext context)
         {
+            bool isPatchRequest = _patchRequestType.IsAssignableFrom(context.Type);
+
             var schema = context.Schema;
             if (
-                _patchRequestType.IsAssignableFrom(context.Type)
+                (isPatchRequest && !_makePatchRequestFieldsNullable)
                 || context.Type == typeof(ValidationProblemDetails)
                 || context.Type == typeof(ProblemDetails)
             )
@@ -52,8 +60,7 @@ namespace MccSoft.WebApi.Patching
 
             foreach (var propertyKeyValue in schema.ActualProperties)
             {
-                var actualSchema = schema.ActualSchema;
-                var property = propertyKeyValue.Value;
+                JsonSchemaProperty property = propertyKeyValue.Value;
                 string propertyName = property.Name;
                 if (
                     property.Type == JsonObjectType.String
@@ -66,6 +73,11 @@ namespace MccSoft.WebApi.Patching
                     if (!clrProperties.ContainsKey(propertyName.ToLower()))
                     {
                         // this could happen with 'discriminator' field
+                        continue;
+                    }
+                    if (isPatchRequest && _makePatchRequestFieldsNullable)
+                    {
+                        property.IsNullableRaw = true;
                         continue;
                     }
 
