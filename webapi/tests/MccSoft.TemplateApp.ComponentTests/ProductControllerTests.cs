@@ -65,7 +65,7 @@ namespace MccSoft.TemplateApp.ComponentTests
         {
             var title = "123";
             var createdProduct = await _productClient.CreateAsync(
-                a.CreateProductGeneratedDto(title)
+                a.CreateProductGeneratedDto(title, productType: ProductType.Electronic)
             );
 
             await _productClient.PatchAsync(
@@ -75,6 +75,7 @@ namespace MccSoft.TemplateApp.ComponentTests
 
             var result = await _productClient.GetAsync(createdProduct.Id);
             result.Title.Should().BeEquivalentTo("321");
+            result.ProductType.Should().Be(ProductType.Electronic);
         }
 
         [Fact]

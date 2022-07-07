@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using MccSoft.WebApi.Patching.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using NJsonSchema;
 using NJsonSchema.CodeGeneration.TypeScript;
 using NSwag;
 using NSwag.CodeGeneration.CSharp;
@@ -115,6 +116,15 @@ namespace MccSoft.TemplateApp.ComponentTests
             }
         }
 
+        public class Tmp : DefaultTypeNameGenerator
+        {
+            protected override string Generate(JsonSchema schema, string typeNameHint)
+            {
+                var result = base.Generate(schema, typeNameHint);
+                return result;
+            }
+        }
+
         private async Task GenerateCSharpHttpClient(string exportPath)
         {
             var document = await OpenApiDocument.FromJsonAsync(File.ReadAllText(exportPath));
@@ -127,6 +137,7 @@ namespace MccSoft.TemplateApp.ComponentTests
                 ExposeJsonSerializerSettings = true,
                 GenerateUpdateJsonSerializerSettingsMethod = false,
                 ClientBaseInterface = "IBaseClient",
+                CodeGeneratorSettings = { TypeNameGenerator = new Tmp(), },
                 CSharpGeneratorSettings =
                 {
                     Namespace = "MccSoft.TemplateApp.Http.Generated",

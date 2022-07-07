@@ -2,7 +2,10 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using MccSoft.IntegreSql.EF.DatabaseInitialization;
 using MccSoft.TemplateApp.App.Features.Products;
+using MccSoft.TemplateApp.App.Features.Products.Dto;
+using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.TestUtils.Factories;
+using MccSoft.Testing;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
@@ -25,6 +28,25 @@ namespace MccSoft.TemplateApp.App.Tests
             {
                 var product = await db.Products.SingleAsync();
                 product.CreatedByUserId.Should().Be(_defaultUser.Id);
+            });
+        }
+
+        [Fact]
+        public async Task Patch()
+        {
+            var result = await Sut.Create(a.CreateProductDto("asd", productType: ProductType.Auto));
+            var patchDto = new PatchProductDto() { Title = "zxc" };
+            patchDto.MarkAllNonDefaultPropertiesAsDefined();
+
+            await Sut.Patch(result.Id, patchDto);
+
+            await WithDbContext(async db =>
+            {
+                var product = await db.Products.SingleAsync();
+                // Title should be changed
+                product.Title.Should().Be("zxc");
+                // ProductType should not be changed
+                product.ProductType.Should().Be(ProductType.Auto);
             });
         }
 
