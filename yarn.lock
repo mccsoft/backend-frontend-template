@@ -2101,7 +2101,7 @@ __metadata:
     js-logger: 1.6.1
     jwt-decode: 3.1.2
     nock: 13.2.4
-    nswag: 13.15.10
+    nswag: 13.16.1
     oidc-client-ts: 2.0.1
     prettier: 2.6.2
     query-string: 7.1.1
@@ -7063,7 +7063,16 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"nswag@npm:13.15.10, nswag@npm:^13.15.10":
+"nswag@npm:13.16.1":
+  version: 13.16.1
+  resolution: "nswag@npm:13.16.1"
+  bin:
+    nswag: bin/nswag.js
+  checksum: 86fea25b4ad81a217d3c79b6184f4441d261d14411511ac51b7d9c41967830b854ebb787ded6af1dda896295d74cc73c0a5eaae4a391563df0b55ad6628e2fb1
+  languageName: node
+  linkType: hard
+
+"nswag@npm:^13.15.10":
   version: 13.15.10
   resolution: "nswag@npm:13.15.10"
   bin:

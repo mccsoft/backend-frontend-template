@@ -28,6 +28,7 @@
     <ProjectReference Include="..\..\Logging\MccSoft.Logging\MccSoft.Logging.csproj" />
     <ProjectReference Include="..\..\LowLevelPrimitives\MccSoft.LowLevelPrimitives\MccSoft.LowLevelPrimitives.csproj" />
     <ProjectReference Include="..\..\NpgSql\MccSoft.NpgSql\MccSoft.NpgSql.csproj" />
+    <ProjectReference Include="..\..\WebApi\MccSoft.WebApi\MccSoft.WebApi.csproj" />
   </ItemGroup>
 
 

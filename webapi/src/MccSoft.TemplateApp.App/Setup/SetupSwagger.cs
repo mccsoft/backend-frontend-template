@@ -52,7 +52,10 @@ public static class SetupSwagger
             options.OperationProcessors.Add(
                 new AspNetCoreOperationSecurityScopeProcessor("Bearer")
             );
-            options.SchemaProcessors.Add(new RequireValueTypesSchemaProcessor());
+            var isCsharp = configuration.GetValue<bool>("Swagger:Csharp");
+            options.SchemaProcessors.Add(
+                new RequireValueTypesSchemaProcessor(makePatchRequestFieldsNullable: isCsharp)
+            );
             options.GenerateEnumMappingDescription = true;
         });
     }

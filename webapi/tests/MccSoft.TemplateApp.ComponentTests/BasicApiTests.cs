@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using MccSoft.WebApi.Patching.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using NJsonSchema;
 using NJsonSchema.CodeGeneration.TypeScript;
 using NSwag;
 using NSwag.CodeGeneration.CSharp;
@@ -85,8 +86,8 @@ namespace MccSoft.TemplateApp.ComponentTests
         {
             string exportPath = Path.GetTempFileName();
 
-            await SaveSwaggerJsonToFile(exportPath, null);
-            await GenerateTypescriptHttpClient(exportPath);
+            // await SaveSwaggerJsonToFile(exportPath, null);
+            // await GenerateTypescriptHttpClient(exportPath);
 
             await SaveSwaggerJsonToFile(exportPath, "https://localhost");
             await GenerateCSharpHttpClient(exportPath);

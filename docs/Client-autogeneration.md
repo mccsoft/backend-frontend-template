@@ -3,8 +3,15 @@ We don't manually write Typescript http-clients, instead we autogenerate them (n
 You should manually regenerate the clients when you add/update controllers/actions public interface.
 
 ## How to regenerate clients
+### Frontend
+If you are changing backend API and would like to update the client:
 1. Run your backend (usually via F5 in your IDE)
-2. From root folder run `yarn generate-api-clients`.
+2. From root folder run `yarn generate-api-client`.
+### Frontend - remote
+If you do not run backend locally, but your typescript client seems outdated, you could regenerate the client using remote backend
+1. From root folder run `yarn generate-api-client-remote` (make sure you have specified correct remote URL in [package.json](../frontend/package.json), "generate-api-client-remote" script).
+### Backend
+1. Run `GenerateHttpClient_ValidAndExported` auto test (from [BasicApiTests.cs](../webapi/tests/MccSoft.TemplateApp.ComponentTests/BasicApiTests.cs))
 
 ## Tweaking to default client generation
 Right now we post-process generated Typescript client, in order to provide correct types.
@@ -14,7 +21,6 @@ We do the following modifications:
  We do this because in reality server sends us `null`, not `undefined`.
 
 2. In Request (HTTP PATCH) DTO we change how `DateTime` is handled:
-  `data["start"] = this.start ? this.start.toISOString() : <any>undefined;` -> 
+  `data["start"] = this.start ? this.start.toISOString() : <any>undefined;` ->
 `data["start"] = this.start ? this.start.toISOString() : this.start;`
   We do this because it's otherwise impossible to pass both `null` and `undefined` to server. Here's the NSwag issue: https://github.com/RicoSuter/NJsonSchema/issues/1239
-        
