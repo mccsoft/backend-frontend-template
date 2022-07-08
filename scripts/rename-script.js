@@ -114,7 +114,13 @@ function changeFrontendPortNumber(port) {
     silent: true,
     recursive: true,
   });
-
+  replace({
+    regex: /https:\/\/localhost:\d+/g,
+    replacement: `https://localhost:${port}`,
+    paths: ["./webapi/src/MccSoft.TemplateApp.App/appsettings.Development.json"],
+    silent: true,
+    recursive: true,
+  });
 }
 
 function changeBackendPortNumber(httpsPort) {

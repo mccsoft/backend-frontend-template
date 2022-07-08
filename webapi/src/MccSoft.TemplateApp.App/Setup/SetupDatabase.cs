@@ -6,6 +6,7 @@ using MccSoft.TemplateApp.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using NeinLinq;
+using Shaddix.OpenIddict.ExternalAuthentication.Infrastructure;
 
 namespace MccSoft.TemplateApp.App.Setup;
 
@@ -22,6 +23,8 @@ public static class SetupDatabase
 
         var context = scope.ServiceProvider.GetRequiredService<TemplateAppDbContext>();
         await context.Database.MigrateAsync();
+
+        await app.SeedOpenIdClientsAsync();
 
         context.ReloadTypesForEnumSupport();
 

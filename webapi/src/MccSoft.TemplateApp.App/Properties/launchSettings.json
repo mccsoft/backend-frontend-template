@@ -3,9 +3,9 @@
     "MccSoft.TemplateApp.App": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "https://localhost:5003",
+      "launchUrl": "https://localhost:5001",
       "environmentVariables": {
-        "ASPNETCORE_URLS": "https://*:5003",
+        "ASPNETCORE_URLS": "https://*:5001",
         "ASPNETCORE_ENVIRONMENT": "Development",
         "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy"
       }

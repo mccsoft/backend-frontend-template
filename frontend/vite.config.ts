@@ -6,8 +6,8 @@ import ImportMetaEnvPlugin from '@import-meta-env/unplugin';
 import { visualizer } from 'rollup-plugin-visualizer';
 import mkcert from 'vite-plugin-mkcert';
 
-var proxyTarget = process.env.BACKEND_URI ?? 'https://localhost:5003';
-var frontendPort = process.env.PORT ?? 5001;
+var proxyTarget = process.env.BACKEND_URI ?? 'https://localhost:5001';
+var frontendPort = process.env.PORT ?? 5003;
 
 // https://vitejs.dev/config/
 export default defineConfig({
