@@ -9,7 +9,8 @@ public static class PatchTestHelper
     /// Calls <see cref="IPatchRequest.SetHasProperty"/> for all properties with non-default values.
     /// Useful in App Tests.
     /// </summary>
-    public static void MarkAllNonDefaultPropertiesAsDefined(this IPatchRequest patchRequest)
+    public static T MarkAllNonDefaultPropertiesAsDefined<T>(this T patchRequest)
+        where T : IPatchRequest
     {
         foreach (var propertyInfo in patchRequest.GetType().GetProperties())
         {
@@ -23,5 +24,7 @@ public static class PatchTestHelper
                 patchRequest.SetHasProperty(propertyInfo.Name);
             }
         }
+
+        return patchRequest;
     }
 }

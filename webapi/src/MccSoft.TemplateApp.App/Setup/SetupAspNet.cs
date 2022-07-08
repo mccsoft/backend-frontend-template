@@ -19,12 +19,13 @@ public static class SetupAspNet
         JsonConvert.DefaultSettings = () =>
             JsonSerializerSetup.SetupJson(new JsonSerializerSettings());
 
-        services.AddControllers(AddGlobalFilters);
-
         services
-            .AddControllers()
-            .AddJsonOptions(
-                options => options.JsonSerializerOptions.Converters.Add(new DateOnlyConverter())
+            .AddControllers(
+                (options) =>
+                {
+                    AddGlobalFilters(options);
+                    options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+                }
             )
             .AddNewtonsoftJson(
                 setupAction => JsonSerializerSetup.SetupJson(setupAction.SerializerSettings)

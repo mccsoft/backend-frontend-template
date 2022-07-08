@@ -55,9 +55,9 @@ SetupHangfire.UseHangfire(app);
 
 app.UseHttpsRedirection();
 
-SetupLocalization.UseLocalization(app);
 SetupAspNet.UseFrontlineServices(app);
 
+SetupLocalization.UseLocalization(app);
 app.UseStaticFiles(SetupStaticFiles.CacheAll);
 
 SetupAuth.UseAuth(app);
@@ -82,5 +82,5 @@ app.Run();
 
 public partial class Program
 {
-    // Expose the Program class for use with WebApplicationFactory<T>
+    // Expose the Program class for use with WebApplicationFactory<T> in tests
 }
