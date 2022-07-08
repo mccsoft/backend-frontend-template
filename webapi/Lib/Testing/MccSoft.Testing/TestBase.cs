@@ -31,24 +31,32 @@ namespace MccSoft.Testing
         protected abstract TDbContext CreateDbContext();
 
         /// <summary>
+        /// !!!!!!!!!!!!!
+        /// Consider using <see cref="WithDbContext{T}(System.Func{TDbContext,T})"/> (async) instead!
+        /// Using synchronous version could make tests hang when running out of threads in a pool.
+        /// !!!!!!!!!!!!
         /// Provides access to a short-lived DbContext, independent from the service DbContext,
         /// but sharing the same DB.
         /// Should be used to prepare data and make assertions.
         /// </summary>
         /// <param name="action">The action to execute with the DbContext.</param>
-        protected void WithDbContext(Action<TDbContext> action)
+        protected void WithDbContextSync(Action<TDbContext> action)
         {
             using var db = CreateDbContext();
             action(db);
         }
 
         /// <summary>
+        /// !!!!!!!!!!!!!
+        /// Consider using <see cref="WithDbContext{T}(System.Func{TDbContext,T})"/> (async) instead!
+        /// Using synchronous version could make tests hang when running out of threads in a pool.
+        /// !!!!!!!!!!!!
         /// Provides access to a short-lived DbContext, independent from the service DbContext,
         /// but sharing the same DB.
         /// Should be used to prepare data and make assertions.
         /// </summary>
         /// <param name="action">The action to execute with the DbContext.</param>
-        protected T WithDbContext<T>(Func<TDbContext, T> action)
+        protected T WithDbContextSync<T>(Func<TDbContext, T> action)
         {
             using var db = CreateDbContext();
             var result = action(db);
@@ -81,7 +89,5 @@ namespace MccSoft.Testing
         }
 
         #endregion
-
-
     }
 }

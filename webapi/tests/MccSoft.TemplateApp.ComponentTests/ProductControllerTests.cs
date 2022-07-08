@@ -88,9 +88,9 @@ namespace MccSoft.TemplateApp.ComponentTests
 
             await _productClient.DeleteAsync(createdProduct.Id);
 
-            WithDbContext(db =>
+            await WithDbContext(async db =>
             {
-                db.Products.Should().HaveCount(0);
+                (await db.Products.CountAsync()).Should().Be(0);
             });
         }
     }

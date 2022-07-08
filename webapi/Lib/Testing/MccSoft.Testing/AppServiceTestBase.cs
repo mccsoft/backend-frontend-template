@@ -91,8 +91,6 @@ namespace MccSoft.Testing
                 // Its ok to call virtual methods because its just init the builder and doesn't use members.
                 // ReSharper disable VirtualMemberCallInConstructor
                 _builder = GetBuilder(connectionString ?? "");
-
-                EnsureDbCreated();
                 // ReSharper restore VirtualMemberCallInConstructor
             }
         }

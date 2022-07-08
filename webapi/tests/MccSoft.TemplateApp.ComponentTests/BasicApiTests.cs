@@ -71,7 +71,7 @@ namespace MccSoft.TemplateApp.ComponentTests
                 "Export path for database schema export not found."
             );
 
-            WithDbContext(context =>
+            WithDbContextSync(context =>
             {
                 string dgmlStr = context.AsDgml();
                 File.WriteAllText(exportPath, dgmlStr);

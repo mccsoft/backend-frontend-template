@@ -40,7 +40,7 @@ namespace MccSoft.TemplateApp.App.Tests
         {
             if (testDatabaseType != null)
             {
-                WithDbContext(db =>
+                WithDbContextSync(db =>
                 {
                     _defaultUser = db.Users.First(x => x.Email == "default@test.test");
                 });
