@@ -70,11 +70,26 @@ namespace MccSoft.TemplateApp.ComponentTests
 
             await _productClient.PatchAsync(
                 createdProduct.Id,
-                new PatchProductDto() { Title = "321", LastStockUpdatedAt = DateTimeOffset.UtcNow }
+                new PatchProductDto() { Title = "321" }
             );
 
             var result = await _productClient.GetAsync(createdProduct.Id);
             result.Title.Should().BeEquivalentTo("321");
+            result.ProductType.Should().Be(ProductType.Electronic);
+        }
+
+        [Fact]
+        public async Task Patch_EmptyBody_NoChange()
+        {
+            var title = "123";
+            var createdProduct = await _productClient.CreateAsync(
+                a.CreateProductGeneratedDto(title, productType: ProductType.Electronic)
+            );
+
+            await _productClient.PatchAsync(createdProduct.Id, new PatchProductDto() { });
+
+            var result = await _productClient.GetAsync(createdProduct.Id);
+            result.Title.Should().BeEquivalentTo(title);
             result.ProductType.Should().Be(ProductType.Electronic);
         }
 
