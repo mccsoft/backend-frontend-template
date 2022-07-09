@@ -10,6 +10,17 @@ This project contains Razor-based authentication page.
 3. You could reuse CSS classes/variables from SPA within authentication page. Check [razor.scss](frontend/src/razor.scss) that is compiled to [frontend.css](webapi/src/MccSoft.TemplateApp.App/wwwroot/css/frontend.css).
     1. Authentication page should have as little JS as possible, so it's not possible to inject malicious code into it.
 
+## How to add Google/Facebook/etc. authentication
+1. Add authentication method to ASP.Net Core. Consult [provider-specific instructions](docs.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins) for details.
+
+    Usually it includes registering an Application in 3rd party provider (e.g. Facebook) and adding a call to `services.AddAuthentication().AddGoogle()` during setup.
+2. Usually we register 2 applications:
+   1. one for Production, with Redirect URI pointing to production URL only.
+   2. another one for Development and DEV stage with Redirect URI pointing to DEV stage and Localhost
+      1. Use backend (not frontend) port when configuring URI for localhost (i.e. take the port number from [appsettings.Development.json](../webapi/src/MccSoft.TemplateApp.App/appsettings.Development.json), `"EndPoints"->"Https"` section, NOT from `vite.config`)
+
+   ClientId/ClientSecret from Production application should only be stored in some environment variables when setting up production stage (so normally developers should not have access to these secrets)
+
 ### How to authenticate from SPA
 There are generally 2 ways of how authentication should be integrated in SPA in terms of UI:
 1. If you only use some 3rd party authentication (i.e. Google or Azure AD)

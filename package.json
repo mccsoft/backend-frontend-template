@@ -24,6 +24,7 @@
     "generate-api-client": "yarn frontend generate-api-client",
     "generate-api-client-remote": "yarn frontend generate-api-client-remote",
     "rename": "node scripts/rename-script.js",
+    "pull-changes-from-template": "node scripts/pull-template-changes.js",
     "frontend": "yarn workspace @templateApp/frontend",
     "build-dotnet-version": "cross-env-shell dotnet publish webapi/src/MccSoft.TemplateApp.App/MccSoft.TemplateApp.App.csproj -c Release -o publish $VERSION",
     "build-dotnet": "rimraf publish && cross-env VERSION=\\\"/p:Version\\\"=\\\"$npm_package_version\\\" yarn build-dotnet-version",

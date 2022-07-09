@@ -1,0 +1,114 @@
+#!/usr/bin/env node
+import yargs from "yargs";
+import fs from "fs";
+import path from "path";
+import {hideBin} from "yargs/helpers";
+import {execSync} from 'child_process'
+
+const args = yargs(hideBin(process.argv))
+    .version("0.1")
+    .option("name", {
+      alias: "n",
+      type: "string",
+      description: "Name of the project (e.g. StudyApp)",
+    })
+    //.demandOption(["name"])
+    .help().argv;
+
+if (!fs.existsSync("./scripts/pull-template-changes.js")) {
+  console.error('You should run the script from repository root folder');
+  process.exit();
+}
+
+const templateFolder = process.cwd() + "_template";
+
+const projectName = args.name || detectProjectName();
+console.log(`ProjectName: ${projectName}`);
+if (!projectName) {
+  console.error('Unable to determine the project name. Please, use --name option');
+  process.exit();
+}
+
+cloneTemplate(templateFolder);
+renameFilesInTemplate(templateFolder, projectName);
+execSync(`node scripts/post_clone_pull_template.js --templateFolder "${templateFolder}"`)
+
+copyRecursively("webapi/Lib");
+copyRecursively("docs");
+copyRecursively(`webapi/src/MccSoft.${projectName}.Http/GeneratedClientOverrides.cs`);
+
+process.exit();
+
+function copyRecursively(relativePathInsideProject) {
+
+  const copyFrom = path.join(templateFolder, relativePathInsideProject);
+  const copyTo = path.join(process.cwd(), relativePathInsideProject);
+  console.log(`Copying from '${copyFrom}' to '${copyTo}'`);
+  fs.cpSync(copyFrom, copyTo, {recursive: true});
+}
+
+function renameFilesInTemplate(templateFolder, projectName) {
+  console.log('Calling `yarn install` in template...');
+  execSync(`yarn install`, {
+    cwd: templateFolder
+  });
+
+  console.log('Renaming files in template...');
+  execSync(`yarn rename -n ${projectName}`, {
+    cwd: templateFolder
+  });
+}
+
+function cloneTemplate(folder) {
+  fs.rmdirSync(folder, {recursive: true});
+  execSync(`git clone https://github.com/mcctomsk/backend-frontend-template.git ${templateFolder}`)
+}
+
+function detectProjectName() {
+  const regex = /MccSoft\.(.*)\.sln/
+  const solutionFile = findFileMatching('webapi', regex);
+  if (!solutionFile)
+    return null;
+
+  console.log('Found solution file:', solutionFile);
+  const result = solutionFile.match(regex);
+  if (!result)
+    return null;
+
+  return result[1];
+}
+
+function findFileMatching(dir, regex) {
+  const files = fs.readdirSync(dir);
+
+  for (const file of files) {
+    if (file.match(regex)) {
+      return file;
+    }
+  }
+
+  return null;
+}
+
+function copyRecursiveSync(src, dest) {
+  var exists = fs.existsSync(src);
+  var stats = exists && fs.statSync(src);
+  var isDirectory = exists && stats.isDirectory();
+  if (isDirectory) {
+    fs.mkdirSync(dest);
+    fs.readdirSync(src).forEach(function (childItemName) {
+      copyRecursiveSync(path.join(src, childItemName),
+          path.join(dest, childItemName));
+    });
+  } else {
+    if (fs.existsSync(src)) {
+      const sourceFileContent = fs.readFileSync(src);
+      const destinationFileContent = fs.readFileSync(dest);
+      if (sourceFileContent !== destinationFileContent) {
+        fs.copyFileSync(src, dest);
+      }
+    } else {
+      fs.copyFileSync(src, dest);
+    }
+  }
+}
