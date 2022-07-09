@@ -36,6 +36,7 @@ execSync(`node scripts/post_clone_pull_template.js --templateFolder "${templateF
 copyRecursively("webapi/Lib");
 copyRecursively("docs");
 copyRecursively(`webapi/src/MccSoft.${projectName}.Http/GeneratedClientOverrides.cs`);
+copyRecursively(`scripts/pull-template-changes.js`);
 
 process.exit();
 
