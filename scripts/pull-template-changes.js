@@ -61,7 +61,9 @@ function renameFilesInTemplate(templateFolder, projectName) {
 }
 
 function cloneTemplate(folder) {
-  fs.rmdirSync(folder, {recursive: true});
+  if (fs.existsSync(folder)) {
+    fs.rmdirSync(folder, {recursive: true});
+  }
   execSync(`git clone https://github.com/mcctomsk/backend-frontend-template.git ${templateFolder}`)
 }
 
