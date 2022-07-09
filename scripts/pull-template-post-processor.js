@@ -16,4 +16,8 @@ const args = yargs(hideBin(process.argv))
     .help().argv;
 
 // Here you can do anything to make structure of cloned template look like your project
-console.warn('Running post_clone_pull_template script');
+console.warn('Running pull-template-post-processor script');
+const templateFolder = args.templateFolder;
+
+// If you need NOT to upgrade certain files from template, you could easily remove them here, like:
+// fs.rmdirSync(path.join(templateFolder, "webapi/MccSoft.TemplateApp.App/Utils"));

@@ -23,12 +23,12 @@ builder.Host.UseSerilog(
     }
 );
 
-SetupDatabase.AddDatabase(builder.Services, builder.Configuration);
+SetupDatabase.AddDatabase(builder);
 SetupAudit.ConfigureAudit(builder.Services, builder.Configuration);
 builder.Services.AddDomainEventsWithMediatR(typeof(Program), typeof(LogDomainEventHandler));
 
 SetupAuth.ConfigureAuth(builder);
-SetupLocalization.AddLocalization(builder.Services);
+SetupLocalization.AddLocalization(builder);
 
 builder.Services.AddUtcEverywhere();
 
@@ -36,7 +36,7 @@ builder.Services.AddMailing(builder.Configuration.GetSection("Email"));
 
 SetupAspNet.AddAspNet(builder);
 
-SetupSwagger.AddSwagger(builder.Services, builder.Configuration);
+SetupSwagger.AddSwagger(builder);
 
 // Set up your application-specific services here
 SetupServices.AddServices(builder.Services);

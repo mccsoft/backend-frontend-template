@@ -2,7 +2,7 @@
 
 namespace MccSoft.TemplateApp.App.Setup;
 
-public static class SetupStaticFiles
+public static partial class SetupStaticFiles
 {
     public static StaticFileOptions DoNotCache =>
         new StaticFileOptions()

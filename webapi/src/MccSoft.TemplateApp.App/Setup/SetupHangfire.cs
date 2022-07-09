@@ -6,7 +6,7 @@ using MccSoft.TemplateApp.App.Settings;
 
 namespace MccSoft.TemplateApp.App.Setup;
 
-public static class SetupHangfire
+public static partial class SetupHangfire
 {
     public static void AddHangfire(
         IServiceCollection services,
@@ -36,7 +36,7 @@ public static class SetupHangfire
         {
             options.WorkerCount = 2;
         });
-        services.RegisterHangfireJobs();
+        services.RegisterJobs();
     }
 
     public static void UseHangfire(WebApplication app)
@@ -50,10 +50,7 @@ public static class SetupHangfire
         )
             return;
 
-        // Configure your jobs here: Pass a Job and its settings inherited from HangFire Job Settings
-        appConfiguration.ConfigureJob<ProductDataLoggerJob, ProductDataLoggerJobSettings>(
-            recurringJobManager
-        );
+        ConfigureJobs(app);
 
         IConfigurationSection configurationSection = app.Configuration.GetSection("Hangfire");
         // In case you will need to debug/monitor tasks you can use Dashboard.
@@ -85,13 +82,12 @@ public static class SetupHangfire
                 }
             );
         }
+        ConfigureJobs(app);
     }
 
-    private static void RegisterHangfireJobs(this IServiceCollection services)
-    {
-        // Add your custom JobServices for resolving them from DI.
-        services.AddScoped<ProductDataLoggerJob>();
-    }
+    static partial void RegisterJobs(this IServiceCollection services);
+
+    static partial void ConfigureJobs(WebApplication app);
 
     private static void ConfigureJob<T, TOptions>(
         this IConfiguration appConfiguration,

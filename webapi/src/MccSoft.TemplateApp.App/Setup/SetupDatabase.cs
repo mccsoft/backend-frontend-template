@@ -10,7 +10,7 @@ using Shaddix.OpenIddict.ExternalAuthentication.Infrastructure;
 
 namespace MccSoft.TemplateApp.App.Setup;
 
-public static class SetupDatabase
+public static partial class SetupDatabase
 {
     public const string DisableMigrationOptionName = nameof(DisableMigrationOptionName);
 
@@ -39,10 +39,18 @@ public static class SetupDatabase
         {
             await seeder.SeedUser(defaultUser.UserName, defaultUser.Password);
         }
+
+        // If you'd like to modify this class, consider adding your custom code in the SetupDatabase.partial.cs
+        // This will make it easier to pull changes from Template when Template is updated
+        // (actually this file will be overwritten by a file from template, which will make your changes disappear)
+        RunMigrationsProjectSpecific(app);
     }
 
-    public static void AddDatabase(IServiceCollection services, IConfiguration configuration)
+    public static void AddDatabase(WebApplicationBuilder builder)
     {
+        IServiceCollection services = builder.Services;
+        IConfiguration configuration = builder.Configuration;
+
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
         // this is needed for OpenIdDict and must go before .UseOpenIddict()
@@ -77,12 +85,18 @@ public static class SetupDatabase
             .RegisterRetryHelper();
 
         SetupHangfire.AddHangfire(services, connectionString, configuration);
-        AddSeeders(services, configuration);
         PostgresSerialization.AdjustDateOnlySerialization();
+
+        // If you'd like to modify this class, consider adding your custom code in the SetupDatabase.partial.cs
+        // This will make it easier to pull changes from Template when Template is updated
+        // (actually this file will be overwritten by a file from template, which will make your changes disappear)
+        AddProjectSpecifics(builder);
+        AddSeeders(services, configuration);
     }
 
-    public static void AddSeeders(IServiceCollection services, IConfiguration configuration)
-    {
-        services.Configure<DefaultUserOptions>(configuration.GetSection("DefaultUser"));
-    }
+    static partial void RunMigrationsProjectSpecific(WebApplication app);
+
+    static partial void AddSeeders(IServiceCollection services, IConfiguration configuration);
+
+    static partial void AddProjectSpecifics(WebApplicationBuilder builder);
 }

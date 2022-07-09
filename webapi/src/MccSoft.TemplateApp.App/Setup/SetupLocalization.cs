@@ -8,10 +8,12 @@ using Microsoft.Extensions.Options;
 
 namespace MccSoft.TemplateApp.App.Setup;
 
-public static class SetupLocalization
+public static partial class SetupLocalization
 {
-    public static void AddLocalization(IServiceCollection services)
+    public static void AddLocalization(WebApplicationBuilder builder)
     {
+        var services = builder.Services;
+
         services.AddI18NextLocalization(
             i18N =>
                 i18N.AddLanguageDetector<ThreadLanguageDetector>()
@@ -19,6 +21,11 @@ public static class SetupLocalization
                     .AddBackend(new JsonFileBackend("Dictionaries"))
         );
         services.AddSingleton<IConfigureOptions<MvcOptions>, ConfigureModelBindingLocalization>();
+
+        // If you'd like to modify this class, consider adding your custom code in the SetupLocalization.partial.cs
+        // This will make it easier to pull changes from Template when Template is updated
+        // (actually this file will be overwritten by a file from template, which will make your changes disappear)
+        AddProjectSpecifics(builder);
     }
 
     public static void UseLocalization(IApplicationBuilder app)
@@ -37,5 +44,14 @@ public static class SetupLocalization
                 .ToList();
             options.SetDefaultCulture("en");
         });
+
+        // If you'd like to modify this class, consider adding your custom code in the SetupLocalization.partial.cs
+        // This will make it easier to pull changes from Template when Template is updated
+        // (actually this file will be overwritten by a file from template, which will make your changes disappear)
+        UseProjectSpecifics(app);
     }
+
+    static partial void AddProjectSpecifics(WebApplicationBuilder builder);
+
+    static partial void UseProjectSpecifics(IApplicationBuilder app);
 }

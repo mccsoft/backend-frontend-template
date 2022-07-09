@@ -31,21 +31,26 @@ if (!projectName) {
 
 cloneTemplate(templateFolder);
 renameFilesInTemplate(templateFolder, projectName);
-execSync(`node scripts/post_clone_pull_template.js --templateFolder "${templateFolder}"`)
 
-copyRecursively("webapi/Lib");
-copyRecursively("docs");
-copyRecursively(`webapi/src/MccSoft.${projectName}.Http/GeneratedClientOverrides.cs`);
-copyRecursively(`scripts/pull-template-changes.js`);
+// run post-processor, so each specific project could modify template files before they are copied over
+execSync(`node scripts/pull-template-post-processor.js --templateFolder "${templateFolder}"`)
+
+copyProjectFolder("webapi/Lib");
+copyProjectFolder("docs");
+copyProjectFolder(`webapi/src/MccSoft.${projectName}.Http/GeneratedClientOverrides.cs`);
+copyProjectFolder(`webapi/src/MccSoft.${projectName}.App/Utils`);
+copyProjectFolder(`webapi/src/MccSoft.${projectName}.App/Setup`, {
+  ignorePattern: /partial\.cs/
+});
+copyProjectFolder(`scripts/pull-template-changes.js`);
 
 process.exit();
 
-function copyRecursively(relativePathInsideProject) {
-
+function copyProjectFolder(relativePathInsideProject, options = {ignorePattern: undefined}) {
   const copyFrom = path.join(templateFolder, relativePathInsideProject);
   const copyTo = path.join(process.cwd(), relativePathInsideProject);
   console.log(`Copying from '${copyFrom}' to '${copyTo}'`);
-  fs.cpSync(copyFrom, copyTo, {recursive: true});
+  copyRecursively(copyFrom, copyTo, {recursive: true});
 }
 
 function renameFilesInTemplate(templateFolder, projectName) {
@@ -93,17 +98,22 @@ function findFileMatching(dir, regex) {
   return null;
 }
 
-function copyRecursiveSync(src, dest) {
+function copyRecursively(src, dest, options = {ignorePattern: undefined}) {
   var exists = fs.existsSync(src);
   var stats = exists && fs.statSync(src);
   var isDirectory = exists && stats.isDirectory();
   if (isDirectory) {
     fs.mkdirSync(dest);
     fs.readdirSync(src).forEach(function (childItemName) {
-      copyRecursiveSync(path.join(src, childItemName),
+      copyRecursively(path.join(src, childItemName),
           path.join(dest, childItemName));
     });
   } else {
+    if (options?.ignorePattern) {
+      if (src.match(options.ignorePattern)) {
+        return;
+      }
+    }
     if (fs.existsSync(src)) {
       const sourceFileContent = fs.readFileSync(src);
       const destinationFileContent = fs.readFileSync(dest);

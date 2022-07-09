@@ -13,7 +13,7 @@ using Shaddix.OpenIddict.ExternalAuthentication.Infrastructure;
 
 namespace MccSoft.TemplateApp.App.Setup;
 
-public static class SetupAuth
+public static partial class SetupAuth
 {
     public const string DisableSignOutLockedUserMiddleware = nameof(
         DisableSignOutLockedUserMiddleware
@@ -84,37 +84,29 @@ public static class SetupAuth
                 options.UseAspNetCore();
             });
 
-        services
-            .AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme =
-                    OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme =
-                    OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
-            })
-            .AddGoogle(options =>
-            {
-                configuration.GetSection("ExternalAuthentication:Google").Bind(options);
-            })
-            .AddFacebook(options =>
-            {
-                configuration.GetSection("ExternalAuthentication:Facebook").Bind(options);
-            })
-            .AddMicrosoftAccount(options =>
-            {
-                configuration.GetSection("ExternalAuthentication:Microsoft").Bind(options);
-            })
-            .AddOpenIdConnect(options =>
-            {
-                configuration.GetSection("ExternalAuthentication:AzureAd").Bind(options);
-            });
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme =
+                OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme =
+                OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+        });
 
         // Make OpenIddict a default Authorization policy
         // (so that you could use [Authorize] without specifying scheme
         services.AddAuthorization();
 
         services.AddSignUrl(configuration.GetSection("SignUrl").GetValue<string>("Secret"));
+
+        // If you'd like to modify this class, consider adding your custom code in the SetupAuth.partial.cs
+        // This will make it easier to pull changes from Template when Template is updated
+        // (actually this file will be overwritten by a file from template, which will make your changes disappear)
+        AddProjectSpecifics(builder);
     }
+
+    static partial void AddProjectSpecifics(WebApplicationBuilder builder);
+
+    static partial void UseProjectSpecifics(IApplicationBuilder app);
 
     public static void UseAuth(WebApplication app)
     {
@@ -131,5 +123,10 @@ public static class SetupAuth
         {
             IdentityModelEventSource.ShowPII = true;
         }
+
+        // If you'd like to modify this class, consider adding your custom code in the SetupAuth.partial.cs
+        // This will make it easier to pull changes from Template when Template is updated
+        // (actually this file will be overwritten by a file from template, which will make your changes disappear)
+        UseProjectSpecifics(app);
     }
 }

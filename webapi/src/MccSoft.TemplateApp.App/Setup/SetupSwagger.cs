@@ -6,15 +6,18 @@ using NSwag.Generation.Processors.Security;
 
 namespace MccSoft.TemplateApp.App.Setup;
 
-public static class SetupSwagger
+public static partial class SetupSwagger
 {
     private static SwaggerOptions GetSwaggerOptions(this IConfiguration configuration)
     {
         return configuration.GetSection("Swagger").Get<SwaggerOptions>();
     }
 
-    public static void AddSwagger(IServiceCollection services, IConfiguration configuration)
+    public static void AddSwagger(WebApplicationBuilder builder)
     {
+        var services = builder.Services;
+        var configuration = builder.Configuration;
+
         var swaggerOptions = configuration.GetSwaggerOptions();
         services.AddOpenApiDocument(options =>
         {
@@ -58,6 +61,11 @@ public static class SetupSwagger
             );
             options.GenerateEnumMappingDescription = true;
         });
+
+        // If you'd like to modify this class, consider adding your custom code in the SetupSwagger.partial.cs
+        // This will make it easier to pull changes from Template when Template is updated
+        // (actually this file will be overwritten by a file from template, which will make your changes disappear)
+        AddProjectSpecifics(builder);
     }
 
     public static void UseSwagger(WebApplication app)
@@ -85,5 +93,14 @@ public static class SetupSwagger
                 UsePkceWithAuthorizationCodeGrant = true,
             };
         });
+
+        // If you'd like to modify this class, consider adding your custom code in the SetupSwagger.partial.cs
+        // This will make it easier to pull changes from Template when Template is updated
+        // (actually this file will be overwritten by a file from template, which will make your changes disappear)
+        UseProjectSpecifics(app);
     }
+
+    static partial void AddProjectSpecifics(WebApplicationBuilder builder);
+
+    static partial void UseProjectSpecifics(IApplicationBuilder app);
 }

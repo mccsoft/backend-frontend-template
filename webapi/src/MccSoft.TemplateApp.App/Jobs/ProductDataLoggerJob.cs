@@ -19,8 +19,6 @@ namespace MccSoft.TemplateApp.App.Jobs
             var operationName = nameof(ProductDataLoggerJob);
             _logger.LogInformation($"Starting {operationName} scheduler job");
 
-            List<int> studiesToSync = new List<int>();
-
             var dbEntities = _db.Products.ToList();
 
             foreach (var dbEntity in dbEntities)

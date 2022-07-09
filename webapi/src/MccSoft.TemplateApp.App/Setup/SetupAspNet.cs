@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace MccSoft.TemplateApp.App.Setup;
 
-public static class SetupAspNet
+public static partial class SetupAspNet
 {
     public static void AddAspNet(WebApplicationBuilder builder)
     {
@@ -40,7 +40,16 @@ public static class SetupAspNet
         services.AddHealthChecks();
 
         AddCors(builder);
+
+        // If you'd like to modify this class, consider adding your custom code in the SetupAspNet.partial.cs
+        // This will make it easier to pull changes from Template when Template is updated
+        // (actually this file will be overwritten by a file from template, which will make your changes disappear)
+        AddProjectSpecifics(builder);
     }
+
+    static partial void AddProjectSpecifics(WebApplicationBuilder builder);
+
+    static partial void UseProjectSpecifics(IApplicationBuilder app);
 
     private const string DefaultCorsPolicyName = "DefaultCorsPolicy";
 
@@ -89,6 +98,11 @@ public static class SetupAspNet
 
         app.UseErrorHandling();
         app.UseRethrowErrorsFromPersistence();
+
+        // If you'd like to modify this class, consider adding your custom code in the SetupAspNet.partial.cs
+        // This will make it easier to pull changes from Template when Template is updated
+        // (actually this file will be overwritten by a file from template, which will make your changes disappear)
+        UseProjectSpecifics(app);
     }
 
     private static void UseForwardedHeaders(IApplicationBuilder app)
