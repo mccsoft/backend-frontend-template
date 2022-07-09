@@ -103,7 +103,10 @@ function copyRecursively(src, dest, options = {ignorePattern: undefined}) {
   var stats = exists && fs.statSync(src);
   var isDirectory = exists && stats.isDirectory();
   if (isDirectory) {
-    fs.mkdirSync(dest);
+    if (!fs.existsSync(dest)) {
+      fs.mkdirSync(dest);
+    }
+
     fs.readdirSync(src).forEach(function (childItemName) {
       copyRecursively(path.join(src, childItemName),
           path.join(dest, childItemName));
@@ -118,10 +121,10 @@ function copyRecursively(src, dest, options = {ignorePattern: undefined}) {
       const sourceFileContent = fs.readFileSync(src);
       const destinationFileContent = fs.readFileSync(dest);
       if (sourceFileContent !== destinationFileContent) {
-        fs.copyFileSync(src, dest);
+        fs.cpSync(src, dest, {force: true, preserveTimestamps: true});
       }
     } else {
-      fs.copyFileSync(src, dest);
+      fs.cpSync(src, dest, {force: true, preserveTimestamps: true});
     }
   }
 }
