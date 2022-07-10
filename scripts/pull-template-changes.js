@@ -51,7 +51,7 @@ function copyProjectFolder(relativePathInsideProject, options = {ignorePattern: 
   const copyFrom = path.join(templateFolder, relativePathInsideProject);
   const copyTo = path.join(process.cwd(), relativePathInsideProject);
   console.log(`Copying from '${copyFrom}' to '${copyTo}'`);
-  copyRecursively(copyFrom, copyTo, {recursive: true});
+  copyRecursively(copyFrom, copyTo, options);
 }
 
 function renameFilesInTemplate(templateFolder, projectName) {
