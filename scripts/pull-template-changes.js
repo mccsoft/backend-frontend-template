@@ -35,6 +35,8 @@ renameFilesInTemplate(templateFolder, projectName);
 // run post-processor, so each specific project could modify template files before they are copied over
 execSync(`node scripts/pull-template-post-processor.js --templateFolder "${templateFolder}"`)
 
+console.log('Starting to copy files...');
+copyProjectFolder(`scripts/pull-template-changes.js`);
 copyProjectFolder("webapi/Lib");
 copyProjectFolder("docs");
 copyProjectFolder(`webapi/src/MccSoft.${projectName}.Http/GeneratedClientOverrides.cs`);
@@ -42,7 +44,6 @@ copyProjectFolder(`webapi/src/MccSoft.${projectName}.App/Utils`);
 copyProjectFolder(`webapi/src/MccSoft.${projectName}.App/Setup`, {
   ignorePattern: /partial\.cs/
 });
-copyProjectFolder(`scripts/pull-template-changes.js`);
 
 process.exit();
 
@@ -117,7 +118,7 @@ function copyRecursively(src, dest, options = {ignorePattern: undefined}) {
         return;
       }
     }
-    if (fs.existsSync(src)) {
+    if (fs.existsSync(dest)) {
       const sourceFileContent = fs.readFileSync(src);
       const destinationFileContent = fs.readFileSync(dest);
       if (sourceFileContent !== destinationFileContent) {
