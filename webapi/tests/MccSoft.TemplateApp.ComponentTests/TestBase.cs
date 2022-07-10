@@ -90,29 +90,25 @@ namespace MccSoft.TemplateApp.ComponentTests
             ComponentTestFixture application = new ComponentTestFixture()
             {
                 OutputHelper = _outputHelper,
-            }.Configure(builder =>
-            {
-                builder
-                    .ConfigureTestServices(
-                        (services) =>
-                        {
-                            ConfigureServices(services);
-                            services.RemoveDbContextRegistration<TemplateAppDbContext>();
+            }
+                .ConfigureTestServices(services =>
+                {
+                    ConfigureServices(services);
+                    services.RemoveDbContextRegistration<TemplateAppDbContext>();
 
-                            services.AddDbContext<TemplateAppDbContext>(
-                                options =>
-                                {
-                                    _databaseInitializer.UseProvider(options, connectionString);
-                                    options.WithLambdaInjection();
-                                    options.UseOpenIddict();
-                                },
-                                contextLifetime: ServiceLifetime.Scoped,
-                                optionsLifetime: ServiceLifetime.Singleton
-                            );
-                        }
-                    )
-                    .UseSetting("Swagger:Csharp", "true");
-            });
+                    services.AddDbContext<TemplateAppDbContext>(
+                        options =>
+                        {
+                            _databaseInitializer.UseProvider(options, connectionString);
+                            options.WithLambdaInjection();
+                            options.UseOpenIddict();
+                        },
+                        contextLifetime: ServiceLifetime.Scoped,
+                        optionsLifetime: ServiceLifetime.Singleton
+                    );
+                })
+                .UseSetting("Swagger:Csharp", "true");
+
             if (!enableMigrations)
             {
                 application.Configure(
@@ -123,6 +119,7 @@ namespace MccSoft.TemplateApp.ComponentTests
                             .UseSetting(SetupAuth.DisableSignOutLockedUserMiddleware, "true")
                 );
             }
+
             InitializeGlobalVariables(application);
             return application;
         }

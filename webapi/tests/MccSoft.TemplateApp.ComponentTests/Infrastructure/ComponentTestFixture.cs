@@ -12,7 +12,9 @@ using Xunit.Abstractions;
 
 namespace MccSoft.TemplateApp.ComponentTests;
 
-public class ComponentTestFixture : WebApplicationFactory<Program>, ITestOutputHelperAccessor
+public partial class ComponentTestFixture
+    : WebApplicationFactory<Program>,
+        ITestOutputHelperAccessor
 {
     public ITestOutputHelper OutputHelper { get; set; }
 
@@ -53,5 +55,19 @@ public class ComponentTestFixture : WebApplicationFactory<Program>, ITestOutputH
                 .AddTestAuthentication(options => { });
         });
         _configurationActions.ForEach(x => x.Invoke(builder));
+    }
+
+    public ComponentTestFixture ConfigureTestServices(
+        Action<IServiceCollection> servicesConfiguration
+    )
+    {
+        _configurationActions.Add(builder => builder.ConfigureTestServices(servicesConfiguration));
+        return this;
+    }
+
+    public ComponentTestFixture UseSetting(string key, string? value)
+    {
+        _configurationActions.Add(builder => builder.UseSetting(key, value));
+        return this;
     }
 }

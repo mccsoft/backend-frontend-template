@@ -40,6 +40,7 @@ copyProjectFolder(`scripts/pull-template-changes.js`);
 copyProjectFolder("webapi/Lib");
 copyProjectFolder("docs");
 copyProjectFolder(`webapi/src/MccSoft.${projectName}.Http/GeneratedClientOverrides.cs`);
+copyProjectFolder(`webapi/tests/MccSoft.${projectName}.ComponentTests/Infrastructure/ComponentTestFixture.cs`);
 copyProjectFolder(`webapi/src/MccSoft.${projectName}.App/Utils`);
 copyProjectFolder(`webapi/src/MccSoft.${projectName}.App/Setup`, {
   ignorePattern: /partial\.cs/
