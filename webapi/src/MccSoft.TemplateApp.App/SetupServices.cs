@@ -7,8 +7,10 @@ namespace MccSoft.TemplateApp.App;
 
 public static class SetupServices
 {
-    public static void AddServices(IServiceCollection services)
+    public static void AddServices(WebApplicationBuilder builder)
     {
+        var services = builder.Services;
+
         services
             .AddScoped<IDateTimeProvider, DateTimeProvider>()
             .AddTransient<IUserAccessor, UserAccessor>()

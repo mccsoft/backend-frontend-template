@@ -39,7 +39,7 @@ SetupAspNet.AddAspNet(builder);
 SetupSwagger.AddSwagger(builder);
 
 // Set up your application-specific services here
-SetupServices.AddServices(builder.Services);
+SetupServices.AddServices(builder);
 
 // ---------------------------------
 //

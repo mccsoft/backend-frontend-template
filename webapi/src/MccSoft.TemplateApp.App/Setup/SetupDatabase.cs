@@ -28,22 +28,10 @@ public static partial class SetupDatabase
 
         context.ReloadTypesForEnumSupport();
 
-        DefaultUserSeeder seeder = scope.ServiceProvider.GetRequiredService<DefaultUserSeeder>();
-        DefaultUserOptions defaultUser = scope.ServiceProvider
-            .GetRequiredService<IOptions<DefaultUserOptions>>()
-            .Value;
-        if (
-            !string.IsNullOrEmpty(defaultUser.UserName)
-            && !string.IsNullOrEmpty(defaultUser.Password)
-        )
-        {
-            await seeder.SeedUser(defaultUser.UserName, defaultUser.Password);
-        }
-
         // If you'd like to modify this class, consider adding your custom code in the SetupDatabase.partial.cs
         // This will make it easier to pull changes from Template when Template is updated
         // (actually this file will be overwritten by a file from template, which will make your changes disappear)
-        RunMigrationsProjectSpecific(app);
+        await RunMigrationsProjectSpecific(app);
     }
 
     public static void AddDatabase(WebApplicationBuilder builder)
@@ -94,7 +82,7 @@ public static partial class SetupDatabase
         AddSeeders(services, configuration);
     }
 
-    static partial void RunMigrationsProjectSpecific(WebApplication app);
+    private static partial Task RunMigrationsProjectSpecific(WebApplication app);
 
     static partial void AddSeeders(IServiceCollection services, IConfiguration configuration);
 

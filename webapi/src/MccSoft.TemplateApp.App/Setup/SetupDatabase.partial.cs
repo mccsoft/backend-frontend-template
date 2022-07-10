@@ -1,4 +1,5 @@
 ﻿using MccSoft.TemplateApp.App.Services.Authentication;
+using Microsoft.Extensions.Options;
 
 namespace MccSoft.TemplateApp.App.Setup;
 
@@ -8,7 +9,22 @@ namespace MccSoft.TemplateApp.App.Setup;
 /// </summary>
 public static partial class SetupDatabase
 {
-    static partial void RunMigrationsProjectSpecific(WebApplication app) { }
+    private static async partial Task RunMigrationsProjectSpecific(WebApplication app)
+    {
+        using var scope = app.Services.CreateScope();
+
+        DefaultUserSeeder seeder = scope.ServiceProvider.GetRequiredService<DefaultUserSeeder>();
+        DefaultUserOptions defaultUser = scope.ServiceProvider
+            .GetRequiredService<IOptions<DefaultUserOptions>>()
+            .Value;
+        if (
+            !string.IsNullOrEmpty(defaultUser.UserName)
+            && !string.IsNullOrEmpty(defaultUser.Password)
+        )
+        {
+            await seeder.SeedUser(defaultUser.UserName, defaultUser.Password);
+        }
+    }
 
     static partial void AddProjectSpecifics(WebApplicationBuilder builder) { }
 

@@ -106,7 +106,7 @@ public static partial class SetupAuth
 
     static partial void AddProjectSpecifics(WebApplicationBuilder builder);
 
-    static partial void UseProjectSpecifics(IApplicationBuilder app);
+    static partial void UseProjectSpecifics(WebApplication app);
 
     public static void UseAuth(WebApplication app)
     {

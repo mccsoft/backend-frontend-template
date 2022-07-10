@@ -1,4 +1,5 @@
 using MccSoft.TemplateApp.Persistence;
+using MccSoft.WebApi.Jobs;
 
 namespace MccSoft.TemplateApp.App.Jobs
 {

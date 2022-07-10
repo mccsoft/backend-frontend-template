@@ -30,5 +30,5 @@ public static partial class SetupAuth
             });
     }
 
-    static partial void UseProjectSpecifics(IApplicationBuilder app) { }
+    static partial void UseProjectSpecifics(WebApplication app) { }
 }

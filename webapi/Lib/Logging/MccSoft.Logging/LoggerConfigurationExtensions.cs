@@ -154,7 +154,7 @@ namespace MccSoft.Logging
                 );
             }
 
-            if (hostingEnvironment.IsDevelopment())
+            if (hostingEnvironment.IsDevelopment() || hostingEnvironment.IsEnvironment("Test"))
             {
                 loggerConfiguration.WriteTo.Console(formatProvider: isoCulture);
             }

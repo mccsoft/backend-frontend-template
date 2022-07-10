@@ -49,7 +49,7 @@ public static partial class SetupAspNet
 
     static partial void AddProjectSpecifics(WebApplicationBuilder builder);
 
-    static partial void UseProjectSpecifics(IApplicationBuilder app);
+    static partial void UseProjectSpecifics(WebApplication app);
 
     private const string DefaultCorsPolicyName = "DefaultCorsPolicy";
 
@@ -90,7 +90,7 @@ public static partial class SetupAspNet
         options.Filters.Add(new ProducesResponseTypeAttribute(200));
     }
 
-    public static void UseFrontlineServices(IApplicationBuilder app)
+    public static void UseFrontlineServices(WebApplication app)
     {
         UseForwardedHeaders(app);
         app.UseRouting();
