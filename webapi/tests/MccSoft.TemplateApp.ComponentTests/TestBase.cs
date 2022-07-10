@@ -111,13 +111,10 @@ namespace MccSoft.TemplateApp.ComponentTests
 
             if (!enableMigrations)
             {
-                application.Configure(
-                    builder =>
-                        builder
-                            .UseSetting(SetupDatabase.DisableMigrationOptionName, "true")
-                            .UseSetting("Hangfire__Disable", "true")
-                            .UseSetting(SetupAuth.DisableSignOutLockedUserMiddleware, "true")
-                );
+                application
+                    .UseSetting(SetupDatabase.DisableMigrationOptionName, "true")
+                    .UseSetting("Hangfire__Disable", "true")
+                    .UseSetting(SetupAuth.DisableSignOutLockedUserMiddleware, "true");
             }
 
             InitializeGlobalVariables(application);

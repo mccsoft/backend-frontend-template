@@ -1,3 +1,8 @@
-﻿namespace MccSoft.TemplateApp.ComponentTests.Infrastructure;
+﻿using Microsoft.AspNetCore.Hosting;
 
-public partial class ComponentTestFixture { }
+namespace MccSoft.TemplateApp.ComponentTests.Infrastructure;
+
+public partial class ComponentTestFixture
+{
+    void ConfigureWebHostProjectSpecific(IWebHostBuilder builder) { }
+}

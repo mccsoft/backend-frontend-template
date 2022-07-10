@@ -5,7 +5,6 @@ using MccSoft.TemplateApp.ComponentTests.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Xunit.Abstractions;
@@ -54,8 +53,13 @@ public partial class ComponentTestFixture
                 })
                 .AddTestAuthentication(options => { });
         });
+
+        ConfigureWebHostProjectSpecific(builder);
+
         _configurationActions.ForEach(x => x.Invoke(builder));
     }
+
+    partial void ConfigureWebHostProjectSpecific(IWebHostBuilder builder);
 
     public ComponentTestFixture ConfigureTestServices(
         Action<IServiceCollection> servicesConfiguration

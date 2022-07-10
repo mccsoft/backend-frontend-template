@@ -1,8 +1,6 @@
 ﻿using Hangfire;
 using Hangfire.Dashboard.BasicAuthorization;
 using Hangfire.PostgreSql;
-using MccSoft.TemplateApp.App.Jobs;
-using MccSoft.TemplateApp.App.Settings;
 using MccSoft.WebApi.Jobs;
 
 namespace MccSoft.TemplateApp.App.Setup;
