@@ -111,7 +111,7 @@ function copyRecursively(src, dest, options = {ignorePattern: undefined}) {
 
     fs.readdirSync(src).forEach(function (childItemName) {
       copyRecursively(path.join(src, childItemName),
-          path.join(dest, childItemName));
+          path.join(dest, childItemName), options);
     });
   } else {
     if (options?.ignorePattern) {
