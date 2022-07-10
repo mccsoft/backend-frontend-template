@@ -89,4 +89,9 @@ public static class SetupAudit
             )
             .UseOptOut();
     }
+
+    public static void UseAudit(WebApplication app)
+    {
+        HttpContextAccessor = app.Services.GetRequiredService<IHttpContextAccessor>();
+    }
 }

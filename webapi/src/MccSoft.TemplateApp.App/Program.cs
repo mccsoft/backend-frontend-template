@@ -58,25 +58,14 @@ app.UseHttpsRedirection();
 SetupAspNet.UseFrontlineServices(app);
 
 SetupLocalization.UseLocalization(app);
-app.UseStaticFiles(SetupStaticFiles.CacheAll);
 
 SetupAuth.UseAuth(app);
 SetupSwagger.UseSwagger(app);
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-    endpoints
-        .MapRazorPages()
-        .RequireAuthorization(
-            new AuthorizeAttribute() { AuthenticationSchemes = "Identity.Application" }
-        );
-    endpoints.MapHealthChecks("/health");
-    endpoints.MapFallbackToFile("index.html", SetupStaticFiles.DoNotCache);
-});
+SetupAspNet.UseEndpoints(app);
+SetupAudit.UseAudit(app);
 
 app.Logger.LogInformation("Service started");
-SetupAudit.HttpContextAccessor = app.Services.GetRequiredService<IHttpContextAccessor>();
 
 app.Run();
 

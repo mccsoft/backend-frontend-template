@@ -3,6 +3,7 @@ using MccSoft.LowLevelPrimitives.Serialization.DateOnlyConverters;
 using MccSoft.TemplateApp.App.Middleware;
 using MccSoft.WebApi;
 using MccSoft.WebApi.Serialization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -50,6 +51,8 @@ public static partial class SetupAspNet
     static partial void AddProjectSpecifics(WebApplicationBuilder builder);
 
     static partial void UseProjectSpecifics(WebApplication app);
+
+    static partial void UseProjectSpecificEndpoints(WebApplication app);
 
     private const string DefaultCorsPolicyName = "DefaultCorsPolicy";
 
@@ -123,5 +126,25 @@ public static partial class SetupAspNet
         forwardedHeadersOptions.KnownProxies.Clear();
 
         app.UseForwardedHeaders(forwardedHeadersOptions);
+    }
+
+    public static void UseEndpoints(WebApplication app)
+    {
+        app.UseStaticFiles(SetupStaticFiles.CacheAll);
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+            endpoints
+                .MapRazorPages()
+                .RequireAuthorization(
+                    new AuthorizeAttribute() { AuthenticationSchemes = "Identity.Application" }
+                );
+            endpoints.MapHealthChecks("/health");
+            endpoints.MapFallbackToFile("index.html", SetupStaticFiles.DoNotCache);
+        });
+        app.Use404ForMissingStaticFiles();
+
+        UseProjectSpecificEndpoints(app);
     }
 }
