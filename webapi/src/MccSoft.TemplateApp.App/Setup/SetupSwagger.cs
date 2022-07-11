@@ -2,6 +2,7 @@
 using MccSoft.WebApi.Patching;
 using NSwag;
 using NSwag.AspNetCore;
+using NSwag.Generation.AspNetCore;
 using NSwag.Generation.Processors.Security;
 
 namespace MccSoft.TemplateApp.App.Setup;
@@ -60,6 +61,8 @@ public static partial class SetupSwagger
                 new RequireValueTypesSchemaProcessor(makePatchRequestFieldsNullable: isCsharp)
             );
             options.GenerateEnumMappingDescription = true;
+
+            AdjustDefaultOpenApiDocument(options);
         });
 
         // If you'd like to modify this class, consider adding your custom code in the SetupSwagger.partial.cs
@@ -103,4 +106,8 @@ public static partial class SetupSwagger
     static partial void AddProjectSpecifics(WebApplicationBuilder builder);
 
     static partial void UseProjectSpecifics(IApplicationBuilder app);
+
+    static partial void AdjustDefaultOpenApiDocument(
+        AspNetCoreOpenApiDocumentGeneratorSettings options
+    );
 }
