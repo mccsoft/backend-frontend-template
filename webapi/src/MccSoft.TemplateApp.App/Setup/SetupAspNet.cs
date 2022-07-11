@@ -54,6 +54,8 @@ public static partial class SetupAspNet
 
     static partial void UseProjectSpecificEndpoints(WebApplication app);
 
+    static partial void AddEndpoints(IEndpointRouteBuilder endpoints);
+
     private const string DefaultCorsPolicyName = "DefaultCorsPolicy";
 
     public static void AddCors(WebApplicationBuilder builder)
@@ -142,6 +144,8 @@ public static partial class SetupAspNet
                 );
             endpoints.MapHealthChecks("/health");
             endpoints.MapFallbackToFile("index.html", SetupStaticFiles.DoNotCache);
+
+            AddEndpoints(endpoints);
         });
         app.Use404ForMissingStaticFiles();
 

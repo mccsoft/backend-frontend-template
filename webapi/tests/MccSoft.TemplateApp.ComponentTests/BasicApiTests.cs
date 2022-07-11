@@ -106,7 +106,16 @@ namespace MccSoft.TemplateApp.ComponentTests
                 client.BaseAddress = new Uri(baseUrl);
             }
 
-            string swaggerJsonString = await client.GetStringAsync(url);
+            var response = await client.GetAsync(url);
+            string swaggerJsonString = await response.Content.ReadAsStringAsync();
+            try
+            {
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(swaggerJsonString, e);
+            }
             JObject swagger = JObject.Parse(swaggerJsonString);
             //AssertEx.ApiDocumented(swagger);
             await using (StreamWriter file = File.CreateText(exportPath))

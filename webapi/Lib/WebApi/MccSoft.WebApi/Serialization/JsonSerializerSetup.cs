@@ -6,7 +6,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace MccSoft.WebApi.Serialization;
 
-public class JsonSerializerSetup
+public partial class JsonSerializerSetup
 {
     public static JsonSerializerSettings SetupJson(JsonSerializerSettings settings)
     {
@@ -22,6 +22,11 @@ public class JsonSerializerSetup
         settings.Converters.Add(new StringEnumConverter());
         settings.Converters.Add(new DateOnlyNewtonsoftConverter());
         settings.Converters.Add(new TimeOnlyNewtonsoftConverter());
+
+        CustomizeSettings(settings);
+
         return settings;
     }
+
+    static partial void CustomizeSettings(JsonSerializerSettings settings);
 }

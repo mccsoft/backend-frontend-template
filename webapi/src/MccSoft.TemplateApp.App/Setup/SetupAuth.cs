@@ -61,12 +61,12 @@ public static partial class SetupAuth
             {
                 options.UseEntityFrameworkCore().UseDbContext<TemplateAppDbContext>();
             })
-            .AddDefaultAuthorizationController(
-                options =>
-                    options
-                        .SetPublicUrl(siteUrl)
-                        .SetConfiguration(configuration.GetSection("OpenId"))
-            )
+            .AddDefaultAuthorizationController(options =>
+            {
+                options.SetPublicUrl(siteUrl).SetConfiguration(configuration.GetSection("OpenId"));
+
+                ConfigureDefaultAuthorizationController(options);
+            })
             .AddServer(options =>
             {
                 options
@@ -107,6 +107,8 @@ public static partial class SetupAuth
     static partial void AddProjectSpecifics(WebApplicationBuilder builder);
 
     static partial void UseProjectSpecifics(WebApplication app);
+
+    static partial void ConfigureDefaultAuthorizationController(OpenIddictSettings options);
 
     public static void UseAuth(WebApplication app)
     {

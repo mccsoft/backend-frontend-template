@@ -17,7 +17,12 @@ public static partial class SetupLocalization
         services.AddI18NextLocalization(
             i18N =>
                 i18N.AddLanguageDetector<ThreadLanguageDetector>()
-                    .Configure(o => o.DetectLanguageOnEachTranslation = true)
+                    .Configure(o =>
+                    {
+                        o.DetectLanguageOnEachTranslation = true;
+                        o.DefaultLanguage = "en";
+                        o.FallbackLanguages = new[] { "en" };
+                    })
                     .AddBackend(new JsonFileBackend("Dictionaries"))
         );
         services.AddSingleton<IConfigureOptions<MvcOptions>, ConfigureModelBindingLocalization>();
