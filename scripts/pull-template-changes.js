@@ -37,11 +37,15 @@ execSync(`node scripts/pull-template-post-processor.js --templateFolder "${templ
 
 console.log('Starting to copy files...');
 copyProjectFolder(`scripts/pull-template-changes.js`);
-copyProjectFolder("webapi/Lib");
+copyProjectFolder("webapi/Lib", {
+  ignorePattern: /partial\.cs/
+});
 copyProjectFolder("docs");
 copyProjectFolder(`webapi/src/MccSoft.${projectName}.Http/GeneratedClientOverrides.cs`);
 copyProjectFolder(`webapi/tests/MccSoft.${projectName}.ComponentTests/Infrastructure/ComponentTestFixture.cs`);
-copyProjectFolder(`webapi/src/MccSoft.${projectName}.App/Utils`);
+copyProjectFolder(`webapi/src/MccSoft.${projectName}.App/Utils`, {
+  ignorePattern: /partial\.cs/
+});
 copyProjectFolder(`webapi/src/MccSoft.${projectName}.App/Setup`, {
   ignorePattern: /partial\.cs/
 });
