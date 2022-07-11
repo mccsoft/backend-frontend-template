@@ -68,9 +68,10 @@
       2. Handle this route at [RootPage](../frontend/src/pages/authorized/RootPage.tsx) ```<Route path={Links.WorkItemDetails.route} element={<YOUR_PAGE_COMPONENT />} />```
       3. Within the page component you could access URL parameters using `Links.WorkItemDetails.useParams()`
    2. Optional parameters unfortunately are not supported. You have to define separate route for each optional parameter and `Links.WorkItemDetails.useMatch()` to get the values.
+3. We tend NOT to use default exports. Please export and use components via named exports (i.e. `export const MyPage = () => <div>blablabla</div>`). Only use default exports with lazy-loading (via `React.lazy`, or better using the [lazyRetry helper](../frontend/src/helpers/retry-helper.tsx))
 
 ### FAQ
 1. You could pull updates from Template into your project by running `yarn pull-changes-from-template` (it will actually run [scripts/pull-changes-from-template.js](../scripts/pull-template-changes.js)).
    1. It will clone the template repo next to your project folder, rename according to your project and copy Lib folder and other files that are not meant to be changed.
    2. You could examine/compare some other files and copy them to your project manually
-   3. Check the changes when commiting them to your repo!
+   3. Check the changes before commiting them to your repo!
