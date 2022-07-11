@@ -69,27 +69,20 @@ stages:
             displayName: 'Authenticate at Container Registry'
 
           - task: Docker@2
-            condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+            condition: succeeded()
             inputs:
               repository: $(DOCKER_REGISTRY)
               command: 'buildAndPush'
               Dockerfile: 'publish/Dockerfile'
               buildContext: '$(Build.SourcesDirectory)/publish'
-              tags: |
-                $(BUILD_NUMBER)
-                latest
-            displayName: 'build and push version+latest'
-
-          - task: Docker@2
-            condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/main'))
-            inputs:
-              repository: $(DOCKER_REGISTRY)
-              command: 'buildAndPush'
-              Dockerfile: 'publish/Dockerfile'
-              buildContext: '$(Build.SourcesDirectory)/publish'
-              tags: |
-                $(BUILD_NUMBER)
-            displayName: 'build and push version only'
+              ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+                tags: |
+                  $(BUILD_NUMBER)
+                  latest
+              ${{ else }}:
+                tags: |
+                  $(BUILD_NUMBER)
+            displayName: 'build and push docker image'
 
           - publish: './docker-compose.yaml'
             artifact: 'docker-compose'
