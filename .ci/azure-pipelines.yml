@@ -77,11 +77,11 @@ stages:
               buildContext: '$(Build.SourcesDirectory)/publish'
               ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
                 tags: |
-                  $(Build.BuildId)
+                  $(BUILD_NUMBER)
                   latest
               ${{ else }}:
                 tags: |
-                  $(Build.BuildId)
+                  $(BUILD_NUMBER)
             displayName: 'build and push docker image'
 
           - publish: './docker-compose.yaml'
