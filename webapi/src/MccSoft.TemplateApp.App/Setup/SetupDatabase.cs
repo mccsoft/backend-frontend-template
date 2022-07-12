@@ -31,7 +31,7 @@ public static partial class SetupDatabase
         // If you'd like to modify this class, consider adding your custom code in the SetupDatabase.partial.cs
         // This will make it easier to pull changes from Template when Template is updated
         // (actually this file will be overwritten by a file from template, which will make your changes disappear)
-        await RunMigrationsProjectSpecific(app);
+        await RunMigrationsProjectSpecific(app, scope, context);
     }
 
     public static void AddDatabase(WebApplicationBuilder builder)
@@ -82,7 +82,11 @@ public static partial class SetupDatabase
         AddSeeders(services, configuration);
     }
 
-    private static partial Task RunMigrationsProjectSpecific(WebApplication app);
+    private static partial Task RunMigrationsProjectSpecific(
+        WebApplication app,
+        IServiceScope scope,
+        TemplateAppDbContext context
+    );
 
     static partial void AddSeeders(IServiceCollection services, IConfiguration configuration);
 
