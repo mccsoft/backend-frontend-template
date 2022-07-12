@@ -353,7 +353,7 @@ type GetProductQueryParameters = {
 export class ProductQuery{
 
     get baseUrl() {
-      return getBaseUrl() ?? '' + 'http://localhost';
+      return getBaseUrl() ?? '' + '';
     }
 
     static get Client() {
@@ -689,7 +689,7 @@ export class SignUrlClient {
 export class SignUrlQuery{
 
     get baseUrl() {
-      return getBaseUrl() ?? '' + 'http://localhost';
+      return getBaseUrl() ?? '' + '';
     }
 
     static get Client() {
@@ -926,69 +926,6 @@ export class TestDataClient {
     }
 
     /**
-     * Tests RequiredOrUndefined attribute
-     */
-    patch(dto: TestPatchDto , cancelToken?: CancelToken | undefined): Promise<string> {
-        let url_ = this.baseUrl + "/patch";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(dto);
-
-        let options_ = <AxiosRequestConfig>{
-            data: content_,
-            method: "POST",
-            url: url_,
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processPatch(_response);
-        });
-    }
-
-    protected processPatch(response: AxiosResponse): Promise<string> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 400) {
-            const _responseText = response.data;
-            let result400: any = null;
-            let resultData400  = _responseText;
-            result400 = ValidationProblemDetails.fromJS(resultData400);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
-
-        } else if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
-            return Promise.resolve<string>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<string>(null as any);
-    }
-
-    /**
      * Try this in browser with language set to DE
      * @param a (optional) 
      */
@@ -1058,7 +995,7 @@ export class TestDataClient {
 export class TestDataQuery{
 
     get baseUrl() {
-      return getBaseUrl() ?? '' + 'http://localhost';
+      return getBaseUrl() ?? '' + '';
     }
 
     static get Client() {
@@ -1123,7 +1060,7 @@ export class TestDataQuery{
     static setThrowErrorDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: string | undefined) => string) {
         queryClient.setQueryData(queryKey, updater);
     }
-          }
+        }
 
 export class VersionClient {
     private instance: AxiosInstance;
@@ -1201,7 +1138,7 @@ export class VersionClient {
 export class VersionQuery{
 
     get baseUrl() {
-      return getBaseUrl() ?? '' + 'http://localhost';
+      return getBaseUrl() ?? '' + '';
     }
 
     static get Client() {
@@ -1465,7 +1402,7 @@ export class ProductDto implements IProductDto {
         data["id"] = this.id;
         data["title"] = this.title;
         data["productType"] = this.productType;
-        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : <any>undefined;
+        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : this.lastStockUpdatedAt;
         return data;
     }
 }
@@ -1517,7 +1454,7 @@ export class CreateProductDto implements ICreateProductDto {
         data = typeof data === 'object' ? data : {};
         data["title"] = this.title;
         data["productType"] = this.productType;
-        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : <any>undefined;
+        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : this.lastStockUpdatedAt;
         return data;
     }
 }
@@ -1561,7 +1498,7 @@ export class PatchProductDto implements IPatchProductDto {
         data = typeof data === 'object' ? data : {};
         data["title"] = this.title;
         data["productType"] = this.productType;
-        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : <any>undefined;
+        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : this.lastStockUpdatedAt;
         return data;
     }
 }
@@ -1659,7 +1596,7 @@ export class ProductListItemDto implements IProductListItemDto {
         data["id"] = this.id;
         data["title"] = this.title;
         data["productType"] = this.productType;
-        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : <any>undefined;
+        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : this.lastStockUpdatedAt;
         return data;
     }
 }
@@ -1674,42 +1611,6 @@ export interface IProductListItemDto {
 export enum SortOrder {
     Asc = "Asc",
     Desc = "Desc",
-}
-
-export class TestPatchDto implements ITestPatchDto {
-    value!: string;
-
-    constructor(data?: ITestPatchDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.value = _data["value"];
-        }
-    }
-
-    static fromJS(data: any): TestPatchDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new TestPatchDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["value"] = this.value;
-        return data;
-    }
-}
-
-export interface ITestPatchDto {
-    value: string;
 }
 
 function formatDate(d: Date) {

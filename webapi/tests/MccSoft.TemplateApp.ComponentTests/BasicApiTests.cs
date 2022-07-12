@@ -85,17 +85,20 @@ namespace MccSoft.TemplateApp.ComponentTests
         public async Task GenerateHttpClient_ValidAndExported()
         {
             string exportPath = Path.GetTempFileName();
+            string url = Configuration["Swagger:Endpoint:Url"];
+            await SaveSwaggerJsonToFile(url, exportPath, null);
+            await GenerateTypescriptHttpClient(exportPath);
 
-            // await SaveSwaggerJsonToFile(exportPath, null);
-            // await GenerateTypescriptHttpClient(exportPath);
-
-            await SaveSwaggerJsonToFile(exportPath, "https://localhost");
+            await SaveSwaggerJsonToFile(
+                url.Replace("v1", "csharp"),
+                exportPath,
+                "https://localhost"
+            );
             await GenerateCSharpHttpClient(exportPath);
         }
 
-        private async Task SaveSwaggerJsonToFile(string exportPath, string baseUrl)
+        private async Task SaveSwaggerJsonToFile(string url, string exportPath, string baseUrl)
         {
-            string url = Configuration["Swagger:Endpoint:Url"];
             Assert.False(string.IsNullOrEmpty(url), "No url for swagger found");
             Assert.False(string.IsNullOrEmpty(exportPath), "Export path for swagger not found.");
 
@@ -154,7 +157,7 @@ namespace MccSoft.TemplateApp.ComponentTests
                 " "
             );
 
-            File.WriteAllText(
+            await File.WriteAllTextAsync(
                 "../../../../../src/MccSoft.TemplateApp.Http/GeneratedClient.cs",
                 csharpCode
             );

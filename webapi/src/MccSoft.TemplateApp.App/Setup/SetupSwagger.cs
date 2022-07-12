@@ -22,53 +22,67 @@ public static partial class SetupSwagger
         var swaggerOptions = configuration.GetSwaggerOptions();
         services.AddOpenApiDocument(options =>
         {
-            options.AddSecurity(
-                "Bearer",
-                new OpenApiSecurityScheme()
-                {
-                    Type = OpenApiSecuritySchemeType.OpenIdConnect,
-                    OpenIdConnectUrl = "/.well-known/openid-configuration",
-                    Flow = OpenApiOAuth2Flow.Application,
-                }
-            );
-            options.AddSecurity(
-                "JWT Token",
-                new OpenApiSecurityScheme()
-                {
-                    Type = OpenApiSecuritySchemeType.ApiKey,
-                    Name = "Authorization",
-                    Description = "Copy 'Bearer ' + valid JWT token into field",
-                    In = OpenApiSecurityApiKeyLocation.Header
-                }
-            );
-
-            options.PostProcess = document =>
-            {
-                document.Info = new OpenApiInfo
-                {
-                    Version = swaggerOptions.Version,
-                    Title = swaggerOptions.Title,
-                    Description = swaggerOptions.Description,
-                    Contact = new OpenApiContact { Email = swaggerOptions.Contact.Email },
-                    License = new OpenApiLicense { Name = swaggerOptions.License.Name },
-                };
-            };
-            options.OperationProcessors.Add(
-                new AspNetCoreOperationSecurityScopeProcessor("Bearer")
-            );
-            var isCsharp = configuration.GetValue<bool>("Swagger:Csharp");
+            ConfigureOpenApiDocument(options, swaggerOptions);
             options.SchemaProcessors.Add(
-                new RequireValueTypesSchemaProcessor(makePatchRequestFieldsNullable: isCsharp)
+                new RequireValueTypesSchemaProcessor(makePatchRequestFieldsNullable: false)
             );
-            options.GenerateEnumMappingDescription = true;
-
-            AdjustDefaultOpenApiDocument(options);
+        });
+        services.AddOpenApiDocument(options =>
+        {
+            ConfigureOpenApiDocument(options, swaggerOptions);
+            options.DocumentName = "csharp";
+            options.SchemaProcessors.Add(
+                new RequireValueTypesSchemaProcessor(makePatchRequestFieldsNullable: true)
+            );
         });
 
         // If you'd like to modify this class, consider adding your custom code in the SetupSwagger.partial.cs
         // This will make it easier to pull changes from Template when Template is updated
         // (actually this file will be overwritten by a file from template, which will make your changes disappear)
         AddProjectSpecifics(builder);
+    }
+
+    private static void ConfigureOpenApiDocument(
+        AspNetCoreOpenApiDocumentGeneratorSettings options,
+        SwaggerOptions swaggerOptions
+    )
+    {
+        options.AddSecurity(
+            "Bearer",
+            new OpenApiSecurityScheme()
+            {
+                Type = OpenApiSecuritySchemeType.OpenIdConnect,
+                OpenIdConnectUrl = "/.well-known/openid-configuration",
+                Flow = OpenApiOAuth2Flow.Application,
+            }
+        );
+        options.AddSecurity(
+            "JWT Token",
+            new OpenApiSecurityScheme()
+            {
+                Type = OpenApiSecuritySchemeType.ApiKey,
+                Name = "Authorization",
+                Description = "Copy 'Bearer ' + valid JWT token into field",
+                In = OpenApiSecurityApiKeyLocation.Header
+            }
+        );
+
+        options.PostProcess = document =>
+        {
+            document.Info = new OpenApiInfo
+            {
+                Version = swaggerOptions.Version,
+                Title = swaggerOptions.Title,
+                Description = swaggerOptions.Description,
+                Contact = new OpenApiContact { Email = swaggerOptions.Contact.Email },
+                License = new OpenApiLicense { Name = swaggerOptions.License.Name },
+            };
+        };
+        options.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("Bearer"));
+
+        options.GenerateEnumMappingDescription = true;
+
+        AdjustDefaultOpenApiDocument(options);
     }
 
     public static void UseSwagger(WebApplication app)
@@ -81,12 +95,11 @@ public static partial class SetupSwagger
 
         app.UseOpenApi(options =>
         {
-            options.Path = "/swagger/v1/swagger.json";
+            options.Path = "/swagger/{documentName}/swagger.json";
         });
         app.UseSwaggerUi3(options =>
         {
             options.Path = "/swagger";
-            options.DocumentPath = "/swagger/v1/swagger.json";
             options.OAuth2Client = new OAuth2ClientSettings()
             {
                 AppName = "swagger",

@@ -21,7 +21,7 @@
     "typecheck": "yarn frontend typecheck",
     "start": "yarn frontend start",
     "start-remote": "yarn frontend start-remote",
-    "generate-api-client": "yarn frontend generate-api-client",
+    "generate-api-clients": "yarn frontend generate-api-clients",
     "generate-api-client-remote": "yarn frontend generate-api-client-remote",
     "rename": "node scripts/rename-script.js",
     "pull-changes-from-template": "node scripts/pull-template-changes.js",
