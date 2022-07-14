@@ -13,6 +13,11 @@ const args = yargs(hideBin(process.argv))
       type: "string",
       description: "Name of the project (e.g. StudyApp)",
     })
+    .option("company", {
+      alias: "c",
+      type: "string",
+      description: "Name of the root level namespace (e.g. MccSoft)",
+    })
     //.demandOption(["name"])
     .help().argv;
 
@@ -23,8 +28,11 @@ if (!fs.existsSync("./scripts/pull-template-changes.js")) {
 
 const templateFolder = process.cwd() + "_template";
 
+const companyName = args.company || detectCompanyName();
 const projectName = args.name || detectProjectName();
-console.log(`ProjectName: ${projectName}`);
+const prefix = `${companyName}.${projectName}`;
+
+console.log(`ProjectName: ${projectName}, CompanyName: ${companyName}`);
 if (!projectName) {
   console.error('Unable to determine the project name. Please, use --name option');
   process.exit();
@@ -42,17 +50,23 @@ copyProjectFolder("webapi/Lib", {
   ignorePattern: /partial\.cs/
 });
 copyProjectFolder("docs");
-copyProjectFolder(`webapi/src/MccSoft.${projectName}.Http/GeneratedClientOverrides.cs`);
-copyProjectFolder(`webapi/tests/MccSoft.${projectName}.ComponentTests/Infrastructure/ComponentTestFixture.cs`);
-copyProjectFolder(`webapi/src/MccSoft.${projectName}.App/Utils`, {
+copyProjectFolder(`webapi/src/${prefix}.Http/GeneratedClientOverrides.cs`);
+copyProjectFolder(`webapi/tests/${prefix}.ComponentTests/Infrastructure/ComponentTestFixture.cs`);
+copyProjectFolder(`webapi/src/${prefix}.App/Utils`, {
   ignorePattern: /partial\.cs/
 });
-copyProjectFolder(`webapi/src/MccSoft.${projectName}.App/Setup`, {
+copyProjectFolder(`webapi/src/${prefix}.App/Setup`, {
   ignorePattern: /partial\.cs/
 });
 
 syncPacketsInPackageJson('package.json');
 syncPacketsInPackageJson('frontend/package.json');
+syncReferencesInProjects(`webapi/src/${prefix}.App/${prefix}.App.csproj`);
+syncReferencesInProjects(`webapi/src/${prefix}.App/${prefix}.Common.csproj`);
+syncReferencesInProjects(`webapi/src/${prefix}.App/${prefix}.Domain.csproj`);
+syncReferencesInProjects(`webapi/src/${prefix}.App/${prefix}.Http.csproj`);
+syncReferencesInProjects(`webapi/src/${prefix}.App/${prefix}.Persistence.csproj`);
+
 
 process.exit();
 
@@ -95,6 +109,22 @@ function detectProjectName() {
 
   return result[1];
 }
+
+function detectCompanyName() {
+  return 'MccSoft';
+  const regex = /MccSoft\.(.*)\.sln/
+  const solutionFile = findFileMatching('webapi', regex);
+  if (!solutionFile)
+    return null;
+
+  console.log('Found solution file:', solutionFile);
+  const result = solutionFile.match(regex);
+  if (!result)
+    return null;
+
+  return result[1];
+}
+
 
 function findFileMatching(dir, regex) {
   const files = fs.readdirSync(dir);
@@ -147,7 +177,37 @@ function syncReferencesInProjects(relativePathInsideProject) {
 }
 
 function doSyncReferencesInProjects(src, dest) {
+  const sourceFileContent = fs.readFileSync(src).toString('ascii');
+  let destinationFileContent = fs.readFileSync(dest).toString('ascii');
 
+  const matches = sourceFileContent.matchAll(/<PackageReference Include="(.*?)" Version="(.*?)" \/>/gm);
+  let addition = "";
+
+  for (const match of matches) {
+    const found = destinationFileContent.match(`<PackageReference.*?Include="${match[1]}".*?Version="(.*?)".*?\/>`);
+
+    if (found) {
+      console.log(`Found ${match[1]}, ${match[2]}, ${found[1]}.`);
+      if (semver.gt(match[2], found[1])) {
+        destinationFileContent = destinationFileContent
+            .replace(`<PackageReference Include="${match[1]}" Version="${found[1]}" />`,
+            `<PackageReference Include="${match[1]}" Version="${match[2]}" />`);
+      }
+    } else {
+      // add package to file
+      addition += `<PackageReference Include="${match[1]}" Version="${match[2]}" \/>`;
+    }
+  }
+
+  if (addition) {
+    destinationFileContent = destinationFileContent.replace('<\/Project>',
+        `  <ItemGroup>
+${addition}
+  </ItemGroup>
+</Project>`);
+  }
+
+  fs.writeFileSync(dest, destinationFileContent);
 }
 
 function syncPacketsInPackageJson(relativePathInsideProject) {
@@ -181,5 +241,5 @@ function doSyncPacketsInPackageJson(src, dest) {
   }
 
 
-  fs.writeFileSync(dest, JSON.stringify(destJson, undefined, 2 ));
+  fs.writeFileSync(dest, JSON.stringify(destJson, undefined, 2));
 }
