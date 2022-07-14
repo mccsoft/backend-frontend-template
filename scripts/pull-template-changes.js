@@ -3,7 +3,8 @@ import yargs from "yargs";
 import fs from "fs";
 import path from "path";
 import {hideBin} from "yargs/helpers";
-import {execSync} from 'child_process'
+import {execSync} from 'child_process';
+import semver from 'semver';
 
 const args = yargs(hideBin(process.argv))
     .version("0.1")
@@ -49,6 +50,9 @@ copyProjectFolder(`webapi/src/MccSoft.${projectName}.App/Utils`, {
 copyProjectFolder(`webapi/src/MccSoft.${projectName}.App/Setup`, {
   ignorePattern: /partial\.cs/
 });
+
+syncPacketsInPackageJson('package.json');
+syncPacketsInPackageJson('frontend/package.json');
 
 process.exit();
 
@@ -133,4 +137,49 @@ function copyRecursively(src, dest, options = {ignorePattern: undefined}) {
       fs.cpSync(src, dest, {force: true, preserveTimestamps: true});
     }
   }
+}
+
+function syncReferencesInProjects(relativePathInsideProject) {
+  const copyFrom = path.join(templateFolder, relativePathInsideProject);
+  const copyTo = path.join(process.cwd(), relativePathInsideProject);
+  doSyncReferencesInProjects(copyFrom, copyTo);
+
+}
+
+function doSyncReferencesInProjects(src, dest) {
+
+}
+
+function syncPacketsInPackageJson(relativePathInsideProject) {
+  const copyFrom = path.join(templateFolder, relativePathInsideProject);
+  const copyTo = path.join(process.cwd(), relativePathInsideProject);
+  doSyncPacketsInPackageJson(copyFrom, copyTo);
+}
+
+function doSyncPacketsInPackageJson(src, dest) {
+  const sourceFileContent = fs.readFileSync(src);
+  const destinationFileContent = fs.readFileSync(dest);
+
+  const sourceJson = JSON.parse(sourceFileContent);
+  const destJson = JSON.parse(destinationFileContent);
+  if (sourceJson.dependencies) {
+    Object.keys(sourceJson.dependencies).forEach(key => {
+      const value = sourceJson.dependencies[key];
+      if (!destJson.dependencies[key] || semver.gt(value, destJson.dependencies[key])) {
+        destJson.dependencies[key] = value;
+      }
+    });
+  }
+
+  if (sourceJson.devDependencies) {
+    Object.keys(sourceJson.devDependencies).forEach(key => {
+      const value = sourceJson.devDependencies[key];
+      if (!destJson.devDependencies[key] || semver.gt(value, destJson.devDependencies[key])) {
+        destJson.devDependencies[key] = value;
+      }
+    });
+  }
+
+
+  fs.writeFileSync(dest, JSON.stringify(destJson, undefined, 2 ));
 }
