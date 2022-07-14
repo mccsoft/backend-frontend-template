@@ -1,5 +1,6 @@
 import React, {
   HTMLAttributes,
+  useEffect,
   useLayoutEffect,
   useRef,
   useState,
@@ -23,7 +24,15 @@ export const JLottie: React.FC<
       ...options,
       container: lottieDiv.current,
     });
-    return () => animation.destroy();
+    return () => {
+      try {
+        animation.destroy();
+      } catch (e) {
+        /* JLottie throws an error like `cannot call innerHTML of undefined`.
+         * It can't be prevented, because DOM was already unmounted
+         */
+      }
+    };
   }, []);
   const [id] = useState(() => createId());
 
