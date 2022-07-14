@@ -18,6 +18,7 @@ import { logOut } from '../../helpers/interceptors/auth/auth-interceptor';
 import styles from './RootPage.module.scss';
 import Logger from 'js-logger';
 import { ProductDetailsPage } from './products/details/ProductDetailsPage';
+import { EditProductPage } from './products/edit/EditProductPage';
 
 export const RootPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -34,6 +35,10 @@ export const RootPage: React.FC = () => {
             <Route
               path={Links.Authorized.CreateProduct.route}
               element={<CreateProductPage />}
+            />
+            <Route
+              path={Links.Authorized.EditProduct.route}
+              element={<EditProductPage />}
             />
             <Route
               path={Links.Authorized.Products.route}

@@ -9,6 +9,7 @@ export const Links = {
     Products: createLink('/products'),
     ProductDetails: createLink('/products/:id'),
     CreateProduct: createLink('/products/create'),
+    EditProduct: createLink('/products/:id/edit'),
     UiKit: createLink('/uikit'),
   },
 };

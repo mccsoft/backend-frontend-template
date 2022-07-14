@@ -53,6 +53,22 @@ export const ProductListPage: React.FC = () => {
             width: 'auto',
             Header: i18n.t('column_title'),
           },
+          {
+            accessor: 'id',
+            Cell: ({ row }) => (
+              <div>
+                <AppLink
+                  to={Links.Authorized.EditProduct.link({
+                    id: row.original.id,
+                  })}
+                >
+                  Edit
+                </AppLink>{' '}
+              </div>
+            ),
+            width: 'auto',
+            Header: '',
+          },
         ];
       }, [i18n.i18n.language]),
       manualSortBy: true,

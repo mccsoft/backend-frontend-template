@@ -13,6 +13,12 @@
         "product_type": "Product Type",
         "lastStockUpdatedAt": "Last Stock Update"
       },
+      "Edit": {
+        "save_button": "Save",
+        "title": "Title",
+        "product_type": "Product Type",
+        "lastStockUpdatedAt": "Last Stock Update"
+      },
       "list": {
         "column_title": "Title"
       }
