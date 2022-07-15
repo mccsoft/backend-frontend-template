@@ -41,6 +41,8 @@ services:
       - Serilog__Remote__Token=${Serilog__Remote__Token}
       - Serilog__Remote__InstanceName=${Serilog__Remote__InstanceName}
       - SignUrl__Secret=${SignUrl__Secret}
+    volumes:
+    - ./deafult_file_storage:/files:rw
 
   nginx-proxy:
     image: nginxproxy/nginx-proxy

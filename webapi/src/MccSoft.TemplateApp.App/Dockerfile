@@ -4,7 +4,8 @@ USER root
 # we need gettext-base for envsubst to work
 RUN \
   apt-get update \
-  && apt-get -y install gettext-base
+  && apt-get -y install gettext-base \
+  && mkdir /files
 
 ENV ASPNETCORE_URLS="http://*:5000"
 ENV ASPNETCORE_ENVIRONMENT="Docker"

@@ -4,6 +4,7 @@ using MccSoft.TemplateApp.App.Utils.Localization;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Persistence;
 using MccSoft.WebApi.SignedUrl;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
@@ -26,6 +27,20 @@ public static partial class SetupAuth
 
         // uncommenting next line breaks AzureAD authentication (i.e. any external OpenId)
         // JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+        services
+            .AddDataProtection(x =>
+            {
+                x.ApplicationDiscriminator = nameof(TemplateApp);
+            })
+            .PersistKeysToFileSystem(
+                new DirectoryInfo(
+                    Path.Combine(
+                        configuration.GetValue<string>("DefaultFileStorage"),
+                        "data-protection-keys"
+                    )
+                )
+            );
 
         services
             .AddDefaultIdentity<User>(options =>
