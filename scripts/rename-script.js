@@ -19,17 +19,25 @@ const args = yargs(hideBin(process.argv))
       type: "string",
       description: "Name of the project (e.g. StudyApp)",
     })
+    .option("company", {
+      alias: "c",
+      type: "string",
+      description: "Name of the root level namespace (e.g. MccSoft)",
+      default: 'MccSoft'
+    })
     .demandOption(["name"])
     .help().argv;
 
+const companyName = args.company;
 const projectName = args.name;
-console.log(`ProjectName: ${projectName}`);
+console.log(`ProjectName: ${projectName}, CompanyName: ${companyName}`);
 const frontendPortNumber = Math.round(Math.random() * 1000) + 3100;
 console.log(`FrontendPortNumber: ${frontendPortNumber}`);
 const backendPortNumber = Math.round(Math.random() * 1000) + 49000;
 console.log(`BackendPortNumber: ${backendPortNumber}`);
 
 const replacements = [
+  { find: "MccSoft.", replace: `${companyName}.` },
   { find: "TemplateApp", replace: projectName },
   { find: "templateapp", replace: projectName.toLowerCase() },
   {
@@ -63,7 +71,7 @@ await changeFrontendPortNumber(frontendPortNumber);
 await changeBackendPortNumber(backendPortNumber);
 await changePasswordsInAppsettings();
 
-await fs.rename('webapi/.idea/.idea.MccSoft.TemplateApp', `webapi/.idea/.idea.MccSoft.${pascalCase(projectName)}`, ()=>{})
+await fs.rename('webapi/.idea/.idea.MccSoft.TemplateApp', `webapi/.idea/.idea.${companyName}.${pascalCase(projectName)}`, ()=>{})
 await renameFiles(replacements);
 await replaceInFiles(replacements);
 

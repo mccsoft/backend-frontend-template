@@ -28,8 +28,9 @@ if (!fs.existsSync("./scripts/pull-template-changes.js")) {
 
 const templateFolder = process.cwd() + "_template";
 
-const companyName = args.company || detectCompanyName();
-const projectName = args.name || detectProjectName();
+const detectedInfo = detectProjectAndCompanyName()
+const companyName = args.company || detectedInfo.company;
+const projectName = args.name || detectedInfo.project;
 const prefix = `${companyName}.${projectName}`;
 
 console.log(`ProjectName: ${projectName}, CompanyName: ${companyName}`);
@@ -96,33 +97,21 @@ function cloneTemplate(folder) {
   execSync(`git clone https://github.com/mcctomsk/backend-frontend-template.git ${templateFolder}`)
 }
 
-function detectProjectName() {
-  const regex = /MccSoft\.(.*)\.sln/
-  const solutionFile = findFileMatching('webapi', regex);
-  if (!solutionFile)
-    return null;
+function detectProjectAndCompanyName() {
+  const regex = /(.*?)\.(.*)\.App/
+  const appFolder = findFileMatching('webapi', regex);
+  if (!appFolder)
+    return 'MccSoft';
 
-  console.log('Found solution file:', solutionFile);
-  const result = solutionFile.match(regex);
+  console.log('Found App folder:', appFolder);
+  const result = appFolder.match(regex);
   if (!result)
     return null;
 
-  return result[1];
-}
-
-function detectCompanyName() {
-  return 'MccSoft';
-  const regex = /MccSoft\.(.*)\.sln/
-  const solutionFile = findFileMatching('webapi', regex);
-  if (!solutionFile)
-    return null;
-
-  console.log('Found solution file:', solutionFile);
-  const result = solutionFile.match(regex);
-  if (!result)
-    return null;
-
-  return result[1];
+  return {
+    company: result[1],
+    project: result[2],
+  };
 }
 
 
@@ -191,7 +180,7 @@ function doSyncReferencesInProjects(src, dest) {
       if (semver.gt(match[2], found[1])) {
         destinationFileContent = destinationFileContent
             .replace(`<PackageReference Include="${match[1]}" Version="${found[1]}" />`,
-            `<PackageReference Include="${match[1]}" Version="${match[2]}" />`);
+                `<PackageReference Include="${match[1]}" Version="${match[2]}" />`);
       }
     } else {
       // add package to file
