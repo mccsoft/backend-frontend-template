@@ -112,9 +112,6 @@
     <Content Update="appsettings.Test.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="inject-environment-variables-to-spa.sh">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Remove="Statistics\Patient2.repx" />
     <Content Remove="logs\**" />
     <Content Remove="Areas\Identity\Pages\Account\ResetPassword.cshtml" />
