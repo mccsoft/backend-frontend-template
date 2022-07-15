@@ -112,23 +112,7 @@
     <Content Update="appsettings.Test.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Remove="Statistics\Patient2.repx" />
     <Content Remove="logs\**" />
-    <Content Remove="Areas\Identity\Pages\Account\ResetPassword.cshtml" />
-    <Content Remove="Areas\Identity\Pages\Account\RegisterConfirmation.cshtml" />
-    <Content Remove="Areas\Identity\Pages\Account\ForgotPassword.cshtml" />
-    <Content Remove="Areas\Identity\Pages\Account\ConfirmEmailChange.cshtml" />
-    <Content Remove="Areas\Identity\Pages\Account\AccessDenied.cshtml" />
-    <Content Remove="Areas\Identity\Pages\Account\Manage\_ViewImports.cshtml" />
-    <Content Remove="Areas\Identity\Pages\Account\Manage\_ManageNav.cshtml" />
-    <Content Remove="Areas\Identity\Pages\Account\Manage\_Layout.cshtml" />
-    <Content Remove="Areas\Identity\Pages\Account\Manage\TwoFactorAuthentication.cshtml" />
-    <Content Remove="Areas\Identity\Pages\Account\Manage\ResetAuthenticator.cshtml" />
-    <Content Remove="Areas\Identity\Pages\Account\Manage\Index.cshtml" />
-    <Content Remove="Areas\Identity\Pages\Account\Manage\GenerateRecoveryCodes.cshtml" />
-    <Content Remove="Areas\Identity\Pages\Account\Manage\ExternalLogins.cshtml" />
-    <Content Remove="Areas\Identity\Pages\Account\Manage\DownloadPersonalData.cshtml" />
-    <Content Remove="Areas\Identity\Pages\Account\Manage\Disable2fa.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
