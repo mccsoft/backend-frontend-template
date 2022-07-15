@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace MccSoft.TemplateApp.App.Setup;
 
-public static class SetupAudit
+public static partial class SetupAudit
 {
     public static IHttpContextAccessor HttpContextAccessor { get; set; }
 
@@ -40,14 +40,8 @@ public static class SetupAudit
                             TemplateAppDbContext dbContext = (TemplateAppDbContext)
                                 ev.EntityFrameworkEvent.GetDbContext();
                             DatabaseFacade db = dbContext.Database;
-                            DbConnection conn = db.GetDbConnection();
                             IDbContextTransaction tran = db.CurrentTransaction;
-                            TemplateAppDbContext auditContext = new TemplateAppDbContext(
-                                new DbContextOptionsBuilder<TemplateAppDbContext>()
-                                    .UseNpgsql(conn)
-                                    .Options,
-                                dbContext.UserAccessor
-                            );
+                            TemplateAppDbContext auditContext = CreateAuditDbContext(dbContext);
                             if (tran != null)
                             {
                                 auditContext.Database.UseTransaction(tran.GetDbTransaction());
@@ -89,6 +83,10 @@ public static class SetupAudit
             )
             .UseOptOut();
     }
+
+    private static partial TemplateAppDbContext CreateAuditDbContext(
+        TemplateAppDbContext dbContext
+    );
 
     public static void UseAudit(WebApplication app)
     {
