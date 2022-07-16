@@ -42,7 +42,7 @@ if (!projectName) {
 }
 
 cloneTemplate(templateFolder);
-renameFilesInTemplate(templateFolder, projectName);
+renameFilesInTemplate(templateFolder, projectName, companyName);
 
 // run post-processor, so each specific project could modify template files before they are copied over
 execSync(
@@ -111,14 +111,14 @@ function copyProjectFolder(
   copyRecursively(copyFrom, copyTo, options);
 }
 
-function renameFilesInTemplate(templateFolder, projectName) {
+function renameFilesInTemplate(templateFolder, projectName, companyName) {
   console.log('Calling `yarn install` in template...');
   execSync(`yarn install`, {
     cwd: templateFolder,
   });
 
   console.log('Renaming files in template...');
-  execSync(`yarn rename -n ${projectName}`, {
+  execSync(`yarn rename -n ${projectName} -c ${companyName}`, {
     cwd: templateFolder,
   });
 }

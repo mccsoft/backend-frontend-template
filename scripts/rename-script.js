@@ -38,7 +38,7 @@ const backendPortNumber = Math.round(Math.random() * 1000) + 49000;
 console.log(`BackendPortNumber: ${backendPortNumber}`);
 
 const replacements = [
-  { find: 'MccSoft.', replace: `${companyName}.` },
+  { find: 'MccSoft\.', replace: `${companyName}.` },
   { find: `${companyName}.IntegreSql.EF`, replace: `MccSoft.IntegreSql.EF` },
   { find: 'TemplateApp', replace: projectName },
   { find: 'templateapp', replace: projectName.toLowerCase() },
