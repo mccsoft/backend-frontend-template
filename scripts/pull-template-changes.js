@@ -219,8 +219,8 @@ function syncReferencesInProjects(relativePathInsideProject) {
 
 function doSyncReferencesInProjects(src, dest) {
   if (!fs.existsSync(src) || !fs.existsSync(dest)) return;
-  const sourceFileContent = fs.readFileSync(src).toString('ascii');
-  let destinationFileContent = fs.readFileSync(dest).toString('ascii');
+  const sourceFileContent = fs.readFileSync(src).toString('utf8');
+  let destinationFileContent = fs.readFileSync(dest).toString('utf8');
 
   const matches = sourceFileContent.matchAll(
     /<PackageReference Include="(.*?)" Version="(.*?)" \/>/gm,
