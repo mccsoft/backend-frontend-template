@@ -70,10 +70,10 @@ copyProjectFolder(`frontend/src/helpers`,{
 syncPacketsInPackageJson('package.json');
 syncPacketsInPackageJson('frontend/package.json');
 syncReferencesInProjects(`webapi/src/${prefix}.App/${prefix}.App.csproj`);
-syncReferencesInProjects(`webapi/src/${prefix}.App/${prefix}.Common.csproj`);
-syncReferencesInProjects(`webapi/src/${prefix}.App/${prefix}.Domain.csproj`);
-syncReferencesInProjects(`webapi/src/${prefix}.App/${prefix}.Http.csproj`);
-syncReferencesInProjects(`webapi/src/${prefix}.App/${prefix}.Persistence.csproj`);
+syncReferencesInProjects(`webapi/src/${prefix}.Common/${prefix}.Common.csproj`);
+syncReferencesInProjects(`webapi/src/${prefix}.Domain/${prefix}.Domain.csproj`);
+syncReferencesInProjects(`webapi/src/${prefix}.Http/${prefix}.Http.csproj`);
+syncReferencesInProjects(`webapi/src/${prefix}.Persistence/${prefix}.Persistence.csproj`);
 
 
 process.exit();
@@ -181,7 +181,6 @@ function doSyncReferencesInProjects(src, dest) {
     const found = destinationFileContent.match(`<PackageReference.*?Include="${match[1]}".*?Version="(.*?)".*?\/>`);
 
     if (found) {
-      console.log(`Found ${match[1]}, ${match[2]}, ${found[1]}.`);
       if (semver.gt(match[2], found[1])) {
         destinationFileContent = destinationFileContent
             .replace(`<PackageReference Include="${match[1]}" Version="${found[1]}" />`,
