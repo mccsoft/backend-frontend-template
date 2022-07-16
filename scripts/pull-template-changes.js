@@ -218,25 +218,34 @@ function doSyncPacketsInPackageJson(src, dest) {
   const destJson = JSON.parse(destinationFileContent);
   if (sourceJson.dependencies) {
     Object.keys(sourceJson.dependencies).forEach(key => {
-      const value = sourceJson.dependencies[key];
-      const sourceVersion = semver.clean(value);
-      const destVersion = semver.clean(destJson.dependencies[key] ?? '');
-      if (!destJson.dependencies[key] || semver.gt(sourceVersion, destVersion)) {
-        destJson.dependencies[key] = value;
+      try {
+        const value = sourceJson.dependencies[key];
+        const sourceVersion = semver.clean(value);
+        const destVersion = semver.clean(destJson.dependencies[key] ?? '');
+        if (!destJson.dependencies[key] || semver.gt(sourceVersion, destVersion)) {
+          destJson.dependencies[key] = value;
+        }
+      } catch (e) {
+        console.error(`Key: ${key}`);
+        throw e;
       }
     });
   }
 
   if (sourceJson.devDependencies) {
     Object.keys(sourceJson.devDependencies).forEach(key => {
-      const value = sourceJson.devDependencies[key];
-      const sourceVersion = semver.clean(value);
-      const destVersion = semver.clean(destJson.dependencies[key] ?? '');
-      if (!destJson.devDependencies[key] || semver.gt(sourceVersion, destVersion)) {
-        destJson.devDependencies[key] = value;
+      try {
+        const value = sourceJson.devDependencies[key];
+        const sourceVersion = semver.clean(value);
+        const destVersion = semver.clean(destJson.dependencies[key] ?? '');
+        if (!destJson.devDependencies[key] || semver.gt(sourceVersion, destVersion)) {
+          destJson.devDependencies[key] = value;
+        }
+      } catch (e) {
+        console.error(`Key: ${key}`);
+        throw e;
       }
     });
   }
 
-  fs.writeFileSync(dest, JSON.stringify(destJson, undefined, 2));
-}
+  fs.writeFileSync(dest, JSON.stringify(destJson, undefined, 2));}
