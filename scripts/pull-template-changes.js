@@ -26,11 +26,35 @@ if (!fs.existsSync('./scripts/pull-template-changes.js')) {
   process.exit();
 }
 
-const templateFolder = process.cwd() + '_template';
+const currentDir = process.cwd();
+if (!currentDir.endsWith('_template')) {
+  const detectedInfo = detectProjectAndCompanyName();
+  const companyName = args.company || detectedInfo.company;
+  const projectName = args.name || detectedInfo.project;
+
+  // if we are run from project folder do the following:
+  // 1. Clone template and rename files according to project & company
+  // 2. Run pull-template-changes from cloned folder
+  const templateFolder = process.cwd() + '_template';
+
+  cloneTemplate(templateFolder);
+  renameFilesInTemplate(templateFolder, projectName, companyName);
+
+  execSync(`node scripts/pull-template-changes.js`, {
+    cwd: templateFolder,
+    stdio: 'inherit',
+  });
+
+  process.exit();
+}
+
+const templateFolder = process.cwd();
+process.chdir(templateFolder.replace('_template', ''));
 
 const detectedInfo = detectProjectAndCompanyName();
 const companyName = args.company || detectedInfo.company;
 const projectName = args.name || detectedInfo.project;
+
 const prefix = `${companyName}.${projectName}`;
 
 console.log(`ProjectName: ${projectName}, CompanyName: ${companyName}`);
@@ -40,9 +64,6 @@ if (!projectName) {
   );
   process.exit();
 }
-
-cloneTemplate(templateFolder);
-renameFilesInTemplate(templateFolder, projectName, companyName);
 
 // run post-processor, so each specific project could modify template files before they are copied over
 execSync(
