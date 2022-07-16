@@ -40,14 +40,16 @@ export function AppTable<D extends object = object>(props: {
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   key={column.id}
                 >
-                  {column.render('Header')}
-                  <span>
-                    {column.isSorted
-                      ? column.isSortedDesc
-                        ? ' 🔽'
-                        : ' 🔼'
-                      : ''}
-                  </span>
+                  <>
+                    {column.render('Header')}
+                    <span>
+                      {column.isSorted
+                        ? column.isSortedDesc
+                          ? ' 🔽'
+                          : ' 🔼'
+                        : ''}
+                    </span>
+                  </>
                 </TableCell>
               ))}
             </TableRow>
