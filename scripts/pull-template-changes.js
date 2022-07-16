@@ -60,6 +60,13 @@ copyProjectFolder(`webapi/src/${prefix}.App/Setup`, {
   ignorePattern: /partial\.cs/
 });
 
+copyProjectFolder(`frontend/src/application/constants/create-link.ts`);
+copyProjectFolder(`frontend/src/components/sign-url`);
+copyProjectFolder(`frontend/src/components/animation`);
+copyProjectFolder(`frontend/src/helpers`,{
+  ignorePattern: /partial/
+});
+
 syncPacketsInPackageJson('package.json');
 syncPacketsInPackageJson('frontend/package.json');
 syncReferencesInProjects(`webapi/src/${prefix}.App/${prefix}.App.csproj`);

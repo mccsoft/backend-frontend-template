@@ -1,5 +1,6 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { QueryFactory } from 'services/api';
+import { SignUrlImagePartial } from './SignUrlImage.partial';
 
 type Props = Omit<
   React.DetailedHTMLProps<
@@ -12,30 +13,33 @@ type Props = Omit<
   fallback?: string;
 };
 
-export const SignUrlImage: FC<Props> = (props) => {
-  const { src, fallback, ...restProps } = props;
-  const cookieQuery = QueryFactory.SignUrlQuery.useSetSignatureCookieQuery({
-    refetchIntervalInBackground: true,
-    refetchInterval: 1 * 60 * 1000 /* once in 10 minutes*/,
-  });
+export const SignUrlImage = React.forwardRef<HTMLImageElement, Props>(
+  (props, ref) => {
+    const { src, fallback, ...restProps } = props;
+    const cookieQuery = QueryFactory.SignUrlQuery.useSetSignatureCookieQuery({
+      refetchIntervalInBackground: true,
+      refetchInterval: 1 * 60 * 1000 /* once in 10 minutes*/,
+    });
 
-  return (
-    <img
-      {...restProps}
-      src={
-        /*
+    return (
+      <SignUrlImagePartial
+        {...restProps}
+        ref={ref}
+        src={
+          /*
           We show fallback if the `url` is null or if the Cookie query has failed.
           While Cookie query is loading (initial loading) we show nothing, because it will probably load fast
           and it doesn't make sense to show `fallback` (we might want to show `loading` later)
            */
-        !src
-          ? fallback
-          : cookieQuery.isLoading
-          ? ''
-          : cookieQuery.isError
-          ? fallback
-          : src
-      }
-    />
-  );
-};
+          !src
+            ? fallback
+            : cookieQuery.isLoading
+            ? ''
+            : cookieQuery.isError
+            ? fallback
+            : src
+        }
+      />
+    );
+  },
+);

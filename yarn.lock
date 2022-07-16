@@ -2039,6 +2039,7 @@ __metadata:
     concurrently: 5.2.0
     copyfiles: 2.3.0
     cross-env: 7.0.3
+    lottie-web: 5.9.6
     node-replace: 0.3.3
     prettier: 2.6.2
     renamer: 4.0.0
@@ -6500,6 +6501,13 @@ fsevents@~2.3.2:
   bin:
     loose-envify: cli.js
   checksum: 6517e24e0cad87ec9888f500c5b5947032cdfe6ef65e1c1936a0c48a524b81e65542c9c3edc91c97d5bddc806ee2a985dbc79be89215d613b1de5db6d1cfe6f4
+  languageName: node
+  linkType: hard
+
+"lottie-web@npm:5.9.6":
+  version: 5.9.6
+  resolution: "lottie-web@npm:5.9.6"
+  checksum: aed6a1d0c24eefb6c42a42aae18f29737746551cfdc86319f1b9675f5bc276ba26971e8d2b0e1498df880571fe4bfe2fc87885a1d4f8a318d5e4e5b939b7a474
   languageName: node
   linkType: hard
 

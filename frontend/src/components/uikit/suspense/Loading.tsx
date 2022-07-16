@@ -1,19 +1,10 @@
 import clsx from 'clsx';
 import { convertToErrorString } from 'helpers/form/useErrorHandler';
 import React from 'react';
-import { JLottie } from 'components/animations/JLottie';
 import styles from './Loading.module.scss';
 
 import animationData from 'assets/animations/9629-loading.json';
-
-const defaultOptions = {
-  loop: true,
-  autoplay: true,
-  animationData: JSON.stringify(animationData),
-  rendererSettings: {
-    preserveAspectRatio: 'xMidYMid slice',
-  },
-};
+import { Lottie } from '../../animations/Lottie';
 
 interface Props {
   loading: boolean;
@@ -55,7 +46,7 @@ export const Loading: React.FC<Props> = (props) => {
         <div className={clsx(loadingStyles)} data-test-id="loading">
           <div className={styles.loading}>
             <div className={styles.row}>
-              <JLottie options={defaultOptions} className={styles.lottie} />
+              <Lottie animationData={animationData} className={styles.lottie} />
               {props.title && (
                 <div className={styles.title}> {props.title}</div>
               )}
