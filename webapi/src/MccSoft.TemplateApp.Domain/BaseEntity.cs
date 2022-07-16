@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using MccSoft.DomainHelpers.DomainEvents;
 
-namespace MccSoft.DomainHelpers
+namespace MccSoft.TemplateApp.Domain
 {
-    public class BaseEntity : IDomainEventEntity
+    public partial class BaseEntity : IDomainEventEntity
     {
         #region Domain Events
 
