@@ -151,10 +151,10 @@ function findFileMatching(dir, regex) {
 }
 
 function copyRecursively(src, dest, options = { ignorePattern: undefined }) {
-  var exists = fs.existsSync(src);
+  const exists = fs.existsSync(src);
   if (!exists) return;
-  var stats = exists && fs.statSync(src);
-  var isDirectory = exists && stats.isDirectory();
+  const stats = exists && fs.statSync(src);
+  const isDirectory = exists && stats.isDirectory();
   if (isDirectory) {
     if (!fs.existsSync(dest)) {
       fs.mkdirSync(dest);
@@ -192,6 +192,7 @@ function syncReferencesInProjects(relativePathInsideProject) {
 }
 
 function doSyncReferencesInProjects(src, dest) {
+  if (!fs.existsSync(src) || !fs.existsSync(dest)) return;
   const sourceFileContent = fs.readFileSync(src).toString('ascii');
   let destinationFileContent = fs.readFileSync(dest).toString('ascii');
 
@@ -238,6 +239,7 @@ function syncPacketsInPackageJson(relativePathInsideProject) {
 }
 
 function doSyncPacketsInPackageJson(src, dest) {
+  if (!fs.existsSync(src) || !fs.existsSync(dest)) return;
   const sourceFileContent = fs.readFileSync(src);
   const destinationFileContent = fs.readFileSync(dest);
 
