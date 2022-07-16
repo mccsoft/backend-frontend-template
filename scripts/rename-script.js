@@ -2,15 +2,9 @@
 import Renamer from "renamer";
 import yargs from "yargs";
 import fs from "fs";
-import { hideBin } from "yargs/helpers";
+import {hideBin} from "yargs/helpers";
 import replace from "node-replace";
-import {
-  camelCase,
-  constantCase,
-  paramCase,
-  pascalCase,
-  snakeCase,
-} from "change-case";
+import {camelCase, capitalCase, constantCase, paramCase, pascalCase, snakeCase,} from "change-case";
 
 const args = yargs(hideBin(process.argv))
     .version("0.1")
@@ -37,10 +31,10 @@ const backendPortNumber = Math.round(Math.random() * 1000) + 49000;
 console.log(`BackendPortNumber: ${backendPortNumber}`);
 
 const replacements = [
-  { find: "MccSoft\.", replace: `${companyName}.` },
-  { find: `${companyName}.IntegreSql.EF`, replace: `MccSoft.IntegreSql.EF` },
-  { find: "TemplateApp", replace: projectName },
-  { find: "templateapp", replace: projectName.toLowerCase() },
+  {find: "MccSoft\.", replace: `${companyName}.`},
+  {find: `${companyName}.IntegreSql.EF`, replace: `MccSoft.IntegreSql.EF`},
+  {find: "TemplateApp", replace: projectName},
+  {find: "templateapp", replace: projectName.toLowerCase()},
   {
     find: "templateApp",
     replace:
@@ -62,6 +56,11 @@ const replacements = [
         pascalCase(projectName) /* converts 'ProjectName' to 'ProjectName' */,
   },
   {
+    find: "Template App",
+    replace:
+        capitalCase(projectName) /* converts 'ProjectName' to 'ProjectName' */,
+  },
+  {
     find: "TEMPLATE_APP",
     replace:
         constantCase(projectName) /* converts 'ProjectName' to 'Project Name' */,
@@ -72,7 +71,8 @@ await changeFrontendPortNumber(frontendPortNumber);
 await changeBackendPortNumber(backendPortNumber);
 await changePasswordsInAppsettings();
 
-await fs.rename('webapi/.idea/.idea.MccSoft.TemplateApp', `webapi/.idea/.idea.${companyName}.${pascalCase(projectName)}`, ()=>{})
+await fs.rename('webapi/.idea/.idea.MccSoft.TemplateApp', `webapi/.idea/.idea.${companyName}.${pascalCase(projectName)}`, () => {
+})
 await renameFiles(replacements);
 await replaceInFiles(replacements);
 
@@ -206,10 +206,10 @@ function changePasswordsInAppsettings() {
 }
 
 function generatePassword(length) {
-  var result           = '';
-  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var result = '';
+  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   var charactersLength = characters.length;
-  for ( var i = 0; i < length; i++ ) {
+  for (var i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() *
         charactersLength));
   }
