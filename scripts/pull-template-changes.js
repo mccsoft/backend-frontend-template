@@ -50,32 +50,24 @@ execSync(
 );
 
 console.log('Starting to copy files...');
+const defaultOptions = {
+  ignorePattern: /partial\./,
+};
 copyProjectFolder(`scripts/pull-template-changes.js`);
-copyProjectFolder('webapi/Lib', {
-  ignorePattern: /partial\.cs/,
-});
+copyProjectFolder('webapi/Lib', defaultOptions);
 copyProjectFolder('docs');
 copyProjectFolder(`webapi/src/${prefix}.Http/GeneratedClientOverrides.cs`);
 copyProjectFolder(
   `webapi/tests/${prefix}.ComponentTests/Infrastructure/ComponentTestFixture.cs`,
 );
-copyProjectFolder(`webapi/src/${prefix}.App/Utils`, {
-  ignorePattern: /partial\.cs/,
-});
-copyProjectFolder(`webapi/src/${prefix}.App/Setup`, {
-  ignorePattern: /partial\.cs/,
-});
+copyProjectFolder(`webapi/src/${prefix}.Domain/BaseEntity.cs`);
+copyProjectFolder(`webapi/src/${prefix}.App/Utils`, defaultOptions);
+copyProjectFolder(`webapi/src/${prefix}.App/Setup`, defaultOptions);
 
 copyProjectFolder(`frontend/src/application/constants/create-link.ts`);
-copyProjectFolder(`frontend/src/components/sign-url`, {
-  ignorePattern: /partial/,
-});
-copyProjectFolder(`frontend/src/components/animations`, {
-  ignorePattern: /partial/,
-});
-copyProjectFolder(`frontend/src/helpers`, {
-  ignorePattern: /partial/,
-});
+copyProjectFolder(`frontend/src/components/sign-url`, defaultOptions);
+copyProjectFolder(`frontend/src/components/animations`, defaultOptions);
+copyProjectFolder(`frontend/src/helpers`, defaultOptions);
 
 syncPacketsInPackageJson('package.json');
 syncPacketsInPackageJson('frontend/package.json');
