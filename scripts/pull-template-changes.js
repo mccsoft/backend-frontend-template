@@ -106,9 +106,7 @@ function cloneTemplate(folder) {
 
 function detectProjectAndCompanyName() {
   const regex = /(.*?)\.(.*)\.App/
-  const appFolder = findFileMatching('webapi', regex);
-  if (!appFolder)
-    return 'MccSoft';
+  const appFolder = findFileMatching('webapi/src', regex);
 
   console.log('Found App folder:', appFolder);
   const result = appFolder.match(regex);
