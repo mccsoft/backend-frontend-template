@@ -101,23 +101,3 @@ Don't forget to change the favicons/tiles in `frontend/public` folder to the log
       doctl auth init -t (INSERT DIGITAL OCEAN API TOKEN HERE)
       doctl registry login
       ```
-##App environment variables (should be configured on Digital Ocean):
-
-- ConnectionStrings__DefaultConnection
-
-  Server=${db.HOSTNAME};Database=${db.DATABASE};Port=${db.PORT};Username=${db.USERNAME};Password=${db.PASSWORD};Pooling=true;Keepalive=5;Command Timeout=60;SSL Mode=Require;Trust Server Certificate=true
-
-- IdentityServer__Key__Password
-
-  (Value you entered when generating `idsrv4cert.pfx`)
-
-- REACT_APP_SENTRY_DSN
-
-  (Sentry URL you'd like to send FRONTEND errors to)
-
-- Sentry__Dsn
-
-  (Sentry URL you'd like to send BACKEND errors to)
-
-
-

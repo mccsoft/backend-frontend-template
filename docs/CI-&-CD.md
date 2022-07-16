@@ -32,6 +32,28 @@ The following steps are performed during build:
 1. Builds and tags the Docker image. You could do this on your PC by running `yarn docker-build`, or `build-with-docker` (if you want to build backend, frontend and image at once). [Dockerfile](https://github.com/mcctomsk/backend-frontend-template/blob/master/webapi/src/MccSoft.TemplateApp.App/Dockerfile) is taken from the webapi/src/App project.
 1. Pushes the built image to Container Registry.
 
+## Deploy to Azure Web Service
+If we care more about ease of setup/maintenance (e.g. editing env. variables via web interface), and spending a bit more money is not a concern, we usually deploy to Azure App Service.
+1. Create Azure App Service.
+2. Point it to your Docker image (using the `latest` tag for DEV environment).
+   1. Currently it's done via 'Deployment Center' menu.
+3. Set up environment variables
+   1. Currently it's done via 'Configuration' menu
+   2. Most probably you would need to change the following variables:
+      1. `ConnectionStrings__DefaultConnection` - connection string to a database
+      2. `DefaultUser__Password` - password for default `admin` user
+      3. `General__SiteUrl` - public URL of your site
+      4. OpenId certificates:
+         1. `OpenId__EncryptionCertificate__Base64Certificate`
+         2. `OpenId__EncryptionCertificate__Password`
+         3. `OpenId__SigningCertificate__Base64Certificate`
+         4. `OpenId__SigningCertificate__Password`
+         5. You could generate all of them by running [scripts/GenerateDotEnv.ps1](scripts/GenerateDotEnv.ps1) and checking the `.env.base` file.
+4. Map some folder (to persist data between docker restarts) to '/files' path (or whatever you specified in appsettings.json `DefaultFileStorage` variable)
+   1. Currently it's done via 'Configuration' menu, 'Path mappings' tab.
+#### Cons:
+1. It's hard to manage SSL certificate (via let's encrypt) if you want your own domain name.
+
 ## Deploy To Dev / Deploy To Prod
 For Deploy to work you need to set up a PC that will host your project. Instructions on setting it up are available in [README.md](https://github.com/mcctomsk/backend-frontend-template#set-up-hosting-server-droplet-on-digital-ocean).
 
