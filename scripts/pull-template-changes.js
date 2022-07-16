@@ -210,6 +210,7 @@ function syncPacketsInPackageJson(relativePathInsideProject) {
   doSyncPacketsInPackageJson(copyFrom, copyTo);
 }
 
+
 function doSyncPacketsInPackageJson(src, dest) {
   const sourceFileContent = fs.readFileSync(src);
   const destinationFileContent = fs.readFileSync(dest);
@@ -220,8 +221,8 @@ function doSyncPacketsInPackageJson(src, dest) {
     Object.keys(sourceJson.dependencies).forEach(key => {
       try {
         const value = sourceJson.dependencies[key];
-        const sourceVersion = semver.clean(value);
-        const destVersion = semver.clean(destJson.dependencies[key] ?? '');
+        const sourceVersion = semver.coerce(value)?.version;
+        const destVersion = semver.coerce(destJson.dependencies[key] ?? '')?.version;
         if (!destJson.dependencies[key] || semver.gt(sourceVersion, destVersion)) {
           destJson.dependencies[key] = value;
         }
@@ -236,8 +237,8 @@ function doSyncPacketsInPackageJson(src, dest) {
     Object.keys(sourceJson.devDependencies).forEach(key => {
       try {
         const value = sourceJson.devDependencies[key];
-        const sourceVersion = semver.clean(value);
-        const destVersion = semver.clean(destJson.dependencies[key] ?? '');
+        const sourceVersion = semver.coerce(value)?.version;
+        const destVersion = semver.coerce(destJson.dependencies[key] ?? '')?.version;
         if (!destJson.devDependencies[key] || semver.gt(sourceVersion, destVersion)) {
           destJson.devDependencies[key] = value;
         }
@@ -248,4 +249,5 @@ function doSyncPacketsInPackageJson(src, dest) {
     });
   }
 
-  fs.writeFileSync(dest, JSON.stringify(destJson, undefined, 2));}
+  fs.writeFileSync(dest, JSON.stringify(destJson, undefined, 2));
+}
