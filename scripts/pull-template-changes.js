@@ -223,7 +223,7 @@ function doSyncPacketsInPackageJson(src, dest) {
         const value = sourceJson.dependencies[key];
         const sourceVersion = semver.coerce(value)?.version;
         const destVersion = semver.coerce(destJson.dependencies[key] ?? '')?.version;
-        if (!destJson.dependencies[key] || semver.gt(sourceVersion, destVersion)) {
+        if (!destVersion || semver.gt(sourceVersion, destVersion)) {
           destJson.dependencies[key] = value;
         }
       } catch (e) {
@@ -239,7 +239,7 @@ function doSyncPacketsInPackageJson(src, dest) {
         const value = sourceJson.devDependencies[key];
         const sourceVersion = semver.coerce(value)?.version;
         const destVersion = semver.coerce(destJson.dependencies[key] ?? '')?.version;
-        if (!destJson.devDependencies[key] || semver.gt(sourceVersion, destVersion)) {
+        if (!destVersion || semver.gt(sourceVersion, destVersion)) {
           destJson.devDependencies[key] = value;
         }
       } catch (e) {
