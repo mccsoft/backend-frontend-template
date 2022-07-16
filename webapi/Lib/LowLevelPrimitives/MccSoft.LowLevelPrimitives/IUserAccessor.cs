@@ -3,7 +3,7 @@
     /// <summary>
     /// interface for getting identification information about current user
     /// </summary>
-    public interface IUserAccessor
+    public partial interface IUserAccessor
     {
         /// <summary>
         /// returns Id of current user; throws if user is not authenticated or we are out of http request context
