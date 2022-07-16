@@ -62,7 +62,7 @@ copyProjectFolder(`webapi/src/${prefix}.App/Setup`, {
 
 copyProjectFolder(`frontend/src/application/constants/create-link.ts`);
 copyProjectFolder(`frontend/src/components/sign-url`);
-copyProjectFolder(`frontend/src/components/animation`);
+copyProjectFolder(`frontend/src/components/animations`);
 copyProjectFolder(`frontend/src/helpers`,{
   ignorePattern: /partial/
 });
