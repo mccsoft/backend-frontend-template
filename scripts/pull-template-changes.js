@@ -189,6 +189,11 @@ function copyRecursively(src, dest, options = { ignorePattern: undefined }) {
       );
     });
   } else {
+    const srcPartialFile = getPartialFileName(src);
+    const destPartialFile = getPartialFileName(dest);
+    if (fs.existsSync(srcPartialFile) && !fs.existsSync(destPartialFile)) {
+      fs.copyFileSync(srcPartialFile, destPartialFile);
+    }
     if (fs.existsSync(dest)) {
       if (options?.ignorePattern) {
         if (src.match(options.ignorePattern)) {
@@ -303,4 +308,11 @@ function doSyncPacketsInPackageJson(src, dest) {
   }
 
   fs.writeFileSync(dest, JSON.stringify(destJson, undefined, 2));
+}
+
+function getPartialFileName(fileName) {
+  return fileName.replace(
+    path.extname(fileName),
+    '.partial' + path.extname(fileName),
+  );
 }
