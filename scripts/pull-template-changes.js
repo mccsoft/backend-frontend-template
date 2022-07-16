@@ -152,6 +152,7 @@ function findFileMatching(dir, regex) {
 
 function copyRecursively(src, dest, options = { ignorePattern: undefined }) {
   var exists = fs.existsSync(src);
+  if (!exists) return;
   var stats = exists && fs.statSync(src);
   var isDirectory = exists && stats.isDirectory();
   if (isDirectory) {
