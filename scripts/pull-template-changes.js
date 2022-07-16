@@ -61,8 +61,12 @@ copyProjectFolder(`webapi/src/${prefix}.App/Setup`, {
 });
 
 copyProjectFolder(`frontend/src/application/constants/create-link.ts`);
-copyProjectFolder(`frontend/src/components/sign-url`);
-copyProjectFolder(`frontend/src/components/animations`);
+copyProjectFolder(`frontend/src/components/sign-url`,{
+  ignorePattern: /partial/
+});
+copyProjectFolder(`frontend/src/components/animations`,{
+  ignorePattern: /partial/
+});
 copyProjectFolder(`frontend/src/helpers`,{
   ignorePattern: /partial/
 });
@@ -146,12 +150,12 @@ function copyRecursively(src, dest, options = {ignorePattern: undefined}) {
           path.join(dest, childItemName), options);
     });
   } else {
-    if (options?.ignorePattern) {
-      if (src.match(options.ignorePattern)) {
-        return;
-      }
-    }
     if (fs.existsSync(dest)) {
+      if (options?.ignorePattern) {
+        if (src.match(options.ignorePattern)) {
+          return;
+        }
+      }
       const sourceFileContent = fs.readFileSync(src);
       const destinationFileContent = fs.readFileSync(dest);
       if (sourceFileContent !== destinationFileContent) {
