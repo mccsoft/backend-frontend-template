@@ -78,6 +78,10 @@ syncReferencesInProjects(`webapi/src/${prefix}.Common/${prefix}.Common.csproj`);
 syncReferencesInProjects(`webapi/src/${prefix}.Domain/${prefix}.Domain.csproj`);
 syncReferencesInProjects(`webapi/src/${prefix}.Http/${prefix}.Http.csproj`);
 syncReferencesInProjects(`webapi/src/${prefix}.Persistence/${prefix}.Persistence.csproj`);
+syncReferencesInProjects(`webapi/tests/${prefix}.App.Tests/${prefix}.App.Tests.csproj`);
+syncReferencesInProjects(`webapi/tests/${prefix}.Domain.Tests/${prefix}.Domain.Tests.csproj`);
+syncReferencesInProjects(`webapi/tests/${prefix}.ComponentTests/${prefix}.ComponentTests.csproj`);
+syncReferencesInProjects(`webapi/tests/${prefix}.TestUtils/${prefix}.TestUtils.csproj`);
 
 
 process.exit();
