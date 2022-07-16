@@ -23,6 +23,9 @@ public class DateOnlyNewtonsoftConverter : Newtonsoft.Json.JsonConverter<DateOnl
         if (value is DateTime dateTime)
             return new DateOnly(dateTime.Date.Year, dateTime.Date.Month, dateTime.Date.Day);
 
+        if (value is DateTimeOffset dateTimeOffset)
+            return DateOnly.FromDateTime(dateTimeOffset.Date);
+
         return DateOnly.ParseExact((string)value, DateFormat, CultureInfo.InvariantCulture);
     }
 
