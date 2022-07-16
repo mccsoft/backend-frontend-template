@@ -219,7 +219,9 @@ function doSyncPacketsInPackageJson(src, dest) {
   if (sourceJson.dependencies) {
     Object.keys(sourceJson.dependencies).forEach(key => {
       const value = sourceJson.dependencies[key];
-      if (!destJson.dependencies[key] || semver.gt(value, destJson.dependencies[key])) {
+      const sourceVersion = semver.clean(value);
+      const destVersion = semver.clean(destJson.dependencies[key] ?? '');
+      if (!destJson.dependencies[key] || semver.gt(sourceVersion, destVersion)) {
         destJson.dependencies[key] = value;
       }
     });
@@ -228,12 +230,13 @@ function doSyncPacketsInPackageJson(src, dest) {
   if (sourceJson.devDependencies) {
     Object.keys(sourceJson.devDependencies).forEach(key => {
       const value = sourceJson.devDependencies[key];
-      if (!destJson.devDependencies[key] || semver.gt(value, destJson.devDependencies[key])) {
+      const sourceVersion = semver.clean(value);
+      const destVersion = semver.clean(destJson.dependencies[key] ?? '');
+      if (!destJson.devDependencies[key] || semver.gt(sourceVersion, destVersion)) {
         destJson.devDependencies[key] = value;
       }
     });
   }
-
 
   fs.writeFileSync(dest, JSON.stringify(destJson, undefined, 2));
 }
