@@ -1,26 +1,33 @@
 #!/usr/bin/env node
-import Renamer from "renamer";
-import yargs from "yargs";
-import fs from "fs";
-import {hideBin} from "yargs/helpers";
-import replace from "node-replace";
-import {camelCase, capitalCase, constantCase, paramCase, pascalCase, snakeCase,} from "change-case";
+import Renamer from 'renamer';
+import yargs from 'yargs';
+import fs from 'fs';
+import { hideBin } from 'yargs/helpers';
+import replace from 'node-replace';
+import {
+  camelCase,
+  capitalCase,
+  constantCase,
+  paramCase,
+  pascalCase,
+  snakeCase,
+} from 'change-case';
 
 const args = yargs(hideBin(process.argv))
-    .version("0.1")
-    .option("name", {
-      alias: "n",
-      type: "string",
-      description: "Name of the project (e.g. StudyApp)",
-    })
-    .option("company", {
-      alias: "c",
-      type: "string",
-      description: "Name of the root level namespace (e.g. MccSoft)",
-      default: 'MccSoft'
-    })
-    .demandOption(["name"])
-    .help().argv;
+  .version('0.1')
+  .option('name', {
+    alias: 'n',
+    type: 'string',
+    description: 'Name of the project (e.g. StudyApp)',
+  })
+  .option('company', {
+    alias: 'c',
+    type: 'string',
+    description: 'Name of the root level namespace (e.g. MccSoft)',
+    default: 'MccSoft',
+  })
+  .demandOption(['name'])
+  .help().argv;
 
 const companyName = args.company;
 const projectName = args.name;
@@ -31,39 +38,39 @@ const backendPortNumber = Math.round(Math.random() * 1000) + 49000;
 console.log(`BackendPortNumber: ${backendPortNumber}`);
 
 const replacements = [
-  {find: "MccSoft\.", replace: `${companyName}.`},
-  {find: `${companyName}.IntegreSql.EF`, replace: `MccSoft.IntegreSql.EF`},
-  {find: "TemplateApp", replace: projectName},
-  {find: "templateapp", replace: projectName.toLowerCase()},
+  { find: 'MccSoft.', replace: `${companyName}.` },
+  { find: `${companyName}.IntegreSql.EF`, replace: `MccSoft.IntegreSql.EF` },
+  { find: 'TemplateApp', replace: projectName },
+  { find: 'templateapp', replace: projectName.toLowerCase() },
   {
-    find: "templateApp",
+    find: 'templateApp',
     replace:
-        camelCase(projectName) /* converts 'ProjectName' to 'projectName'*/,
+      camelCase(projectName) /* converts 'ProjectName' to 'projectName'*/,
   },
   {
-    find: "template-app",
+    find: 'template-app',
     replace:
-        paramCase(projectName) /* converts 'projectName' to 'project-name' */,
+      paramCase(projectName) /* converts 'projectName' to 'project-name' */,
   },
   {
-    find: "template_app",
+    find: 'template_app',
     replace:
-        snakeCase(projectName) /* converts 'projectName' to 'project-name' */,
+      snakeCase(projectName) /* converts 'projectName' to 'project-name' */,
   },
   {
-    find: "TemplateApp",
+    find: 'TemplateApp',
     replace:
-        pascalCase(projectName) /* converts 'ProjectName' to 'ProjectName' */,
+      pascalCase(projectName) /* converts 'ProjectName' to 'ProjectName' */,
   },
   {
-    find: "Template App",
+    find: 'Template App',
     replace:
-        capitalCase(projectName) /* converts 'ProjectName' to 'ProjectName' */,
+      capitalCase(projectName) /* converts 'ProjectName' to 'ProjectName' */,
   },
   {
-    find: "TEMPLATE_APP",
+    find: 'TEMPLATE_APP',
     replace:
-        constantCase(projectName) /* converts 'ProjectName' to 'Project Name' */,
+      constantCase(projectName) /* converts 'ProjectName' to 'Project Name' */,
   },
 ];
 
@@ -71,8 +78,11 @@ await changeFrontendPortNumber(frontendPortNumber);
 await changeBackendPortNumber(backendPortNumber);
 await changePasswordsInAppsettings();
 
-await fs.rename('webapi/.idea/.idea.MccSoft.TemplateApp', `webapi/.idea/.idea.${companyName}.${pascalCase(projectName)}`, () => {
-})
+await fs.rename(
+  'webapi/.idea/.idea.MccSoft.TemplateApp',
+  `webapi/.idea/.idea.${companyName}.${pascalCase(projectName)}`,
+  () => {},
+);
 await renameFiles(replacements);
 await replaceInFiles(replacements);
 
@@ -81,8 +91,8 @@ async function replaceInFiles(replacements) {
     replace({
       regex: replacement.find,
       replacement: replacement.replace,
-      paths: ["./"],
-      exclude: "node_modules",
+      paths: ['./'],
+      exclude: 'node_modules',
       recursive: true,
       silent: true,
     });
@@ -93,7 +103,7 @@ async function renameFiles(replacements) {
   const renamer = new Renamer();
   for (const replacement of replacements) {
     await renamer.rename({
-      files: ["!(node_modules)/**/*"],
+      files: ['!(node_modules)/**/*'],
       find: replacement.find,
       replace: replacement.replace,
     });
@@ -104,29 +114,32 @@ function changeFrontendPortNumber(port) {
   replace({
     regex: /var frontendPort = process.env.PORT \?\? \d+;/g,
     replacement: `var frontendPort = process.env.PORT ?? ${port};`,
-    paths: ["./frontend/vite.config.ts"],
+    paths: ['./frontend/vite.config.ts'],
     silent: true,
     recursive: true,
   });
   replace({
     regex: /<SpaProxyServerUrl>https:\/\/localhost:\d+<\/SpaProxyServerUrl>/,
     replacement: `<SpaProxyServerUrl>https://localhost:${port}</SpaProxyServerUrl>`,
-    paths: ["./webapi/src/MccSoft.TemplateApp.App/MccSoft.TemplateApp.App.csproj"],
-    silent: true,
-    recursive: true,
-
-  });
-  replace({
-    regex: /https:\/\/localhost:\d+/g,
-    replacement: `https://localhost:${port}`,
-    paths: ["./webapi/src/MccSoft.TemplateApp.App/appsettings.json"],
+    paths: [
+      './webapi/src/MccSoft.TemplateApp.App/MccSoft.TemplateApp.App.csproj',
+    ],
     silent: true,
     recursive: true,
   });
   replace({
     regex: /https:\/\/localhost:\d+/g,
     replacement: `https://localhost:${port}`,
-    paths: ["./webapi/src/MccSoft.TemplateApp.App/appsettings.Development.json"],
+    paths: ['./webapi/src/MccSoft.TemplateApp.App/appsettings.json'],
+    silent: true,
+    recursive: true,
+  });
+  replace({
+    regex: /https:\/\/localhost:\d+/g,
+    replacement: `https://localhost:${port}`,
+    paths: [
+      './webapi/src/MccSoft.TemplateApp.App/appsettings.Development.json',
+    ],
     silent: true,
     recursive: true,
   });
@@ -138,16 +151,14 @@ function changeBackendPortNumber(httpsPort) {
   replace({
     regex: /https:\/\/localhost:(\d+)/g,
     replacement: `https://localhost:${httpsPort}`,
-    paths: [
-      "./frontend/vite.config.ts",
-    ],
+    paths: ['./frontend/vite.config.ts'],
     silent: true,
   });
   replace({
     regex: /"Url": "http:\/\/\*:\d+"/g,
     replacement: `"Url": "http://*:${nonHttpsPort}"`,
     paths: [
-      "./webapi/src/MccSoft.TemplateApp.App/appsettings.Development.json",
+      './webapi/src/MccSoft.TemplateApp.App/appsettings.Development.json',
     ],
     silent: true,
   });
@@ -155,7 +166,7 @@ function changeBackendPortNumber(httpsPort) {
     regex: /"Url": "https:\/\/\*:\d+"/g,
     replacement: `"Url": "https://*:${httpsPort}"`,
     paths: [
-      "./webapi/src/MccSoft.TemplateApp.App/appsettings.Development.json",
+      './webapi/src/MccSoft.TemplateApp.App/appsettings.Development.json',
     ],
     silent: true,
   });
@@ -163,7 +174,7 @@ function changeBackendPortNumber(httpsPort) {
     regex: /"https:\/\/localhost:\d+"/g,
     replacement: `"https://localhost:${httpsPort}"`,
     paths: [
-      "./webapi/src/MccSoft.TemplateApp.App/Properties/launchSettings.json",
+      './webapi/src/MccSoft.TemplateApp.App/Properties/launchSettings.json',
     ],
     silent: true,
   });
@@ -171,20 +182,20 @@ function changeBackendPortNumber(httpsPort) {
     regex: /"https:\/\/\*:\d+"/g,
     replacement: `"https://*:${httpsPort}"`,
     paths: [
-      "./webapi/src/MccSoft.TemplateApp.App/Properties/launchSettings.json",
+      './webapi/src/MccSoft.TemplateApp.App/Properties/launchSettings.json',
     ],
     silent: true,
   });
   replace({
     regex: /"proxy": "https:\/\/localhost:\d+"/g,
     replacement: `"proxy": "http://localhost:${nonHttpsPort}"`,
-    paths: ["./frontend/package.json"],
+    paths: ['./frontend/package.json'],
     silent: true,
   });
   replace({
     regex: /\/input:https:\/\/localhost:\d+/g,
     replacement: `/input:https://localhost:${httpsPort}`,
-    paths: ["./frontend/package.json"],
+    paths: ['./frontend/package.json'],
     silent: true,
   });
 }
@@ -193,25 +204,24 @@ function changePasswordsInAppsettings() {
   replace({
     regex: /"DashboardPassword": "(.*?)"/,
     replacement: `"DashboardPassword": "${generatePassword(12)}"`,
-    paths: ["./webapi/src/MccSoft.TemplateApp.App/appsettings.json"],
+    paths: ['./webapi/src/MccSoft.TemplateApp.App/appsettings.json'],
     silent: true,
   });
   replace({
     regex: /("DefaultUser".*?"Password": ").*?"/gims,
     replacement: `$1${generatePassword(12)}"`,
-    paths: ["./webapi/src/MccSoft.TemplateApp.App/appsettings.json"],
+    paths: ['./webapi/src/MccSoft.TemplateApp.App/appsettings.json'],
     silent: true,
   });
-
 }
 
 function generatePassword(length) {
   var result = '';
-  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   var charactersLength = characters.length;
   for (var i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() *
-        charactersLength));
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
 }

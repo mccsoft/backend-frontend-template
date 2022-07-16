@@ -3,7 +3,6 @@ build
 .idea
 publish
 webapi
-scripts
 nginx
 frontend/src/services/api/api-client.ts
 .yarn
