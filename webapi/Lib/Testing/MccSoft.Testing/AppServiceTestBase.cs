@@ -72,7 +72,9 @@ namespace MccSoft.Testing
             _userAccessorMock.Setup(x => x.IsHttpContextAvailable).Returns(true);
         }
 
-        protected void InitializeDatabase(DatabaseSeedingOptions<TDbContext> seedingOptions)
+        protected virtual void InitializeDatabase(
+            DatabaseSeedingOptions<TDbContext> seedingOptions = null
+        )
         {
             string connectionString = _databaseInitializer?.CreateDatabaseGetConnectionStringSync(
                 seedingOptions

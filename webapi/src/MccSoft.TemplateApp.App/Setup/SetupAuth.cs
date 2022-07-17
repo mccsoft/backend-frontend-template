@@ -111,7 +111,9 @@ public static partial class SetupAuth
         // (so that you could use [Authorize] without specifying scheme
         services.AddAuthorization();
 
-        services.AddSignUrl(configuration.GetSection("SignUrl").GetValue<string>("Secret"));
+        var signUrlSecret = configuration.GetSection("SignUrl").GetValue<string>("Secret");
+        if (!string.IsNullOrEmpty(signUrlSecret))
+            services.AddSignUrl(signUrlSecret);
 
         // If you'd like to modify this class, consider adding your custom code in the SetupAuth.partial.cs
         // This will make it easier to pull changes from Template when Template is updated
