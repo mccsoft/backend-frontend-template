@@ -28,7 +28,9 @@ namespace MccSoft.Testing
     /// (the state of objects loaded in a separate DbContext will be incorrect, if SaveChanges is
     /// forgotten).
     /// </remarks>
-    public class AppServiceTestBase<TService, TDbContext> : TestBase<TDbContext>, IDisposable
+    public abstract class AppServiceTestBase<TService, TDbContext>
+        : TestBase<TDbContext>,
+            IDisposable
         where TDbContext : DbContext, ITransactionFactory
         where TService : class
     {
@@ -36,37 +38,27 @@ namespace MccSoft.Testing
             new[] { new DebugLoggerProvider() }
         );
 
-        private readonly Func<
-            DbContextOptions<TDbContext>,
-            IUserAccessor,
-            TDbContext
-        > _dbContextFactory;
-
-        private readonly DbContextOptionsBuilder<TDbContext> _builder;
-        private TDbContext _dbContext;
+        protected readonly DbContextOptionsBuilder<TDbContext> _builder;
+        protected TDbContext _dbContext;
 
         protected readonly Mock<IUserAccessor> _userAccessorMock;
 
-        private readonly DatabaseType? _databaseType;
-        private readonly IDatabaseInitializer _databaseInitializer;
-        protected ServiceProvider _serviceProvider;
-        private Mock<IBackgroundJobClient> _backgroundJobClient;
+        protected readonly DatabaseType? _databaseType;
+        protected readonly IDatabaseInitializer _databaseInitializer;
+        protected Mock<IBackgroundJobClient> _backgroundJobClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AppServiceTestBase{TService,TDbContext}" />
         /// class with the specified DbContext factory.
         /// </summary>
         /// <param name="databaseType">Type of database to use in tests</param>
-        /// <param name="dbContextFactory">A function that creates a DbContext.</param>
         /// <param name="basicDatabaseSeedingOptions">Additional database seeding (beside EnsureCreated)</param>
         protected AppServiceTestBase(
             DatabaseType? databaseType,
-            Func<DbContextOptions<TDbContext>, IUserAccessor, TDbContext> dbContextFactory,
             DatabaseSeedingOptions<TDbContext> basicDatabaseSeedingOptions = null
         )
         {
             _databaseType = databaseType;
-            _dbContextFactory = dbContextFactory;
 
             _databaseInitializer = databaseType switch
             {
@@ -177,27 +169,30 @@ namespace MccSoft.Testing
             LoggerFactory.Dispose();
         }
 
-        /// <summary>
-        /// Creates a new instance of <typeparamref name="TDbContext"/>.
-        /// Should be used in alternative implementations of <see cref="InitializeService" />.
-        /// </summary>
-        /// <returns>A new DbContext instance.</returns>
-        protected override TDbContext CreateDbContext()
+        protected TService InitializeService(
+            Action<IServiceCollection> configureRegistrations = null
+        )
         {
-            return _dbContextFactory(_builder.Options, _userAccessorMock.Object);
+            return InitializeService(configureRegistrations, out var _);
+        }
+
+        protected TService InitializeService(out IServiceProvider serviceProvider)
+        {
+            return InitializeService(null, out serviceProvider);
         }
 
         protected TService InitializeService(
-            Action<IServiceCollection> configureRegistrations = null
+            Action<IServiceCollection> configureRegistrations,
+            out IServiceProvider serviceProvider
         )
         {
             var serviceCollection = CreateServiceCollection();
             serviceCollection.AddTransient<TService>();
             configureRegistrations?.Invoke(serviceCollection);
 
-            _serviceProvider = serviceCollection.BuildServiceProvider();
+            serviceProvider = serviceCollection.BuildServiceProvider();
 
-            return _serviceProvider.GetRequiredService<TService>();
+            return serviceProvider.GetRequiredService<TService>();
         }
 
         /// <summary>

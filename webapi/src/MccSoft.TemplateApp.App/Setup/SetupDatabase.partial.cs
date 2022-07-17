@@ -1,5 +1,7 @@
-﻿using MccSoft.TemplateApp.App.Services.Authentication;
+﻿using MccSoft.LowLevelPrimitives;
+using MccSoft.TemplateApp.App.Services.Authentication;
 using MccSoft.TemplateApp.Persistence;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace MccSoft.TemplateApp.App.Setup;
@@ -34,5 +36,13 @@ public static partial class SetupDatabase
     static partial void AddSeeders(IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<DefaultUserOptions>(configuration.GetSection("DefaultUser"));
+    }
+
+    private static partial TemplateAppDbContext CreateDbContext(IServiceProvider provider)
+    {
+        return new TemplateAppDbContext(
+            provider.GetRequiredService<DbContextOptions<TemplateAppDbContext>>(),
+            provider.GetRequiredService<IUserAccessor>()
+        );
     }
 }

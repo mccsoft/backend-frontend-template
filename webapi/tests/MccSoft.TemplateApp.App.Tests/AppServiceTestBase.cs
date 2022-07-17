@@ -27,7 +27,6 @@ namespace MccSoft.TemplateApp.App.Tests
         public AppServiceTestBase(DatabaseType? testDatabaseType = DatabaseType.Postgres)
             : base(
                 testDatabaseType,
-                (options, userAccessor) => new TemplateAppDbContext(options, userAccessor),
                 new DatabaseSeedingOptions<TemplateAppDbContext>(
                     Name: "DefaultUser",
                     SeedingFunction: async db =>
@@ -61,6 +60,16 @@ namespace MccSoft.TemplateApp.App.Tests
             // Here you could register more project-specific types in a service collection
 
             return serviceCollection;
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="TemplateAppDbContext"/>.
+        /// Should be used in alternative implementations of <see cref="InitializeService" />.
+        /// </summary>
+        /// <returns>A new DbContext instance.</returns>
+        protected override TemplateAppDbContext CreateDbContext()
+        {
+            return new TemplateAppDbContext(_builder.Options, _userAccessorMock.Object);
         }
     }
 }

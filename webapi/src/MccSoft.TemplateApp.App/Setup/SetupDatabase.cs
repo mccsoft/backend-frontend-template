@@ -62,14 +62,7 @@ public static partial class SetupDatabase
             );
 
         services
-            .AddSingleton<Func<TemplateAppDbContext>>(
-                provider =>
-                    () =>
-                        new TemplateAppDbContext(
-                            provider.GetRequiredService<DbContextOptions<TemplateAppDbContext>>(),
-                            provider.GetRequiredService<IUserAccessor>()
-                        )
-            )
+            .AddSingleton<Func<TemplateAppDbContext>>(provider => () => CreateDbContext(provider))
             .RegisterRetryHelper();
 
         SetupHangfire.AddHangfire(services, connectionString, configuration);
@@ -81,6 +74,8 @@ public static partial class SetupDatabase
         AddProjectSpecifics(builder);
         AddSeeders(services, configuration);
     }
+
+    private static partial TemplateAppDbContext CreateDbContext(IServiceProvider provider);
 
     private static partial Task RunMigrationsProjectSpecific(
         WebApplication app,

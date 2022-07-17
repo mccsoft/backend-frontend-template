@@ -353,7 +353,7 @@ type GetProductQueryParameters = {
 export class ProductQuery{
 
     get baseUrl() {
-      return getBaseUrl() ?? '' + '';
+      return getBaseUrl() ?? '' + 'http://localhost';
     }
 
     static get Client() {
@@ -689,7 +689,7 @@ export class SignUrlClient {
 export class SignUrlQuery{
 
     get baseUrl() {
-      return getBaseUrl() ?? '' + '';
+      return getBaseUrl() ?? '' + 'http://localhost';
     }
 
     static get Client() {
@@ -995,7 +995,7 @@ export class TestDataClient {
 export class TestDataQuery{
 
     get baseUrl() {
-      return getBaseUrl() ?? '' + '';
+      return getBaseUrl() ?? '' + 'http://localhost';
     }
 
     static get Client() {
@@ -1138,7 +1138,7 @@ export class VersionClient {
 export class VersionQuery{
 
     get baseUrl() {
-      return getBaseUrl() ?? '' + '';
+      return getBaseUrl() ?? '' + 'http://localhost';
     }
 
     static get Client() {
@@ -1402,7 +1402,7 @@ export class ProductDto implements IProductDto {
         data["id"] = this.id;
         data["title"] = this.title;
         data["productType"] = this.productType;
-        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : this.lastStockUpdatedAt;
+        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : <any>undefined;
         return data;
     }
 }
@@ -1454,7 +1454,7 @@ export class CreateProductDto implements ICreateProductDto {
         data = typeof data === 'object' ? data : {};
         data["title"] = this.title;
         data["productType"] = this.productType;
-        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : this.lastStockUpdatedAt;
+        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : <any>undefined;
         return data;
     }
 }
@@ -1498,7 +1498,7 @@ export class PatchProductDto implements IPatchProductDto {
         data = typeof data === 'object' ? data : {};
         data["title"] = this.title;
         data["productType"] = this.productType;
-        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : this.lastStockUpdatedAt;
+        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : <any>undefined;
         return data;
     }
 }
@@ -1596,7 +1596,7 @@ export class ProductListItemDto implements IProductListItemDto {
         data["id"] = this.id;
         data["title"] = this.title;
         data["productType"] = this.productType;
-        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : this.lastStockUpdatedAt;
+        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : <any>undefined;
         return data;
     }
 }
