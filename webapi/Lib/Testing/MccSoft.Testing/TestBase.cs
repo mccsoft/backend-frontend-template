@@ -1,5 +1,7 @@
 ﻿using MccSoft.Testing.Infrastructure;
 using System;
+using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +19,12 @@ namespace MccSoft.Testing
         /// For classes starting with a vowel use <see cref="an"/>.
         /// </summary>
         public static MotherFactory a = null;
+
+        protected TestBase()
+        {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+        }
 
         /// <summary>
         /// The entity factory.

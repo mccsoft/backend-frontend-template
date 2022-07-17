@@ -47,8 +47,6 @@ namespace MccSoft.Testing
 
             TestScope = application.Services.CreateScope();
             Configuration = ResolveFromTestScope<IConfiguration>();
-
-            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
         }
 
         /// <summary>

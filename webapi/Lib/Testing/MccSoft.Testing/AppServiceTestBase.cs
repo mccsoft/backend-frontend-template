@@ -38,7 +38,7 @@ namespace MccSoft.Testing
             new[] { new DebugLoggerProvider() }
         );
 
-        protected readonly DbContextOptionsBuilder<TDbContext> _builder;
+        protected DbContextOptionsBuilder<TDbContext> _builder;
         protected TDbContext _dbContext;
 
         protected readonly Mock<IUserAccessor> _userAccessorMock;
@@ -53,10 +53,7 @@ namespace MccSoft.Testing
         /// </summary>
         /// <param name="databaseType">Type of database to use in tests</param>
         /// <param name="basicDatabaseSeedingOptions">Additional database seeding (beside EnsureCreated)</param>
-        protected AppServiceTestBase(
-            DatabaseType? databaseType,
-            DatabaseSeedingOptions<TDbContext> basicDatabaseSeedingOptions = null
-        )
+        protected AppServiceTestBase(DatabaseType? databaseType)
         {
             _databaseType = databaseType;
 
@@ -71,21 +68,24 @@ namespace MccSoft.Testing
                 _ => throw new ArgumentOutOfRangeException(nameof(databaseType), databaseType, null)
             };
 
-            string connectionString = _databaseInitializer?.CreateDatabaseGetConnectionStringSync(
-                basicDatabaseSeedingOptions
-            );
-
             _userAccessorMock = new Mock<IUserAccessor>();
             _userAccessorMock.Setup(x => x.IsHttpContextAvailable).Returns(true);
-
-            if (databaseType != null)
-            {
-                // Its ok to call virtual methods because its just init the builder and doesn't use members.
-                // ReSharper disable VirtualMemberCallInConstructor
-                _builder = GetBuilder(connectionString ?? "");
-                // ReSharper restore VirtualMemberCallInConstructor
-            }
         }
+
+        protected void InitializeDatabase(DatabaseSeedingOptions<TDbContext> seedingOptions)
+        {
+            string connectionString = _databaseInitializer?.CreateDatabaseGetConnectionStringSync(
+                seedingOptions
+            );
+
+            // Its ok to call virtual methods because its just init the builder and doesn't use members.
+            // ReSharper disable VirtualMemberCallInConstructor
+            _builder = GetBuilder(connectionString ?? "");
+            InitializeGlobalVariables();
+            // ReSharper restore VirtualMemberCallInConstructor
+        }
+
+        protected virtual void InitializeGlobalVariables() { }
 
         public void Dispose()
         {
@@ -173,7 +173,7 @@ namespace MccSoft.Testing
             Action<IServiceCollection> configureRegistrations = null
         )
         {
-            return InitializeService(configureRegistrations, out var _);
+            return InitializeService(configureRegistrations, out _);
         }
 
         protected TService InitializeService(out IServiceProvider serviceProvider)
