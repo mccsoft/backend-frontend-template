@@ -39,6 +39,7 @@ console.log(`BackendPortNumber: ${backendPortNumber}`);
 
 const replacements = [
   { find: /MccSoft\./g, replace: `${companyName}.` },
+  { find: /mccsoft:/g, replace: `${companyName.toLowerCase()}:` },
   { find: `${companyName}.IntegreSql.EF`, replace: `MccSoft.IntegreSql.EF` },
   { find: 'TemplateApp', replace: projectName },
   { find: 'templateapp', replace: projectName.toLowerCase() },
