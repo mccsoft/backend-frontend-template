@@ -8,7 +8,7 @@ namespace MccSoft.HttpClientExtension
     /// </summary>
     public class FailedRequestException : Exception
     {
-        private const string _urnPrefix = "urn:MccSoft.";
+        private const string _urnPrefix = "urn:mccsoft:";
 
         public FailedRequestException(
             HttpStatusCode statusCode,
@@ -23,9 +23,9 @@ namespace MccSoft.HttpClientExtension
         }
 
         /// <summary>
-        /// Checks that the error response indicates a problem created by PrismaCLOUD code.
+        /// Checks that the error response indicates a problem created by our code.
         /// </summary>
-        public bool IsLmtProblem() => ProblemType?.StartsWith(_urnPrefix) == true;
+        public bool IsOurProblem() => ProblemType?.StartsWith(_urnPrefix) == true;
 
         /// <summary>
         /// The status code of the HTTP response.

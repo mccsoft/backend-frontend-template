@@ -40,7 +40,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Drawing.Common" Version="5.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.7" />
     <PackageReference Include="Audit.NET.PostgreSql" Version="19.1.4" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.30" />

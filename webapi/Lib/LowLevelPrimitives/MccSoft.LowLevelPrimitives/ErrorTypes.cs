@@ -12,9 +12,8 @@
     /// </remarks>
     public static class ErrorTypes
     {
-        private const string _namespace = "urn:MccSoft.";
+        private const string _namespace = "urn:mccsoft:";
 
-        public const string DownForMaintenance = _namespace + "down-for-maintenance";
         public const string NotFound = _namespace + "not-found";
         public const string ValidationError = _namespace + "validation-error";
         public const string AccessDenied = _namespace + "access-denied";
