@@ -41,7 +41,7 @@ namespace MccSoft.Testing
         protected DbContextOptionsBuilder<TDbContext> _builder;
         protected TDbContext _dbContext;
 
-        protected readonly Mock<IUserAccessor> _userAccessorMock;
+        protected Mock<IUserAccessor> _userAccessorMock;
 
         protected readonly DatabaseType? _databaseType;
         protected readonly IDatabaseInitializer _databaseInitializer;

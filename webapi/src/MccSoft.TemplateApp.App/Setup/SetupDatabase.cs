@@ -66,7 +66,6 @@ public static partial class SetupDatabase
             .RegisterRetryHelper();
 
         SetupHangfire.AddHangfire(services, connectionString, configuration);
-        PostgresSerialization.AdjustDateOnlySerialization();
 
         // If you'd like to modify this class, consider adding your custom code in the SetupDatabase.partial.cs
         // This will make it easier to pull changes from Template when Template is updated

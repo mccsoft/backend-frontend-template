@@ -1,4 +1,5 @@
 ﻿using MccSoft.LowLevelPrimitives;
+using MccSoft.NpgSql;
 using MccSoft.TemplateApp.App.Services.Authentication;
 using MccSoft.TemplateApp.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -31,7 +32,10 @@ public static partial class SetupDatabase
         }
     }
 
-    static partial void AddProjectSpecifics(WebApplicationBuilder builder) { }
+    static partial void AddProjectSpecifics(WebApplicationBuilder builder)
+    {
+        PostgresSerialization.AdjustDateOnlySerialization();
+    }
 
     static partial void AddSeeders(IServiceCollection services, IConfiguration configuration)
     {
