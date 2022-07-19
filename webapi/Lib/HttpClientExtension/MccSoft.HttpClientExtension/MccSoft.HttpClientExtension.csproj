@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="IdentityModel" Version="5.2.0" />
-    <PackageReference Include="JsonKnownTypes" Version="0.5.4" />
+    <PackageReference Include="JsonKnownTypes" Version="0.5.5" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
   </ItemGroup>

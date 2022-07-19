@@ -83,29 +83,21 @@ namespace MccSoft.Testing
                     && !typeof(ICollection).IsAssignableFrom(p.PropertyType)
             );
             var stringPropertyInfos = propertyInfos.Where(p => p.PropertyType == typeof(string));
-            var enumPropertyInfos = propertyInfos.Where(
-                p =>
-                {
-                    Type propertyType = p.PropertyType.IsNullableType()
-                      ? Nullable.GetUnderlyingType(p.PropertyType)
-                      : p.PropertyType;
+            var enumPropertyInfos = propertyInfos.Where(p =>
+            {
+                Type propertyType = Nullable.GetUnderlyingType(p.PropertyType) ?? p.PropertyType;
 
-                    return typeof(Enum).IsAssignableFrom(propertyType);
-                }
-            );
+                return typeof(Enum).IsAssignableFrom(propertyType);
+            });
             var listPropertyInfos = propertyInfos.Where(
                 p => typeof(IList).IsAssignableFrom(p.PropertyType)
             );
-            var boolPropertyInfos = propertyInfos.Where(
-                p =>
-                {
-                    Type propertyType = p.PropertyType.IsNullableType()
-                      ? Nullable.GetUnderlyingType(p.PropertyType)
-                      : p.PropertyType;
+            var boolPropertyInfos = propertyInfos.Where(p =>
+            {
+                Type propertyType = Nullable.GetUnderlyingType(p.PropertyType) ?? p.PropertyType;
 
-                    return typeof(Boolean).IsAssignableFrom(propertyType);
-                }
-            );
+                return typeof(Boolean).IsAssignableFrom(propertyType);
+            });
 
             ProcessDoubles(obj, doublePropertyInfos);
             ProcessIntegers(obj, intPropertyInfos);
@@ -293,7 +285,7 @@ namespace MccSoft.Testing
 
         private static object GetRandomEnumValue(Type enumType)
         {
-            enumType = enumType.IsNullableType() ? Nullable.GetUnderlyingType(enumType) : enumType;
+            enumType = Nullable.GetUnderlyingType(enumType) ?? enumType;
             Array enumValues = Enum.GetValues(enumType);
             IEnumerator enumerator = enumValues.GetEnumerator();
             enumerator.MoveNext();
