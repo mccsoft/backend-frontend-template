@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import './index.scss';
 import { App } from './App';
 import reportWebVitals from './reportWebVitals';
@@ -18,7 +18,10 @@ Date.prototype.toISOString = function () {
   return result;
 };
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement,
+);
+root.render(
   <React.StrictMode>
     <OpenIdCallback
       signInRedirectHandler={(user) => {
@@ -36,7 +39,6 @@ ReactDOM.render(
       <App />
     </OpenIdCallback>
   </React.StrictMode>,
-  document.getElementById('root'),
 );
 
 // If you want to start measuring performance in your app, pass a function
