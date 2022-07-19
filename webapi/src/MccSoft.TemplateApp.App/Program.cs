@@ -6,7 +6,6 @@ using MccSoft.TemplateApp.App.DomainEventHandlers;
 using MccSoft.TemplateApp.App.Setup;
 using MccSoft.WebApi.Sentry;
 using MccSoft.WebApi.Serialization.ModelBinding;
-using Microsoft.AspNetCore.Authorization;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,6 +44,7 @@ SetupServices.AddServices(builder);
 var app = builder.Build();
 
 // ---------------------------------
+
 
 app.UseSerilog(app.Environment);
 app.Logger.LogSentryTestError("TemplateApp");

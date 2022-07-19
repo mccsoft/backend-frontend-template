@@ -2,6 +2,7 @@
 using MccSoft.LowLevelPrimitives.Serialization.DateOnlyConverters;
 using MccSoft.TemplateApp.App.Middleware;
 using MccSoft.WebApi;
+using MccSoft.WebApi.Sentry;
 using MccSoft.WebApi.Serialization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -17,6 +18,7 @@ public static partial class SetupAspNet
     {
         var services = builder.Services;
 
+        builder.WebHost.UseAppSentry();
         builder.Services.AddResponseCompression();
 
         JsonConvert.DefaultSettings = () =>
@@ -104,6 +106,7 @@ public static partial class SetupAspNet
 
         UseForwardedHeaders(app);
         app.UseRouting();
+        app.UseSentryTracing();
         app.UseCors(DefaultCorsPolicyName);
 
         app.UseErrorHandling();
