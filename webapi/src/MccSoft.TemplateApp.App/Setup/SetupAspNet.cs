@@ -17,6 +17,8 @@ public static partial class SetupAspNet
     {
         var services = builder.Services;
 
+        builder.Services.AddResponseCompression();
+
         JsonConvert.DefaultSettings = () =>
             JsonSerializerSetup.SetupJson(new JsonSerializerSettings());
 
@@ -97,6 +99,9 @@ public static partial class SetupAspNet
 
     public static void UseFrontlineServices(WebApplication app)
     {
+        if (!app.Configuration.GetValue<bool>("DisableCompression"))
+            app.UseResponseCompression();
+
         UseForwardedHeaders(app);
         app.UseRouting();
         app.UseCors(DefaultCorsPolicyName);
