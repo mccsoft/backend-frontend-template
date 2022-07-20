@@ -8,7 +8,7 @@
 
     <div class="grid-container justify-center">
       <div class="col-md-6 col-xs-12 col-lg-4">
-        <form method="post">
+        <form method="post" asp-route-returnUrl="@Model.ReturnUrl">
           <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
           <div class="container">
