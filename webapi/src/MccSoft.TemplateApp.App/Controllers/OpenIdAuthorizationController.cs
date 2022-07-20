@@ -10,6 +10,7 @@ public class OpenIdAuthorizationController : OpenIdAuthorizationControllerBase<U
     public OpenIdAuthorizationController(
         SignInManager<User> signInManager,
         UserManager<User> userManager,
-        IOpenIddictClientConfigurationProvider configurationProvider
-    ) : base(signInManager, userManager, configurationProvider) { }
+        IOpenIddictClientConfigurationProvider configurationProvider,
+        ILogger<OpenIdAuthorizationController> logger
+    ) : base(signInManager, userManager, configurationProvider, logger) { }
 }
