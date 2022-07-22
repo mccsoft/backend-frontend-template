@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.ResponseCompression;
 using Newtonsoft.Json;
 
 namespace MccSoft.TemplateApp.App.Setup;
@@ -19,7 +20,11 @@ public static partial class SetupAspNet
         var services = builder.Services;
 
         builder.WebHost.UseAppSentry();
-        builder.Services.AddResponseCompression();
+        builder.Services.AddResponseCompression(options =>
+        {
+            options.EnableForHttps = true;
+            options.Providers.Add<GzipCompressionProvider>();
+        });
 
         JsonConvert.DefaultSettings = () =>
             JsonSerializerSetup.SetupJson(new JsonSerializerSettings());
