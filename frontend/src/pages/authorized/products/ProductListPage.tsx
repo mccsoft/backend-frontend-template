@@ -14,10 +14,10 @@ import React, { useMemo } from 'react';
 import { useSortBy, useTable } from 'react-table';
 import { QueryFactory } from 'services/api';
 import { ProductListItemDto } from 'services/api/api-client';
-import { StringParam, useQueryParams } from 'use-query-params';
 import { localFormat } from '../../../helpers/date-helpers';
 import { useScopedTranslation } from '../../../application/localization/useScopedTranslation';
 import styles from './ProductListPage.module.scss';
+import { StringParam, useQueryParams } from 'react-router-url-params';
 
 export const ProductListPage: React.FC = () => {
   const i18n = useScopedTranslation('Page.Products.list');

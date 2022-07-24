@@ -4,7 +4,7 @@ import {
   NumberParam,
   StringParam,
   withDefault,
-} from 'use-query-params';
+} from 'react-router-url-params';
 
 export const sortingQueryParams = (defaultDesc?: boolean) => ({
   sortBy: StringParam,

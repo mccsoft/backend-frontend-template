@@ -13,8 +13,6 @@ import React, { useCallback } from 'react';
 import { useQueryClient } from 'react-query';
 import { QueryFactory } from 'services/api';
 import {
-  CreateProductDto,
-  ICreateProductDto,
   IPatchProductDto,
   PatchProductDto,
   ProductType,
@@ -22,11 +20,9 @@ import {
 import { HookFormDropDownInput } from 'components/uikit/inputs/dropdown/HookFormDropDownInput';
 import { useNavigate } from 'react-router';
 import { HookFormDatePicker } from '../../../../components/uikit/inputs/date-time/HookFormDatePicker';
-import { parseIntOrThrow } from '../../../../application/constants/create-link';
 
 export const EditProductPage: React.FC = () => {
-  const { id } = Links.Authorized.EditProduct.useParams();
-  const productId = parseIntOrThrow(id);
+  const { id: productId } = Links.Authorized.EditProduct.useParams();
   const i18n = useScopedTranslation('Page.Products.Edit');
   const productQuery = QueryFactory.ProductQuery.useGetQuery(productId);
   const queryClient = useQueryClient();

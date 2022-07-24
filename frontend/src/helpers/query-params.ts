@@ -2,7 +2,7 @@ import {
   NumberParam,
   NumericArrayParam,
   QueryParamConfig,
-} from 'use-query-params';
+} from 'react-router-url-params';
 
 export function createEnumArrayParam<T>(): QueryParamConfig<
   T[] | null | undefined,

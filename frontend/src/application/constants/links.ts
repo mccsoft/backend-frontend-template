@@ -1,15 +1,19 @@
-import { createLink } from 'application/constants/create-link';
+import { createRoute, RequiredNumberParam } from 'react-router-url-params';
 
 export const Links = {
   Unauthorized: {
-    Login: createLink('/login'),
+    Login: createRoute('/login'),
   },
   Authorized: {
-    Dashboard: createLink('/'),
-    Products: createLink('/products'),
-    ProductDetails: createLink('/products/:id'),
-    CreateProduct: createLink('/products/create'),
-    EditProduct: createLink('/products/:id/edit'),
-    UiKit: createLink('/uikit'),
+    Dashboard: createRoute('/'),
+    Products: createRoute('/products'),
+    ProductDetails: createRoute('/products/:id', {
+      id: RequiredNumberParam,
+    }),
+    CreateProduct: createRoute('/products/create'),
+    EditProduct: createRoute('/products/:id/edit', {
+      id: RequiredNumberParam,
+    }),
+    UiKit: createRoute('/uikit'),
   },
 };

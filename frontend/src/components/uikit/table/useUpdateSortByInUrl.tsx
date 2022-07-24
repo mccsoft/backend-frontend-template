@@ -1,6 +1,10 @@
 import { SortingRule } from 'react-table';
-import { BooleanParam, StringParam, useQueryParams } from 'use-query-params';
 import { useEffect, useRef } from 'react';
+import {
+  BooleanParam,
+  StringParam,
+  useQueryParams,
+} from 'react-router-url-params';
 
 export function useUpdateSortByInUrl(sortBy: Array<SortingRule<any>>) {
   const [query, setQuery] = useQueryParams({

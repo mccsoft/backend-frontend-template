@@ -3,11 +3,9 @@ import { AppLink } from 'components/uikit/buttons/AppLink';
 import { Loading } from 'components/uikit/suspense/Loading';
 import React from 'react';
 import { QueryFactory } from 'services/api';
-import { parseIntOrThrow } from '../../../../application/constants/create-link';
 
 export const ProductDetailsPage: React.FC = (props) => {
-  const { id } = Links.Authorized.ProductDetails.useParams();
-  const productId = parseIntOrThrow(id);
+  const { id: productId } = Links.Authorized.ProductDetails.useParams();
   const productQuery = QueryFactory.ProductQuery.useGetQuery(productId);
 
   return (
