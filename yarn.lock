@@ -2989,7 +2989,7 @@ __metadata:
     react-redux: 8.0.2
     react-router: 6.3.0
     react-router-dom: 6.3.0
-    react-router-url-params: 0.2.2
+    react-router-url-params: 0.3.1
     react-table: 7.8.0
     react-textarea-autosize: 8.3.4
     react-tooltip: 4.2.21
@@ -9233,9 +9233,9 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"react-router-url-params@npm:0.2.2":
-  version: 0.2.2
-  resolution: "react-router-url-params@npm:0.2.2"
+"react-router-url-params@npm:0.3.1":
+  version: 0.3.1
+  resolution: "react-router-url-params@npm:0.3.1"
   dependencies:
     serialize-query-params: ^1.3.6
   peerDependencies:
@@ -9244,7 +9244,7 @@ fsevents@~2.3.2:
     react-dom: ">=16.8.0"
     react-router: ">=6.3.0"
     react-router-dom: ">=6.3.0"
-  checksum: 31a290e84ab1f2127eb00d6a050d57f50bcc8ce18e8d4d834dc4fa930b2643aaa529fab87a2ef2fedbc19c0a9b72cab42e0854c01bf4fa2cfe4087b3be0db822
+  checksum: 08f312d15640eeada883fc411b4a17b19b760193e07df95db19e73e882ceb3f91cb3b0d7e263c062e86bcd7e5bf5af439162fcf3bfa40e7c2c2eccb0c5a571a4
   languageName: node
   linkType: hard
 
