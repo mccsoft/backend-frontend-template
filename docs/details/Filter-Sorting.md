@@ -17,7 +17,7 @@ Here's a guidance how to implement that:
    3. If you need paging/sorting, call `.ToPagingListAsync` extension method on filtered `IQuerable`.
 2. Frontend
    1. All filters, sorting and pagination should be stored in the URL.
-   2. To do that, embrace `use-query-params` library. Define the state within a component with all parameters:
+   2. To do that, embrace `react-router-url-params` library. Define the state within a component with all parameters:
        ```ts
         const [queryParams, setQueryParams] = useQueryParams({
             search: StringParam,

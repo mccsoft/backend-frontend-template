@@ -13,7 +13,7 @@ Examples: Patient list, Product list, etc.
 1. To change filter parameters call `setQueryParams({ search: 'qwe' })` (or pass any other filter/paging parameter you like).
 1. All current filter values (e.g. for passing to react-query) should be taken from `queryParams` (e.g. `queryParams.search`).
 ```TS
-    import { StringParam, useQueryParams } from 'use-query-params';
+    import { StringParam, useQueryParams } from 'react-router-url-params';
 
 
     const [queryParams, setQueryParams] = useQueryParams({
