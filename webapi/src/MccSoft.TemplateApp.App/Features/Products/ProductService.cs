@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using MccSoft.LowLevelPrimitives;
+using MccSoft.LowLevelPrimitives.Exceptions;
 using MccSoft.NpgSql;
 using MccSoft.TemplateApp.App.Features.Products.Dto;
 using MccSoft.TemplateApp.App.Utils;
@@ -38,6 +39,17 @@ namespace MccSoft.TemplateApp.App.Features.Products
 
             var productId = await _retryHelper.RetryInTransactionAsync(async db =>
             {
+                var isProductWithSameNameExists = await db.Products.AnyAsync(
+                    x => x.Title == dto.Title
+                );
+                if (isProductWithSameNameExists)
+                {
+                    throw new ValidationException(
+                        nameof(dto.Title),
+                        "Product with same name already exists"
+                    );
+                }
+
                 var user = await db.Users.GetOne(User.HasId(userId));
                 var product = new Product(dto.Title)
                 {
