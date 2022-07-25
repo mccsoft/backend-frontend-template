@@ -16,7 +16,7 @@ namespace MccSoft.WebApi.Pagination
         /// <param name="pagedRequestDto">Dto with sorting and paging parameters</param>
         /// <param name="defaultSortExpression">Default sort expression</param>
         /// <param name="defaultLimit">Default limit to use if not specified in Dto.</param>
-        /// /// <param name="allowedSortFields">fields for which sorting is allowed. If null - all fields will be allowed</param>
+        /// <param name="allowedSortFields">fields for which sorting is allowed. If null - all fields will be allowed</param>
         public static Task<PagedResult<T>> ToPagingListAsync<T>(
             this IQueryable<T> query,
             PagedRequestDto pagedRequestDto,
@@ -58,21 +58,65 @@ namespace MccSoft.WebApi.Pagination
         {
             var totalRecordCount = await query.CountAsync();
 
-            var sort = string.IsNullOrEmpty(sortExpression)
-              ? defaultSortExpression
-              : sortExpression;
+            query = query.ApplyPagingAndSorting(
+                offset,
+                limit,
+                sortExpression,
+                defaultSortExpression,
+                sortOrder
+            );
 
-            if (sortOrder == SortOrder.Desc)
-            {
-                query = query.OrderBy(sort, @descending: true);
-            }
-            else
-            {
-                query = query.OrderBy(sort);
-            }
-
-            var data = await query.Skip(offset).Take(limit).ToListAsync().ConfigureAwait(false);
+            var data = await query.ToListAsync().ConfigureAwait(false);
             return new PagedResult<T>(data, totalRecordCount);
+        }
+
+        /// <summary>
+        /// Applies sorting and paging rules to IQueryable
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query">Entity Framework query</param>
+        /// <param name="pagedRequestDto">Dto with sorting and paging parameters</param>
+        /// <param name="defaultSortExpression">Default sort expression</param>
+        /// <param name="defaultLimit">Default limit to use if not specified in Dto.</param>
+        /// <param name="allowedSortFields">fields for which sorting is allowed. If null - all fields will be allowed</param>
+        public static IQueryable<T> ApplyPagingAndSorting<T>(
+            this IQueryable<T> query,
+            PagedRequestDto pagedRequestDto,
+            string defaultSortExpression,
+            int defaultLimit = 20,
+            IList<string>? allowedSortFields = null /* null means all fields are allowed */
+        ) where T : class
+        {
+            return query.ApplyPagingAndSorting(
+                pagedRequestDto.Offset ?? 0,
+                pagedRequestDto.Limit ?? defaultLimit,
+                pagedRequestDto.SortBy,
+                defaultSortExpression,
+                pagedRequestDto.SortOrder,
+                allowedSortFields: allowedSortFields
+            );
+        }
+
+        private static IQueryable<T> ApplyPagingAndSorting<T>(
+            this IQueryable<T> query,
+            int offset,
+            int limit,
+            string sortExpression,
+            string defaultSortExpression,
+            SortOrder sortOrder,
+            IList<string>? allowedSortFields = null /* null means all fields are allowed */
+        ) where T : class
+        {
+            var sort = string.IsNullOrEmpty(sortExpression)
+                ? defaultSortExpression
+                : sortExpression;
+
+            query =
+                sortOrder == SortOrder.Desc
+                    ? query.OrderBy(sort, descending: true)
+                    : query.OrderBy(sort);
+            query = query.Skip(offset).Take(limit);
+            return query;
         }
     }
 }
