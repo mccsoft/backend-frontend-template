@@ -1,4 +1,8 @@
-import { createRoute, RequiredNumberParam } from 'react-router-url-params';
+import {
+  createRoute,
+  RequiredNumberParam,
+  StringParam,
+} from 'react-router-url-params';
 
 export const Links = {
   Unauthorized: {
