@@ -6,10 +6,10 @@ You should manually regenerate the clients when you add/update controllers/actio
 ### Frontend
 If you are changing backend API and would like to update the client:
 1. Run your backend (usually via F5 in your IDE)
-2. From root folder run `yarn generate-api-client`.
+2. From root folder run `yarn generate-api-clients`.
 ### Frontend - remote
 If you do not run backend locally, but your typescript client seems outdated, you could regenerate the client using remote backend
-1. From root folder run `yarn generate-api-client-remote` (make sure you have specified correct remote URL in [package.json](../frontend/package.json), "generate-api-client-remote" script).
+1. From root folder run `yarn generate-api-clients-remote` (make sure you have specified correct remote URL in [package.json](../frontend/package.json), "generate-api-client-remote" script).
 ### Backend
 1. Run `GenerateHttpClient_ValidAndExported` auto test (from [BasicApiTests.cs](../webapi/tests/MccSoft.TemplateApp.ComponentTests/BasicApiTests.cs))
 
