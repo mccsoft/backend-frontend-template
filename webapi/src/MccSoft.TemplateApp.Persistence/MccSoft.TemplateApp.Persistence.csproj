@@ -26,6 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Lib\LowLevelPrimitives\MccSoft.LowLevelPrimitives\MccSoft.LowLevelPrimitives.csproj" />
     <ProjectReference Include="..\..\Lib\NpgSql\MccSoft.NpgSql\MccSoft.NpgSql.csproj" />
+    <ProjectReference Include="..\..\Lib\PersistenceHelpers\MccSoft.PersistenceHelpers\MccSoft.PersistenceHelpers.csproj" />
     <ProjectReference Include="..\MccSoft.TemplateApp.Common\MccSoft.TemplateApp.Common.csproj" />
     <ProjectReference Include="..\MccSoft.TemplateApp.Domain\MccSoft.TemplateApp.Domain.csproj" />
   </ItemGroup>

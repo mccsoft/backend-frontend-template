@@ -1,11 +1,9 @@
 ﻿using System;
 using MccSoft.DomainHelpers;
-using MccSoft.DomainHelpers.DomainEvents.Events;
-using Microsoft.Extensions.Logging;
 
 namespace MccSoft.TemplateApp.Domain
 {
-    public class Product : BaseEntity
+    public class Product : BaseOwnedEntity
     {
         private string _title;
         public int Id { get; set; }
