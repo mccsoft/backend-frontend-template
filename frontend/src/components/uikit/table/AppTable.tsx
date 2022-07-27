@@ -8,7 +8,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from '@material-ui/core';
+} from '@mui/material';
 
 export const emptyArray: any[] = [];
 // ignored because it's used in react-table as well
@@ -17,7 +17,7 @@ export function AppTable<D extends object = object>(props: {
   table: TableInstance<D>;
 }) {
   const tableObj = props.table;
-  const tableRef = useRef();
+  const tableRef = useRef<HTMLDivElement>(null);
   return (
     <TableContainer
       ref={tableRef}

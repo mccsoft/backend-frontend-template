@@ -1,4 +1,3 @@
-import { Grid } from '@material-ui/core';
 import { Links } from 'application/constants/links';
 import { useScopedTranslation } from 'application/localization/useScopedTranslation';
 import { AppLink } from 'components/uikit/buttons/AppLink';
@@ -20,6 +19,7 @@ import {
 import { HookFormDropDownInput } from 'components/uikit/inputs/dropdown/HookFormDropDownInput';
 import { useNavigate } from 'react-router';
 import { HookFormDatePicker } from '../../../../components/uikit/inputs/date-time/HookFormDatePicker';
+import { Grid } from '@mui/material';
 
 export const CreateProductPage: React.FC = () => {
   const i18n = useScopedTranslation('Page.Products.Create');

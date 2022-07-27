@@ -19,6 +19,8 @@ import {
 import { sendRefreshTokenRequest } from './helpers/interceptors/auth/auth-client';
 import { logoutAction } from './application/redux-store/root-reducer';
 import { backendUri } from './pages/unauthorized/openid/openid-settings';
+import { ThemeProvider } from '@mui/material';
+import { createTheme } from '@mui/material/styles';
 
 QueryFactory.setAxiosFactory(() => axios);
 
@@ -40,6 +42,8 @@ if (import.meta.env.PROD) {
     // tracesSampleRate: 1.0,
   });
 }
+
+const theme = createTheme();
 
 export const App = () => {
   const queryClient = useMemo(() => {
@@ -64,15 +68,17 @@ export const App = () => {
 
   return (
     <Suspense fallback={fallback}>
-      <QueryClientProvider client={queryClient}>
-        <Provider store={RootStore.store}>
-          <PersistGate loading={fallback} persistor={RootStore.persistor}>
-            <LanguageProvider>
-              <AppRouter />
-            </LanguageProvider>
-          </PersistGate>
-        </Provider>
-      </QueryClientProvider>
+      <ThemeProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+          <Provider store={RootStore.store}>
+            <PersistGate loading={fallback} persistor={RootStore.persistor}>
+              <LanguageProvider>
+                <AppRouter />
+              </LanguageProvider>
+            </PersistGate>
+          </Provider>
+        </QueryClientProvider>
+      </ThemeProvider>
     </Suspense>
   );
 };
