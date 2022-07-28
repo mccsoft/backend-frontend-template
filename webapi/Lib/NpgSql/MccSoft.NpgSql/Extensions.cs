@@ -13,6 +13,8 @@ namespace MccSoft.NpgSql
         /// </summary>
         public static void ReloadTypesForEnumSupport(this DbContext context)
         {
+            // This is for enum support in PostgreSQL.
+            // Details here: https://www.npgsql.org/efcore/mapping/enum.html#creating-your-database-enum
             var conn = (NpgsqlConnection)context.Database.GetDbConnection();
             conn.Open();
             conn.ReloadTypes();
