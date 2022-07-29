@@ -7,7 +7,6 @@ trigger:
     exclude:
       - docs/*
 
-
 variables:
   BUILD_NUMBER: 0.1.$(Build.BuildId)
   REACT_APP_BUILD_NUMBER: 0.1.$(Build.BuildId)
@@ -41,28 +40,27 @@ stages:
 
           - template: ./build-import-meta-env.yml
 
+          #          - script: |
+          #              mkdir ./cobertura
+          #              find '$(Agent.TempDirectory)' -name 'coverage.cobertura.xml' -exec cp --backup=numbered -t ./cobertura {} +
+          #              cd ./cobertura
+          #              for f in *~*~; do mv "$f" "$(echo "$f" | sed -r 's/(.*)\.~([0-9]+)~/\2\1/')"; done;
+          #            displayName: 'copy coverage files'
 
-#          - script: |
-#              mkdir ./cobertura
-#              find '$(Agent.TempDirectory)' -name 'coverage.cobertura.xml' -exec cp --backup=numbered -t ./cobertura {} +
-#              cd ./cobertura
-#              for f in *~*~; do mv "$f" "$(echo "$f" | sed -r 's/(.*)\.~([0-9]+)~/\2\1/')"; done;
-#            displayName: 'copy coverage files'
+          #          - script: |
+          #              cd ./webapi
+          #              dotnet tool restore
+          #              dotnet reportgenerator -reports:../cobertura/* -targetdir:../cobertura/report -sourcedirs:./ -assemblyfilters:+Lmt.Unicorn.App\;+Lmt.Unicorn.Common\;+Lmt.Unicorn.Domain
+          #            displayName: 'generate coverage report'
 
-#          - script: |
-#              cd ./webapi
-#              dotnet tool restore
-#              dotnet reportgenerator -reports:../cobertura/* -targetdir:../cobertura/report -sourcedirs:./ -assemblyfilters:+Lmt.Unicorn.App\;+Lmt.Unicorn.Common\;+Lmt.Unicorn.Domain
-#            displayName: 'generate coverage report'
+          #          - publish: './cobertura'
+          #            artifact: 'backend-coverage'
 
-#          - publish: './cobertura'
-#            artifact: 'backend-coverage'
-
-#          - task: PublishTestResults@2
-#            inputs:
-#              testResultsFormat: 'JUnit'
-#              testResultsFiles: '**/junit.xml'
-#              mergeTestResults: true
+          #          - task: PublishTestResults@2
+          #            inputs:
+          #              testResultsFormat: 'JUnit'
+          #              testResultsFiles: '**/junit.xml'
+          #              mergeTestResults: true
 
           - script: |
               docker login $(DOCKER_REGISTRY) -u $(DOCKER_USER) -p $(DOCKER_TOKEN)
@@ -93,60 +91,61 @@ stages:
           - publish: './scripts/deploy'
             artifact: 'scripts'
 
-  - stage: DeployToDev
-    dependsOn: Build
-    condition: succeeded()
-    jobs:
-      - deployment:
-        environment:
-          name: 'DEV'
-          resourceType: VirtualMachine
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - template: ./azure-deploy-template.yml
+  # TODO: Uncomment if you need deployment.
+  # - stage: DeployToDev
+  #   dependsOn: Build
+  #   condition: succeeded()
+  #   jobs:
+  #     - deployment:
+  #       environment:
+  #         name: 'DEV'
+  #         resourceType: VirtualMachine
+  #       strategy:
+  #         runOnce:
+  #           deploy:
+  #             steps:
+  #               - template: ./azure-deploy-template.yml
 
-  - stage: TagDevSources
-    dependsOn: DeployToDev
-    condition: succeeded()
-    jobs:
-      - job:
-        condition: succeeded()
-        pool:
-          vmImage: ubuntu-latest
-        steps:
-          - checkout: self
-            persistCredentials: true
-          - script: |
-              git tag 'dev' -f
-              git push origin 'dev' -f --tags
+  # - stage: TagDevSources
+  #   dependsOn: DeployToDev
+  #   condition: succeeded()
+  #   jobs:
+  #     - job:
+  #       condition: succeeded()
+  #       pool:
+  #         vmImage: ubuntu-latest
+  #       steps:
+  #         - checkout: self
+  #           persistCredentials: true
+  #         - script: |
+  #             git tag 'dev' -f
+  #             git push origin 'dev' -f --tags
 
-  - stage: DeployToProd
-    dependsOn: Build
-    condition: succeeded()
-    jobs:
-      - deployment:
-        environment:
-          name: 'PROD'
-          resourceType: VirtualMachine
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - template: ./azure-deploy-template.yml
+  # - stage: DeployToProd
+  #   dependsOn: Build
+  #   condition: succeeded()
+  #   jobs:
+  #     - deployment:
+  #       environment:
+  #         name: 'PROD'
+  #         resourceType: VirtualMachine
+  #       strategy:
+  #         runOnce:
+  #           deploy:
+  #             steps:
+  #               - template: ./azure-deploy-template.yml
 
-  - stage: TagProdSources
-    dependsOn: DeployToProd
-    condition: succeeded()
-    jobs:
-      - job:
-        condition: succeeded()
-        pool:
-          vmImage: ubuntu-latest
-        steps:
-          - checkout: self
-            persistCredentials: true
-          - script: |
-              git tag 'prod' -f
-              git push origin 'prod' -f --tags
+  # - stage: TagProdSources
+  #   dependsOn: DeployToProd
+  #   condition: succeeded()
+  #   jobs:
+  #     - job:
+  #       condition: succeeded()
+  #       pool:
+  #         vmImage: ubuntu-latest
+  #       steps:
+  #         - checkout: self
+  #           persistCredentials: true
+  #         - script: |
+  #             git tag 'prod' -f
+  #             git push origin 'prod' -f --tags
