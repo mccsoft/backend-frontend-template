@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace MccSoft.NpgSql
+namespace MccSoft.PersistenceHelpers
 {
     /// <summary>
     /// Represents an object that can start a transaction.

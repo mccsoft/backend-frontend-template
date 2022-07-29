@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 
-namespace MccSoft.NpgSql
+namespace MccSoft.PersistenceHelpers
 {
     /// <summary>
-    /// A logger to use in PostgresRetryHelper.
+    /// A logger to use in DbRetryHelper.
     /// Collects all the log messages written during transaction
     /// and logs them only in case if the transaction was successfully finished.
     /// </summary>
-    /// <typeparam name="T">Name of the service which uses PostgresRetryHelper and this logger.</typeparam>
+    /// <typeparam name="T">Name of the service which uses DbRetryHelper and this logger.</typeparam>
     public class TransactionLogger<T> : ILogger<T>
     {
         private readonly List<LogEntry> _logEntriesCollection = new List<LogEntry>();

@@ -1,17 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
 
-namespace MccSoft.NpgSql
+namespace MccSoft.PersistenceHelpers
 {
     /// <summary>
-    /// Retries a failed Postgres operation on a transient error.
+    /// Retries a failed database operation on a transient error.
     /// </summary>
     /// <typeparam name="TDbContext">The type of the DbContext.</typeparam>
     /// <typeparam name="TCaller">The type of the service performing transaction.</typeparam>
-    public class PostgresRetryHelper<TDbContext, TCaller>
+    public class DbRetryHelper<TDbContext, TCaller>
         where TDbContext : DbContext, ITransactionFactory, IDisposable
     {
         private readonly TDbContext _dbContext;
@@ -19,7 +19,7 @@ namespace MccSoft.NpgSql
         private readonly TransactionLogger<TCaller> _transactionLogger;
         private readonly ILogger _logger;
 
-        public PostgresRetryHelper(
+        public DbRetryHelper(
             TDbContext dbContext,
             Func<TDbContext> dbContextFactory,
             ILoggerFactory loggerFactory,
@@ -29,11 +29,11 @@ namespace MccSoft.NpgSql
             _dbContext = dbContext;
             _dbContextFactory = dbContextFactory;
             _transactionLogger = transactionLogger;
-            _logger = loggerFactory.CreateLogger<PostgresRetryHelper<TDbContext, TCaller>>();
+            _logger = loggerFactory.CreateLogger<DbRetryHelper<TDbContext, TCaller>>();
         }
 
         /// <summary>
-        /// Retries the specified action on transient Postgres errors with exponential backoff.
+        /// Retries the specified action on transient database errors with exponential backoff.
         /// Wraps the action in a transaction that is committed automatically
         /// if the action doesn't throw and returns the result of the action.
         /// </summary>
@@ -62,7 +62,7 @@ namespace MccSoft.NpgSql
         }
 
         /// <summary>
-        /// Retries the specified action on transient Postgres errors with exponential backoff.
+        /// Retries the specified action on transient database errors with exponential backoff.
         /// Doesn't wrap the whole action in a transaction automatically!
         /// Use when you have a single SaveChanges inside the action.
         /// </summary>
@@ -88,7 +88,7 @@ namespace MccSoft.NpgSql
         }
 
         /// <summary>
-        /// Retries the specified action on transient Postgres errors with exponential backoff.
+        /// Retries the specified action on transient database errors with exponential backoff.
         /// Wraps the action in a transaction that is committed automatically
         /// if the action doesn't throw.
         /// </summary>
@@ -105,7 +105,7 @@ namespace MccSoft.NpgSql
         }
 
         /// <summary>
-        /// Retries the specified action on transient Postgres errors with exponential backoff.
+        /// Retries the specified action on transient database errors with exponential backoff.
         /// Doesn't wrap the whole action in a transaction automatically!
         /// Use when you have a single SaveChanges inside the action.
         /// </summary>
@@ -122,7 +122,7 @@ namespace MccSoft.NpgSql
         }
 
         /// <summary>
-        /// Retries the specified action on transient Postgres errors with exponential backoff.
+        /// Retries the specified action on transient database errors with exponential backoff.
         /// Wraps the action in a transaction that is committed automatically
         /// if the action doesn't throw and returns the result of the action.
         /// </summary>
@@ -135,7 +135,7 @@ namespace MccSoft.NpgSql
         }
 
         /// <summary>
-        /// Retries the specified action on transient Postgres errors with exponential backoff.
+        /// Retries the specified action on transient database errors with exponential backoff.
         /// Doesn't wrap the whole action in a transaction automatically!
         /// Use when you have a single SaveChanges inside the action.
         /// </summary>
@@ -148,7 +148,7 @@ namespace MccSoft.NpgSql
         }
 
         /// <summary>
-        /// Retries the specified action on transient Postgres errors with exponential backoff.
+        /// Retries the specified action on transient database errors with exponential backoff.
         /// Wraps the action in a transaction that is committed automatically
         /// if the action doesn't throw.
         /// </summary>
@@ -165,7 +165,7 @@ namespace MccSoft.NpgSql
         }
 
         /// <summary>
-        /// Retries the specified action on transient Postgres errors with exponential backoff.
+        /// Retries the specified action on transient database errors with exponential backoff.
         /// Wraps the action in a transaction that is committed automatically
         /// if the action doesn't throw.
         /// </summary>
