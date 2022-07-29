@@ -33,7 +33,7 @@ public static partial class SetupAudit
                         .UseDbContext(ev =>
                         {
                             // https://github.com/thepirat000/Audit.NET/issues/451
-                            // To support transactions rollback (e.g. PostgresRetryHelper) we need to use separate context for Audit entries
+                            // To support transactions rollback (e.g. DbRetryHelper) we need to use separate context for Audit entries
                             // (otherwise there's an infinite cycle inside Audit.Net when transaction is rolled back and next transaction is committed).
                             // But we also need to use the same transaction for audit logs as in the main context, to not save Audit logs from rolled back transactions.
                             // So we create DBContext manually

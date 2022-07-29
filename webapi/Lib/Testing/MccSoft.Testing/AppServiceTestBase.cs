@@ -131,12 +131,12 @@ namespace MccSoft.Testing
         }
 
         /// <summary>
-        /// Provides access to a PostgresRetryHelper and DbContext
+        /// Provides access to a DbRetryHelper and DbContext
         /// that should be used to initialize the service being tested.
         /// </summary>
         /// <param name="action">The action that creates the service.</param>
         protected TService InitializeService(
-            Func<PostgresRetryHelper<TDbContext, TService>, TDbContext, TService> action
+            Func<DbRetryHelper<TDbContext, TService>, TDbContext, TService> action
         )
         {
             if (_databaseType == null)
@@ -145,14 +145,14 @@ namespace MccSoft.Testing
         }
 
         /// <summary>
-        /// Creates PostgresRetryHelper for any service type
+        /// Creates DbRetryHelper for any service type
         /// </summary>
-        protected PostgresRetryHelper<
+        protected DbRetryHelper<
             TDbContext,
             TAnyService
         > CreatePostgresRetryHelper<TAnyService>()
         {
-            return new PostgresRetryHelper<TDbContext, TAnyService>(
+            return new DbRetryHelper<TDbContext, TAnyService>(
                 CreateDbContext(),
                 CreateDbContext,
                 LoggerFactory,

@@ -18,12 +18,12 @@ namespace MccSoft.TemplateApp.App.Features.Products
     public class ProductService
     {
         private readonly TemplateAppDbContext _dbContext;
-        private readonly PostgresRetryHelper<TemplateAppDbContext, ProductService> _retryHelper;
+        private readonly DbRetryHelper<TemplateAppDbContext, ProductService> _retryHelper;
         private readonly IUserAccessor _userAccessor;
 
         public ProductService(
             TemplateAppDbContext dbContext,
-            PostgresRetryHelper<TemplateAppDbContext, ProductService> retryHelper,
+            DbRetryHelper<TemplateAppDbContext, ProductService> retryHelper,
             IUserAccessor userAccessor
         )
         {

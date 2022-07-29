@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 
-namespace MccSoft.NpgSql
+namespace MccSoft.PersistenceHelpers
 {
     /// <summary>
     /// Configures EntityFrameworkCore logging.
