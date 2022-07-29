@@ -39,6 +39,10 @@
       "nothing_selected": "No selection",
       "all_selected": "All selected",
       "some_selected": "Some selected"
+    },
+    "dialog": {
+      "ok_button": "Ok",
+      "cancel_button": "Cancel"
     }
   },
   "suspense": {

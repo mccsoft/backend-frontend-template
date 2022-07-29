@@ -1,0 +1,47 @@
+@import '../../../styles/variables';
+
+.modal {
+  width: 400px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 78px;
+  padding-left: 24px;
+  padding-right: 24px;
+  border-bottom: 1px $separator solid;
+}
+
+.title {
+  font-weight: normal;
+  font-family: $font-family;
+  font-size: 24px;
+  line-height: 28px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 24px;
+}
+
+.closeButton {
+  cursor: pointer;
+}
+
+.closeButton:hover path {
+  fill: $close-button-hover;
+}
+
+.closeButton:active path {
+  fill: $close-button-active;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}

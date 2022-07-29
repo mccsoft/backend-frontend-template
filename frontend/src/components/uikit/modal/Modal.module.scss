@@ -1,0 +1,37 @@
+.header {
+  padding-left: 24px;
+  padding-right: 24px;
+  height: 78px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px $separator solid;
+}
+
+.title {
+  font-weight: normal;
+  font-family: $font-family;
+  font-size: 24px;
+  line-height: 28px;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 24px 16px 24px;
+  line-height: 17px;
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+.closeButton {
+  cursor: pointer;
+}
+
+.closeButton:hover path {
+  fill: $close-button-hover;
+}
+
+.closeButton:active path {
+  fill: $close-button-active;
+}

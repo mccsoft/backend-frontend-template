@@ -21,6 +21,7 @@ import { logoutAction } from './application/redux-store/root-reducer';
 import { backendUri } from './pages/unauthorized/openid/openid-settings';
 import { ThemeProvider } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
+import { ModalProvider } from './components/uikit/modal/useModal';
 
 QueryFactory.setAxiosFactory(() => axios);
 
@@ -73,7 +74,9 @@ export const App = () => {
           <Provider store={RootStore.store}>
             <PersistGate loading={fallback} persistor={RootStore.persistor}>
               <LanguageProvider>
-                <AppRouter />
+                <ModalProvider>
+                  <AppRouter />
+                </ModalProvider>
               </LanguageProvider>
             </PersistGate>
           </Provider>

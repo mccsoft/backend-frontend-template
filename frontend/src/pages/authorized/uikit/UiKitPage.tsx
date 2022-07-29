@@ -14,6 +14,7 @@ import { ProductType } from 'services/api/api-client';
 import { useScopedTranslation } from 'application/localization/useScopedTranslation';
 
 import styles from './UiKitPage.module.scss';
+import { useModal } from '../../../components/uikit/modal/useModal';
 
 type UiKitForm = {
   dropDown: ProductType;
@@ -34,7 +35,7 @@ export const UiKitPage: React.FC = () => {
   const options = useMemo(() => {
     return [ProductType.Auto, ProductType.Electronic, ProductType.Other];
   }, []);
-
+  const modals = useModal();
   return (
     <div>
       <AppLink
@@ -76,6 +77,41 @@ export const UiKitPage: React.FC = () => {
         </Field>
         <Button type={'submit'} title={i18n.t('submit_button_title')} />
       </form>
+      <Button
+        color={ButtonColor.Primary}
+        onClick={async () => {
+          const result = await modals.showAlert({
+            text: 'zxc',
+            title: 'qwe',
+          });
+          alert(result);
+        }}
+        title={'Show alert'}
+      ></Button>
+      <Button
+        color={ButtonColor.Primary}
+        onClick={async () => {
+          const result = await modals.showConfirm({
+            text: 'zxc',
+            title: 'qwe',
+          });
+          alert(result);
+        }}
+        title={'Show confirm'}
+      ></Button>
+      <Button
+        color={ButtonColor.Secondary}
+        onClick={async () => {
+          const result = await modals.showPrompt({
+            text: 'zxc',
+            title: 'qwe',
+            defaultValue: '',
+            fieldName: 'Project Name',
+          });
+          alert(result);
+        }}
+        title={'Show prompt'}
+      ></Button>
     </div>
   );
 };
