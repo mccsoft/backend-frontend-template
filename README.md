@@ -36,7 +36,7 @@ Template contains:
 1. Kubernetes deployment files and guidance regarding deploy to kubernetes (in progress)
 
 ## Setting up new project from template
-Before using the template for your brand-new app run `yarn rename -n YourProjectName`. Use CamelCase for your project name.
+Before using the template for your brand-new app run `yarn rename -n YourProjectName`. Additionally you can use `-c YourCompanyName` to change solution's root namespace. Use CamelCase for your project name. 
 The script does the following (you could do this manually if you like to):
 1. Rename all files/folders from 'TemplateApp' to your project name.
 1. Change all namespaces, classnames, database names, dockerfiles and deployment scripts to suit your project
