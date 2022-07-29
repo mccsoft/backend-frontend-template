@@ -11,7 +11,6 @@ namespace MccSoft.NpgSql
         /// you need to instruct Npgsql to reload all types after applying your migrations
         /// For more info refer to: https://www.npgsql.org/efcore/mapping/enum.html?tabs=tabid-1#creating-your-database-enum
         /// </summary>
-        /// <param name="context"></param>
         public static void ReloadTypesForEnumSupport(this DbContext context)
         {
             var conn = (NpgsqlConnection)context.Database.GetDbConnection();
