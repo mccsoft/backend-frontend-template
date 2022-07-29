@@ -1,5 +1,6 @@
-﻿using MccSoft.LowLevelPrimitives;
+using MccSoft.LowLevelPrimitives;
 using MccSoft.NpgSql;
+using MccSoft.PersistenceHelpers;
 using MccSoft.PersistenceHelpers.DomainEvents;
 using MccSoft.TemplateApp.App.Services.Authentication;
 using MccSoft.TemplateApp.Persistence;

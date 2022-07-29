@@ -1,4 +1,3 @@
-using MccSoft.NpgSql;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MccSoft.PersistenceHelpers

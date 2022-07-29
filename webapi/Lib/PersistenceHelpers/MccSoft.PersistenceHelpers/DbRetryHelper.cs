@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using MccSoft.NpgSql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
