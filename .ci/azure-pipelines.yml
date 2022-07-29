@@ -91,61 +91,60 @@ stages:
           - publish: './scripts/deploy'
             artifact: 'scripts'
 
-  # TODO: Uncomment if you need deployment.
-  # - stage: DeployToDev
-  #   dependsOn: Build
-  #   condition: succeeded()
-  #   jobs:
-  #     - deployment:
-  #       environment:
-  #         name: 'DEV'
-  #         resourceType: VirtualMachine
-  #       strategy:
-  #         runOnce:
-  #           deploy:
-  #             steps:
-  #               - template: ./azure-deploy-template.yml
+  - stage: DeployToDev
+    dependsOn: Build
+    condition: succeeded()
+    jobs:
+      - deployment:
+        environment:
+          name: 'DEV'
+          resourceType: VirtualMachine
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: ./azure-deploy-template.yml
 
-  # - stage: TagDevSources
-  #   dependsOn: DeployToDev
-  #   condition: succeeded()
-  #   jobs:
-  #     - job:
-  #       condition: succeeded()
-  #       pool:
-  #         vmImage: ubuntu-latest
-  #       steps:
-  #         - checkout: self
-  #           persistCredentials: true
-  #         - script: |
-  #             git tag 'dev' -f
-  #             git push origin 'dev' -f --tags
+  - stage: TagDevSources
+    dependsOn: DeployToDev
+    condition: succeeded()
+    jobs:
+      - job:
+        condition: succeeded()
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - checkout: self
+            persistCredentials: true
+          - script: |
+              git tag 'dev' -f
+              git push origin 'dev' -f --tags
 
-  # - stage: DeployToProd
-  #   dependsOn: Build
-  #   condition: succeeded()
-  #   jobs:
-  #     - deployment:
-  #       environment:
-  #         name: 'PROD'
-  #         resourceType: VirtualMachine
-  #       strategy:
-  #         runOnce:
-  #           deploy:
-  #             steps:
-  #               - template: ./azure-deploy-template.yml
+  - stage: DeployToProd
+    dependsOn: Build
+    condition: succeeded()
+    jobs:
+      - deployment:
+        environment:
+          name: 'PROD'
+          resourceType: VirtualMachine
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: ./azure-deploy-template.yml
 
-  # - stage: TagProdSources
-  #   dependsOn: DeployToProd
-  #   condition: succeeded()
-  #   jobs:
-  #     - job:
-  #       condition: succeeded()
-  #       pool:
-  #         vmImage: ubuntu-latest
-  #       steps:
-  #         - checkout: self
-  #           persistCredentials: true
-  #         - script: |
-  #             git tag 'prod' -f
-  #             git push origin 'prod' -f --tags
+  - stage: TagProdSources
+    dependsOn: DeployToProd
+    condition: succeeded()
+    jobs:
+      - job:
+        condition: succeeded()
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - checkout: self
+            persistCredentials: true
+          - script: |
+              git tag 'prod' -f
+              git push origin 'prod' -f --tags
