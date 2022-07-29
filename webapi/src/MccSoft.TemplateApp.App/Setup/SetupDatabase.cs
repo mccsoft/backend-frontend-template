@@ -1,11 +1,8 @@
-using MccSoft.LowLevelPrimitives;
 using MccSoft.NpgSql;
 using MccSoft.PersistenceHelpers;
 using MccSoft.PersistenceHelpers.DomainEvents;
-using MccSoft.TemplateApp.App.Services.Authentication;
 using MccSoft.TemplateApp.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using NeinLinq;
 using Shaddix.OpenIddict.ExternalAuthentication.Infrastructure;
 
