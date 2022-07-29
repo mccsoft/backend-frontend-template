@@ -56,7 +56,7 @@
 # Backend
 1. Do not use `Controllers` and `Services` folders. Rather create a folder in `Features` folder (with a name of your feature), and put your Controllers, Services and Dtos there.
   - it puts everything related to a feature in one place, which helps in refactoring and understanding
-
+1. Check [Multi-tenancy](details/MultiTenancy-EFIntegration.md) implementation if your app uses it
 
 # Frontend
 1. Use redux for client state only (and it's ok to not use redux at all :))
