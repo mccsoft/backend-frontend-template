@@ -53,6 +53,13 @@
 .base-input:focus-within {
   border: 1px solid $border-focused !important;
 }
+
+.base-input:focus {
+  border: 1px solid $border-focused !important;
+}
+.base-input:focus-visible {
+  outline: none;
+}
 .base-input:active {
   border: 1px solid $border-focused !important;
 }

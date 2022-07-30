@@ -8,6 +8,8 @@
       <excludeFolder url="file://$MODULE_DIR$/frontend/build" />
       <excludeFolder url="file://$MODULE_DIR$/webapi" />
       <excludeFolder url="file://$MODULE_DIR$/.yarn/plugins" />
+      <excludeFolder url="file://$MODULE_DIR$/publish" />
+      <excludeFolder url="file://$MODULE_DIR$/.yarn" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
