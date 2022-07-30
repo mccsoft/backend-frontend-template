@@ -13,6 +13,8 @@ export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   helperText?: string;
   type?: string;
   badge?: React.ReactNode;
+  endAdornment?: React.ReactNode;
+  endAdornmentClassname?: string;
   testId?: string;
 };
 
@@ -30,6 +32,8 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(function Input(
     onEnterPressed,
     type,
     badge,
+    endAdornment,
+    endAdornmentClassname,
     ...rest
   } = props;
   const isError = !!errorText;
@@ -63,6 +67,16 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(function Input(
         data-test-id={props.testId}
         {...rest}
       />
+      {endAdornment ? (
+        <div
+          className={clsx(styles.passwordEye, endAdornmentClassname)}
+          onClick={props.onClick}
+          onFocus={props.onFocus}
+          onMouseDown={props.onMouseDown}
+        >
+          {endAdornment}
+        </div>
+      ) : null}
       {showPassword !== undefined && (
         <div
           className={clsx(styles.passwordEye, 'passwordEye')}
