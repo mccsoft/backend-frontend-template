@@ -6,12 +6,15 @@ import {
   Path,
   RegisterOptions,
 } from 'react-hook-form';
-import { ComboBoxInput, ComboBoxInputProps } from './ComboBoxInput';
+import { ComboBoxInput } from './ComboBoxInput';
+import { StyledAutocompleteProps } from './StyledAutocomplete';
 
-type HookFormProps<D, TFieldValues extends FieldValues = FieldValues> = Omit<
-  ComboBoxInputProps<D>,
-  'onSelectedOptionChanged' | 'onValueChanged'
+type HookFormProps<T, TFieldValues extends FieldValues = FieldValues> = Omit<
+  StyledAutocompleteProps<T, false, false, true>,
+  'onChange'
 > & {
+  onValueChanged: (value: string | null, option: T | null) => void;
+} & {
   name: Path<TFieldValues>;
   control: Control<TFieldValues>;
   rules?: Exclude<RegisterOptions, 'valueAsDate' | 'setValueAs'>;
@@ -20,9 +23,9 @@ type HookFormProps<D, TFieldValues extends FieldValues = FieldValues> = Omit<
 };
 
 export function HookFormComboBoxInput<
-  D,
+  T,
   TFieldValues extends FieldValues = FieldValues,
->(props: HookFormProps<D, TFieldValues>) {
+>(props: HookFormProps<T, TFieldValues>) {
   return (
     <Controller
       control={props.control}
@@ -32,8 +35,8 @@ export function HookFormComboBoxInput<
         <ComboBoxInput
           {...props}
           value={value}
-          onValueChanged={(value, option: D | null) => {
-            onChange(option ?? value);
+          onValueChanged={(value) => {
+            onChange(value);
           }}
         />
       )}

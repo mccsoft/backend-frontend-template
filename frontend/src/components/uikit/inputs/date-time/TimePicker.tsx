@@ -54,19 +54,18 @@ export const TimePicker: FC<TimePickerProps> = (props) => {
     minTimeInMills,
     onTimeChanged,
     timeInMills,
-    error,
     errorText,
     timeEntriesIntervalInMinutes = 30,
     className,
   } = props;
 
-  const timeEntries = useMemo(() => {
+  const timeEntries: TimeEntry[] = useMemo(() => {
     const totalMillsInADay = 24 * 60 * 60000;
     const intervalInMills = timeEntriesIntervalInMinutes * 60000;
     const entries: TimeEntry[] = [];
     for (
       let timeInMills = 0;
-      timeInMills <= totalMillsInADay;
+      timeInMills < totalMillsInADay;
       timeInMills += intervalInMills
     ) {
       const label = millsToTimeString(timeInMills);
@@ -81,11 +80,11 @@ export const TimePicker: FC<TimePickerProps> = (props) => {
   }, [minTimeInMills, timeEntriesIntervalInMinutes]);
 
   const onChange = useCallback(
-    (timeAsString: string | null, selectedEntry: TimeEntry | null) => {
-      if (selectedEntry) {
-        onTimeChanged?.(selectedEntry.timeInMills, false);
-      } else if (timeAsString) {
-        let newTime = parseTime(timeAsString);
+    (value: string | TimeEntry | null) => {
+      if (value === null) {
+        onTimeChanged?.(null, false);
+      } else if (typeof value === 'string') {
+        let newTime = parseTime(value);
         if (
           minTimeInMills !== undefined &&
           newTime !== null &&
@@ -95,7 +94,7 @@ export const TimePicker: FC<TimePickerProps> = (props) => {
         }
         onTimeChanged?.(newTime, newTime === null);
       } else {
-        onTimeChanged?.(null, false);
+        onTimeChanged?.(value.timeInMills, false);
       }
     },
     [onTimeChanged, minTimeInMills],
@@ -105,20 +104,16 @@ export const TimePicker: FC<TimePickerProps> = (props) => {
     <div className={clsx(styles.container, className)}>
       <ComboBoxInput
         options={timeEntries}
-        labelFunction={(item) => item.label}
-        idFunction={(item) => item.timeInMills.toString()}
-        label={
-          timeInMills !== null && timeInMills !== undefined
-            ? millsToTimeString(timeInMills)
-            : undefined
+        getOptionLabel={(item) =>
+          typeof item === 'string' ? item : item.label
+        }
+        isOptionEqualToValue={(item1, item2) =>
+          item1?.timeInMills === item2?.timeInMills
         }
         value={timeEntries.find((x) => x.timeInMills === timeInMills)}
-        variant={'formInput'}
-        calloutMaxHeight={200}
-        noPlaceholder={true}
-        error={error}
         errorText={errorText}
         onValueChanged={onChange}
+        enableSearch={true}
       />
     </div>
   );

@@ -13,9 +13,17 @@ export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   helperText?: string;
   type?: string;
   badge?: React.ReactNode;
+  /*
+   * endAdornment is an element that is placed on the right of the Input (visually inside the input)
+   */
   endAdornment?: React.ReactNode;
   endAdornmentClassname?: string;
   testId?: string;
+  /*
+   * 'normal' - input will have minimal width
+   * 'formInput' - input will have the standard width (as all form elements)
+   */
+  variant?: 'normal' | 'formInput';
 };
 
 export const Input = React.forwardRef<HTMLInputElement, Props>(function Input(
@@ -60,7 +68,12 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(function Input(
     >
       <input
         ref={ref}
-        className={clsx(styles.input, className)}
+        className={clsx(
+          styles.input,
+          endAdornment ? styles.inputWithAdornment : null,
+          props.variant === 'normal' ? styles.nonFormInput : null,
+          className,
+        )}
         data-error={isError}
         onKeyDown={onEnterPressed ? onKeyDown : undefined}
         type={showPassword ? 'input' : type}

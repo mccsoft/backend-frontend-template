@@ -1,0 +1,78 @@
+@import 'src/styles/variables';
+@import 'src/styles/base';
+
+.root-container {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.option-value {
+  height: initial;
+  background-color: initial;
+  font-family: $font-family !important;
+  font-style: normal;
+  font-weight: normal;
+  color: $normal !important;
+  font-size: 13px;
+  line-height: 16px;
+
+  border: none;
+  border-top: 1px $separator solid;
+  padding: 0;
+  height: $form-input-height;
+}
+
+.option-value:hover {
+  background: $background-input-hover !important;
+}
+
+.option-value:focus {
+  background: $background-input-hover !important;
+}
+
+.option-value[aria-disabled='true'] {
+  opacity: 0.5;
+}
+
+.option-value[aria-disabled='true'][aria-selected='true'] {
+  opacity: 0.5;
+}
+
+.option-value[aria-selected='true'] {
+  background: $background-input-hover !important;
+}
+
+.dropdown-callout {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  box-shadow: 0 5px 13px rgba(0, 0, 0, 0.14);
+  border-radius: 4px;
+  -webkit-app-region: no-drag;
+}
+
+.expand-icon {
+  opacity: 0.7;
+}
+
+input[aria-expanded='true'] + div .expand-icon {
+  transform: rotate(180deg);
+}
+
+.errorText {
+  @extend .inputErrorText;
+}
+.listbox {
+  padding: 0 !important;
+}
+
+.checkbox {
+  margin-left: 12px;
+  pointer-events: none;
+}
+.multiSelectCheckbox {
+  margin-right: 8px;
+}
+.asd {
+  height: $normal-input-height;
+}

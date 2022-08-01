@@ -21,7 +21,7 @@
   font-style: normal;
   color: $normal;
   caret-color: $caret-color;
-  padding: 12px 12px 11px;
+  padding: $input-padding $input-padding ($input-padding - 1) $input-padding;
 }
 
 .inputErrorBorder {

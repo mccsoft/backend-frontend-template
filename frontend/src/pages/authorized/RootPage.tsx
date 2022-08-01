@@ -55,10 +55,12 @@ export const RootPage: React.FC = () => {
           <div>Version: {appVersion()}</div>
           <div>
             <DropDownInput
+              className={styles.languageSwitcher}
+              variant={'normal'}
               options={languages}
               required={true}
               value={getCurrentSupportedLanguage(i18n.i18n)}
-              onSelectedOptionChanged={(x) => {
+              onValueChanged={(x) => {
                 changeLanguage(x as Language);
               }}
             />

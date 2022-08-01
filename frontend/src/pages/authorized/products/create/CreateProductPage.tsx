@@ -59,6 +59,7 @@ export const CreateProductPage: React.FC = () => {
                   ProductType.Electronic,
                   ProductType.Other,
                 ]}
+                required={true}
                 name={'productType'}
                 control={form.control}
                 errorText={form.formState.errors.productType?.message}

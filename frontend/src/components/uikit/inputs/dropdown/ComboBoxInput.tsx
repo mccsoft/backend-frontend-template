@@ -1,200 +1,23 @@
-import {
-  ComboBox,
-  VirtualizedComboBox,
-  IDropdownOption,
-  IComboBoxStyles,
-  ICalloutProps,
-  IComboBoxOption,
-  IComboBox,
-} from '@fluentui/react';
 import * as React from 'react';
-import { CSSProperties, useCallback, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
-import arrowDownIcon from 'assets/icons/arrow-down.svg';
+import { useMemo } from 'react';
+import { AutocompleteProps } from '@mui/material/Autocomplete/Autocomplete';
+import {
+  StyledAutocomplete,
+  StyledAutocompleteProps,
+} from './StyledAutocomplete';
 
-import styles from './ComboBoxInput.module.scss';
-
-export type ComboBoxInputProps<D> = {
-  options: D[];
-  allowFreeform?: boolean;
-  autoComplete?: 'on' | 'off';
-  dropdownMaxWidth?: number;
-  dropdownWidth?: number;
-  useComboBoxAsMenuWidth?: boolean;
-  labelFunction?: (item: D) => string;
-  idFunction?: (item: D) => string;
-  label?: string;
-  value?: D | null;
-  defaultValue?: D | null;
-  rootClassName?: string;
-  disabled?: boolean;
-  emptyLabel?: string;
-  error?: boolean;
-  errorText?: string;
-  variant?: 'normal' | 'formInput';
-  calloutMaxHeight?: number;
-  noPlaceholder?: boolean;
-  onValueChanged: (value: string | null, option: D | null) => void;
-  style?: CSSProperties;
-  virtualized?: boolean;
-};
-
-export function ComboBoxInput<D>(props: ComboBoxInputProps<D>) {
-  const {
-    rootClassName,
-    options,
-    disabled,
-    onValueChanged,
-    label,
-    value,
-    emptyLabel,
-    error,
-    errorText,
-    variant = 'normal',
-    calloutMaxHeight,
-    noPlaceholder,
-    style,
-  } = props;
-  const labelFunction =
-    props.labelFunction ??
-    useCallback(
-      (item: D) => (item as { toString: () => string }).toString(),
-      [],
-    );
-
-  const i18next = useTranslation();
-
-  const getLabelForOption = useCallback(
-    (option: D | null): string =>
-      option === null
-        ? emptyLabel || i18next.t('uikit.inputs.nothing_selected')
-        : labelFunction
-        ? labelFunction(option)
-        : (option as { toString: () => string }).toString(),
-    [emptyLabel, labelFunction],
-  );
-
-  const getValueForOption: (option: D | null | undefined) => string | null =
-    useCallback(
-      (option: D | null | undefined) =>
-        option === null || option === undefined
-          ? null
-          : props.idFunction
-          ? props.idFunction(option)
-          : getLabelForOption(option),
-      [getLabelForOption, props.idFunction],
-    );
-
-  const isFormInput = variant === 'formInput';
-  const dropdownStyles: Partial<IComboBoxStyles> = useMemo(
-    () => ({
-      container: styles.comboboxInputContainer,
-      root: clsx(
-        styles.combobox,
-        isFormInput ? styles.comboboxFormInput : undefined,
-        disabled ? styles.comboboxDisabled : undefined,
-        error ? styles.comboboxError : undefined,
-      ),
-      input: clsx(styles.input, styles.value),
-      callout: styles.comboboxCallout,
-    }),
-    [styles, isFormInput, disabled, error],
-  );
-
-  const optionList = useMemo(
-    () =>
-      options.map(
-        (option) =>
-          ({
-            key: getValueForOption(option) ?? '',
-            text: getLabelForOption(option),
-            data: option,
-          } as IComboBoxOption),
-      ),
-    [options],
-  );
-
-  const onChange = useCallback(
-    (e: React.FormEvent<IComboBox>, selectedOption?: IDropdownOption) => {
-      onValueChanged((e.target as any).value, selectedOption?.data);
-    },
-    [options, onValueChanged, value],
-  );
-
-  const calloutProps: ICalloutProps = useMemo(
-    () => ({
-      calloutMaxHeight,
-    }),
-    [],
-  );
-
-  const placeholder = useMemo(
-    () => (!noPlaceholder ? getLabelForOption(null) : undefined),
-    [noPlaceholder, getLabelForOption],
-  );
-
-  const knownKey = useMemo(
-    () => options.find((option) => option === value),
-    [options, value],
-  );
-
-  const caretDownButtonStyles = useMemo(
-    () => ({
-      root: styles.expandButton,
-      iconChecked: styles.expanded,
-      icon: styles.expandIconContainer,
-    }),
-    [styles],
-  );
-
-  const comboBoxOptionStyles = useMemo(
-    () => ({
-      root: clsx(
-        styles.comboboxItem,
-        isFormInput ? styles.comboboxFormItem : undefined,
-      ),
-      optionText: styles.value,
-    }),
-    [styles, isFormInput],
-  );
-
-  const iconButtonProps = useMemo(
-    () => ({
-      iconProps: {
-        imageProps: {
-          src: arrowDownIcon,
-        },
+export function ComboBoxInput<T, Required extends boolean>(
+  props: Omit<StyledAutocompleteProps<T, false, Required, true>, 'onChange'> & {
+    onValueChanged: (value: T | null | string) => void;
+  },
+) {
+  const { onValueChanged, ...rest } = props;
+  const onChange: AutocompleteProps<T, false, Required, true>['onChange'] =
+    useMemo(
+      () => (e, item) => {
+        onValueChanged(item);
       },
-    }),
-    [arrowDownIcon],
-  );
-  const Component = props.virtualized ? VirtualizedComboBox : ComboBox;
-  return (
-    <div className={clsx(styles.rootContainer, rootClassName)} style={style}>
-      <Component
-        autoComplete={props.autoComplete ?? 'on'}
-        allowFreeform={props.allowFreeform}
-        dropdownMaxWidth={props.dropdownMaxWidth}
-        dropdownWidth={props.dropdownWidth}
-        options={optionList}
-        placeholder={placeholder}
-        onChange={onChange}
-        text={label || ''}
-        defaultSelectedKey={
-          props.defaultValue ? getValueForOption(props.defaultValue) : undefined
-        }
-        selectedKey={knownKey ? getValueForOption(value) : undefined}
-        styles={dropdownStyles}
-        caretDownButtonStyles={caretDownButtonStyles}
-        useComboBoxAsMenuWidth={props.useComboBoxAsMenuWidth}
-        comboBoxOptionStyles={comboBoxOptionStyles}
-        iconButtonProps={iconButtonProps}
-        calloutProps={calloutProps}
-      />
-      {error && !!errorText && (
-        <div className={styles.errorText}>{errorText}</div>
-      )}
-    </div>
-  );
+      [onValueChanged],
+    );
+  return <StyledAutocomplete {...rest} onChange={onChange} freeSolo={true} />;
 }

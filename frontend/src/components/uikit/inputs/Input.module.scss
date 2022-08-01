@@ -27,3 +27,14 @@
   align-items: center;
   @extend .none-select;
 }
+
+.input-with-adornment {
+  padding-right: $input-padding + 16;
+}
+
+.non-form-input {
+  height: $normal-input-height;
+}
+.non-form-input + .passwordEye {
+  height: $normal-input-height;
+}
