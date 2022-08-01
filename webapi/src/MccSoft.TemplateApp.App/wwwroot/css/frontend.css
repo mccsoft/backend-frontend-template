@@ -19,7 +19,7 @@
   font-style: normal;
   color: #4f4f4f;
   caret-color: #344966;
-  padding: 12px 12px 11px;
+  padding: 12px 12px 11px 12px;
 }
 
 .inputErrorBorder, .base-input[data-error=true], [data-error=true].input, .inputErrorBorder:focus-within, .inputErrorBorder:hover {
@@ -32,6 +32,14 @@
 
 .base-input:focus-within, .input:focus-within {
   border: 1px solid #0e4195 !important;
+}
+
+.base-input:focus, .input:focus {
+  border: 1px solid #0e4195 !important;
+}
+
+.base-input:focus-visible, .input:focus-visible {
+  outline: none;
 }
 
 .base-input:active, .input:active {
@@ -151,7 +159,7 @@ html {
   font-style: normal;
   color: #4f4f4f;
   caret-color: #344966;
-  padding: 12px 12px 11px;
+  padding: 12px 12px 11px 12px;
 }
 
 .inputErrorBorder, .inputErrorBorder:hover, .inputErrorBorder:focus-within, .base-input[data-error=true], [data-error=true].input {
@@ -164,6 +172,14 @@ html {
 
 .base-input:focus-within, .input:focus-within {
   border: 1px solid #0e4195 !important;
+}
+
+.base-input:focus, .input:focus {
+  border: 1px solid #0e4195 !important;
+}
+
+.base-input:focus-visible, .input:focus-visible {
+  outline: none;
 }
 
 .base-input:active, .input:active {
@@ -207,12 +223,25 @@ html {
 
 .passwordEye {
   position: absolute;
-  right: 6px;
+  right: 12px;
+  width: 16px;
   top: 0;
   height: 40px;
   display: flex;
   cursor: pointer;
   align-items: center;
+}
+
+.input-with-adornment {
+  padding-right: 28px;
+}
+
+.non-form-input {
+  height: 32px;
+}
+
+.non-form-input + .passwordEye {
+  height: 32px;
 }
 
 .button {

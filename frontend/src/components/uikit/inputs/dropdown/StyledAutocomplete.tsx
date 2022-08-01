@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import * as React from 'react';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import arrowDownIcon from 'assets/icons/arrow-down.svg';
 

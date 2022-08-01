@@ -31,16 +31,16 @@
   background: $background-input-hover !important;
 }
 
+.option-value[aria-selected='true'] {
+  background: $background-input-hover !important;
+}
+
 .option-value[aria-disabled='true'] {
   opacity: 0.5;
 }
 
 .option-value[aria-disabled='true'][aria-selected='true'] {
   opacity: 0.5;
-}
-
-.option-value[aria-selected='true'] {
-  background: $background-input-hover !important;
 }
 
 .dropdown-callout {
@@ -72,7 +72,4 @@ input[aria-expanded='true'] + div .expand-icon {
 }
 .multiSelectCheckbox {
   margin-right: 8px;
-}
-.asd {
-  height: $normal-input-height;
 }

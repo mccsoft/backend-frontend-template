@@ -4,9 +4,9 @@ import { Field } from '../Field';
 import { Input } from '../inputs/Input';
 import { Button, ButtonColor } from '../buttons/Button';
 import { useScopedTranslation } from '../../../application/localization/useScopedTranslation';
-import { assertNever } from '@fluentui/react';
 import { ModalContextType, UseModalOptions } from './useModal.types';
 import styles from './CustomModal.module.scss';
+import { assertNever } from 'helpers/assert-never';
 
 const ModalContext = React.createContext<ModalContextType>({} as any);
 
