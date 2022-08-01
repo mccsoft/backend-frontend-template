@@ -1,4 +1,3 @@
-
 # Day-to-day development workflow
 1. Take a task/feature, move it to 'In Progress' on the Board
 2. Create a branch for your feature/task

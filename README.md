@@ -7,6 +7,8 @@
 
 This is a template to set up a backend ASP.Net project with React frontend. You could check it out at [https://template.mcc-soft.de](https://template.mcc-tomsk.de) (credentials: admin/BSjo1M8jU760).
 
+Developers are encouraged to start with [setting up the environment](docs/Setting-up-development-environment.md) and proceed to [development how-to](docs/Development-Howto.md).
+
 Template contains:
 1. ASP.NET Core backend (.NET 6)
    1. OpenIddict authentication (with support for Social Networks authentication)
@@ -36,7 +38,7 @@ Template contains:
 1. Kubernetes deployment files and guidance regarding deploy to kubernetes (in progress)
 
 ## Setting up new project from template
-Before using the template for your brand-new app run `yarn rename -n YourProjectName`. Additionally you can use `-c YourCompanyName` to change solution's root namespace. Use CamelCase for your project name. 
+Before using the template for your brand-new app run `yarn rename -n YourProjectName`. Additionally you can use `-c YourCompanyName` to change solution's root namespace. Use CamelCase for your project name.
 The script does the following (you could do this manually if you like to):
 1. Rename all files/folders from 'TemplateApp' to your project name.
 1. Change all namespaces, classnames, database names, dockerfiles and deployment scripts to suit your project
