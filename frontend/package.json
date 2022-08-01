@@ -31,6 +31,7 @@
     "js-base64": "3.6.0",
     "js-logger": "1.6.1",
     "jwt-decode": "3.1.2",
+    "lottie-web": "5.9.6",
     "nock": "13.2.4",
     "nswag": "13.16.1",
     "oidc-client-ts": "2.0.1",

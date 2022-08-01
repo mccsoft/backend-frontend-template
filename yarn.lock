@@ -3021,7 +3021,6 @@ __metadata:
     concurrently: 5.2.0
     copyfiles: 2.3.0
     cross-env: 7.0.3
-    lottie-web: 5.9.6
     node-replace: 0.3.3
     prettier: 2.6.2
     renamer: 4.0.0
@@ -3088,6 +3087,7 @@ __metadata:
     js-base64: 3.6.0
     js-logger: 1.6.1
     jwt-decode: 3.1.2
+    lottie-web: 5.9.6
     nock: 13.2.4
     nswag: 13.16.1
     oidc-client-ts: 2.0.1
