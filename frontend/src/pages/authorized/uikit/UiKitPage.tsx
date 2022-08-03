@@ -54,6 +54,14 @@ export const UiKitPage: React.FC = () => {
         <Field title={i18n.t('dropdown')}>
           <HookFormDropDownInput
             options={options}
+            customOptions={[
+              {
+                label: 'Add new',
+                onClick: () => {
+                  alert('Adding new ProductType is not implemented');
+                },
+              },
+            ]}
             name={'dropDown'}
             control={form.control}
           />

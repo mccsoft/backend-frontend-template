@@ -11,7 +11,6 @@ import { AutocompleteProps } from '@mui/material/Autocomplete/Autocomplete';
 import { AutocompleteClasses } from '@mui/material/Autocomplete/autocompleteClasses';
 
 export interface CustomOption {
-  key: number | string;
   label: string;
   onClick: () => void;
 }
@@ -41,8 +40,19 @@ export type StyledAutocompleteProps<
    * 'formInput' - input will have the standard width (as all form elements)
    */
   variant?: 'normal' | 'formInput';
+  /*
+   * You could add more options to Autocomplete beside the standard `menuItems`.
+   * It's useful when for example you have a dropdown with categories and want to add a `Add New Category' item
+   * Custom options are added to the top of the list.
+   */
+  customOptions?: CustomOption[];
 };
 
+type OptionType<T> = InternalOptionType | T;
+type InternalOptionType =
+  | ({ __optionType: 'custom' } & CustomOption)
+  | { __optionType: 'not-selected' };
+const notSelectedOption: InternalOptionType = { __optionType: 'not-selected' };
 export function StyledAutocomplete<
   T,
   Multiple extends boolean | undefined = undefined,
@@ -74,23 +84,83 @@ export function StyledAutocomplete<
     [],
   );
 
-  const options = useMemo(() => {
-    if (required || props.multiple) return props.options;
-    return props.options.includes(null!)
-      ? props.options
-      : [null!, ...props.options];
-  }, [required, props.options]);
+  const options: T[] = useMemo(() => {
+    const result: T[] = [];
+    if (!required && !props.multiple) {
+      if (!props.options.includes(null!))
+        result.push(notSelectedOption as OptionType<T> as any);
+    }
+    if (props.customOptions) {
+      result.push(
+        ...props.customOptions.map(
+          (x) => ({ __optionType: 'custom', ...x } as OptionType<T> as any),
+        ),
+      );
+    }
+
+    result.push(...props.options);
+
+    return result;
+  }, [required, props.options, props.customOptions]);
 
   const getOptionLabel: typeof props['getOptionLabel'] = useMemo(() => {
-    if (required) return props.getOptionLabel;
     return (option) => {
-      if (option === null || option === undefined) {
-        return emptyLabel;
-      }
+      if (option === null || option === undefined) return emptyLabel;
 
-      return props.getOptionLabel?.(option) ?? (option as any).toString();
+      const getDefaultValue = () =>
+        props.getOptionLabel?.(option) ?? (option as any).toString();
+
+      if (typeof option !== 'object') return getDefaultValue();
+
+      const internalOption = option as unknown as InternalOptionType;
+      if (internalOption.__optionType === 'not-selected') return emptyLabel;
+      if (internalOption.__optionType === 'custom') return internalOption.label;
+
+      return getDefaultValue();
     };
-  }, [required, props.getOptionLabel, emptyLabel]);
+  }, [props.getOptionLabel, emptyLabel]);
+
+  // handle equality for CustomOptions
+  const isOptionEqualToValue: typeof props['isOptionEqualToValue'] =
+    useMemo(() => {
+      return (option1, option2) => {
+        if (option1 == option2) return true;
+        if (typeof option1 !== 'object' || typeof option2 !== 'object')
+          return props.isOptionEqualToValue?.(option1, option2) ?? false;
+
+        if (option1 === null || option1 === undefined) {
+          if (option2 === null || option2 === undefined) return true;
+          return false;
+        }
+
+        const internalOption1 = option1 as unknown as InternalOptionType;
+        const internalOption2 = option2 as unknown as InternalOptionType;
+        if (internalOption1.__optionType === 'custom') {
+          if (internalOption2.__optionType !== 'custom') return false;
+          return internalOption1.label == internalOption2.label;
+        }
+        if (internalOption2.__optionType === 'custom') return false;
+
+        return props.isOptionEqualToValue?.(option1, option2) ?? false;
+      };
+    }, [props.getOptionLabel, emptyLabel]);
+
+  // handle CustomOptions selection
+  const onChange: typeof props['onChange'] = useMemo(() => {
+    if (!props.customOptions || props.customOptions.length === 0)
+      return props.onChange;
+
+    return (event, value, reason, details) => {
+      if (typeof value === 'object') {
+        const internalOption = value as InternalOptionType;
+        if (internalOption.__optionType === 'custom') {
+          internalOption.onClick();
+          return;
+        }
+      }
+      props.onChange?.(event, value, reason, details);
+    };
+  }, [props.onChange, props.customOptions]);
 
   return (
     <div
@@ -122,6 +192,8 @@ export function StyledAutocomplete<
         data-error={!!errorText}
         placeholder={emptyLabel}
         getOptionLabel={getOptionLabel}
+        isOptionEqualToValue={isOptionEqualToValue}
+        onChange={onChange}
         disableClearable={props.required}
         value={props.value ?? null!}
       />
