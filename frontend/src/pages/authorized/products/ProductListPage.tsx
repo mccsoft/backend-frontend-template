@@ -18,9 +18,12 @@ import { localFormat } from '../../../helpers/date-helpers';
 import { useScopedTranslation } from '../../../application/localization/useScopedTranslation';
 import styles from './ProductListPage.module.scss';
 import { StringParam, useQueryParams } from 'react-router-url-params';
+import { DotMenu } from 'components/uikit/menu/DotMenu';
+import { useNavigate } from 'react-router';
 
 export const ProductListPage: React.FC = () => {
   const i18n = useScopedTranslation('Page.Products.list');
+  const navigate = useNavigate();
   const [queryParams, setQueryParams] = useQueryParams({
     search: StringParam,
     ...pagingSortingQueryParams(2),
@@ -50,23 +53,32 @@ export const ProductListPage: React.FC = () => {
                 {localFormat(row.original.lastStockUpdatedAt, 'P')}
               </div>
             ),
-            width: 'auto',
+            width: '400px',
             Header: i18n.t('column_title'),
           },
           {
             accessor: 'id',
-            Cell: ({ row }) => (
-              <div>
-                <AppLink
-                  to={Links.Authorized.EditProduct.link({
-                    id: row.original.id,
-                  })}
-                >
-                  Edit
-                </AppLink>{' '}
-              </div>
-            ),
-            width: 'auto',
+            Cell: ({ row }) => {
+              return (
+                <DotMenu
+                  menuItems={[
+                    {
+                      key: 'edit',
+                      text: 'Edit',
+                      onClick: () =>
+                        navigate(
+                          Links.Authorized.EditProduct.link({
+                            id: row.original.id,
+                          }),
+                        ),
+                    },
+                  ]}
+                  anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                />
+              );
+            },
+            width: '40px',
             Header: '',
           },
         ];

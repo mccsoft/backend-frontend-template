@@ -6,7 +6,7 @@ export type CustomModalProps = {
   onClose: () => void;
   isOpen: boolean;
   isBlocking: boolean;
-  title: String;
+  title: string;
   children: React.ReactNode;
 };
 

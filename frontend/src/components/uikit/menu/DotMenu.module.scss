@@ -1,0 +1,14 @@
+@import '../../../styles/variables';
+.dotMenu {
+  cursor: pointer;
+  top: 18px;
+  right: 16px;
+}
+
+.dotMenuImage:hover path {
+  fill: $primary-light;
+}
+
+.dotMenuImage:active path {
+  fill: $primary;
+}
