@@ -1,4 +1,4 @@
-import { MenuDirection } from 'components/uikit/menu/MenuDirection';
+import { MenuDirection } from './MenuDirection';
 import { MenuProps } from '@mui/material';
 
 export const anchorTransformOrigin: Record<
