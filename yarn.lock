@@ -3135,7 +3135,7 @@ __metadata:
     redux: 4.2.0
     redux-devtools-extension: 2.13.9
     redux-persist: 6.0.0
-    replace: ^1.2.1
+    replace: 1.2.1
     rollup-plugin-visualizer: 5.6.0
     sass: 1.53.0
     throttle-debounce: 3.0.1
@@ -9884,7 +9884,7 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"replace@npm:^1.2.1":
+"replace@npm:1.2.1":
   version: 1.2.1
   resolution: "replace@npm:1.2.1"
   dependencies:

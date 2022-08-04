@@ -4,7 +4,6 @@ import { AppLink } from 'components/uikit/buttons/AppLink';
 import { ButtonColor } from 'components/uikit/buttons/Button';
 import { Input } from 'components/uikit/inputs/Input';
 import { Loading } from 'components/uikit/suspense/Loading';
-import { TablePagination } from 'components/uikit/TablePagination';
 import {
   pagingSortingQueryParams,
   pagingSortingToBackendRequest,
@@ -24,6 +23,8 @@ import styles from './ProductListPage.module.scss';
 import { StringParam, useQueryParams } from 'react-router-url-params';
 import { DotMenu } from 'components/uikit/menu/DotMenu';
 import { useNavigate } from 'react-router';
+import { AppPagination } from 'components/uikit/pagination/AppPagination';
+import { MenuDirection } from '../../../components/uikit/menu/MenuDirection';
 
 export const ProductListPage: React.FC = () => {
   const i18n = useScopedTranslation('Page.Products.list');
@@ -85,8 +86,7 @@ export const ProductListPage: React.FC = () => {
                       ),
                   },
                 ]}
-                anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                direction={MenuDirection.bottomLeftEdge}
               />
             );
           },
@@ -119,7 +119,7 @@ export const ProductListPage: React.FC = () => {
 
       <Loading loading={productsQuery.isLoading}>
         <AppTable table={table} />
-        <TablePagination
+        <AppPagination
           page={queryParams.page}
           perPage={queryParams.perPage}
           totalCount={productsQuery.data?.totalCount ?? 0}

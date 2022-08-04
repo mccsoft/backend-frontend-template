@@ -3,6 +3,8 @@ import * as React from 'react';
 import { Key, useCallback } from 'react';
 import clsx from 'clsx';
 import styles from './AppMenu.module.scss';
+import { anchorTransformOrigin } from './anchorTransformOrigin';
+import { MenuDirection } from './MenuDirection';
 
 export type AppMenuItem = {
   text: string;
@@ -17,6 +19,11 @@ export type AppMenuItem = {
  */
 export type AppMenuProps = MenuProps & {
   menuItems: AppMenuItem[];
+  /*
+   * You could use this prop instead of `anchorOrigin` & `transformOrigin`.
+   * If `direction` is specified it takes the priority over `anchorOrigin` & `transformOrigin`.
+   */
+  direction?: MenuDirection;
 };
 
 const classes: MenuProps['classes'] = {
@@ -24,7 +31,7 @@ const classes: MenuProps['classes'] = {
   list: styles.list,
 };
 export const AppMenu: React.FC<AppMenuProps> = (props) => {
-  const { menuItems, ...rest } = props;
+  const { menuItems, direction, ...rest } = props;
   const onClose: NonNullable<MenuProps['onClose']> = useCallback(
     (ev: any, reason) => {
       ev.stopPropagation();
@@ -39,8 +46,17 @@ export const AppMenu: React.FC<AppMenuProps> = (props) => {
     },
     [props.onClick],
   );
+
   return (
-    <Menu {...rest} classes={classes} onClose={onClose} onClick={onClick}>
+    <Menu
+      {...rest}
+      {...(direction !== undefined
+        ? anchorTransformOrigin[direction]
+        : undefined)}
+      classes={classes}
+      onClose={onClose}
+      onClick={onClick}
+    >
       {menuItems.map((menuItem) => (
         <MenuItem
           key={menuItem.key}
