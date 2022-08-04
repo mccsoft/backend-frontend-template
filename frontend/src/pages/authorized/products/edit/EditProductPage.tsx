@@ -47,7 +47,7 @@ export const EditProductPage: React.FC = () => {
   );
 
   return (
-    <Loading loading={form.formState.isSubmitting}>
+    <Loading loading={form.formState.isSubmitting || productQuery.isLoading}>
       <AppLink
         color={ButtonColor.Primary}
         to={Links.Authorized.Products.link()}

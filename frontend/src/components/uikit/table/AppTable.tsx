@@ -1,4 +1,4 @@
-import { TableInstance } from 'react-table';
+import { flexRender, Table as TanTable } from '@tanstack/react-table';
 import React, { useRef } from 'react';
 import {
   Paper,
@@ -9,61 +9,59 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
+import styles from './AppTable.module.scss';
 
 export const emptyArray: any[] = [];
 // ignored because it's used in react-table as well
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function AppTable<D extends object = object>(props: {
-  table: TableInstance<D>;
+  table: TanTable<D>;
 }) {
-  const tableObj = props.table;
+  const { table } = props;
   const tableRef = useRef<HTMLDivElement>(null);
   return (
-    <TableContainer
-      ref={tableRef}
-      // className={styles.tableContainer}
-      component={Paper}
-    >
-      <Table
-        stickyHeader
-        aria-label="sticky table"
-        {...(tableObj.getTableProps() as any)}
-      >
+    <TableContainer ref={tableRef} component={Paper}>
+      <Table stickyHeader aria-label="sticky table">
         <TableHead>
-          {tableObj.headerGroups.map((headerGroup) => (
-            <TableRow
-              {...(headerGroup.getHeaderGroupProps() as any)}
-              key={headerGroup.id}
-            >
-              {headerGroup.headers.map((column) => (
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
                 <TableCell
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                  key={column.id}
+                  key={header.id}
+                  {...{
+                    className: header.column.getCanSort()
+                      ? styles.sortableColumnHeader
+                      : undefined,
+                    onClick: header.column.getToggleSortingHandler(),
+                  }}
+                  style={{ width: header.column.getSize() }}
                 >
                   <>
-                    {column.render('Header')}
-                    <span>
-                      {column.isSorted
-                        ? column.isSortedDesc
-                          ? ' 🔽'
-                          : ' 🔼'
-                        : ''}
-                    </span>
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
+                    {{
+                      asc: ' 🔼',
+                      desc: ' 🔽',
+                    }[header.column.getIsSorted() as string] ?? null}
                   </>
                 </TableCell>
               ))}
             </TableRow>
           ))}
         </TableHead>
-        <TableBody {...(tableObj.getTableBodyProps() as any)}>
-          {tableObj.rows.map((row) => {
-            tableObj.prepareRow(row);
+        <TableBody>
+          {table.getRowModel().rows.map((row) => {
             return (
-              <TableRow {...(row.getRowProps() as any)} key={row.id}>
-                {row.cells.map((cell, index) => {
+              <TableRow key={row.id}>
+                {row.getVisibleCells().map((cell) => {
                   return (
-                    <TableCell {...(cell.getCellProps() as any)} key={index}>
-                      {cell.render('Cell')}
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
                     </TableCell>
                   );
                 })}

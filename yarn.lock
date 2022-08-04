@@ -3013,6 +3013,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/react-table@npm:8.5.5":
+  version: 8.5.5
+  resolution: "@tanstack/react-table@npm:8.5.5"
+  dependencies:
+    "@tanstack/table-core": 8.5.5
+  peerDependencies:
+    react: ">=16"
+    react-dom: ">=16"
+  checksum: 237e4480ef88682f7d6673cb170fd40fefe1fc5173242af45540d2559b7ad411fc4cbb858ab832e31c51d5d0f91284ddb371dd37171a36d78e655fe0213aad9f
+  languageName: node
+  linkType: hard
+
+"@tanstack/table-core@npm:8.5.5":
+  version: 8.5.5
+  resolution: "@tanstack/table-core@npm:8.5.5"
+  checksum: f86b2821ff0fb9f981efee995b6def01e6b622945f08b8a249200bfc58e5cd88d556db093916f856bb540d7ab7948dcb8e80787f4f6babdc212f4f054ff43327
+  languageName: node
+  linkType: hard
+
 "@templateApp/build@workspace:.":
   version: 0.0.0-use.local
   resolution: "@templateApp/build@workspace:."
@@ -3046,6 +3065,7 @@ __metadata:
     "@reduxjs/toolkit": 1.8.3
     "@sentry/react": 6.19.7
     "@sentry/tracing": 6.19.7
+    "@tanstack/react-table": 8.5.5
     "@testing-library/jest-dom": 5.11.4
     "@testing-library/react": 11.1.0
     "@testing-library/user-event": 12.1.10

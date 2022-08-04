@@ -152,7 +152,7 @@ export function StyledAutocomplete<
 
     return (event, value, reason, details) => {
       if (typeof value === 'object') {
-        const internalOption = value as InternalOptionType;
+        const internalOption = value as unknown as InternalOptionType;
         if (internalOption.__optionType === 'custom') {
           internalOption.onClick();
           return;

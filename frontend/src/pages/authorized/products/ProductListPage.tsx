@@ -9,9 +9,13 @@ import {
   pagingSortingQueryParams,
   pagingSortingToBackendRequest,
 } from 'helpers/pagination-helper';
-import { useUpdateSortByInUrl } from 'components/uikit/table/useUpdateSortByInUrl';
+import { useSortBy } from 'components/uikit/table/updateSortByInUrl';
 import React, { useMemo } from 'react';
-import { useSortBy, useTable } from 'react-table';
+import {
+  getCoreRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from '@tanstack/react-table';
 import { QueryFactory } from 'services/api';
 import { ProductListItemDto } from 'services/api/api-client';
 import { localFormat } from '../../../helpers/date-helpers';
@@ -33,74 +37,66 @@ export const ProductListPage: React.FC = () => {
     ...pagingSortingToBackendRequest(queryParams),
   });
 
-  const table = useTable<ProductListItemDto>(
-    {
-      data: productsQuery.data?.data ?? emptyArray,
-      columns: useMemo(() => {
-        return [
-          {
-            accessor: 'title',
-            Cell: ({ row }) => (
-              <div>
-                <AppLink
-                  to={Links.Authorized.ProductDetails.link({
-                    id: row.original.id,
-                  })}
-                >
-                  {row.original.id}. {row.original.title}
-                </AppLink>{' '}
-                ({row.original.productType}) -{' '}
-                {localFormat(row.original.lastStockUpdatedAt, 'P')}
-              </div>
-            ),
-            width: '400px',
-            Header: i18n.t('column_title'),
-          },
-          {
-            accessor: 'id',
-            Cell: ({ row }) => {
-              return (
-                <DotMenu
-                  menuItems={[
-                    {
-                      key: 'edit',
-                      text: 'Edit',
-                      onClick: () =>
-                        navigate(
-                          Links.Authorized.EditProduct.link({
-                            id: row.original.id,
-                          }),
-                        ),
-                    },
-                  ]}
-                  anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                />
-              );
-            },
-            width: '40px',
-            Header: '',
-          },
-        ];
-      }, [i18n.i18n.language]),
-      manualSortBy: true,
-      initialState: useMemo(
-        () => ({
-          sortBy: queryParams.sortBy
-            ? [
-                {
-                  id: queryParams.sortBy,
-                  desc: queryParams.desc,
-                },
-              ]
-            : [],
-        }),
-        [],
-      ),
+  const sortBy = useSortBy();
+  const table = useReactTable<ProductListItemDto>({
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    manualSorting: true,
+    onSortingChange: sortBy.onSortingChange,
+    state: {
+      sorting: sortBy.sortingState,
     },
-    useSortBy,
-  );
-  useUpdateSortByInUrl(table.state.sortBy);
+    data: productsQuery.data?.data ?? emptyArray,
+    columns: useMemo(() => {
+      return [
+        {
+          accessorKey: 'title',
+          enableSorting: true,
+          cell: ({ row }) => (
+            <div>
+              <AppLink
+                to={Links.Authorized.ProductDetails.link({
+                  id: row.original.id,
+                })}
+              >
+                {row.original.id}. {row.original.title}
+              </AppLink>{' '}
+              ({row.original.productType}) -{' '}
+              {localFormat(row.original.lastStockUpdatedAt, 'P')}
+            </div>
+          ),
+          size: 5000,
+          header: i18n.t('column_title'),
+        },
+        {
+          id: 'menu',
+          cell: ({ row }) => {
+            return (
+              <DotMenu
+                menuItems={[
+                  {
+                    key: 'edit',
+                    text: 'Edit',
+                    onClick: () =>
+                      navigate(
+                        Links.Authorized.EditProduct.link({
+                          id: row.original.id,
+                        }),
+                      ),
+                  },
+                ]}
+                anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+              />
+            );
+          },
+          size: 40,
+          maxSize: 40,
+          header: '',
+        },
+      ];
+    }, [i18n.i18n.language]),
+  });
 
   return (
     <div>
