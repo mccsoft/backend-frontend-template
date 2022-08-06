@@ -42,6 +42,8 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(function Input(
     badge,
     endAdornment: endAdornmentProps,
     endAdornmentClassname,
+    variant,
+    testId,
     ...rest
   } = props;
   const isError = !!errorText;
@@ -82,13 +84,13 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(function Input(
         className={clsx(
           styles.input,
           endAdornment ? styles.inputWithAdornment : null,
-          props.variant === 'normal' ? styles.nonFormInput : null,
+          variant === 'normal' ? styles.nonFormInput : null,
           className,
         )}
         data-error={isError}
         onKeyDown={onEnterPressed ? onKeyDown : undefined}
         type={showPassword ? 'input' : type}
-        data-test-id={props.testId}
+        data-test-id={testId}
         {...rest}
       />
       {endAdornment ? (
