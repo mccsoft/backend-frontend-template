@@ -15,6 +15,7 @@ import { useScopedTranslation } from 'application/localization/useScopedTranslat
 
 import styles from './UiKitPage.module.scss';
 import { useModal } from '../../../components/uikit/modal/useModal';
+import { PopperExample } from './components/PopperExample';
 
 type UiKitForm = {
   dropDown: ProductType;
@@ -120,6 +121,7 @@ export const UiKitPage: React.FC = () => {
         }}
         title={'Show prompt'}
       ></Button>
+      <PopperExample />
     </div>
   );
 };

@@ -1,0 +1,53 @@
+@use 'sass:math';
+@import 'src/styles/variables';
+$arrowSize: 20px;
+$topMargin: 10px;
+
+.arrow,
+.arrow::before {
+  position: absolute;
+  width: $arrowSize;
+  height: $arrowSize;
+  background: inherit;
+}
+
+.arrow {
+  visibility: hidden;
+}
+
+.arrow::before {
+  visibility: visible;
+  content: '';
+  transform: rotate(45deg) translateZ(-1px);
+}
+
+.popper {
+  background-color: white;
+  border-radius: 2px;
+  box-shadow: rgb(0 0 0 / 13%) 0px 6.4px 14.4px 0px,
+    rgb(0 0 0 / 11%) 0px 1.2px 3.6px 0px;
+}
+.content {
+  position: relative;
+}
+
+.root[data-popper-placement^='top'] {
+  .arrow {
+    bottom: math.div(-$arrowSize, 2);
+  }
+
+  .popper-enter-active {
+    transform: translateY(-$topMargin);
+    transition: transform 100ms;
+  }
+}
+.root[data-popper-placement^='bottom'] {
+  .arrow {
+    top: math.div(-$arrowSize, 2);
+  }
+
+  .popper-enter-active {
+    transform: translateY($topMargin);
+    transition: transform 100ms;
+  }
+}
