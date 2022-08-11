@@ -5,7 +5,7 @@
 
 ## What's that
 
-This is a template to set up a backend ASP.Net project with React frontend. You could check it out at [https://template.mcc-soft.de](https://template.mcc-tomsk.de) (credentials: admin/BSjo1M8jU760).
+This is a template to set up a backend ASP.Net project with React frontend. You could check it out at [https://template.mcc-soft.de](https://template.mcc-soft.de) (credentials: admin/BSjo1M8jU760).
 
 Developers are encouraged to start with [setting up the environment](docs/Setting-up-development-environment.md) and proceed to [development how-to](docs/Development-Howto.md).
 
