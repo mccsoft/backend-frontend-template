@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AppPopper } from './AppPopper';
+import type { TooltipProps } from '@mui/material';
 import {
   bindHover,
   bindPopper,
@@ -13,8 +14,8 @@ type AppTooltipProps = {
    * Tooltip reference element.
    */
   children: React.ReactElement<any, any>;
-  title: NonNullable<React.ReactNode>;
-} & Omit<React.ComponentProps<typeof AppPopper>, 'open'>;
+  title: TooltipProps['title'];
+} & Omit<React.ComponentProps<typeof AppPopper>, 'open' | 'title'>;
 
 /*
  * Styling of MUI Tooltip is quite hard, as we need to override all it default styles.

@@ -5,8 +5,8 @@ import {
   bindPopper,
   usePopupState,
 } from 'material-ui-popup-state/hooks';
-import { AppPopper } from '../../../../components/uikit/menu/AppPopper';
-import { AppTooltip } from '../../../../components/uikit/menu/AppTooltip';
+import { AppPopper } from 'components/uikit/menu/AppPopper';
+import { AppTooltip } from 'components/uikit/menu/AppTooltip';
 
 export const PopperExample = () => {
   const popperState = usePopupState({
