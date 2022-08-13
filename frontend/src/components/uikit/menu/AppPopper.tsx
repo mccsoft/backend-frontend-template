@@ -1,8 +1,9 @@
-import { useTransitionClass } from './useTransitionClass';
 import PopperUnstyled from '@mui/base/PopperUnstyled';
 import clsx from 'clsx';
+import { useTriggerOnClickOutsideElement } from 'helpers/useTriggerOnClickOutsideElement';
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './AppPopper.module.scss';
+import { useTransitionClass } from './useTransitionClass';
 
 /*
  * Poppers could be used as a Tooltips, where you can't wrap an `anchor` into a Tooltip
@@ -10,13 +11,18 @@ import styles from './AppPopper.module.scss';
  * Otherwise (if you can wrap you anchor element into another component), please use <AppTooltip>
  */
 export const AppPopper: React.FC<
-  React.ComponentProps<typeof PopperUnstyled> & {
-    noArrow?: boolean;
-    delay?: number;
-    disableTransition?: boolean;
-    // className that is applied to a root element of a popper
-    rootClassName?: string;
-  }
+  React.PropsWithChildren<
+    React.ComponentProps<typeof PopperUnstyled> & {
+      noArrow?: boolean;
+      delay?: number;
+      disableTransition?: boolean;
+      // className that is applied to a root element of a popper
+      rootClassName?: string;
+      // true by default
+      hideOnClickOutside?: boolean;
+      onClose?: () => void;
+    }
+  >
 > = (props) => {
   const {
     children,
@@ -25,12 +31,10 @@ export const AppPopper: React.FC<
     disableTransition,
     rootClassName,
     className,
+    hideOnClickOutside = true,
+    onClose,
     ...rest
   } = props;
-  const arrowRef = useRef<HTMLDivElement>(null);
-  const transitionClass = useTransitionClass(
-    disableTransition ? undefined : styles.popperEnterActive,
-  );
 
   const [isOpenDelayed, setIsOpenDelayed] = useState(false);
   useEffect(
@@ -51,33 +55,69 @@ export const AppPopper: React.FC<
     [props.open],
   );
   const isOpen = delay ? isOpenDelayed : props.open;
+  const isOpenRef = useRef(isOpen);
+  isOpenRef.current = isOpen;
 
-  return (
+  const popper = (
     <PopperUnstyled
       {...rest}
       open={isOpen}
       className={clsx(styles.root, rootClassName)}
     >
-      {(childProps) => (
-        <div
-          className={clsx(
-            styles.popper,
-            className,
-            !noArrow && transitionClass,
-          )}
-        >
-          {props.open && !noArrow && (
-            <div
-              className={styles.arrow}
-              ref={arrowRef}
-              data-popper-arrow
-            ></div>
-          )}
-          <div className={styles.content}>
-            {typeof children === 'function' ? children(childProps) : children}
-          </div>
-        </div>
-      )}
+      {isOpen
+        ? (childProps) => (
+            <PopperContent
+              disableTransition={disableTransition}
+              className={className}
+              noArrow={noArrow}
+              onClose={onClose}
+              hideOnClickOutside={hideOnClickOutside}
+            >
+              {typeof children === 'function' ? children(childProps) : children}
+            </PopperContent>
+          )
+        : null}
     </PopperUnstyled>
+  );
+
+  return popper;
+};
+const PopperContent: React.FC<
+  React.PropsWithChildren<{
+    disableTransition: boolean | undefined;
+    className: string | undefined;
+    noArrow: boolean | undefined;
+    hideOnClickOutside: boolean | undefined;
+    onClose: undefined | (() => void);
+  }>
+> = ({
+  className,
+  disableTransition,
+  noArrow,
+  onClose,
+  hideOnClickOutside,
+  children,
+}) => {
+  const arrowRef = useRef<HTMLDivElement>(null);
+  const transitionClass = useTransitionClass(
+    disableTransition ? undefined : styles.popperEnterActive,
+  );
+  const ref = useRef<HTMLDivElement>(null);
+  useTriggerOnClickOutsideElement(
+    ref,
+    onClose!,
+    !!onClose && !!hideOnClickOutside,
+  );
+
+  return (
+    <div
+      ref={ref}
+      className={clsx(styles.popper, className, !noArrow && transitionClass)}
+    >
+      {!noArrow && (
+        <div className={styles.arrow} ref={arrowRef} data-popper-arrow></div>
+      )}
+      <div className={styles.content}>{children}</div>
+    </div>
   );
 };
