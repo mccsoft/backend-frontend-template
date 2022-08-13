@@ -14,7 +14,6 @@
     "@sentry/react": "6.19.7",
     "@sentry/tracing": "6.19.7",
     "@tanstack/react-table": "8.5.5",
-    "@tippyjs/react": "4.2.6",
     "@types/react-paginate": "7.1.1",
     "@types/react-table": "7.7.10",
     "axios": "0.26.1",

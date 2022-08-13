@@ -5,8 +5,8 @@ import {
   bindPopper,
   usePopupState,
 } from 'material-ui-popup-state/hooks';
-import { Tooltip } from '@mui/material';
 import { AppPopper } from '../../../../components/uikit/menu/AppPopper';
+import { AppTooltip } from '../../../../components/uikit/menu/AppTooltip';
 
 export const PopperExample = () => {
   const popperState = usePopupState({
@@ -15,12 +15,12 @@ export const PopperExample = () => {
   });
   return (
     <div>
-      <Tooltip title={<div>Tooltip contents!</div>} arrow={true}>
+      <AppTooltip title={<div>Tooltip contents!</div>} arrow={true}>
         <Button
           color={ButtonColor.Secondary}
           title={'Simple tooltip on hover'}
         ></Button>
-      </Tooltip>
+      </AppTooltip>
       <Button
         {...bindHover(popperState)}
         color={ButtonColor.Secondary}

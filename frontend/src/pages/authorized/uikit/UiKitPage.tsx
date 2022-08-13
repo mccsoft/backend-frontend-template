@@ -46,7 +46,13 @@ export const UiKitPage: React.FC = () => {
         Back
       </AppLink>
       <form onSubmit={form.handleSubmitDefault} className={styles.main}>
-        <Field title={i18n.t('input')}>
+        <Field
+          title={i18n.t('input')}
+          hint={'Some hint'}
+          linkProps={{
+            title: 'Add something',
+          }}
+        >
           <Input
             {...form.register('input', requiredRule())}
             errorText={form.formState.errors.input?.message}

@@ -1,4 +1,3 @@
-import Tippy from '@tippyjs/react';
 import React, { FC } from 'react';
 import { AppLink } from 'components/uikit/buttons/AppLink';
 import { ButtonColor } from './buttons/Button';
@@ -6,6 +5,7 @@ import clsx from 'clsx';
 import { ReactComponent as HintIcon } from 'assets/icons/i.svg';
 
 import styles from './Field.module.scss';
+import { AppTooltip } from './menu/AppTooltip';
 
 export interface FieldProps {
   title: string;
@@ -30,15 +30,11 @@ export const Field: FC<FieldProps> = (props) => {
         <div className={styles.titleWithHint}>
           <div className={clsx(styles.title, titleClassName)}>{title}</div>
           {props.hint ? (
-            <div className={styles.hint}>
-              <Tippy
-                allowHTML={true}
-                content={props.hint}
-                placement={'bottom-start'}
-              >
+            <AppTooltip title={props.hint} arrow={false}>
+              <div className={styles.hint}>
                 <HintIcon />
-              </Tippy>
-            </div>
+              </div>
+            </AppTooltip>
           ) : null}
         </div>
         {!!linkProps &&

@@ -2756,13 +2756,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@popperjs/core@npm:^2.8.3":
-  version: 2.9.2
-  resolution: "@popperjs/core@npm:2.9.2"
-  checksum: a5916302e706b7dfbbbcd8728bafc1682b450d5ec70dd10da84a07c89a419fa72f83cbf990798589e6e69e1b520d6768176ea4bd360d7450d08a2fbc25a14e1c
-  languageName: node
-  linkType: hard
-
 "@reduxjs/toolkit@npm:1.8.3":
   version: 1.8.3
   resolution: "@reduxjs/toolkit@npm:1.8.3"
@@ -3206,7 +3199,6 @@ __metadata:
     "@testing-library/jest-dom": 5.11.4
     "@testing-library/react": 11.1.0
     "@testing-library/user-event": 12.1.10
-    "@tippyjs/react": 4.2.6
     "@types/jest": 26.0.15
     "@types/node": 17.0.24
     "@types/react": 18.0.15
@@ -3340,18 +3332,6 @@ __metadata:
   peerDependencies:
     "@testing-library/dom": ">=7.21.4"
   checksum: bf82187734d1cb2293922c047c2e466528d51466160308b662e91c28a58f6699d64882de4d7f1a69f763bf8e6a2f617e83b39005e08a9aaae2e6930f730028b9
-  languageName: node
-  linkType: hard
-
-"@tippyjs/react@npm:4.2.6":
-  version: 4.2.6
-  resolution: "@tippyjs/react@npm:4.2.6"
-  dependencies:
-    tippy.js: ^6.3.1
-  peerDependencies:
-    react: ">=16.8"
-    react-dom: ">=16.8"
-  checksum: 8f0fba591c9dae2e1af1ae632bbc775ba5c9dd4498e50e242be70302b4c27115c6740eec44e885e294b27cb28515777b52af5b34aac9d4bab627d948add938ae
   languageName: node
   linkType: hard
 
@@ -11171,15 +11151,6 @@ resolve@^2.0.0-next.3:
   version: 1.0.0
   resolution: "tinyspy@npm:1.0.0"
   checksum: f9a7cea406db9b0f99a4ef162eb0a45d88fc36facbc309702c8d568283baa363ab3c4138d8402fbfdef7a8d3157ff7cfae3e99ec6c75d8f684bd7b23485b5ec5
-  languageName: node
-  linkType: hard
-
-"tippy.js@npm:^6.3.1":
-  version: 6.3.1
-  resolution: "tippy.js@npm:6.3.1"
-  dependencies:
-    "@popperjs/core": ^2.8.3
-  checksum: a2e8559590e7149bb08274bc52bca497fc63ee3cac9a28b1ab76a143cebdcddb0f2d01452c7c1be26df2e60d54785bc4f5a2aac7af3628cb76e674e70bfc7381
   languageName: node
   linkType: hard
 
