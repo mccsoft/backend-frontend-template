@@ -42,7 +42,7 @@ export const AppTooltip: React.FC<AppTooltipProps> = (props) => {
       })}
       {title && popupState.isOpen && (
         <AppPopper
-          delay={500}
+          delay={200}
           {...rest}
           {...bindPopper(popupState)}
           noArrow={!arrow}
