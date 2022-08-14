@@ -4,11 +4,12 @@ export function useTriggerOnClickOutsideElement(
   elementRef: RefObject<HTMLElement>,
   onClickOutside: () => void,
   enabled: boolean,
+  preventDefault = false,
 ) {
   useEffect(() => {
     if (enabled) {
       const clickListener = (e: MouseEvent) => {
-        e.preventDefault();
+        if (preventDefault) e.preventDefault();
         if (!elementRef.current?.contains(e.target as Node)) {
           onClickOutside();
         }
