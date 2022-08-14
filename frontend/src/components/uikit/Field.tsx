@@ -7,20 +7,24 @@ import { ReactComponent as HintIcon } from 'assets/icons/i.svg';
 import styles from './Field.module.scss';
 import { AppTooltip } from './menu/AppTooltip';
 
-export interface FieldProps {
+export type FieldLinkProps = {
+  title: string | React.ReactNode;
+  disabled?: boolean;
+  icon?: string;
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  className?: string;
+  testId?: string;
+  color?: ButtonColor;
+};
+
+export type FieldProps = {
   title: string;
   children?: React.ReactNode;
   className?: string;
   titleClassName?: string;
-  linkProps?: {
-    title: string | React.ReactNode;
-    disabled?: boolean;
-    icon?: string;
-    onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
-    className?: string;
-  };
+  linkProps?: FieldLinkProps;
   hint?: string;
-}
+};
 
 export const Field: FC<FieldProps> = (props) => {
   const { children, className, linkProps, title, titleClassName } = props;
@@ -41,8 +45,9 @@ export const Field: FC<FieldProps> = (props) => {
           (typeof linkProps.title === 'string' ? (
             <AppLink
               {...linkProps}
+              testId={linkProps.testId ?? 'field-link'}
               color={ButtonColor.Primary}
-              className={clsx([styles.fieldLink, linkProps.className])}
+              className={clsx(styles.fieldLink, linkProps.className)}
             >
               {linkProps.title}
             </AppLink>

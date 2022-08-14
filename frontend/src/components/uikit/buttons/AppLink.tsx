@@ -11,6 +11,7 @@ export type LinkProps = {
   className?: string;
   disabled?: boolean;
   icon?: string;
+  testId?: string;
 } & (
   | {
       onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
@@ -27,16 +28,13 @@ export const AppLink: React.FC<PropsWithChildren<LinkProps>> = (props) => {
     ...props,
   };
 
-  const linkStyles = [className];
-  linkStyles.push(styles.link);
-  linkStyles.push(styles[`${color}-link`]);
-
   return (
     <Link
       data-disabled={disabled}
       {...rest}
       to={props.to ?? ''}
-      className={clsx(linkStyles)}
+      className={clsx(className, styles.link, styles[`${color}-link`])}
+      data-test-id={props.testId}
     >
       {icon && <img className={styles.icon} src={icon} />}
       {children}

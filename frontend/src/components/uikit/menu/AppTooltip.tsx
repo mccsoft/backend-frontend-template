@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { AppPopper } from './AppPopper';
 import type { PopperProps, TooltipProps } from '@mui/material';
 import {
@@ -30,10 +30,7 @@ export const AppTooltip: React.FC<AppTooltipProps> = (props) => {
     variant: 'popper',
     popupId: popupId,
   });
-  const onClickHandler: NonNullable<PopperProps['onClick']> = useCallback(
-    (e) => e.stopPropagation(),
-    [],
-  );
+
   return (
     <>
       {React.cloneElement(children, {
@@ -42,7 +39,7 @@ export const AppTooltip: React.FC<AppTooltipProps> = (props) => {
       })}
       {title && popupState.isOpen && (
         <AppPopper
-          delay={200}
+          delay={500}
           {...rest}
           {...bindPopper(popupState)}
           noArrow={!arrow}
@@ -56,3 +53,5 @@ export const AppTooltip: React.FC<AppTooltipProps> = (props) => {
     </>
   );
 };
+const onClickHandler: NonNullable<PopperProps['onClick']> = (e) =>
+  e.stopPropagation();
