@@ -90,28 +90,30 @@ namespace MccSoft.TemplateApp.ComponentTests
             ComponentTestFixture application = new ComponentTestFixture()
             {
                 OutputHelper = _outputHelper,
-            }.ConfigureTestServices(services =>
-            {
-                ConfigureServices(services);
-                services.RemoveDbContextRegistration<TemplateAppDbContext>();
+            }
+                .ConfigureTestServices(services =>
+                {
+                    ConfigureServices(services);
+                    services.RemoveDbContextRegistration<TemplateAppDbContext>();
 
-                services.AddDbContext<TemplateAppDbContext>(
-                    options =>
-                    {
-                        _databaseInitializer.UseProvider(options, connectionString);
-                        options.WithLambdaInjection();
-                        options.UseOpenIddict();
-                    },
-                    contextLifetime: ServiceLifetime.Scoped,
-                    optionsLifetime: ServiceLifetime.Singleton
-                );
-            });
+                    services.AddDbContext<TemplateAppDbContext>(
+                        options =>
+                        {
+                            _databaseInitializer.UseProvider(options, connectionString);
+                            options.WithLambdaInjection();
+                            options.UseOpenIddict();
+                        },
+                        contextLifetime: ServiceLifetime.Scoped,
+                        optionsLifetime: ServiceLifetime.Singleton
+                    );
+                })
+                .UseSetting("ConnectionStrings:DefaultConnection", connectionString);
 
             if (!enableMigrations)
             {
                 application
                     .UseSetting(SetupDatabase.DisableMigrationOptionName, "true")
-                    .UseSetting("Hangfire__Disable", "true")
+                    .UseSetting("Hangfire:Disable", "true")
                     .UseSetting(SetupAuth.DisableSignOutLockedUserMiddleware, "true");
             }
 
