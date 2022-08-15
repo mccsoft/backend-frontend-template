@@ -111,7 +111,7 @@ syncReferencesInProjects(
 syncReferencesInProjects(
   `webapi/tests/${prefix}.TestUtils/${prefix}.TestUtils.csproj`,
 );
-
+console.log(`finished successfully`);
 process.exit();
 
 function copyProjectFolder(
@@ -212,6 +212,7 @@ function copyRecursively(src, dest, options = { ignorePattern: undefined }) {
 }
 
 function syncReferencesInProjects(relativePathInsideProject) {
+  console.log(`syncReferencesInProjects '${relativePathInsideProject}'`);
   const copyFrom = path.join(templateFolder, relativePathInsideProject);
   const copyTo = path.join(process.cwd(), relativePathInsideProject);
   doSyncReferencesInProjects(copyFrom, copyTo);
@@ -259,6 +260,7 @@ ${addition}
 }
 
 function syncPacketsInPackageJson(relativePathInsideProject) {
+  console.log(`syncPacketsInPackageJson '${relativePathInsideProject}'`);
   const copyFrom = path.join(templateFolder, relativePathInsideProject);
   const copyTo = path.join(process.cwd(), relativePathInsideProject);
   doSyncPacketsInPackageJson(copyFrom, copyTo);
