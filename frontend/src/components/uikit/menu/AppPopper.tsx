@@ -4,6 +4,7 @@ import { useTriggerOnClickOutsideElement } from 'helpers/useTriggerOnClickOutsid
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './AppPopper.module.scss';
 import { useTransitionClass } from './useTransitionClass';
+import type { PopperUnstyledOwnProps } from '@mui/base/PopperUnstyled/PopperUnstyled';
 
 /*
  * Poppers could be used as a Tooltips, where you can't wrap an `anchor` into a Tooltip
@@ -45,6 +46,21 @@ export const AppPopper: React.FC<
         setIsOpenDelayed(false);
       } else {
         const timerId = setTimeout(() => {
+          const resolvedAnchorEl = resolveAnchorEl(props.anchorEl);
+          if (resolvedAnchorEl) {
+            const box = resolvedAnchorEl.getBoundingClientRect();
+
+            if (
+              box.top === 0 &&
+              box.left === 0 &&
+              box.right === 0 &&
+              box.bottom === 0
+            ) {
+              onClose?.();
+              return;
+            }
+          }
+
           setIsOpenDelayed(true);
         }, delay ?? 0);
         return () => {
@@ -121,3 +137,6 @@ const PopperContent: React.FC<
     </div>
   );
 };
+function resolveAnchorEl(anchorEl: PopperUnstyledOwnProps['anchorEl']) {
+  return typeof anchorEl === 'function' ? anchorEl() : anchorEl;
+}
