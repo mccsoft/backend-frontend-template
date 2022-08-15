@@ -84,25 +84,6 @@ export function StyledAutocomplete<
     [],
   );
 
-  const options: T[] = useMemo(() => {
-    const result: T[] = [];
-    if (!required && !props.multiple) {
-      if (!props.options.includes(null!))
-        result.push(notSelectedOption as OptionType<T> as any);
-    }
-    if (props.customOptions) {
-      result.push(
-        ...props.customOptions.map(
-          (x) => ({ __optionType: 'custom', ...x } as OptionType<T> as any),
-        ),
-      );
-    }
-
-    result.push(...props.options);
-
-    return result;
-  }, [required, props.options, props.customOptions]);
-
   const getOptionLabel: typeof props['getOptionLabel'] = useMemo(() => {
     return (option) => {
       if (option === null || option === undefined) return emptyLabel;
@@ -123,27 +104,66 @@ export function StyledAutocomplete<
   // handle equality for CustomOptions
   const isOptionEqualToValue: typeof props['isOptionEqualToValue'] =
     useMemo(() => {
+      const original = props.isOptionEqualToValue ?? defaultEqualityFunction;
       return (option1, option2) => {
-        if (option1 == option2) return true;
-        if (typeof option1 !== 'object' || typeof option2 !== 'object')
-          return props.isOptionEqualToValue?.(option1, option2) ?? false;
+        if (original(option1, option2)) return true;
 
-        if (option1 === null || option1 === undefined) {
-          if (option2 === null || option2 === undefined) return true;
+        if (
+          option1 === null ||
+          option1 === undefined ||
+          option2 === null ||
+          option2 === undefined
+        )
           return false;
-        }
+
+        if (typeof option1 !== 'object' || typeof option2 !== 'object')
+          return false;
 
         const internalOption1 = option1 as unknown as InternalOptionType;
         const internalOption2 = option2 as unknown as InternalOptionType;
-        if (internalOption1.__optionType === 'custom') {
-          if (internalOption2.__optionType !== 'custom') return false;
+        if (
+          internalOption1.__optionType === 'custom' &&
+          internalOption2.__optionType === 'custom'
+        ) {
           return internalOption1.label == internalOption2.label;
         }
-        if (internalOption2.__optionType === 'custom') return false;
-
-        return props.isOptionEqualToValue?.(option1, option2) ?? false;
+        return false;
       };
     }, [props.getOptionLabel, emptyLabel]);
+
+  const options: T[] = useMemo(() => {
+    const result: T[] = [];
+    if (!required && !props.multiple) {
+      if (!props.options.includes(null!))
+        result.push(notSelectedOption as OptionType<T> as any);
+    }
+    if (props.customOptions) {
+      result.push(
+        ...props.customOptions.map(
+          (x) => ({ __optionType: 'custom', ...x } as OptionType<T> as any),
+        ),
+      );
+    }
+
+    result.push(...props.options);
+
+    // update selected value
+    if (props.value) {
+      let newSelectedValues: any;
+      if (props.multiple) {
+        newSelectedValues = result.filter((x) =>
+          (props.value as any).includes((z: any) => isOptionEqualToValue(x, z)),
+        );
+      } else {
+        newSelectedValues = result.find((x) =>
+          isOptionEqualToValue(x, props.value as any),
+        );
+      }
+      props.onChange?.({} as any, newSelectedValues, 'selectOption');
+    }
+
+    return result;
+  }, [required, props.options, props.customOptions]);
 
   // handle CustomOptions selection
   const onChange: typeof props['onChange'] = useMemo(() => {
@@ -200,4 +220,7 @@ export function StyledAutocomplete<
       {!!errorText && <div className={styles.errorText}>{errorText}</div>}
     </div>
   );
+}
+function defaultEqualityFunction(x: any, y: any) {
+  return x == y;
 }
