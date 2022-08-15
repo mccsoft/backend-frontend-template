@@ -11,6 +11,16 @@ namespace MccSoft.PersistenceHelpers;
 /// Interceptor that allows to execute arbitrary code when entities of certain types are saved.
 /// Helpful to set something like OrganisationId/TenantId for all created/modified entities
 /// to be equal to id of current user.
+///
+/// To integrate it add something like the following to OnConfiguring:
+///  optionsBuilder.AddInterceptors(
+///     new PostProcessEntitiesOnSaveInterceptor<IOwnedEntity, TemplateAppDbContext>(
+///         (entity, context) =>
+///         {
+///             entity.SetOwnerIdUnsafe(context.CurrentOwnerId);
+///         }
+///     )
+///   );
 /// </summary>
 public class PostProcessEntitiesOnSaveInterceptor<TEntity, TDbContext> : SaveChangesInterceptor
     where TDbContext : DbContext

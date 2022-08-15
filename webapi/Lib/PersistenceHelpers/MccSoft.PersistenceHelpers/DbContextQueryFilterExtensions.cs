@@ -16,6 +16,11 @@ public static class DbContextQueryFilterExtensions
     /// Sets up a query filter. <typeparam name="T"></typeparam> is a base type for all Entities (e.g. TenantId or OrganisationId).
     /// Normally every Entity that should be filtered by TenantId/OrganisationId should have a base class/interface
     /// with TenantId property, that you could filter on.
+    ///
+    /// To integrate it add something like the following to OnModelCreating:
+    /// builder.SetupQueryFilter<IOwnedEntity>(
+    ///   (x) => CurrentOwnerId == null || x.OwnerId == CurrentOwnerId
+    /// );
     /// </summary>
     public static void SetupQueryFilter<T>(
         this ModelBuilder builder,
