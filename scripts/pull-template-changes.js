@@ -112,7 +112,6 @@ syncReferencesInProjects(
   `webapi/tests/${prefix}.TestUtils/${prefix}.TestUtils.csproj`,
 );
 console.log(`finished successfully`);
-process.exit();
 
 function copyProjectFolder(
   relativePathInsideProject,
