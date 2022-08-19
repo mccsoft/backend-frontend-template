@@ -3,7 +3,7 @@ import { Loading } from 'components/uikit/suspense/Loading';
 import React, { Suspense, useMemo } from 'react';
 import { Provider } from 'react-redux';
 import { LanguageProvider } from './application/localization/LanguageProvider';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { PersistGate } from 'redux-persist/integration/react';
 import { AppRouter } from 'pages/router';
 import axios from 'axios';

@@ -15,7 +15,7 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { QueryErrorResetBoundary } from 'react-query';
+import { QueryErrorResetBoundary } from '@tanstack/react-query';
 
 /**
  * Helper which retries to run a given async function if it is failed.

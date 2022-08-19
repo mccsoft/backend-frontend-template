@@ -9,7 +9,7 @@ import { Loading } from 'components/uikit/suspense/Loading';
 import { useAdvancedForm } from 'helpers/form/useAdvancedForm';
 import { requiredRule } from 'helpers/form/react-hook-form-helper';
 import React, { useCallback } from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { QueryFactory } from 'services/api';
 import {
   CreateProductDto,

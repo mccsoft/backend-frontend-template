@@ -1,3 +1,5 @@
+const resultTypesByQueryKey: Record<string, () => { init(data: any): void }> = {};
+
 /* tslint:disable */
 /* eslint-disable */
 //----------------------
@@ -353,7 +355,7 @@ type GetProductQueryParameters = {
 export class ProductQuery{
 
     get baseUrl() {
-      return getBaseUrl() ?? '' + 'http://localhost';
+      return getBaseUrl() ?? '' + '';
     }
 
     static get Client() {
@@ -459,6 +461,9 @@ export class ProductQuery{
         }
     
 
+        const metaContext = useContext(QueryMetaContext);
+        options = addMetaToOptions(options, metaContext);
+
         return useQuery<PagedResultOfProductListItemDto, TError, TSelectData>({
             queryFn: ProductQuery.search,
             queryKey: ProductQuery.searchQueryKey(search, productType, lastStockUpdatedAt, offset, limit, sortBy, sortOrder),
@@ -548,6 +553,9 @@ export class ProductQuery{
         }
     
 
+        const metaContext = useContext(QueryMetaContext);
+        options = addMetaToOptions(options, metaContext);
+
         return useQuery<ProductDto, TError, TSelectData>({
             queryFn: ProductQuery.get,
             queryKey: ProductQuery.getQueryKey(id),
@@ -565,6 +573,8 @@ export class ProductQuery{
         queryClient.setQueryData(queryKey, updater);
     }
     }
+resultTypesByQueryKey['ProductClient___search'] = () => new PagedResultOfProductListItemDto();
+resultTypesByQueryKey['ProductClient___get'] = () => new ProductDto();
 
 export class SignUrlClient {
     private instance: AxiosInstance;
@@ -689,7 +699,7 @@ export class SignUrlClient {
 export class SignUrlQuery{
 
     get baseUrl() {
-      return getBaseUrl() ?? '' + 'http://localhost';
+      return getBaseUrl() ?? '' + '';
     }
 
     static get Client() {
@@ -728,6 +738,9 @@ export class SignUrlQuery{
 
         options = params[0] as any;
     
+
+        const metaContext = useContext(QueryMetaContext);
+        options = addMetaToOptions(options, metaContext);
 
         return useQuery<string, TError, TSelectData>({
             queryFn: SignUrlQuery.getSignature,
@@ -775,6 +788,9 @@ export class SignUrlQuery{
 
         options = params[0] as any;
     
+
+        const metaContext = useContext(QueryMetaContext);
+        options = addMetaToOptions(options, metaContext);
 
         return useQuery<void, TError, TSelectData>({
             queryFn: SignUrlQuery.setSignatureCookie,
@@ -995,7 +1011,7 @@ export class TestDataClient {
 export class TestDataQuery{
 
     get baseUrl() {
-      return getBaseUrl() ?? '' + 'http://localhost';
+      return getBaseUrl() ?? '' + '';
     }
 
     static get Client() {
@@ -1037,6 +1053,9 @@ export class TestDataQuery{
 
         options = params[0] as any;
     
+
+        const metaContext = useContext(QueryMetaContext);
+        options = addMetaToOptions(options, metaContext);
 
         return useQuery<string, TError, TSelectData>({
             queryFn: TestDataQuery.throwError,
@@ -1138,7 +1157,7 @@ export class VersionClient {
 export class VersionQuery{
 
     get baseUrl() {
-      return getBaseUrl() ?? '' + 'http://localhost';
+      return getBaseUrl() ?? '' + '';
     }
 
     static get Client() {
@@ -1181,6 +1200,9 @@ export class VersionQuery{
 
         options = params[0] as any;
     
+
+        const metaContext = useContext(QueryMetaContext);
+        options = addMetaToOptions(options, metaContext);
 
         return useQuery<string, TError, TSelectData>({
             queryFn: VersionQuery.version,
@@ -1402,7 +1424,7 @@ export class ProductDto implements IProductDto {
         data["id"] = this.id;
         data["title"] = this.title;
         data["productType"] = this.productType;
-        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : <any>undefined;
+        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : this.lastStockUpdatedAt;
         return data;
     }
 }
@@ -1454,7 +1476,7 @@ export class CreateProductDto implements ICreateProductDto {
         data = typeof data === 'object' ? data : {};
         data["title"] = this.title;
         data["productType"] = this.productType;
-        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : <any>undefined;
+        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : this.lastStockUpdatedAt;
         return data;
     }
 }
@@ -1498,7 +1520,7 @@ export class PatchProductDto implements IPatchProductDto {
         data = typeof data === 'object' ? data : {};
         data["title"] = this.title;
         data["productType"] = this.productType;
-        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : <any>undefined;
+        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : this.lastStockUpdatedAt;
         return data;
     }
 }
@@ -1596,7 +1618,7 @@ export class ProductListItemDto implements IProductListItemDto {
         data["id"] = this.id;
         data["title"] = this.title;
         data["productType"] = this.productType;
-        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : <any>undefined;
+        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : this.lastStockUpdatedAt;
         return data;
     }
 }
@@ -1654,7 +1676,9 @@ function isAxiosError(obj: any | undefined): obj is AxiosError {
     return obj && obj.isAxiosError === true;
 }
 
-import { useQuery, UseQueryResult, QueryFunctionContext, UseQueryOptions, QueryClient, QueryKey } from 'react-query';
+import { useQuery, UseQueryResult, QueryFunctionContext, UseQueryOptions, QueryClient, QueryKey } from '@tanstack/react-query';
+import { QueryMetaContext, QueryMetaContextValue } from 'react-query-swagger';
+import { useContext } from 'react';
 
 function removeUndefinedFromArrayTail<T>(arr: T[]): T[] {
     let lastDefinedValueIndex = arr.length - 1;
@@ -1737,8 +1761,86 @@ export function setAxiosFactory(factory: () => AxiosInstance) {
   _axiosFactory = factory;
 }
 
+function addMetaToOptions<TResultType, TError, TSelectData>(options: UseQueryOptions<TResultType, TError, TSelectData> | undefined, metaContext: QueryMetaContextValue) {
+  if (metaContext.metaFn) {
+    options = options ?? { };
+    options.meta = {
+      ...metaContext.metaFn(),
+      ...options.meta,
+    };
+  }
+  return options;
+}
+
 function parseDateOnly(s: string) {
     const date = new Date(s);
-    return new Date(date.getTime() + 
+    return new Date(date.getTime() +
         date.getTimezoneOffset() * 60000);
+}
+import type { PersistedClient } from '@tanstack/react-query-persist-client';
+/*
+ * If you have Dates in QueryKeys (i.e. in request parameters), you need to deserialize them to Dates correctly
+ * (otherwise they are deserialized as strings by default, and your queries are broken).
+ */
+function deserializeDate(str: unknown) {
+  const date = new Date(str as string);
+  const isDate = date instanceof Date && !isNaN(date as any) && date.toISOString() === str;
+  return isDate ? date : str;
+}
+
+export function deserializeDatesInQueryKeys(client: PersistedClient) {
+  client.clientState.queries.forEach((query) => {
+    const data: any = query.state.data;
+    query.queryKey = query.queryKey.map(x=>deserializeDate(x));
+  });
+}
+
+export function deserializeClassesInQueryData(client: PersistedClient) {
+  client.clientState.queries.forEach((query) => {
+    const data: any = query.state.data;
+    if (Array.isArray(data)) {
+      query.state.data = data.map(elem => constructDtoClass(query.queryKey, elem));
+    } else {
+      query.state.data = constructDtoClass(query.queryKey, data);
+    }
+  });
+}
+/*
+ * Pass this function as `deserialize` option to createSyncStoragePersister/createAsyncStoragePersister
+ * to correctly deserialize your DTOs (including Dates)
+ */
+export function persistorDeserialize(cache: string): PersistedClient {
+  const client: PersistedClient = JSON.parse(cache);
+  deserializeClassesInQueryData(client);
+  deserializeDatesInQueryKeys(client);
+
+  return client;
+}
+
+function constructDtoClass(queryKey: QueryKey, data: any): unknown {
+  const resultTypeKey = getResultTypeClassKey(queryKey);
+  const constructorFunction = resultTypesByQueryKey[resultTypeKey];
+
+  if (!constructorFunction) {
+    return data;
+  }
+
+  const dto = constructorFunction();
+  dto.init(data);
+
+  return dto;
+}
+
+function getResultTypeClassKey(queryKey: QueryKey): string {
+  if (!Array.isArray(queryKey)) {
+    return queryKey as unknown as string;
+  }
+  if (queryKey.length >= 2) {
+    // We concatenate first and second elements, because they uniquely identify the query.
+    // All other QueryKey elements are query parameters
+    return `${queryKey[0]}___${queryKey[1]}`;
+  }
+
+  // We actually should never reach this point :)
+  return queryKey.join('___');
 }
