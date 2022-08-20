@@ -25,6 +25,7 @@
     },
     "uikit": {
       "input": "Input",
+      "password": "Password",
       "dropdown": "Dropdown",
       "time": "Time",
       "date": "Date",

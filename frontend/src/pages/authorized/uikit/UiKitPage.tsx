@@ -58,6 +58,13 @@ export const UiKitPage: React.FC = () => {
             errorText={form.formState.errors.input?.message}
           />
         </Field>
+        <Field title={i18n.t('password')}>
+          <Input
+            type={'password'}
+            variant={'formInput'}
+            errorText={form.formState.errors.input?.message}
+          />
+        </Field>
         <Field title={i18n.t('dropdown')}>
           <HookFormDropDownInput
             options={options}

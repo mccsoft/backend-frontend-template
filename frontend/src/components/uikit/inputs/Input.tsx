@@ -95,7 +95,11 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(function Input(
       />
       {endAdornment ? (
         <div
-          className={clsx(styles.passwordEye, endAdornmentClassname)}
+          className={clsx(
+            styles.endAdornment,
+            type === 'password' && styles.passwordEye,
+            endAdornmentClassname,
+          )}
           onClick={endAdornment.onClick}
           onFocus={props.onFocus}
           onMouseDown={props.onMouseDown}

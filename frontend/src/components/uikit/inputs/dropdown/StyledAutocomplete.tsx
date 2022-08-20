@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import * as React from 'react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import arrowDownIcon from 'assets/icons/arrow-down.svg';
+import { ReactComponent as ArrowDownIcon } from 'assets/icons/arrow-down.svg';
 
 import styles from './StyledAutocomplete.module.scss';
 import { Autocomplete } from '@mui/material';
@@ -15,7 +15,7 @@ export interface CustomOption {
   onClick: () => void;
 }
 
-const caretDown = <img src={arrowDownIcon} className={styles.expandIcon} />;
+const caretDown = <ArrowDownIcon className={styles.expandIcon} />;
 
 export type StyledAutocompleteProps<
   T,
@@ -26,7 +26,6 @@ export type StyledAutocompleteProps<
   AutocompleteProps<T, Multiple, Required, FreeSolo>,
   'disableClearable' | 'renderInput'
 > & {
-  emptyLabel?: string;
   rootClassName?: string;
   required?: Required;
   testId?: string;
@@ -63,7 +62,7 @@ export function StyledAutocomplete<
 ): JSX.Element {
   const i18next = useTranslation();
   const {
-    emptyLabel,
+    placeholder,
     rootClassName,
     required,
     testId,
@@ -71,22 +70,24 @@ export function StyledAutocomplete<
     enableSearch,
     ...rest
   } = {
-    emptyLabel: i18next.t('uikit.inputs.nothing_selected'),
     ...props,
+    placeholder:
+      props.placeholder ?? i18next.t('uikit.inputs.nothing_selected'),
   };
 
-  const dropdownStyles: Partial<AutocompleteClasses> = useMemo(
+  const classes: Partial<AutocompleteClasses> = useMemo(
     () => ({
-      option: styles.optionValue,
-      popper: styles.dropdownCallout,
-      listbox: styles.listbox,
+      ...props.classes,
+      option: clsx(styles.optionValue, props.classes?.option),
+      popper: clsx(styles.dropdownCallout, props.classes?.popper),
+      listbox: clsx(styles.listbox, props.classes?.listbox),
     }),
-    [],
+    [props.classes],
   );
 
   const getOptionLabel: typeof props['getOptionLabel'] = useMemo(() => {
     return (option) => {
-      if (option === null || option === undefined) return emptyLabel;
+      if (option === null || option === undefined) return placeholder;
 
       const getDefaultValue = () =>
         props.getOptionLabel?.(option) ?? (option as any).toString();
@@ -94,12 +95,12 @@ export function StyledAutocomplete<
       if (typeof option !== 'object') return getDefaultValue();
 
       const internalOption = option as unknown as InternalOptionType;
-      if (internalOption.__optionType === 'not-selected') return emptyLabel;
+      if (internalOption.__optionType === 'not-selected') return placeholder;
       if (internalOption.__optionType === 'custom') return internalOption.label;
 
       return getDefaultValue();
     };
-  }, [props.getOptionLabel, emptyLabel]);
+  }, [props.getOptionLabel, placeholder]);
 
   // handle equality for CustomOptions
   const isOptionEqualToValue: typeof props['isOptionEqualToValue'] =
@@ -129,7 +130,7 @@ export function StyledAutocomplete<
         }
         return false;
       };
-    }, [props.getOptionLabel, emptyLabel]);
+    }, [props.getOptionLabel, placeholder]);
 
   const options: T[] = useMemo(() => {
     const result: T[] = [];
@@ -197,8 +198,12 @@ export function StyledAutocomplete<
           return (
             <Input
               containerRef={params.InputProps.ref}
-              placeholder={emptyLabel}
+              placeholder={placeholder}
               {...params.inputProps}
+              className={clsx(
+                params.inputProps.className,
+                !enableSearch && !props.freeSolo && styles.nonEditableInput,
+              )}
               value={value}
               size={undefined}
               readOnly={!enableSearch}
@@ -207,10 +212,10 @@ export function StyledAutocomplete<
             />
           );
         }}
-        classes={dropdownStyles}
+        classes={classes}
         data-test-id={testId}
         data-error={!!errorText}
-        placeholder={emptyLabel}
+        placeholder={placeholder}
         getOptionLabel={getOptionLabel}
         isOptionEqualToValue={isOptionEqualToValue}
         onChange={onChange}

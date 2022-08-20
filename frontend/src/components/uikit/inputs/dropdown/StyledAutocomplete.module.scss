@@ -22,6 +22,9 @@
   padding: 0;
   height: $form-input-height;
 }
+.non-editable-input {
+  cursor: pointer;
+}
 
 .option-value:hover {
   background: $background-input-hover !important;

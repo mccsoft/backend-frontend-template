@@ -17,7 +17,7 @@
   // required for proper displaying of endAdornment
   position: relative;
 }
-.passwordEye {
+.endAdornment {
   position: absolute;
   right: 12px;
   width: 16px;
@@ -29,6 +29,11 @@
   @extend .none-select;
 }
 
+.passwordEye {
+  margin-right: -4px;
+  width: 24px;
+}
+
 .input-with-adornment {
   padding-right: $input-padding + 16;
 }
@@ -36,6 +41,6 @@
 .non-form-input {
   height: $normal-input-height;
 }
-.non-form-input + .passwordEye {
+.non-form-input + .endAdornment {
   height: $normal-input-height;
 }
