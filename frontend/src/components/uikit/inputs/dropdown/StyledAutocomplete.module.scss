@@ -26,15 +26,7 @@
   cursor: pointer;
 }
 
-.option-value:hover {
-  background: $background-input-hover !important;
-}
-
-.option-value:focus {
-  background: $background-input-hover !important;
-}
-
-.option-value[aria-selected='true'] {
+.option-value:global(.Mui-focused) {
   background: $background-input-hover !important;
 }
 

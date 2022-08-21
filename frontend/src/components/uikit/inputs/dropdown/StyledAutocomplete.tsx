@@ -24,8 +24,14 @@ export type StyledAutocompleteProps<
   FreeSolo extends boolean | undefined = undefined,
 > = Omit<
   AutocompleteProps<T, Multiple, Required, FreeSolo>,
-  'disableClearable' | 'renderInput'
+  'disableClearable' | 'renderInput' | 'getOptionLabel' | 'isOptionEqualToValue'
 > & {
+  getOptionLabel:
+    | AutocompleteProps<T, Multiple, Required, FreeSolo>['getOptionLabel']
+    | keyof T;
+  isOptionEqualToValue:
+    | AutocompleteProps<T, Multiple, Required, FreeSolo>['isOptionEqualToValue']
+    | keyof T;
   rootClassName?: string;
   required?: Required;
   testId?: string;
@@ -52,6 +58,7 @@ type InternalOptionType =
   | ({ __optionType: 'custom' } & CustomOption)
   | { __optionType: 'not-selected' };
 const notSelectedOption: InternalOptionType = { __optionType: 'not-selected' };
+
 export function StyledAutocomplete<
   T,
   Multiple extends boolean | undefined = undefined,
@@ -78,59 +85,78 @@ export function StyledAutocomplete<
   const classes: Partial<AutocompleteClasses> = useMemo(
     () => ({
       ...props.classes,
-      option: clsx(styles.optionValue, props.classes?.option),
+      option: clsx(
+        styles.optionValue,
+        props.variant === 'normal' && styles.optionValueNormal,
+        props.classes?.option,
+      ),
       popper: clsx(styles.dropdownCallout, props.classes?.popper),
       listbox: clsx(styles.listbox, props.classes?.listbox),
     }),
     [props.classes],
   );
 
-  const getOptionLabel: typeof props['getOptionLabel'] = useMemo(() => {
-    return (option) => {
+  const getOptionLabel: AutocompleteProps<
+    T,
+    Multiple,
+    Required,
+    FreeSolo
+  >['getOptionLabel'] = useMemo(() => {
+    return (option: any) => {
       if (option === null || option === undefined) return placeholder;
 
-      const getDefaultValue = () =>
-        props.getOptionLabel?.(option) ?? (option as any).toString();
+      const getDefaultValue = convertPropertyAccessorToFunction(
+        props.getOptionLabel,
+      );
 
-      if (typeof option !== 'object') return getDefaultValue();
+      if (typeof option !== 'object') return getDefaultValue(option);
 
       const internalOption = option as unknown as InternalOptionType;
       if (internalOption.__optionType === 'not-selected') return placeholder;
       if (internalOption.__optionType === 'custom') return internalOption.label;
 
-      return getDefaultValue();
+      return getDefaultValue(option);
     };
   }, [props.getOptionLabel, placeholder]);
 
   // handle equality for CustomOptions
-  const isOptionEqualToValue: typeof props['isOptionEqualToValue'] =
-    useMemo(() => {
-      const original = props.isOptionEqualToValue ?? defaultEqualityFunction;
-      return (option1, option2) => {
-        if (original(option1, option2)) return true;
+  const isOptionEqualToValue: AutocompleteProps<
+    T,
+    Multiple,
+    Required,
+    FreeSolo
+  >['isOptionEqualToValue'] = useMemo(() => {
+    const original = props.isOptionEqualToValue
+      ? typeof props.isOptionEqualToValue !== 'function'
+        ? convertPropertyAccessorToEqualityFunction(props.isOptionEqualToValue)
+        : props.isOptionEqualToValue
+      : defaultEqualityFunction;
 
-        if (
-          option1 === null ||
-          option1 === undefined ||
-          option2 === null ||
-          option2 === undefined
-        )
-          return false;
+    return (option1, option2) => {
+      if (original(option1, option2)) return true;
 
-        if (typeof option1 !== 'object' || typeof option2 !== 'object')
-          return false;
-
-        const internalOption1 = option1 as unknown as InternalOptionType;
-        const internalOption2 = option2 as unknown as InternalOptionType;
-        if (
-          internalOption1.__optionType === 'custom' &&
-          internalOption2.__optionType === 'custom'
-        ) {
-          return internalOption1.label == internalOption2.label;
-        }
+      if (
+        option1 === null ||
+        option1 === undefined ||
+        option2 === null ||
+        option2 === undefined
+      )
         return false;
-      };
-    }, [props.getOptionLabel, placeholder]);
+
+      if (typeof option1 !== 'object' || typeof option2 !== 'object')
+        return false;
+
+      const internalOption1 = option1 as unknown as InternalOptionType;
+      const internalOption2 = option2 as unknown as InternalOptionType;
+      if (
+        internalOption1.__optionType === 'custom' &&
+        internalOption2.__optionType === 'custom'
+      ) {
+        return internalOption1.label == internalOption2.label;
+      }
+      return false;
+    };
+  }, [props.getOptionLabel, placeholder]);
 
   const options: T[] = useMemo(() => {
     const result: T[] = [];
@@ -202,7 +228,7 @@ export function StyledAutocomplete<
               {...params.inputProps}
               className={clsx(
                 params.inputProps.className,
-                !enableSearch && !props.freeSolo && styles.nonEditableInput,
+                styles.nonEditableInput,
               )}
               value={value}
               size={undefined}
@@ -228,4 +254,40 @@ export function StyledAutocomplete<
 }
 function defaultEqualityFunction(x: any, y: any) {
   return x == y;
+}
+
+function convertPropertyAccessorToEqualityFunction<T>(
+  key: keyof T,
+): (option1: T, option2: T) => boolean {
+  const propertyAccessorFunction = convertPropertyPathToFunction(key);
+  return (option1, option2) =>
+    propertyAccessorFunction(option1) == propertyAccessorFunction(option2);
+}
+
+export function convertPropertyAccessorToFunction<
+  T,
+  Multiple extends boolean | undefined,
+  Required extends boolean | undefined,
+  FreeSolo extends boolean | undefined,
+>(
+  getOptionLabel:
+    | AutocompleteProps<T, Multiple, Required, FreeSolo>['getOptionLabel']
+    | keyof T
+    | undefined,
+): NonNullable<
+  AutocompleteProps<T, Multiple, Required, FreeSolo>['getOptionLabel']
+> {
+  return getOptionLabel
+    ? typeof getOptionLabel !== 'function'
+      ? convertPropertyPathToFunction(getOptionLabel)
+      : getOptionLabel
+    : (option1: any) => option1 as any;
+}
+export function convertPropertyPathToFunction<T>(
+  key: keyof T,
+): (option: any) => string | number {
+  return (option: T) =>
+    option === null || option === undefined || typeof option !== 'object'
+      ? (option as any)
+      : option[key];
 }

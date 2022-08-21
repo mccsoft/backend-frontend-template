@@ -23,7 +23,7 @@ export type LinkProps = {
 );
 
 export const AppLink: React.FC<PropsWithChildren<LinkProps>> = (props) => {
-  const { color, className, disabled, icon, children, ...rest } = {
+  const { color, className, disabled, icon, children, testId, ...rest } = {
     ...defaultProps,
     ...props,
   };
@@ -34,7 +34,7 @@ export const AppLink: React.FC<PropsWithChildren<LinkProps>> = (props) => {
       {...rest}
       to={props.to ?? ''}
       className={clsx(className, styles.link, styles[`${color}-link`])}
-      data-test-id={props.testId}
+      data-test-id={testId}
     >
       {icon && <img className={styles.icon} src={icon} />}
       {children}
