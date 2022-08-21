@@ -10,7 +10,6 @@ import {
 import { emptyArray } from '../../table/AppTable';
 
 import styles from './StyledAutocomplete.module.scss';
-import { Paper } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
@@ -52,21 +51,18 @@ export function MultiSelectDropDownInput<T, Required extends boolean>(
     return !props.value?.length;
   }, [props.value]);
 
-  const paperComponentWithHeader = useMemo(() => {
+  const popupHeader = useMemo(() => {
     if (hideHeader) return undefined;
-    return (paperProps: any) => (
-      <Paper {...paperProps}>
-        <Header
-          isNoneSelected={isNoneSelected}
-          isAllSelected={isAllSelected}
-          selectAllText={i18next.t('uikit.inputs.select_all_button')}
-          selectNoneText={i18next.t('uikit.inputs.select_none_button')}
-          options={props.options}
-          onValueChanged={props.onValueChanged}
-          headerTitle={headerTitle}
-        />
-        {paperProps.children}
-      </Paper>
+    return (
+      <Header
+        isNoneSelected={isNoneSelected}
+        isAllSelected={isAllSelected}
+        selectAllText={i18next.t('uikit.inputs.select_all_button')}
+        selectNoneText={i18next.t('uikit.inputs.select_none_button')}
+        options={props.options}
+        onValueChanged={props.onValueChanged}
+        headerTitle={headerTitle}
+      />
     );
   }, [hideHeader, props.options, headerTitle, isAllSelected, isNoneSelected]);
   return (
@@ -74,7 +70,7 @@ export function MultiSelectDropDownInput<T, Required extends boolean>(
       onChange={onChange}
       multiple={true}
       disableCloseOnSelect={true}
-      PaperComponent={paperComponentWithHeader}
+      popupHeader={popupHeader}
       renderOption={(optionProps, option, { selected }) => (
         <li {...optionProps}>
           <CheckBox

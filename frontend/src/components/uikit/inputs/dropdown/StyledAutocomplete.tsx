@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { ReactComponent as ArrowDownIcon } from 'assets/icons/arrow-down.svg';
 
 import styles from './StyledAutocomplete.module.scss';
-import { Autocomplete } from '@mui/material';
+import { Autocomplete, Paper } from '@mui/material';
 import { Input } from '../Input';
 import { AutocompleteProps } from '@mui/material/Autocomplete/Autocomplete';
 import { AutocompleteClasses } from '@mui/material/Autocomplete/autocompleteClasses';
@@ -56,6 +56,14 @@ export type StyledAutocompleteProps<
    * Custom options are added to the top of the list.
    */
   customOptions?: CustomOption[];
+  /*
+   * Header of drop-down popup
+   */
+  popupHeader?: React.ReactNode;
+  /*
+   * Footer of drop-down popup
+   */
+  popupFooter?: React.ReactNode;
 };
 
 type OptionType<T> = InternalOptionType | T;
@@ -80,6 +88,8 @@ export function StyledAutocomplete<
     testId,
     errorText,
     enableSearch,
+    popupHeader,
+    popupFooter,
     ...rest
   } = {
     ...props,
@@ -213,6 +223,17 @@ export function StyledAutocomplete<
     };
   }, [props.onChange, props.customOptions]);
 
+  const paperComponentWithHeaderFooter = useMemo(() => {
+    if (!popupHeader && !popupFooter) return undefined;
+    return (paperProps: any) => (
+      <Paper {...paperProps}>
+        {popupHeader}
+        {paperProps.children}
+        {popupFooter}
+      </Paper>
+    );
+  }, [popupHeader, popupFooter]);
+
   return (
     <div
       className={clsx(styles.rootContainer, rootClassName)}
@@ -242,6 +263,7 @@ export function StyledAutocomplete<
             />
           );
         }}
+        PaperComponent={paperComponentWithHeaderFooter}
         classes={classes}
         data-test-id={testId}
         data-error={!!errorText}
@@ -275,7 +297,7 @@ export function convertPropertyAccessorToFunction<
   Multiple extends boolean | undefined,
   Required extends boolean | undefined,
   FreeSolo extends boolean | undefined,
->(getOptionLabel?: PropertyAccessor<T>): (option: T) => string | number {
+>(getOptionLabel?: PropertyAccessor<T>): (option: T) => string {
   return getOptionLabel
     ? typeof getOptionLabel !== 'function'
       ? convertPropertyPathToFunction(getOptionLabel)
@@ -284,7 +306,7 @@ export function convertPropertyAccessorToFunction<
 }
 export function convertPropertyPathToFunction<T>(
   key: keyof T,
-): (option: any) => string | number {
+): (option: any) => string {
   return (option: T) =>
     option === null || option === undefined || typeof option !== 'object'
       ? (option as any)
