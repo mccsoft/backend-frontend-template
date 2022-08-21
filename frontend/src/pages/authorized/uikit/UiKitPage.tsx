@@ -23,7 +23,14 @@ type UiKitForm = {
   timeInMilliseconds: number;
   date: Date;
   input: string;
+  password: string;
+  category: ProductType;
 };
+
+const categories: { title: string; id: ProductType }[] = [
+  { title: 'Auto description', id: ProductType.Auto },
+  { title: 'Electronic description', id: ProductType.Electronic },
+];
 
 export const UiKitPage: React.FC = () => {
   const i18n = useScopedTranslation('Page.uikit');
@@ -60,6 +67,7 @@ export const UiKitPage: React.FC = () => {
         </Field>
         <Field title={i18n.t('password')}>
           <Input
+            {...form.register('password', requiredRule())}
             type={'password'}
             variant={'formInput'}
             errorText={form.formState.errors.input?.message}
@@ -77,6 +85,16 @@ export const UiKitPage: React.FC = () => {
               },
             ]}
             name={'dropDown'}
+            control={form.control}
+          />
+        </Field>
+        <Field title={i18n.t('hook_form_dropdown_complex_option')}>
+          <HookFormDropDownInput
+            options={categories}
+            name={'category'}
+            getOptionLabel={(x) => x.title}
+            isOptionEqualToValue={(x, y) => x.id === y.id}
+            idFunction={(x) => x.id}
             control={form.control}
           />
         </Field>

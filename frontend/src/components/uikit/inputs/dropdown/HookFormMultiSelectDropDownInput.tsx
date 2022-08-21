@@ -38,7 +38,7 @@ export function HookFormMultiSelectDropDownInput<
             value={value}
             onBlur={onBlur}
             required={props.required}
-            onValueChanged={(v: D[] | null) => {
+            onValueChanged={(v: ReadonlyArray<D> | null) => {
               onChange(v!);
             }}
             renderTags={(value) => {

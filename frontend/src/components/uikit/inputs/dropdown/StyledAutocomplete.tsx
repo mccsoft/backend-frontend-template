@@ -9,6 +9,7 @@ import { Autocomplete } from '@mui/material';
 import { Input } from '../Input';
 import { AutocompleteProps } from '@mui/material/Autocomplete/Autocomplete';
 import { AutocompleteClasses } from '@mui/material/Autocomplete/autocompleteClasses';
+import { AutocompleteFreeSoloValueMapping } from '@mui/base/AutocompleteUnstyled/useAutocomplete';
 
 export interface CustomOption {
   label: string;
@@ -24,14 +25,18 @@ export type StyledAutocompleteProps<
   FreeSolo extends boolean | undefined = undefined,
 > = Omit<
   AutocompleteProps<T, Multiple, Required, FreeSolo>,
-  'disableClearable' | 'renderInput' | 'getOptionLabel' | 'isOptionEqualToValue'
+  'disableClearable' | 'renderInput' | 'getOptionLabel'
 > & {
-  getOptionLabel:
-    | AutocompleteProps<T, Multiple, Required, FreeSolo>['getOptionLabel']
-    | keyof T;
-  isOptionEqualToValue:
-    | AutocompleteProps<T, Multiple, Required, FreeSolo>['isOptionEqualToValue']
-    | keyof T;
+  getOptionLabel?:
+    | ((
+        option: T | AutocompleteFreeSoloValueMapping<FreeSolo>,
+      ) => string | number)
+    | keyof T
+    | undefined;
+  /*
+   * Could be specified instead of `isOptionEqualToValue`
+   */
+  idFunction?: PropertyAccessor<T>;
   rootClassName?: string;
   required?: Required;
   testId?: string;
@@ -109,13 +114,13 @@ export function StyledAutocomplete<
         props.getOptionLabel,
       );
 
-      if (typeof option !== 'object') return getDefaultValue(option);
+      if (typeof option !== 'object') return getDefaultValue(option) as any;
 
       const internalOption = option as unknown as InternalOptionType;
       if (internalOption.__optionType === 'not-selected') return placeholder;
       if (internalOption.__optionType === 'custom') return internalOption.label;
 
-      return getDefaultValue(option);
+      return getDefaultValue(option) as any;
     };
   }, [props.getOptionLabel, placeholder]);
 
@@ -126,11 +131,10 @@ export function StyledAutocomplete<
     Required,
     FreeSolo
   >['isOptionEqualToValue'] = useMemo(() => {
-    const original = props.isOptionEqualToValue
-      ? typeof props.isOptionEqualToValue !== 'function'
-        ? convertPropertyAccessorToEqualityFunction(props.isOptionEqualToValue)
-        : props.isOptionEqualToValue
-      : defaultEqualityFunction;
+    const original = getEqualityFunction(
+      props.isOptionEqualToValue,
+      props.idFunction,
+    );
 
     return (option1, option2) => {
       if (original(option1, option2)) return true;
@@ -264,23 +268,18 @@ function convertPropertyAccessorToEqualityFunction<T>(
     propertyAccessorFunction(option1) == propertyAccessorFunction(option2);
 }
 
+type PropertyAccessor<T> = ((option: T) => string | number) | keyof T;
+
 export function convertPropertyAccessorToFunction<
   T,
   Multiple extends boolean | undefined,
   Required extends boolean | undefined,
   FreeSolo extends boolean | undefined,
->(
-  getOptionLabel:
-    | AutocompleteProps<T, Multiple, Required, FreeSolo>['getOptionLabel']
-    | keyof T
-    | undefined,
-): NonNullable<
-  AutocompleteProps<T, Multiple, Required, FreeSolo>['getOptionLabel']
-> {
+>(getOptionLabel?: PropertyAccessor<T>): (option: T) => string | number {
   return getOptionLabel
     ? typeof getOptionLabel !== 'function'
       ? convertPropertyPathToFunction(getOptionLabel)
-      : getOptionLabel
+      : (getOptionLabel as any)
     : (option1: any) => option1 as any;
 }
 export function convertPropertyPathToFunction<T>(
@@ -290,4 +289,22 @@ export function convertPropertyPathToFunction<T>(
     option === null || option === undefined || typeof option !== 'object'
       ? (option as any)
       : option[key];
+}
+function getEqualityFunction<T>(
+  isOptionEqualToValue: StyledAutocompleteProps<
+    T,
+    false,
+    false,
+    false
+  >['isOptionEqualToValue'],
+  idFunction: StyledAutocompleteProps<T, false, false, false>['idFunction'],
+) {
+  if (isOptionEqualToValue) return isOptionEqualToValue;
+  if (!idFunction) return defaultEqualityFunction;
+
+  if (typeof idFunction !== 'function') {
+    return convertPropertyAccessorToEqualityFunction(idFunction);
+  }
+
+  return (option1: T, option2: T) => idFunction(option1) == idFunction(option2);
 }
