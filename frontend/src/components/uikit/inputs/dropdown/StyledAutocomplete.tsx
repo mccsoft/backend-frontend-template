@@ -219,7 +219,7 @@ export function StyledAutocomplete<
         options={options}
         renderInput={(params) => {
           const value = props.multiple
-            ? (params.InputProps.startAdornment as string)
+            ? (params.InputProps.startAdornment as string) ?? ''
             : params.inputProps.value;
           return (
             <Input

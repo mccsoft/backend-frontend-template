@@ -31,7 +31,8 @@
       "date": "Date",
       "combobox": "Combobox",
       "submit_button_title": "Submit",
-      "multi_select_dropdown": "Multi select"
+      "multi_select_dropdown": "Multi select",
+      "hook_form_dropdown_complex_option": "Dropdown where Option is a complex object, but we only want to store `id` in a form"
     }
   },
   "uikit": {
@@ -39,7 +40,9 @@
       "required": "Required",
       "nothing_selected": "No selection",
       "all_selected": "All selected",
-      "some_selected": "Some selected"
+      "some_selected": "Some selected",
+      "select_all_button": "ALL",
+      "select_none_button": "NONE"
     },
     "dialog": {
       "ok_button": "Ok",

@@ -8,7 +8,6 @@
 }
 
 .option-value {
-  height: initial;
   background-color: initial;
   font-family: $font-family !important;
   font-style: normal;
@@ -22,6 +21,7 @@
   padding: 0;
   height: $form-input-height;
 }
+
 .non-editable-input {
   cursor: pointer;
 }
@@ -57,6 +57,7 @@ input[aria-expanded='true'] + div .expand-icon {
 .errorText {
   @extend .inputErrorText;
 }
+
 .listbox {
   padding: 0 !important;
 }
@@ -65,6 +66,35 @@ input[aria-expanded='true'] + div .expand-icon {
   margin-left: 12px;
   pointer-events: none;
 }
+
 .multiSelectCheckbox {
   margin-right: 8px;
+}
+
+.multiselect-header {
+  font-weight: 500;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  @extend .option-value;
+
+  .headerText {
+  }
+  .links-block {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  .link {
+    color: $secondary;
+    cursor: pointer;
+    margin-right: 5px;
+    &-disabled {
+      opacity: 0.3;
+    }
+    &-disabled:hover {
+      cursor: default;
+      opacity: 0.3;
+    }
+  }
 }
