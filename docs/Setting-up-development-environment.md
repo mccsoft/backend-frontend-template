@@ -1,5 +1,7 @@
 # Set up development environment
-1. Install your IDE of choice. We tend to use:
+1. Install [latest .Net Core SDK](https://dotnet.microsoft.com/en-us/download/visual-studio-sdks). 
+2. Install [latest Node.js LTS](https://nodejs.org/en/). 
+3. Install your IDE of choice. We tend to use:
     1. Rider or Visual Studio for Backend development
     1. WebStorm or Visual Studio Code for frontend development
 
