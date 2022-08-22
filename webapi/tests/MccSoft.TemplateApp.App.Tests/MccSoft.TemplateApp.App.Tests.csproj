@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-  <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -14,20 +14,18 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-	<PackageReference Include="MccSoft.IntegreSql.EF" Version="0.8.9" />
-	<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.7" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
-    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.7"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0"/>
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
+    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1"/>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\MccSoft.TemplateApp.App\MccSoft.TemplateApp.App.csproj" />
-    <ProjectReference Include="..\..\src\MccSoft.TemplateApp.Persistence\MccSoft.TemplateApp.Persistence.csproj" />
-    <ProjectReference Include="..\MccSoft.TemplateApp.TestUtils\MccSoft.TemplateApp.TestUtils.csproj" />
+    <ProjectReference Include="..\..\src\MccSoft.TemplateApp.App\MccSoft.TemplateApp.App.csproj"/>
+    <ProjectReference Include="..\..\src\MccSoft.TemplateApp.Persistence\MccSoft.TemplateApp.Persistence.csproj"/>
+    <ProjectReference Include="..\MccSoft.TemplateApp.TestUtils\MccSoft.TemplateApp.TestUtils.csproj"/>
   </ItemGroup>
 </Project>
