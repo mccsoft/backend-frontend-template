@@ -74,7 +74,7 @@ console.log('Starting to copy files...');
 const defaultOptions = {
   ignorePattern: /partial\./,
 };
-copyProjectFolder(`scripts/pull-template-changes.js`);
+copyProjectFolder(`scripts`);
 copyProjectFolder('webapi/Lib', defaultOptions);
 copyProjectFolder('docs');
 copyProjectFolder(`webapi/src/${prefix}.Http/GeneratedClientOverrides.cs`);
