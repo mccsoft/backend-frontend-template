@@ -74,7 +74,7 @@ console.log('Starting to copy files...');
 const defaultOptions = {
   ignorePattern: /partial\./,
 };
-copyProjectFolder(`scripts/`);
+copyProjectFolder(`scripts`);
 copyProjectFolder('webapi/Lib', defaultOptions);
 copyProjectFolder('docs');
 copyProjectFolder(`webapi/src/${prefix}.Http/GeneratedClientOverrides.cs`);
@@ -140,7 +140,7 @@ function cloneTemplate(folder) {
     fs.rmdirSync(folder, { recursive: true });
   }
   execSync(
-    `git clone https://github.com/sergey-bulavskiy/backend-frontend-template/tree/feature/adjustments-to-docs-and-pull-script.git \"${folder}\"`,
+    `git clone https://github.com/mcctomsk/backend-frontend-template.git \"${folder}\"`,
   );
 }
 
