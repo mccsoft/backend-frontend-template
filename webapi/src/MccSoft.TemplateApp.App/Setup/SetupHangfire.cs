@@ -1,6 +1,7 @@
 ﻿using Hangfire;
 using Hangfire.Dashboard.BasicAuthorization;
 using Hangfire.PostgreSql;
+using Hangfire.Storage;
 using MccSoft.WebApi.Jobs;
 
 namespace MccSoft.TemplateApp.App.Setup;
@@ -49,8 +50,6 @@ public static partial class SetupHangfire
         )
             return;
 
-        ConfigureJobs(app);
-
         IConfigurationSection configurationSection = app.Configuration.GetSection("Hangfire");
         // In case you will need to debug/monitor tasks you can use Dashboard.
         if (configurationSection.GetValue<bool>("EnableDashboard"))
@@ -81,6 +80,7 @@ public static partial class SetupHangfire
                 }
             );
         }
+
         ConfigureJobs(app);
     }
 
@@ -88,20 +88,43 @@ public static partial class SetupHangfire
 
     static partial void ConfigureJobs(WebApplication app);
 
-    private static void ConfigureJob<T, TOptions>(
+    /// <summary>
+    /// Removes all existing Hangfire Jobs.
+    /// It makes sense to remove all jobs before adding new ones.
+    /// This way if you added a Job and later removed it in newer version, you won't have to remember the job names and remove them manually.
+    /// See https://stackoverflow.com/questions/40277390/how-to-remove-all-hangfire-recurring-jobs-on-startup for details
+    /// </summary>
+    private static void RemoveAllJobs()
+    {
+        using var connection = JobStorage.Current.GetConnection();
+        foreach (var recurringJob in connection.GetRecurringJobs())
+        {
+            RecurringJob.RemoveIfExists(recurringJob.Id);
+        }
+    }
+
+    private static void ConfigureJob<TJob, TOptions>(
         this IConfiguration appConfiguration,
         IRecurringJobManager recurringJobManager
     )
-        where T : JobBase
+        where TJob : JobBase
         where TOptions : HangFireJobSettings
     {
         var jobSettings = Activator.CreateInstance<TOptions>();
         appConfiguration.GetSection(jobSettings.GetType().Name).Bind(jobSettings);
 
-        recurringJobManager.AddOrUpdate<T>(
-            typeof(T).Name,
+        recurringJobManager.AddOrUpdate<TJob>(jobSettings.CronExpression);
+    }
+
+    public static void AddOrUpdate<TJob>(
+        this IRecurringJobManager recurringJobManager,
+        string cronExpression
+    ) where TJob : JobBase
+    {
+        recurringJobManager.AddOrUpdate<TJob>(
+            typeof(TJob).Name,
             job => job.Execute(),
-            jobSettings.CronExpression
+            cronExpression
         );
     }
 }
