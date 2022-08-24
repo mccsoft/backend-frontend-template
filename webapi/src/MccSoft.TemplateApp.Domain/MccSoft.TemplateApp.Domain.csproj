@@ -17,10 +17,10 @@
 
   <ItemGroup>
     <PackageReference Include="JsonKnownTypes" Version="0.5.5" />
-    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="6.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="6.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.8" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Npgsql.Json.NET" Version="6.0.5" />
+    <PackageReference Include="Npgsql.Json.NET" Version="6.0.6" />
   </ItemGroup>
 
   <ItemGroup>
