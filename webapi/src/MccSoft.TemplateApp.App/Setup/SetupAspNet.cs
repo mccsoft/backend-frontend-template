@@ -51,6 +51,8 @@ public static partial class SetupAspNet
 
         AddCors(builder);
 
+        services.AddMiniProfiler();
+
         // If you'd like to modify this class, consider adding your custom code in the SetupAspNet.partial.cs
         // This will make it easier to pull changes from Template when Template is updated
         // (actually this file will be overwritten by a file from template, which will make your changes disappear)
@@ -116,6 +118,11 @@ public static partial class SetupAspNet
 
         app.UseErrorHandling();
         app.UseRethrowErrorsFromPersistence();
+
+        if (app.Configuration.GetValue<bool>("MiniProfilerEnabled"))
+        {
+            app.UseMiniProfiler();
+        }
 
         // If you'd like to modify this class, consider adding your custom code in the SetupAspNet.partial.cs
         // This will make it easier to pull changes from Template when Template is updated

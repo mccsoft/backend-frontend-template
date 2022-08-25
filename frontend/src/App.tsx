@@ -1,4 +1,4 @@
-import { sentryDsn } from 'application/constants/env-variables';
+import { FeatureFlags, sentryDsn } from 'application/constants/env-variables';
 import { Loading } from 'components/uikit/suspense/Loading';
 import React, { Suspense, useMemo } from 'react';
 import { Provider } from 'react-redux';
@@ -22,6 +22,7 @@ import { backendUri } from './pages/unauthorized/openid/openid-settings';
 import { ThemeProvider } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { ModalProvider } from './components/uikit/modal/useModal';
+import { miniProfilerInterceptor } from './helpers/MiniProfiler';
 
 QueryFactory.setAxiosFactory(() => axios);
 
@@ -35,6 +36,9 @@ addLogoutHandler(() => {
 });
 axios.interceptors.request.use(injectLanguageInterceptor);
 axios.interceptors.request.use(sessionAxiosInterceptor);
+if (FeatureFlags.isMiniProfilerEnabled()) {
+  axios.interceptors.response.use(miniProfilerInterceptor, undefined);
+}
 
 if (import.meta.env.PROD) {
   Sentry.init({

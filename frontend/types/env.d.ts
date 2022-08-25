@@ -3,7 +3,8 @@
 interface ImportMetaEnv {
   readonly REACT_APP_VERSION: string;
   readonly REACT_APP_SENTRY_DSN: string;
-  // more env variables...
+  readonly REACT_APP_MINI_PROFILER_ENABLED: string;
+  // more env variables... variable types MUST be string
 }
 
 interface ImportMeta {

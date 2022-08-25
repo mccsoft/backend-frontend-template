@@ -24,7 +24,7 @@
    2. We try to keep branches short-lived (e.g. 1-week is too long) & pull requests small (big PRs are hard to review)
    3. We run autotests for feature-branches (so wait for them to be green before merging your PR)
    4. We don't deploy to PROD on each commit, but we deploy to DEV, and we strive to keep the master branch ready-to-be-deployed.
-   5. We use feature flags (and hide new not-finished functionality behind the feature flag) to keep the feature-branches short and master deployable.
+   5. We use [feature flags](./details/Feature-Flags.md) (and hide new not-finished functionality behind the feature flag) to keep the feature-branches short and master deployable.
 3. When designing API/class follow the principle of the least astonishment. The API/behaviour you are building should not surprise the user or your fellow developer.
    1. If you are doing something non-obvious, leave a comment explaining other simpler solutions that you've tried, and why they didn't work out.
 4. Don't build bicycles.
@@ -42,19 +42,11 @@
    1. It should be possible to copy the URL, send it to the colleague, and if he opens the page, he should see the same thing.
    2. It should be possible to press F5 and see more-or-less the same result
    3. [Detailed how to](./details/Filter-Sorting.md) is also available.
-4. According to [twelve-factor-app](https://12factor.net/config) principles, we allow overriding config parameters via environment variables at runtime.
-   1. For backend you could easily override anything specified in `appsettings.json` using env. variables. E.g. `Email__Host=smtp.sendpulse.com`.
-   2. For frontend you could add environment variables in several steps:
-      1. Add variable to [.env](../frontend/.env) file
-      2. Add variable **with type STRING** to [env.d.ts](../frontend/types/env.d.ts)
-      3. Use normal ways to access env. variables ([provided by vite](https://vitejs.dev/guide/env-and-mode.html#env-files)), e.g. `import.meta.env.REACT_APP_SENTRY_DSN`
-      4. Env. variables should have a prefix `REACT_APP`
-      5. We use [import-meta-env](https://github.com/iendeavor/import-meta-env) plugin so you could override these variables at runtime as well.
-      6. On hosting machine, when Docker image starts run `npx @import-meta-env/cli --example .env` which will use env. variables to override previously defined values.
+4. Use [feature-flags](./details/Feature-Flags.md) to disable/enable features (especially features that are being developed and not yet finished).
 
 # Backend
 1. Do not use `Controllers` and `Services` folders. Rather create a folder in `Features` folder (with a name of your feature), and put your Controllers, Services and Dtos there.
-  - it puts everything related to a feature in one place, which helps in refactoring and understanding
+    - it puts everything related to a feature in one place, which helps in refactoring and understanding
 1. Check [Multi-tenancy](details/MultiTenancy-EFIntegration.md) implementation if your app uses it
 
 # Frontend
