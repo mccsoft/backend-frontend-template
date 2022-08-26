@@ -2,7 +2,7 @@ import { RefObject, useEffect } from 'react';
 
 export function useTriggerOnClickOutsideElement(
   elementRef: RefObject<HTMLElement>,
-  onClickOutside: () => void,
+  onClickOutside: (e: MouseEvent) => void,
   enabled: boolean,
   preventDefault = false,
 ) {
@@ -11,11 +11,19 @@ export function useTriggerOnClickOutsideElement(
       const clickListener = (e: MouseEvent) => {
         if (preventDefault) e.preventDefault();
         if (!elementRef.current?.contains(e.target as Node)) {
-          onClickOutside();
+          onClickOutside(e);
         }
       };
-      window.addEventListener('mousedown', clickListener, false);
+      let unmounted = false;
+      // without setTimeout the StyledAutocomplete immediately closes after opening
+      setTimeout(
+        () =>
+          !unmounted &&
+          window.addEventListener('mousedown', clickListener, false),
+      );
+
       return () => {
+        unmounted = true;
         window.removeEventListener('mousedown', clickListener);
       };
     }

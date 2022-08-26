@@ -7,7 +7,7 @@ import {
   Path,
   RegisterOptions,
 } from 'react-hook-form';
-import { StyledAutocompleteProps } from './StyledAutocomplete';
+import { StyledAutocompleteProps } from './types';
 
 type HookFormProps<
   T,
@@ -19,6 +19,16 @@ type HookFormProps<
   rules?: Exclude<RegisterOptions, 'valueAsDate' | 'setValueAs'>;
   onFocus?: () => void;
   defaultValue?: T | null;
+
+  hasSearchFilter?: boolean;
+  /*
+   * Hides the header with `All/None` buttons and a title
+   */
+  hideHeader?: boolean;
+  /*
+   * Text that is put in the Header. Usually a name of a field
+   */
+  headerTitle?: string;
 };
 
 export function HookFormMultiSelectDropDownInput<
@@ -41,7 +51,7 @@ export function HookFormMultiSelectDropDownInput<
             onValueChanged={(v: ReadonlyArray<D> | null) => {
               onChange(v!);
             }}
-            renderTags={(value) => {
+            renderTags={(value: any) => {
               return value.join(', ');
             }}
           />

@@ -7,7 +7,7 @@ import {
   RegisterOptions,
 } from 'react-hook-form';
 import { ComboBoxInput } from './ComboBoxInput';
-import { StyledAutocompleteProps } from './StyledAutocomplete';
+import { StyledAutocompleteProps } from './types';
 
 type HookFormProps<T, TFieldValues extends FieldValues = FieldValues> = Omit<
   StyledAutocompleteProps<T, false, false, true>,

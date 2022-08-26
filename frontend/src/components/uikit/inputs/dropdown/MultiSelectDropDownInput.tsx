@@ -1,17 +1,18 @@
 import * as React from 'react';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { AutocompleteProps } from '@mui/material/Autocomplete/Autocomplete';
 import { CheckBox } from 'components/uikit/CheckBox';
 import {
   convertPropertyAccessorToFunction,
   StyledAutocomplete,
-  StyledAutocompleteProps,
 } from './StyledAutocomplete';
 import { emptyArray } from '../../table/AppTable';
 
 import styles from './StyledAutocomplete.module.scss';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import { Input } from '../Input';
+import { StyledAutocompleteProps } from './types';
 
 export function MultiSelectDropDownInput<T, Required extends boolean>(
   props: Omit<StyledAutocompleteProps<T, true, Required, false>, 'onChange'> & {
@@ -24,9 +25,24 @@ export function MultiSelectDropDownInput<T, Required extends boolean>(
      * Text that is put in the Header. Usually a name of a field
      */
     headerTitle?: string;
+
+    /*
+     * Component that renders after each option (on the same row)
+     */
+    postfixRenderer?: (option: T) => React.ReactElement<unknown>;
+    hasSearchFilter?: boolean;
   },
 ) {
-  const { onValueChanged, hideHeader, headerTitle, ...rest } = props;
+  const {
+    onValueChanged,
+    hideHeader,
+    headerTitle,
+    postfixRenderer,
+    hasSearchFilter,
+    options,
+    ...rest
+  } = props;
+
   const i18next = useTranslation();
 
   const onChange: AutocompleteProps<T, true, Required, false>['onChange'] =
@@ -43,6 +59,9 @@ export function MultiSelectDropDownInput<T, Required extends boolean>(
       ),
     [props.getOptionLabel],
   );
+
+  const [searchText, setSearchText] = useState<string>('');
+
   const isAllSelected = useMemo(() => {
     return !props.options || props.value?.length === props.options.length;
   }, [props.value?.length, props.options]);
@@ -54,23 +73,55 @@ export function MultiSelectDropDownInput<T, Required extends boolean>(
   const popupHeader = useMemo(() => {
     if (hideHeader) return undefined;
     return (
-      <Header
-        isNoneSelected={isNoneSelected}
-        isAllSelected={isAllSelected}
-        selectAllText={i18next.t('uikit.inputs.select_all_button')}
-        selectNoneText={i18next.t('uikit.inputs.select_none_button')}
-        options={props.options}
-        onValueChanged={props.onValueChanged}
-        headerTitle={headerTitle}
-      />
+      <>
+        <Header
+          isNoneSelected={isNoneSelected}
+          isAllSelected={isAllSelected}
+          selectAllText={i18next.t('uikit.inputs.select_all_button')}
+          selectNoneText={i18next.t('uikit.inputs.select_none_button')}
+          options={props.options}
+          onValueChanged={props.onValueChanged}
+          headerTitle={headerTitle}
+        />
+      </>
     );
-  }, [hideHeader, props.options, headerTitle, isAllSelected, isNoneSelected]);
+  }, [
+    hideHeader,
+    isNoneSelected,
+    isAllSelected,
+    i18next,
+    props.options,
+    props.onValueChanged,
+    headerTitle,
+  ]);
+  const searchInput = !!hasSearchFilter && (
+    <div>
+      <Input
+        value={searchText}
+        onChange={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setSearchText(e.currentTarget.value);
+        }}
+      />
+    </div>
+  );
+
   return (
     <StyledAutocomplete
+      {...rest}
+      options={options}
       onChange={onChange}
       multiple={true}
       disableCloseOnSelect={true}
-      popupHeader={popupHeader}
+      popupHeader={
+        hasSearchFilter || popupHeader ? (
+          <>
+            {popupHeader}
+            {searchInput}
+          </>
+        ) : undefined
+      }
       renderOption={(optionProps, option, { selected }) => (
         <li {...optionProps}>
           <CheckBox
@@ -78,9 +129,9 @@ export function MultiSelectDropDownInput<T, Required extends boolean>(
             checked={selected}
             title={getOptionLabel(option)}
           />
+          {postfixRenderer?.(option)}
         </li>
       )}
-      {...rest}
       value={rest.value ?? emptyArray}
     />
   );

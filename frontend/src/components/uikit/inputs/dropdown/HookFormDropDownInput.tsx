@@ -7,10 +7,8 @@ import {
   Path,
   RegisterOptions,
 } from 'react-hook-form';
-import {
-  convertPropertyAccessorToFunction,
-  StyledAutocompleteProps,
-} from './StyledAutocomplete';
+import { convertPropertyAccessorToFunction } from './StyledAutocomplete';
+import { StyledAutocompleteProps } from './types';
 
 type HookFormProps<
   T,

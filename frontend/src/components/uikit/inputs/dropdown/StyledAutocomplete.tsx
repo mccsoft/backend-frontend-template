@@ -1,76 +1,30 @@
 import clsx from 'clsx';
 import * as React from 'react';
-import { useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as ArrowDownIcon } from 'assets/icons/arrow-down.svg';
 
 import styles from './StyledAutocomplete.module.scss';
-import { Autocomplete, Paper } from '@mui/material';
+import {
+  Autocomplete,
+  AutocompleteFreeSoloValueMapping,
+  Paper,
+} from '@mui/material';
 import { Input } from '../Input';
-import { AutocompleteProps } from '@mui/material/Autocomplete/Autocomplete';
+import {
+  AutocompleteProps,
+  AutocompleteRenderOptionState,
+} from '@mui/material/Autocomplete/Autocomplete';
 import { AutocompleteClasses } from '@mui/material/Autocomplete/autocompleteClasses';
-import { AutocompleteFreeSoloValueMapping } from '@mui/base/AutocompleteUnstyled/useAutocomplete';
-
-export interface CustomOption {
-  label: string;
-  onClick: () => void;
-}
+import { VirtualizedListboxComponent } from './VirtualizedListboxAdapter';
+import {
+  CustomOption,
+  PropertyAccessor,
+  StyledAutocompleteProps,
+} from './types';
+import { useTriggerOnClickOutsideElement } from '../../../../helpers/useTriggerOnClickOutsideElement';
 
 const caretDown = <ArrowDownIcon className={styles.expandIcon} />;
-
-export type StyledAutocompleteProps<
-  T,
-  Multiple extends boolean | undefined = undefined,
-  Required extends boolean | undefined = undefined,
-  FreeSolo extends boolean | undefined = undefined,
-> = Omit<
-  AutocompleteProps<T, Multiple, Required, FreeSolo>,
-  'disableClearable' | 'renderInput' | 'getOptionLabel'
-> & {
-  getOptionLabel?:
-    | ((
-        option: T | AutocompleteFreeSoloValueMapping<FreeSolo>,
-      ) => string | number)
-    | keyof T
-    | undefined;
-  /*
-   * Could be specified instead of `isOptionEqualToValue`
-   */
-  idFunction?: PropertyAccessor<T>;
-  rootClassName?: string;
-  required?: Required;
-  testId?: string;
-  errorText?: string;
-  /*
-   * Makes it possible to type right into the input to filter results
-   */
-  enableSearch?: boolean;
-  /*
-   * 'normal' - input will have minimal width
-   * 'formInput' - input will have the standard width (as all form elements)
-   */
-  variant?: 'normal' | 'formInput';
-  /*
-   * You could add more options to Autocomplete beside the standard `menuItems`.
-   * It's useful when for example you have a dropdown with categories and want to add a `Add New Category' item
-   * Custom options are added to the top of the list.
-   */
-  customOptions?: CustomOption[];
-  /*
-   * Header of drop-down popup
-   */
-  popupHeader?: React.ReactNode;
-  /*
-   * Footer of drop-down popup
-   */
-  popupFooter?: React.ReactNode;
-};
-
-type OptionType<T> = InternalOptionType | T;
-type InternalOptionType =
-  | ({ __optionType: 'custom' } & CustomOption)
-  | { __optionType: 'not-selected' };
-const notSelectedOption: InternalOptionType = { __optionType: 'not-selected' };
 
 export function StyledAutocomplete<
   T,
@@ -82,6 +36,7 @@ export function StyledAutocomplete<
 ): JSX.Element {
   const i18next = useTranslation();
   const {
+    onChange,
     placeholder,
     rootClassName,
     required,
@@ -90,6 +45,8 @@ export function StyledAutocomplete<
     enableSearch,
     popupHeader,
     popupFooter,
+    postfixRenderer,
+    customOptions,
     ...rest
   } = {
     ...props,
@@ -111,82 +68,41 @@ export function StyledAutocomplete<
     [props.classes],
   );
 
-  const getOptionLabel: AutocompleteProps<
-    T,
-    Multiple,
-    Required,
-    FreeSolo
-  >['getOptionLabel'] = useMemo(() => {
-    return (option: any) => {
-      if (option === null || option === undefined) return placeholder;
-
-      const getDefaultValue = convertPropertyAccessorToFunction(
-        props.getOptionLabel,
-      );
-
-      if (typeof option !== 'object') return getDefaultValue(option) as any;
-
-      const internalOption = option as unknown as InternalOptionType;
-      if (internalOption.__optionType === 'not-selected') return placeholder;
-      if (internalOption.__optionType === 'custom') return internalOption.label;
-
-      return getDefaultValue(option) as any;
-    };
+  const getOptionLabel: NonNullable<
+    AutocompleteProps<T, Multiple, Required, FreeSolo>['getOptionLabel']
+  > = useMemo(() => {
+    const baseFunction = convertPropertyAccessorToFunction(
+      props.getOptionLabel,
+    ) as any;
+    return (option) =>
+      option === null || option === undefined
+        ? placeholder
+        : baseFunction(option);
   }, [props.getOptionLabel, placeholder]);
 
-  // handle equality for CustomOptions
   const isOptionEqualToValue: AutocompleteProps<
     T,
     Multiple,
     Required,
     FreeSolo
   >['isOptionEqualToValue'] = useMemo(() => {
-    const original = getEqualityFunction(
-      props.isOptionEqualToValue,
-      props.idFunction,
-    );
-
-    return (option1, option2) => {
-      if (original(option1, option2)) return true;
-
-      if (
-        option1 === null ||
-        option1 === undefined ||
-        option2 === null ||
-        option2 === undefined
-      )
-        return false;
-
-      if (typeof option1 !== 'object' || typeof option2 !== 'object')
-        return false;
-
-      const internalOption1 = option1 as unknown as InternalOptionType;
-      const internalOption2 = option2 as unknown as InternalOptionType;
-      if (
-        internalOption1.__optionType === 'custom' &&
-        internalOption2.__optionType === 'custom'
-      ) {
-        return internalOption1.label == internalOption2.label;
-      }
-      return false;
-    };
-  }, [props.getOptionLabel, placeholder]);
+    return getEqualityFunction(props.isOptionEqualToValue, props.idFunction);
+  }, [props.isOptionEqualToValue, props.idFunction]);
 
   const options: T[] = useMemo(() => {
     const result: T[] = [];
     if (!required && !props.multiple) {
-      if (!props.options.includes(null!))
-        result.push(notSelectedOption as OptionType<T> as any);
-    }
-    if (props.customOptions) {
-      result.push(
-        ...props.customOptions.map(
-          (x) => ({ __optionType: 'custom', ...x } as OptionType<T> as any),
-        ),
-      );
+      if (!props.options.includes(null!)) result.push(null!);
     }
 
-    result.push(...props.options);
+    if (customOptions) {
+      result.push(
+        ...(customOptions.map((x) => ({
+          ...x,
+          __type: 'custom-option',
+        })) as any),
+      );
+    }
 
     // update selected value
     if (props.value) {
@@ -203,37 +119,55 @@ export function StyledAutocomplete<
       props.onChange?.({} as any, newSelectedValues, 'selectOption');
     }
 
-    return result;
-  }, [required, props.options, props.customOptions]);
+    return [...result, ...props.options];
+  }, [required, props.options, customOptions]);
 
-  // handle CustomOptions selection
-  const onChange: typeof props['onChange'] = useMemo(() => {
-    if (!props.customOptions || props.customOptions.length === 0)
-      return props.onChange;
-
-    return (event, value, reason, details) => {
-      if (typeof value === 'object') {
-        const internalOption = value as unknown as InternalOptionType;
-        if (internalOption.__optionType === 'custom') {
-          internalOption.onClick();
-          return;
-        }
+  const renderOption: AutocompleteProps<
+    T,
+    Multiple,
+    Required,
+    FreeSolo
+  >['renderOption'] = useCallback(
+    (
+      liProps: React.HTMLAttributes<HTMLLIElement>,
+      option: T | CustomOption | AutocompleteFreeSoloValueMapping<FreeSolo>,
+      state: AutocompleteRenderOptionState,
+    ) => {
+      if (
+        option &&
+        typeof option === 'object' &&
+        (option as any)['__type'] === 'custom-option'
+      ) {
+        const customOption = option as CustomOption;
+        return (
+          <li
+            {...liProps}
+            onClick={(e) => {
+              e.preventDefault();
+              customOption.onClick();
+            }}
+          >
+            {customOption.label}
+          </li>
+        );
       }
-      props.onChange?.(event, value, reason, details);
-    };
-  }, [props.onChange, props.customOptions]);
 
-  const paperComponentWithHeaderFooter = useMemo(() => {
-    if (!popupHeader && !popupFooter) return undefined;
-    return (paperProps: any) => (
-      <Paper {...paperProps}>
-        {popupHeader}
-        {paperProps.children}
-        {popupFooter}
-      </Paper>
-    );
-  }, [popupHeader, popupFooter]);
+      if (props.renderOption)
+        return props.renderOption(liProps, option as any, state);
+      return (
+        <li {...liProps}>
+          {getOptionLabel(option as any)}
+          {postfixRenderer?.(option as any)}
+        </li>
+      );
+    },
+    [props.renderOption, postfixRenderer],
+  );
 
+  const closeAutocomplete = useRef<React.FocusEventHandler>();
+  const onClickOutsidePaper = useCallback((e: MouseEvent) => {
+    closeAutocomplete.current?.(e as any);
+  }, []);
   return (
     <div
       className={clsx(styles.rootContainer, rootClassName)}
@@ -246,6 +180,7 @@ export function StyledAutocomplete<
           const value = props.multiple
             ? (params.InputProps.startAdornment as string) ?? ''
             : params.inputProps.value;
+          closeAutocomplete.current = params.inputProps.onBlur;
           return (
             <Input
               containerRef={params.InputProps.ref}
@@ -255,6 +190,10 @@ export function StyledAutocomplete<
                 params.inputProps.className,
                 styles.nonEditableInput,
               )}
+              /* If `onBlur` has it's default value
+               * the DropDown will close when input loses the focus.
+               * We need to prevent that, since there might be inputs inside the DropDown */
+              onBlur={undefined}
               value={value}
               size={undefined}
               readOnly={!enableSearch}
@@ -263,12 +202,26 @@ export function StyledAutocomplete<
             />
           );
         }}
-        PaperComponent={paperComponentWithHeaderFooter}
+        componentsProps={{
+          paper: {
+            footer: popupFooter,
+            header: popupHeader,
+            onClickOutside: onClickOutsidePaper,
+          } as PaperComponentProps as any,
+        }}
+        ListboxProps={
+          {
+            itemSize: 40,
+          } as any
+        }
+        ListboxComponent={VirtualizedListboxComponent as any}
+        PaperComponent={PaperComponentWithHeaderFooter}
         classes={classes}
         data-test-id={testId}
         data-error={!!errorText}
         placeholder={placeholder}
         getOptionLabel={getOptionLabel}
+        renderOption={renderOption}
         isOptionEqualToValue={isOptionEqualToValue}
         onChange={onChange}
         disableClearable={props.required}
@@ -278,9 +231,35 @@ export function StyledAutocomplete<
     </div>
   );
 }
+
 function defaultEqualityFunction(x: any, y: any) {
   return x == y;
 }
+
+type PaperComponentProps = {
+  header?: any;
+  footer?: any;
+  onClickOutside?: () => void;
+};
+
+const PaperComponentWithHeaderFooter = React.memo(
+  function PaperComponentWithHeaderFooter(props: PaperComponentProps & any) {
+    const ref = useRef<HTMLDivElement>(null);
+    useTriggerOnClickOutsideElement(
+      ref,
+      props.onClickOutside!,
+      !!props.onClickOutside,
+    );
+
+    return (
+      <Paper {...props} ref={ref}>
+        {props.header}
+        {props.children}
+        {props.footer}
+      </Paper>
+    );
+  },
+);
 
 function convertPropertyAccessorToEqualityFunction<T>(
   key: keyof T,
@@ -289,8 +268,6 @@ function convertPropertyAccessorToEqualityFunction<T>(
   return (option1, option2) =>
     propertyAccessorFunction(option1) == propertyAccessorFunction(option2);
 }
-
-type PropertyAccessor<T> = ((option: T) => string | number) | keyof T;
 
 export function convertPropertyAccessorToFunction<
   T,
@@ -304,6 +281,7 @@ export function convertPropertyAccessorToFunction<
       : (getOptionLabel as any)
     : (option1: any) => option1 as any;
 }
+
 export function convertPropertyPathToFunction<T>(
   key: keyof T,
 ): (option: any) => string {
@@ -312,6 +290,7 @@ export function convertPropertyPathToFunction<T>(
       ? (option as any)
       : option[key];
 }
+
 function getEqualityFunction<T>(
   isOptionEqualToValue: StyledAutocompleteProps<
     T,

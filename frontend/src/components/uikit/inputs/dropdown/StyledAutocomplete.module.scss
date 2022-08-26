@@ -98,3 +98,10 @@ input[aria-expanded='true'] + div .expand-icon {
     }
   }
 }
+
+.virtualized-list {
+  ul {
+    padding: 0;
+    margin: 0;
+  }
+}

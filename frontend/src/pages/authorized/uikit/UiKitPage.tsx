@@ -31,6 +31,8 @@ const categories: { title: string; id: ProductType }[] = [
   { title: 'Auto description', id: ProductType.Auto },
   { title: 'Electronic description', id: ProductType.Electronic },
 ];
+for (let i = 0; i < 100; i++)
+  categories.push({ title: 'asd ' + i, id: (i + 10) as any });
 
 export const UiKitPage: React.FC = () => {
   const i18n = useScopedTranslation('Page.uikit');
@@ -93,7 +95,7 @@ export const UiKitPage: React.FC = () => {
             options={categories}
             name={'category'}
             getOptionLabel={(x) => x.title}
-            isOptionEqualToValue={(x, y) => x.id === y.id}
+            isOptionEqualToValue={(x, y) => x?.id === y?.id}
             idFunction={(x) => x.id}
             control={form.control}
           />
@@ -103,6 +105,7 @@ export const UiKitPage: React.FC = () => {
             options={options}
             name={'multiSelectDropDown'}
             control={form.control}
+            hasSearchFilter={true}
           />
         </Field>
 

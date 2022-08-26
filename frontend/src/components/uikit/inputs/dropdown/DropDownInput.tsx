@@ -1,10 +1,8 @@
 import * as React from 'react';
 import { useMemo } from 'react';
 import { AutocompleteProps } from '@mui/material/Autocomplete/Autocomplete';
-import {
-  StyledAutocomplete,
-  StyledAutocompleteProps,
-} from './StyledAutocomplete';
+import { StyledAutocomplete } from './StyledAutocomplete';
+import { StyledAutocompleteProps } from './types';
 
 export function DropDownInput<T, Required extends boolean>(
   props: Omit<
