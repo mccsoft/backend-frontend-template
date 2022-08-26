@@ -4,8 +4,6 @@ import { LoginPage } from 'pages/unauthorized/LoginPage';
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { useIsAuthorized } from 'helpers/interceptors/auth/auth-interceptor';
-import { MiniProfiler } from '../helpers/MiniProfiler';
-import { FeatureFlags } from '../application/constants/env-variables';
 
 export const AppRouter = () => {
   const isAuth = useIsAuthorized();
@@ -20,7 +18,6 @@ export const AppRouter = () => {
             <Route path={'*'} element={<LoginPage />} />
           </Routes>
         )}
-        {FeatureFlags.isMiniProfilerEnabled() && <MiniProfiler />}
       </QuerySuspenseErrorWrapper>
     </BrowserRouter>
   );

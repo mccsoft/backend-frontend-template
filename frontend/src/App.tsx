@@ -22,7 +22,7 @@ import { backendUri } from './pages/unauthorized/openid/openid-settings';
 import { ThemeProvider } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { ModalProvider } from './components/uikit/modal/useModal';
-import { miniProfilerInterceptor } from './helpers/MiniProfiler';
+import { MiniProfiler, miniProfilerInterceptor } from './helpers/MiniProfiler';
 
 QueryFactory.setAxiosFactory(() => axios);
 
@@ -80,6 +80,7 @@ export const App = () => {
               <LanguageProvider>
                 <ModalProvider>
                   <AppRouter />
+                  {FeatureFlags.isMiniProfilerEnabled() && <MiniProfiler />}
                 </ModalProvider>
               </LanguageProvider>
             </PersistGate>
