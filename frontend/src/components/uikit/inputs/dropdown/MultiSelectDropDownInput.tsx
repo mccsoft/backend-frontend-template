@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { AutocompleteProps } from '@mui/material/Autocomplete/Autocomplete';
 import { CheckBox } from 'components/uikit/CheckBox';
 import {
@@ -13,6 +13,8 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { Input } from '../Input';
 import { StyledAutocompleteProps } from './types';
+import { createFilterOptions } from '@mui/material';
+import { SearchInput } from './SearchInput';
 
 export function MultiSelectDropDownInput<T, Required extends boolean>(
   props: Omit<StyledAutocompleteProps<T, true, Required, false>, 'onChange'> & {
@@ -96,7 +98,7 @@ export function MultiSelectDropDownInput<T, Required extends boolean>(
   ]);
   const searchInput = !!hasSearchFilter && (
     <div>
-      <Input
+      <SearchInput
         value={searchText}
         onChange={(e) => {
           e.preventDefault();
@@ -106,7 +108,16 @@ export function MultiSelectDropDownInput<T, Required extends boolean>(
       />
     </div>
   );
-
+  const defaultFilterOptions = createFilterOptions<T>();
+  const filterOptions: typeof defaultFilterOptions = useCallback(
+    (options, state) => {
+      return defaultFilterOptions(options, {
+        ...state,
+        inputValue: searchText,
+      });
+    },
+    [defaultFilterOptions, searchText],
+  );
   return (
     <StyledAutocomplete
       {...rest}
@@ -114,6 +125,7 @@ export function MultiSelectDropDownInput<T, Required extends boolean>(
       onChange={onChange}
       multiple={true}
       disableCloseOnSelect={true}
+      filterOptions={filterOptions}
       popupHeader={
         hasSearchFilter || popupHeader ? (
           <>
