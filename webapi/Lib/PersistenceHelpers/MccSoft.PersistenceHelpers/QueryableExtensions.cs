@@ -137,7 +137,7 @@ namespace MccSoft.PersistenceHelpers
             Specification<T> spec
         ) where T : class
         {
-            return await repository.SingleOrDefaultAsync(spec.Predicate);
+            return await repository.FirstOrDefaultAsync(spec.Predicate);
         }
 
         /// <summary>

@@ -21,12 +21,11 @@ export const MiniProfiler: React.FC = () => {
     _miniProfilerAlreadyIncluded = true;
     const script = document.createElement('script');
     script.id = 'mini-profiler';
-    script.src =
-      backendUri + '/api/profiler/includes.min.js?v=4.2.22+b27bea37e9';
+    script.src = `${backendUri}/api/profiler/includes.min.js?v=4.2.22+b27bea37e9`;
     script.setAttribute('data-version', '4.2.22+b27bea37e9');
-    script.setAttribute('data-path', backendUri + '/api/profiler/');
+    script.setAttribute('data-path', `${backendUri}/api/profiler/`);
     script.setAttribute('data-position', 'BottomLeft');
-    script.setAttribute('data-start-hidden', 'false');
+    script.setAttribute('data-start-hidden', 'true');
     script.setAttribute('data-scheme', 'Auto');
     script.setAttribute('data-authorized', 'true');
     script.setAttribute('data-max-traces', '15');

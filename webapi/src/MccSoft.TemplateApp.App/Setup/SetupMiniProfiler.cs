@@ -50,7 +50,7 @@ namespace MccSoft.TemplateApp.App.Setup
 
                     // (Optional) You can disable "Connection Open()", "Connection Close()" (and async variant) tracking.
                     // (defaults to true, and connection opening/closing is tracked)
-                    options.TrackConnectionOpenClose = true;
+                    options.TrackConnectionOpenClose = false;
 
                     // (Optional) Use something other than the "light" color scheme.
                     // (defaults to "light")
