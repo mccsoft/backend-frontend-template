@@ -22,7 +22,7 @@ export type UseSendFormReturn<T> = {
   serverErrorsCombined: string;
 };
 
-export function handleSubmitFormError<T>(
+export function handleSubmitFormError<T extends FieldValues>(
   error: any,
   setError: UseFormSetError<T>,
 ): {

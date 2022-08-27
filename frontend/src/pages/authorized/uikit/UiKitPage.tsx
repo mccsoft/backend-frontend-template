@@ -1,5 +1,5 @@
 import { useAdvancedForm } from 'helpers/form/useAdvancedForm';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Field } from 'components/uikit/Field';
 import { HookFormDropDownInput } from 'components/uikit/inputs/dropdown/HookFormDropDownInput';
 import { HookFormMultiSelectDropDownInput } from 'components/uikit/inputs/dropdown/HookFormMultiSelectDropDownInput';
@@ -16,6 +16,7 @@ import { useScopedTranslation } from 'application/localization/useScopedTranslat
 import styles from './UiKitPage.module.scss';
 import { useModal } from '../../../components/uikit/modal/useModal';
 import { PopperExample } from './components/PopperExample';
+import { MultiSelectDropDownInput } from 'components/uikit/inputs/dropdown/MultiSelectDropDownInput';
 
 type UiKitForm = {
   dropDown: ProductType;
@@ -46,6 +47,8 @@ export const UiKitPage: React.FC = () => {
     return [ProductType.Auto, ProductType.Electronic, ProductType.Other];
   }, []);
   const modals = useModal();
+
+  const [multiValues, setMultiValues] = useState<ProductType[]>([]);
   return (
     <div>
       <AppLink
@@ -108,7 +111,16 @@ export const UiKitPage: React.FC = () => {
             hasSearchFilter={true}
           />
         </Field>
-
+        <Field title="Non-hook-form">
+          <MultiSelectDropDownInput
+            options={options}
+            hasSearchFilter={true}
+            value={multiValues}
+            variant={'formInput'}
+            headerTitle={'Test'}
+            onValueChanged={(newValues) => setMultiValues(newValues as any)}
+          />
+        </Field>
         <Field title={i18n.t('date')}>
           <HookFormDatePicker name={'date'} control={form.control} />
         </Field>

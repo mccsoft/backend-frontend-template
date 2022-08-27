@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { useCallback, useMemo, useState } from 'react';
-import { AutocompleteProps } from '@mui/material/Autocomplete/Autocomplete';
+import {
+  AutocompleteProps,
+  AutocompleteRenderOptionState,
+} from '@mui/material/Autocomplete/Autocomplete';
 import { CheckBox } from 'components/uikit/CheckBox';
 import {
   convertPropertyAccessorToFunction,
@@ -11,7 +14,6 @@ import { emptyArray } from '../../table/AppTable';
 import styles from './StyledAutocomplete.module.scss';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { Input } from '../Input';
 import { StyledAutocompleteProps } from './types';
 import { createFilterOptions } from '@mui/material';
 import { SearchInput } from './SearchInput';
@@ -32,7 +34,16 @@ export function MultiSelectDropDownInput<T, Required extends boolean>(
      * Component that renders after each option (on the same row)
      */
     postfixRenderer?: (option: T) => React.ReactElement<unknown>;
+
+    /*
+     * whether there's an Search input inside DropDown
+     */
     hasSearchFilter?: boolean;
+
+    /*
+     * Text to show in Input when all options are selected
+     */
+    allSelectedLabel?: string;
   },
 ) {
   const {
@@ -42,6 +53,7 @@ export function MultiSelectDropDownInput<T, Required extends boolean>(
     postfixRenderer,
     hasSearchFilter,
     options,
+    allSelectedLabel,
     ...rest
   } = props;
 
@@ -108,20 +120,47 @@ export function MultiSelectDropDownInput<T, Required extends boolean>(
       />
     </div>
   );
-  const defaultFilterOptions = createFilterOptions<T>();
-  const filterOptions: typeof defaultFilterOptions = useCallback(
-    (options, state) => {
-      return defaultFilterOptions(options, {
-        ...state,
-        inputValue: searchText,
-      });
+  const filterOptions: ReturnType<typeof createFilterOptions<T>> =
+    useMemo(() => {
+      const defaultFilterOptions = createFilterOptions<T>();
+      return (options, state) => {
+        return defaultFilterOptions(options, {
+          ...state,
+          inputValue: searchText,
+        });
+      };
+    }, [searchText]);
+
+  const renderOption: NonNullable<
+    AutocompleteProps<T, true, Required, false>['renderOption']
+  > = useCallback(
+    (liProps, option, state) => {
+      return (
+        <li
+          {...liProps}
+          className={clsx(liProps.className, styles.liWithPrefix)}
+          onClick={(e) => {
+            liProps.onClick?.(e);
+            e.preventDefault();
+          }}
+        >
+          <CheckBox
+            className={styles.multiSelectCheckbox}
+            checked={state.selected}
+            title={getOptionLabel(option)}
+          />
+          {postfixRenderer?.(option)}
+        </li>
+      );
     },
-    [defaultFilterOptions, searchText],
+    [getOptionLabel, postfixRenderer],
   );
+
   return (
-    <StyledAutocomplete
+    <StyledAutocomplete<T, true, Required, false>
       {...rest}
       options={options}
+      value={rest.value ?? emptyArray}
       onChange={onChange}
       multiple={true}
       disableCloseOnSelect={true}
@@ -134,17 +173,20 @@ export function MultiSelectDropDownInput<T, Required extends boolean>(
           </>
         ) : undefined
       }
-      renderOption={(optionProps, option, { selected }) => (
-        <li {...optionProps}>
-          <CheckBox
-            className={styles.multiSelectCheckbox}
-            checked={selected}
-            title={getOptionLabel(option)}
-          />
-          {postfixRenderer?.(option)}
-        </li>
+      renderOption={renderOption}
+      renderTags={useCallback(
+        (value: any) => {
+          if (
+            Array.isArray(value) &&
+            value.length === props.options.length &&
+            allSelectedLabel
+          ) {
+            return allSelectedLabel;
+          }
+          return value.map(getOptionLabel).join(', ');
+        },
+        [allSelectedLabel, props.options.length],
       )}
-      value={rest.value ?? emptyArray}
     />
   );
 }

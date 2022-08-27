@@ -22,6 +22,12 @@ export const AppPopper: React.FC<
       // true by default
       hideOnClickOutside?: boolean;
       onClose?: () => void;
+
+      /*
+       * This should not be used, but could be passed to Popper if used with {...bindMenu()}
+       * We need to define it here to be able to destructure to NOT pass to underlying PopperUnstyled
+       */
+      anchorPosition?: any;
     }
   >
 > = (props) => {
@@ -34,6 +40,7 @@ export const AppPopper: React.FC<
     className,
     hideOnClickOutside = true,
     onClose,
+    anchorPosition,
     ...rest
   } = props;
 

@@ -32,7 +32,7 @@ export function HookFormDropDownInput<
   Required extends boolean,
   TFieldValues extends FieldValues = FieldValues,
 >(props: HookFormProps<T, Required, TFieldValues>) {
-  const { useIdFunctionAsValue = true, ...rest } = props;
+  const { control, name, rules, useIdFunctionAsValue = true, ...rest } = props;
   const idFunction = props.idFunction
     ? convertPropertyAccessorToFunction<T, false, Required, false>(
         props.idFunction,
@@ -40,9 +40,9 @@ export function HookFormDropDownInput<
     : undefined;
   return (
     <Controller
-      control={props.control}
-      name={props.name}
-      rules={props.rules}
+      control={control}
+      name={name}
+      rules={rules}
       render={({ field: { onChange, onBlur, value } }) => {
         if (useIdFunctionAsValue && idFunction && value) {
           value =
@@ -54,6 +54,7 @@ export function HookFormDropDownInput<
             value={value}
             onBlur={onBlur}
             required={props.required}
+            variant={props.variant ?? 'formInput'}
             onValueChanged={(v: T | null) => {
               if (useIdFunctionAsValue && idFunction && v) {
                 onChange(idFunction(v));

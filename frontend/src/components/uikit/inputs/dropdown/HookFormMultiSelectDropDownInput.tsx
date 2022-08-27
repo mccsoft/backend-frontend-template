@@ -36,23 +36,22 @@ export function HookFormMultiSelectDropDownInput<
   Required extends boolean,
   TFieldValues extends FieldValues = FieldValues,
 >(props: HookFormProps<D, Required, TFieldValues>) {
+  const { control, name, rules, ...rest } = props;
   return (
     <Controller
-      control={props.control}
-      name={props.name}
-      rules={props.rules}
+      control={control}
+      name={name}
+      rules={rules}
       render={({ field: { onChange, onBlur, value } }) => {
         return (
           <MultiSelectDropDownInput
-            {...props}
+            {...rest}
             value={value}
             onBlur={onBlur}
             required={props.required}
+            variant={props.variant ?? 'formInput'}
             onValueChanged={(v: ReadonlyArray<D> | null) => {
               onChange(v!);
-            }}
-            renderTags={(value: any) => {
-              return value.join(', ');
             }}
           />
         );

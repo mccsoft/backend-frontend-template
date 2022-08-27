@@ -26,14 +26,17 @@ export function HookFormComboBoxInput<
   T,
   TFieldValues extends FieldValues = FieldValues,
 >(props: HookFormProps<T, TFieldValues>) {
+  const { control, name, rules, ...rest } = props;
+
   return (
     <Controller
-      control={props.control}
-      name={props.name}
-      rules={props.rules}
+      control={control}
+      name={name}
+      rules={rules}
       render={({ field: { onChange, value } }) => (
         <ComboBoxInput
-          {...props}
+          {...rest}
+          variant={props.variant ?? 'formInput'}
           value={value}
           onValueChanged={(value) => {
             onChange(value);

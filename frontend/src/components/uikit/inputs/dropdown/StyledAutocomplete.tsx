@@ -5,24 +5,21 @@ import { useTranslation } from 'react-i18next';
 import { ReactComponent as ArrowDownIcon } from 'assets/icons/arrow-down.svg';
 
 import styles from './StyledAutocomplete.module.scss';
-import {
-  Autocomplete,
-  AutocompleteFreeSoloValueMapping,
-  Paper,
-} from '@mui/material';
+import { Autocomplete, Paper, Popper, PopperProps } from '@mui/material';
 import { Input } from '../Input';
-import {
-  AutocompleteProps,
-  AutocompleteRenderOptionState,
-} from '@mui/material/Autocomplete/Autocomplete';
+import { AutocompleteProps } from '@mui/material/Autocomplete/Autocomplete';
 import { AutocompleteClasses } from '@mui/material/Autocomplete/autocompleteClasses';
-import { VirtualizedListboxComponent } from './VirtualizedListboxAdapter';
+import {
+  VirtualizedListboxComponent,
+  VirtualizedListboxComponentProps,
+} from './VirtualizedListboxAdapter';
 import {
   CustomOption,
   PropertyAccessor,
   StyledAutocompleteProps,
 } from './types';
 import { useTriggerOnClickOutsideElement } from '../../../../helpers/useTriggerOnClickOutsideElement';
+import equal from 'fast-deep-equal/react';
 
 const caretDown = <ArrowDownIcon className={styles.expandIcon} />;
 
@@ -37,8 +34,10 @@ export function StyledAutocomplete<
   const i18next = useTranslation();
   const {
     onChange,
+    idFunction,
     placeholder,
     rootClassName,
+    style,
     required,
     testId,
     errorText,
@@ -47,11 +46,17 @@ export function StyledAutocomplete<
     popupFooter,
     postfixRenderer,
     customOptions,
+    itemSize,
+    variant,
+    useVirtualization,
+    autosizeInputWidth,
     ...rest
   } = {
     ...props,
     placeholder:
       props.placeholder ?? i18next.t('uikit.inputs.nothing_selected'),
+    variant: props.variant ?? 'normal',
+    useVirtualization: props.useVirtualization ?? true,
   };
 
   const classes: Partial<AutocompleteClasses> = useMemo(
@@ -59,13 +64,13 @@ export function StyledAutocomplete<
       ...props.classes,
       option: clsx(
         styles.optionValue,
-        props.variant === 'normal' && styles.optionValueNormal,
+        variant === 'normal' && styles.optionValueNormal,
         props.classes?.option,
       ),
       popper: clsx(styles.dropdownCallout, props.classes?.popper),
       listbox: clsx(styles.listbox, props.classes?.listbox),
     }),
-    [props.classes],
+    [props.classes, variant],
   );
 
   const getOptionLabel: NonNullable<
@@ -86,8 +91,8 @@ export function StyledAutocomplete<
     Required,
     FreeSolo
   >['isOptionEqualToValue'] = useMemo(() => {
-    return getEqualityFunction(props.isOptionEqualToValue, props.idFunction);
-  }, [props.isOptionEqualToValue, props.idFunction]);
+    return getEqualityFunction(props.isOptionEqualToValue, idFunction);
+  }, [props.isOptionEqualToValue, idFunction]);
 
   const options: T[] = useMemo(() => {
     const result: T[] = [];
@@ -106,39 +111,40 @@ export function StyledAutocomplete<
 
     // update selected value
     if (props.value) {
-      let newSelectedValues: any;
       if (props.multiple) {
-        newSelectedValues = result.filter((x) =>
+        const newSelectedValues = props.options.filter((x) =>
           (props.value as any).includes((z: any) => isOptionEqualToValue(x, z)),
         );
+        if (!equal(newSelectedValues, props.value)) {
+          props.onChange?.({} as any, newSelectedValues as any, 'selectOption');
+        }
       } else {
-        newSelectedValues = result.find((x) =>
+        const newSelectedValue = props.options.find((x) =>
           isOptionEqualToValue(x, props.value as any),
         );
+        if (newSelectedValue !== props.value) {
+          props.onChange?.(
+            {} as any,
+            (newSelectedValue ?? null) as any,
+            'selectOption',
+          );
+        }
       }
-      props.onChange?.({} as any, newSelectedValues, 'selectOption');
     }
 
     return [...result, ...props.options];
   }, [required, props.options, customOptions]);
 
-  const renderOption: AutocompleteProps<
-    T,
-    Multiple,
-    Required,
-    FreeSolo
-  >['renderOption'] = useCallback(
-    (
-      liProps: React.HTMLAttributes<HTMLLIElement>,
-      option: T | CustomOption | AutocompleteFreeSoloValueMapping<FreeSolo>,
-      state: AutocompleteRenderOptionState,
-    ) => {
+  const renderOption: NonNullable<
+    AutocompleteProps<T, Multiple, Required, FreeSolo>['renderOption']
+  > = useCallback(
+    (liProps, option, state) => {
       if (
         option &&
         typeof option === 'object' &&
         (option as any)['__type'] === 'custom-option'
       ) {
-        const customOption = option as CustomOption;
+        const customOption = option as unknown as CustomOption;
         return (
           <li
             {...liProps}
@@ -155,7 +161,10 @@ export function StyledAutocomplete<
       if (props.renderOption)
         return props.renderOption(liProps, option as any, state);
       return (
-        <li {...liProps}>
+        <li
+          {...liProps}
+          className={clsx(liProps.className, styles.liWithPrefix)}
+        >
           {getOptionLabel(option as any)}
           {postfixRenderer?.(option as any)}
         </li>
@@ -168,10 +177,32 @@ export function StyledAutocomplete<
   const onClickOutsidePaper = useCallback((e: MouseEvent) => {
     closeAutocomplete.current?.(e as any);
   }, []);
+
+  const listboxProps: VirtualizedListboxComponentProps = useMemo(
+    () => ({ itemSize: itemSize ?? variant === 'formInput' ? 40 : 32 }),
+    [itemSize, variant],
+  );
+  const componentProps = useMemo(
+    () => ({
+      paper: {
+        footer: popupFooter,
+        header: popupHeader,
+        onClickOutside: onClickOutsidePaper,
+      } as PaperComponentProps,
+      popper: {
+        // When Autocomplete is placed in a Popup (e.g. Tooltip),
+        // we should not close the outer Popup when clicked on DropDown items.
+        // So we need to disablePortal.
+        disablePortal: true,
+      } as Partial<PopperProps>,
+    }),
+    [onClickOutsidePaper, popupFooter, popupHeader],
+  );
   return (
     <div
       className={clsx(styles.rootContainer, rootClassName)}
-      style={props.style}
+      style={style}
+      data-variant={variant}
     >
       <Autocomplete
         {...rest}
@@ -184,6 +215,11 @@ export function StyledAutocomplete<
           return (
             <Input
               containerRef={params.InputProps.ref}
+              style={
+                autosizeInputWidth && value
+                  ? { width: `calc(${(value as string).length}ch + 40px)` }
+                  : undefined
+              }
               placeholder={placeholder}
               {...params.inputProps}
               className={clsx(
@@ -198,24 +234,17 @@ export function StyledAutocomplete<
               size={undefined}
               readOnly={!enableSearch}
               endAdornment={caretDown}
-              variant={props.variant}
+              variant={variant}
             />
           );
         }}
-        componentsProps={{
-          paper: {
-            footer: popupFooter,
-            header: popupHeader,
-            onClickOutside: onClickOutsidePaper,
-          } as PaperComponentProps as any,
-        }}
-        ListboxProps={
-          {
-            itemSize: 40,
-          } as any
+        componentsProps={componentProps as any}
+        ListboxProps={useVirtualization ? listboxProps : undefined}
+        ListboxComponent={
+          useVirtualization ? (VirtualizedListboxComponent as any) : undefined
         }
-        ListboxComponent={VirtualizedListboxComponent as any}
         PaperComponent={PaperComponentWithHeaderFooter}
+        PopperComponent={PopperComponentForAutocomplete}
         classes={classes}
         data-test-id={testId}
         data-error={!!errorText}
@@ -236,6 +265,22 @@ function defaultEqualityFunction(x: any, y: any) {
   return x == y;
 }
 
+const PopperComponentForAutocomplete = React.memo(
+  function PopperComponentForAutocomplete(props: PopperProps) {
+    return (
+      <Popper
+        {...props}
+        // we override the style to make Popper width bigger than Input
+        style={{
+          minWidth: props?.style?.width,
+          maxWidth: '350px',
+          width: 'auto !important',
+        }}
+      />
+    );
+  },
+);
+
 type PaperComponentProps = {
   header?: any;
   footer?: any;
@@ -244,6 +289,7 @@ type PaperComponentProps = {
 
 const PaperComponentWithHeaderFooter = React.memo(
   function PaperComponentWithHeaderFooter(props: PaperComponentProps & any) {
+    const { onClickOutside, header, footer, children, ...rest } = props;
     const ref = useRef<HTMLDivElement>(null);
     useTriggerOnClickOutsideElement(
       ref,
@@ -252,10 +298,10 @@ const PaperComponentWithHeaderFooter = React.memo(
     );
 
     return (
-      <Paper {...props} ref={ref}>
-        {props.header}
-        {props.children}
-        {props.footer}
+      <Paper {...rest} ref={ref}>
+        {header}
+        {children}
+        {footer}
       </Paper>
     );
   },

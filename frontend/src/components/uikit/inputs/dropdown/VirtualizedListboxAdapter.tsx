@@ -6,49 +6,38 @@ import {
   FixedSizeListProps,
   ListChildComponentProps,
 } from 'react-window';
-import { CustomOption } from './types';
-import clsx from 'clsx';
+
 const VirtualList = _VirtualList as ComponentType<FixedSizeListProps>;
+
+export type VirtualizedListboxComponentProps = {
+  itemSize: number;
+} & React.HTMLAttributes<HTMLElement>;
 
 export const VirtualizedListboxComponent = React.forwardRef<
   HTMLDivElement,
-  {
-    itemSize: number;
-    customOptions?: CustomOption[];
-    optionClasses?: string;
-  } & React.HTMLAttributes<HTMLElement>
+  VirtualizedListboxComponentProps
 >(function ListboxComponent(props, ref) {
-  const { children, itemSize, customOptions, optionClasses, ...other } = props;
+  const { children, itemSize, ...other } = props;
   const items = children as [];
 
-  const itemCount = items.length + (customOptions?.length ?? 0);
-  const customOptionsNonNullable = customOptions ?? [];
+  const itemCount = items.length;
   const getHeight = () => {
     if (itemCount > 8) {
-      return 8 * itemSize;
+      return 8 * itemSize + 1;
     }
-    return itemCount * itemSize;
+    return itemCount * itemSize + 1;
   };
 
   const outerElementType = useMemo(() => {
-    return (props: any) => <div {...props} {...other} />;
+    return React.forwardRef<HTMLDivElement>((props, ref) => {
+      return <div ref={ref} {...props} {...other} />;
+    });
   }, []);
 
   const renderRow = useCallback(function (props: ListChildComponentProps) {
     const { data, index, style } = props;
-    const customOption = customOptionsNonNullable[index];
-    const liElement = customOption ? (
-      <li
-        className={clsx('MuiAutocomplete-option', optionClasses)}
-        onClick={customOption.onClick}
-      >
-        {customOption.label}
-      </li>
-    ) : (
-      data[index - customOptionsNonNullable.length]
-    );
 
-    return <li style={style}>{liElement}</li>;
+    return <div style={style}>{data[index]}</div>;
   }, []);
 
   return (

@@ -35,8 +35,8 @@ export type StyledAutocompleteProps<
    */
   enableSearch?: boolean;
   /*
-   * 'normal' - input will have minimal width
-   * 'formInput' - input will have the standard width (as all form elements)
+   * 'normal' - input will have minimal width and height
+   * 'formInput' - input will have the standard width and height (as all form elements)
    */
   variant?: 'normal' | 'formInput';
   /*
@@ -62,6 +62,17 @@ export type StyledAutocompleteProps<
    * if you are using custom
    */
   itemSize?: number;
+
+  /*
+   * If true, uses react-window to render elements in drop-down list
+   * True by default.
+   */
+  useVirtualization?: boolean;
+
+  /*
+   * If true, the size of an input is determined by the currently selected element
+   */
+  autosizeInputWidth?: boolean;
 };
 
 export type PropertyAccessor<T> = ((option: T) => string | number) | keyof T;

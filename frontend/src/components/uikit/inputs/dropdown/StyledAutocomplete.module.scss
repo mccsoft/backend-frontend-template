@@ -5,6 +5,10 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  .multiselect-header {
+    height: $normal-input-height;
+    padding-left: 12px;
+  }
 }
 
 .option-value {
@@ -19,7 +23,11 @@
   border: none;
   border-top: 1px $separator solid;
   padding: 0;
-  height: $form-input-height;
+  height: 100%;
+}
+
+.li-with-prefix {
+  justify-content: space-between !important;
 }
 
 .non-editable-input {
@@ -76,6 +84,7 @@ input[aria-expanded='true'] + div .expand-icon {
   height: auto;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   position: relative;
   @extend .option-value;
 

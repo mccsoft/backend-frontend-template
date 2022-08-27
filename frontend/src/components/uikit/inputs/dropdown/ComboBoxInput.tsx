@@ -10,12 +10,19 @@ export function ComboBoxInput<T, Required extends boolean>(
   },
 ) {
   const { onValueChanged, ...rest } = props;
-  const onChange: AutocompleteProps<T, false, Required, true>['onChange'] =
-    useMemo(
-      () => (e, item) => {
-        onValueChanged(item);
-      },
-      [onValueChanged],
-    );
-  return <StyledAutocomplete {...rest} onChange={onChange} freeSolo={true} />;
+  const onChange: NonNullable<
+    AutocompleteProps<T, false, Required, true>['onChange']
+  > = useMemo(
+    () => (e, item) => {
+      onValueChanged(item);
+    },
+    [onValueChanged],
+  );
+  return (
+    <StyledAutocomplete<T, false, Required, true>
+      {...rest}
+      freeSolo={true}
+      onChange={onChange}
+    />
+  );
 }
