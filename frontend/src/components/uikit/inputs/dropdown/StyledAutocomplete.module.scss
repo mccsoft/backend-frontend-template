@@ -92,6 +92,7 @@ input[aria-expanded='true'] + div .expand-icon {
   align-items: center;
   position: relative;
   @extend .option-value;
+  @extend .font-config;
 
   .headerText {
   }

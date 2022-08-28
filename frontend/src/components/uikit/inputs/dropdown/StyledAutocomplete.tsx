@@ -71,6 +71,7 @@ export function StyledAutocomplete<
         variant === 'normal' && styles.optionValueNormal,
         props.classes?.option,
       ),
+      noOptions: styles.fontConfig,
       popper: clsx(
         styles.dropdownCallout,
         styles.fontConfig,
@@ -121,7 +122,7 @@ export function StyledAutocomplete<
     if (props.value) {
       if (props.multiple) {
         const newSelectedValues = props.options.filter((x) =>
-          (props.value as any).includes((z: any) => isOptionEqualToValue(x, z)),
+          (props.value as any).some((z: any) => isOptionEqualToValue(x, z)),
         );
         if (!equal(newSelectedValues, props.value)) {
           props.onChange?.({} as any, newSelectedValues as any, 'selectOption');

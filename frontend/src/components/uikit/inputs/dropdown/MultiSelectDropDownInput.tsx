@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { useCallback, useMemo, useState } from 'react';
-import {
-  AutocompleteProps,
-} from '@mui/material/Autocomplete/Autocomplete';
+import { AutocompleteProps } from '@mui/material/Autocomplete/Autocomplete';
 import { CheckBox } from 'components/uikit/CheckBox';
 import {
   convertPropertyAccessorToFunction,
@@ -17,7 +15,10 @@ import { StyledAutocompleteProps } from './types';
 import { createFilterOptions } from '@mui/material';
 import { SearchInput } from './SearchInput';
 
-export type MultiSelectDropDownInputProps<T, Required extends boolean | undefined = undefined> = Omit<StyledAutocompleteProps<T, true, Required, false>, 'onChange'> & {
+export type MultiSelectDropDownInputProps<
+  T,
+  Required extends boolean | undefined = undefined,
+> = Omit<StyledAutocompleteProps<T, true, Required, false>, 'onChange'> & {
   onValueChanged: (newValues: ReadonlyArray<T>) => void;
   /*
    * Hides the header with `All/None` buttons and a title
@@ -44,9 +45,10 @@ export type MultiSelectDropDownInputProps<T, Required extends boolean | undefine
   allSelectedLabel?: string;
 };
 
-export function MultiSelectDropDownInput<T, Required extends boolean | undefined = undefined>(
-  props: MultiSelectDropDownInputProps<T, Required>,
-) {
+export function MultiSelectDropDownInput<
+  T,
+  Required extends boolean | undefined = undefined,
+>(props: MultiSelectDropDownInputProps<T, Required>) {
   const {
     onValueChanged,
     hideHeader,
@@ -121,16 +123,20 @@ export function MultiSelectDropDownInput<T, Required extends boolean | undefined
       />
     </div>
   );
-  const filterOptions: ReturnType<typeof createFilterOptions<T>> =
-    useMemo(() => {
-      const defaultFilterOptions = createFilterOptions<T>();
-      return (options, state) => {
-        return defaultFilterOptions(options, {
-          ...state,
-          inputValue: searchText,
-        });
-      };
-    }, [searchText]);
+  const filterOptions: StyledAutocompleteProps<
+    T,
+    true,
+    Required,
+    false
+  >['filterOptions'] = useMemo(() => {
+    const defaultFilterOptions = createFilterOptions<T>();
+    return (options, state) => {
+      return defaultFilterOptions(options, {
+        ...state,
+        inputValue: searchText,
+      });
+    };
+  }, [searchText]);
 
   const renderOption: NonNullable<
     AutocompleteProps<T, true, Required, false>['renderOption']
@@ -157,6 +163,10 @@ export function MultiSelectDropDownInput<T, Required extends boolean | undefined
     [getOptionLabel, postfixRenderer],
   );
 
+  const onClose = useCallback(() => {
+    setSearchText('');
+  }, []);
+
   return (
     <StyledAutocomplete<T, true, Required, false>
       {...rest}
@@ -166,6 +176,7 @@ export function MultiSelectDropDownInput<T, Required extends boolean | undefined
       multiple={true}
       disableCloseOnSelect={true}
       filterOptions={filterOptions}
+      onClose={onClose}
       popupHeader={
         hasSearchFilter || popupHeader ? (
           <>

@@ -9,6 +9,7 @@ export function useTriggerOnClickOutsideElement(
   useEffect(() => {
     if (enabled) {
       const clickListener = (e: MouseEvent) => {
+        // if preventDefault is used, it's not possible to focus inputs within popups
         if (preventDefault) e.preventDefault();
         if (!elementRef.current?.contains(e.target as Node)) {
           onClickOutside(e);
