@@ -13,11 +13,8 @@
 
 .option-value {
   background-color: initial;
-  font-family: $font-family !important;
-  font-style: normal;
-  font-weight: normal;
+
   color: $normal !important;
-  font-size: 13px;
   line-height: 16px;
 
   border: none;
@@ -44,6 +41,14 @@
 
 .option-value[aria-disabled='true'][aria-selected='true'] {
   opacity: 0.5;
+}
+
+// we need to use common font config in dropdown-callout and option-value, to be able to use 'ch' units in callout
+.font-config {
+  font-family: $font-family !important;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: normal;
 }
 
 .dropdown-callout {

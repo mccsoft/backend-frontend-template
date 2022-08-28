@@ -33,7 +33,10 @@ const categories: { title: string; id: ProductType }[] = [
   { title: 'Electronic description', id: ProductType.Electronic },
 ];
 for (let i = 0; i < 100; i++)
-  categories.push({ title: 'asd ' + i, id: (i + 10) as any });
+  categories.push({
+    title: '00000000000000000 000000000000 0000000000000000000 ' + i,
+    id: (i + 10) as any,
+  });
 
 export const UiKitPage: React.FC = () => {
   const i18n = useScopedTranslation('Page.uikit');
@@ -96,6 +99,8 @@ export const UiKitPage: React.FC = () => {
         <Field title={i18n.t('hook_form_dropdown_complex_option')}>
           <HookFormDropDownInput
             options={categories}
+            useVirtualization={true}
+            popupWidth={'autosize'}
             name={'category'}
             getOptionLabel={(x) => x.title}
             isOptionEqualToValue={(x, y) => x?.id === y?.id}

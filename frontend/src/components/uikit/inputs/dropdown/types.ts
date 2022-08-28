@@ -1,6 +1,7 @@
 import { AutocompleteProps } from '@mui/material/Autocomplete/Autocomplete';
 import { AutocompleteFreeSoloValueMapping } from '@mui/base/AutocompleteUnstyled/useAutocomplete';
 import * as React from 'react';
+import { CSSProperties } from 'react';
 
 export interface CustomOption {
   label: string;
@@ -64,15 +65,36 @@ export type StyledAutocompleteProps<
   itemSize?: number;
 
   /*
+   * If true, the size of an input is determined by the currently selected element
+   */
+  autosizeInputWidth?: boolean;
+
+  /*
    * If true, uses react-window to render elements in drop-down list
    * True by default.
    */
   useVirtualization?: boolean;
 
   /*
-   * If true, the size of an input is determined by the currently selected element
+   * Could be used to specify popupWidth.
+   * Makes sense to use when `useVirtualization` is true, otherwise popupWidth will be equal to Input width
+   * (if `useVirtualization` is false, autosize is enabled by default)
    */
-  autosizeInputWidth?: boolean;
+  popupWidth?: number | 'autosize';
+
+  /*
+   * Specifies maximum width of the popup.
+   * Default to '450px'
+   */
+  maxPopupWidth?: number;
+
+  /*
+   * Makes sense to use when `useVirtualization` is true and `popupWidth` is auto.
+   * Specifies the width that is added to automatically calculated item width.
+   * Could be used for paddings and/or postfix.
+   * Defaults to '40px'
+   */
+  additionalWidth?: CSSProperties['width'];
 };
 
 export type PropertyAccessor<T> = ((option: T) => string | number) | keyof T;

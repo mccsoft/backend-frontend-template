@@ -50,6 +50,9 @@ export function StyledAutocomplete<
     variant,
     useVirtualization,
     autosizeInputWidth,
+    popupWidth,
+    maxPopupWidth,
+    additionalWidth,
     ...rest
   } = {
     ...props,
@@ -64,10 +67,15 @@ export function StyledAutocomplete<
       ...props.classes,
       option: clsx(
         styles.optionValue,
+        styles.fontConfig,
         variant === 'normal' && styles.optionValueNormal,
         props.classes?.option,
       ),
-      popper: clsx(styles.dropdownCallout, props.classes?.popper),
+      popper: clsx(
+        styles.dropdownCallout,
+        styles.fontConfig,
+        props.classes?.popper,
+      ),
       listbox: clsx(styles.listbox, props.classes?.listbox),
     }),
     [props.classes, variant],
@@ -182,22 +190,39 @@ export function StyledAutocomplete<
     () => ({ itemSize: itemSize ?? variant === 'formInput' ? 40 : 32 }),
     [itemSize, variant],
   );
-  const componentProps = useMemo(
-    () => ({
+  const componentProps = useMemo(() => {
+    const popperProps: Partial<PopperAutocompleteProps> &
+      PopperAutocompleteAdditionalProps = {
+      // When Autocomplete is placed in a Popup (e.g. Tooltip),
+      // we should not close the outer Popup when clicked on DropDown items.
+      // So we need to disablePortal.
+      disablePortal: true,
+      popupWidth: popupWidth,
+      maxPopupWidth: maxPopupWidth,
+      additionalWidth: additionalWidth,
+      useVirtualization: useVirtualization,
+      options: () => options.map(getOptionLabel),
+    };
+
+    return {
       paper: {
         footer: popupFooter,
         header: popupHeader,
         onClickOutside: onClickOutsidePaper,
       } as PaperComponentProps,
-      popper: {
-        // When Autocomplete is placed in a Popup (e.g. Tooltip),
-        // we should not close the outer Popup when clicked on DropDown items.
-        // So we need to disablePortal.
-        disablePortal: true,
-      } as Partial<PopperProps>,
-    }),
-    [onClickOutsidePaper, popupFooter, popupHeader],
-  );
+      popper: popperProps as any,
+    };
+  }, [
+    additionalWidth,
+    getOptionLabel,
+    maxPopupWidth,
+    onClickOutsidePaper,
+    options,
+    popupFooter,
+    popupHeader,
+    popupWidth,
+    useVirtualization,
+  ]);
   return (
     <div
       className={clsx(styles.rootContainer, rootClassName)}
@@ -244,7 +269,7 @@ export function StyledAutocomplete<
           useVirtualization ? (VirtualizedListboxComponent as any) : undefined
         }
         PaperComponent={PaperComponentWithHeaderFooter}
-        PopperComponent={PopperComponentForAutocomplete}
+        PopperComponent={PopperComponentForAutocomplete as any}
         classes={classes}
         data-test-id={testId}
         data-error={!!errorText}
@@ -265,16 +290,100 @@ function defaultEqualityFunction(x: any, y: any) {
   return x == y;
 }
 
+type PopperAutocompleteAdditionalProps = {
+  /*
+   * Could be used to specify popupWidth.
+   * Makes sense to use when `useVirtualization` is true, otherwise popupWidth will be equal to Input width
+   * (if `useVirtualization` is false, autosize is enabled by default)
+   */
+  popupWidth: number | 'autosize' | undefined;
+
+  /*
+   * Specifies maximum width of the popup.
+   * Default to '450px'
+   */
+  maxPopupWidth: number | undefined;
+
+  /*
+   * Makes sense to use when `useVirtualization` is true and `popupWidth` is auto.
+   * Specifies the width that is added to automatically calculated item width.
+   * Could be used for paddings and/or postfix.
+   * Defaults to '40px'
+   */
+  additionalWidth: string | number | undefined;
+
+  /*
+   * If true, uses react-window to render elements in drop-down list
+   * True by default.
+   */
+  useVirtualization: boolean | undefined;
+
+  options: () => string[];
+};
+
+type PopperAutocompleteProps = PopperProps & PopperAutocompleteAdditionalProps;
+
+function getWidth(
+  popupWidth: 'autosize' | number | undefined,
+  useVirtualization: undefined | boolean,
+  options: string[] | undefined,
+  additionalWidth: string | number,
+): string | number | undefined {
+  // if popupWidth is specified and not 'autosize' - return it as is
+  if (popupWidth && popupWidth !== 'autosize') return popupWidth;
+
+  // if popupWidth is not defined and virtualization is enabled - return `undefined`, popup will have the width of an input
+  if (!popupWidth && useVirtualization) return undefined;
+
+  // if we are here, it means we need to handle autosize
+
+  if (!useVirtualization) {
+    // if no virtualization, then autosize is easy
+    return 'auto !important';
+  }
+
+  // here we need to calculate the width for the VirtualizedList
+  const maxOptionLength = options
+    ?.map((x) => x.length)
+    .reduce(
+      (previousValue, currentValue) =>
+        currentValue > previousValue ? currentValue : previousValue,
+      0,
+    );
+
+  return `calc(${maxOptionLength}ch + ${additionalWidth})`;
+}
+
 const PopperComponentForAutocomplete = React.memo(
-  function PopperComponentForAutocomplete(props: PopperProps) {
+  function PopperComponentForAutocomplete(props: PopperAutocompleteProps) {
+    const {
+      popupWidth,
+      maxPopupWidth,
+      additionalWidth,
+      useVirtualization,
+      options,
+      ...rest
+    } = {
+      ...props,
+      maxPopupWidth: props.maxPopupWidth ?? '450px',
+      additionalWidth: props.additionalWidth ?? '40px',
+    };
+
+    const width = getWidth(
+      popupWidth,
+      useVirtualization,
+      options(),
+      additionalWidth,
+    );
+
     return (
       <Popper
-        {...props}
+        {...rest}
         // we override the style to make Popper width bigger than Input
         style={{
           minWidth: props?.style?.width,
-          maxWidth: '350px',
-          width: 'auto !important',
+          maxWidth: maxPopupWidth,
+          width: width,
         }}
       />
     );

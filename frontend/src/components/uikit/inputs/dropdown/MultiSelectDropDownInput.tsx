@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useCallback, useMemo, useState } from 'react';
 import {
   AutocompleteProps,
-  AutocompleteRenderOptionState,
 } from '@mui/material/Autocomplete/Autocomplete';
 import { CheckBox } from 'components/uikit/CheckBox';
 import {
@@ -18,33 +17,35 @@ import { StyledAutocompleteProps } from './types';
 import { createFilterOptions } from '@mui/material';
 import { SearchInput } from './SearchInput';
 
-export function MultiSelectDropDownInput<T, Required extends boolean>(
-  props: Omit<StyledAutocompleteProps<T, true, Required, false>, 'onChange'> & {
-    onValueChanged: (newValues: ReadonlyArray<T>) => void;
-    /*
-     * Hides the header with `All/None` buttons and a title
-     */
-    hideHeader?: boolean;
-    /*
-     * Text that is put in the Header. Usually a name of a field
-     */
-    headerTitle?: string;
+export type MultiSelectDropDownInputProps<T, Required extends boolean | undefined = undefined> = Omit<StyledAutocompleteProps<T, true, Required, false>, 'onChange'> & {
+  onValueChanged: (newValues: ReadonlyArray<T>) => void;
+  /*
+   * Hides the header with `All/None` buttons and a title
+   */
+  hideHeader?: boolean;
+  /*
+   * Text that is put in the Header. Usually a name of a field
+   */
+  headerTitle?: string;
 
-    /*
-     * Component that renders after each option (on the same row)
-     */
-    postfixRenderer?: (option: T) => React.ReactElement<unknown>;
+  /*
+   * Component that renders after each option (on the same row)
+   */
+  postfixRenderer?: (option: T) => React.ReactElement<unknown>;
 
-    /*
-     * whether there's an Search input inside DropDown
-     */
-    hasSearchFilter?: boolean;
+  /*
+   * whether there's an Search input inside DropDown
+   */
+  hasSearchFilter?: boolean;
 
-    /*
-     * Text to show in Input when all options are selected
-     */
-    allSelectedLabel?: string;
-  },
+  /*
+   * Text to show in Input when all options are selected
+   */
+  allSelectedLabel?: string;
+};
+
+export function MultiSelectDropDownInput<T, Required extends boolean | undefined = undefined>(
+  props: MultiSelectDropDownInputProps<T, Required>,
 ) {
   const {
     onValueChanged,
