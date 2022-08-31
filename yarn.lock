@@ -3288,7 +3288,7 @@ __metadata:
     react-i18next: 11.15.0
     react-js-pagination: 3.0.3
     react-paginate: 8.1.2
-    react-query-swagger: 14.2.2
+    react-query-swagger: 14.3.1
     react-redux: 8.0.2
     react-router: 6.3.0
     react-router-dom: 6.3.0
@@ -9530,9 +9530,9 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"react-query-swagger@npm:14.2.2":
-  version: 14.2.2
-  resolution: "react-query-swagger@npm:14.2.2"
+"react-query-swagger@npm:14.3.1":
+  version: 14.3.1
+  resolution: "react-query-swagger@npm:14.3.1"
   dependencies:
     "@tanstack/react-query-persist-client": ^4.2.0
     nswag: ^13.15.10
@@ -9543,7 +9543,7 @@ fsevents@~2.3.2:
     typescript: 3.x || 4.x
   bin:
     react-query-swagger: cli.js
-  checksum: cfedd7c7db277f7e74e211e36cf520c0cb9746f45ae0826dd00cd34c5bd1a7d3e1325fa0168a1484643e63f1380f79a9509b199e9ae4c0f87714efcff8335967
+  checksum: 87b103f97ea611f03b83cb03a3337f9ea2f29f6dc624290d89804aa42b22947b4001160bdf7b632c9104b7e9b0a28102e8a93a040eca6c478ee5a2ae72d8ca0a
   languageName: node
   linkType: hard
 

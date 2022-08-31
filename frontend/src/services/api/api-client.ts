@@ -1408,7 +1408,7 @@ export class ProductDto implements IProductDto {
             this.id = _data["id"];
             this.title = _data["title"];
             this.productType = _data["productType"];
-            this.lastStockUpdatedAt = _data["lastStockUpdatedAt"] ? parseDateOnly(_data["lastStockUpdatedAt"].toString()) : <any>undefined;
+            this.lastStockUpdatedAt = _data["lastStockUpdatedAt"] ? parseDateOnly(_data["lastStockUpdatedAt"].toString()) : <any>null;
         }
     }
 
@@ -1424,7 +1424,7 @@ export class ProductDto implements IProductDto {
         data["id"] = this.id;
         data["title"] = this.title;
         data["productType"] = this.productType;
-        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : this.lastStockUpdatedAt;
+        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt && formatDate(this.lastStockUpdatedAt);
         return data;
     }
 }
@@ -1461,7 +1461,7 @@ export class CreateProductDto implements ICreateProductDto {
         if (_data) {
             this.title = _data["title"];
             this.productType = _data["productType"];
-            this.lastStockUpdatedAt = _data["lastStockUpdatedAt"] ? parseDateOnly(_data["lastStockUpdatedAt"].toString()) : <any>undefined;
+            this.lastStockUpdatedAt = _data["lastStockUpdatedAt"] ? parseDateOnly(_data["lastStockUpdatedAt"].toString()) : <any>null;
         }
     }
 
@@ -1476,7 +1476,7 @@ export class CreateProductDto implements ICreateProductDto {
         data = typeof data === 'object' ? data : {};
         data["title"] = this.title;
         data["productType"] = this.productType;
-        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : this.lastStockUpdatedAt;
+        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt && formatDate(this.lastStockUpdatedAt);
         return data;
     }
 }
@@ -1505,7 +1505,7 @@ export class PatchProductDto implements IPatchProductDto {
         if (_data) {
             this.title = _data["title"];
             this.productType = _data["productType"];
-            this.lastStockUpdatedAt = _data["lastStockUpdatedAt"] ? parseDateOnly(_data["lastStockUpdatedAt"].toString()) : <any>undefined;
+            this.lastStockUpdatedAt = _data["lastStockUpdatedAt"] ? parseDateOnly(_data["lastStockUpdatedAt"].toString()) : <any>null;
         }
     }
 
@@ -1520,7 +1520,7 @@ export class PatchProductDto implements IPatchProductDto {
         data = typeof data === 'object' ? data : {};
         data["title"] = this.title;
         data["productType"] = this.productType;
-        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : this.lastStockUpdatedAt;
+        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt && formatDate(this.lastStockUpdatedAt);
         return data;
     }
 }
@@ -1602,7 +1602,7 @@ export class ProductListItemDto implements IProductListItemDto {
             this.id = _data["id"];
             this.title = _data["title"];
             this.productType = _data["productType"];
-            this.lastStockUpdatedAt = _data["lastStockUpdatedAt"] ? parseDateOnly(_data["lastStockUpdatedAt"].toString()) : <any>undefined;
+            this.lastStockUpdatedAt = _data["lastStockUpdatedAt"] ? parseDateOnly(_data["lastStockUpdatedAt"].toString()) : <any>null;
         }
     }
 
@@ -1618,7 +1618,7 @@ export class ProductListItemDto implements IProductListItemDto {
         data["id"] = this.id;
         data["title"] = this.title;
         data["productType"] = this.productType;
-        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt ? formatDate(this.lastStockUpdatedAt) : this.lastStockUpdatedAt;
+        data["lastStockUpdatedAt"] = this.lastStockUpdatedAt && formatDate(this.lastStockUpdatedAt);
         return data;
     }
 }

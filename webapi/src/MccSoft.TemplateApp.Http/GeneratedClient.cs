@@ -126,7 +126,7 @@ namespace MccSoft.TemplateApp.Http.Generated
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.16.1.0 (NJsonSchema v10.7.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class ProductClient : BaseClient, IProductClient
     {
-        private string _baseUrl = "https://localhost";
+        private string _baseUrl = "https://localhost:5001";
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
 
@@ -769,7 +769,7 @@ namespace MccSoft.TemplateApp.Http.Generated
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.16.1.0 (NJsonSchema v10.7.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class SignUrlClient : BaseClient, ISignUrlClient
     {
-        private string _baseUrl = "https://localhost";
+        private string _baseUrl = "https://localhost:5001";
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
 
@@ -1106,7 +1106,7 @@ namespace MccSoft.TemplateApp.Http.Generated
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.16.1.0 (NJsonSchema v10.7.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class TestDataClient : BaseClient, ITestDataClient
     {
-        private string _baseUrl = "https://localhost";
+        private string _baseUrl = "https://localhost:5001";
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
 
@@ -1538,7 +1538,7 @@ namespace MccSoft.TemplateApp.Http.Generated
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.16.1.0 (NJsonSchema v10.7.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class VersionClient : BaseClient, IVersionClient
     {
-        private string _baseUrl = "https://localhost";
+        private string _baseUrl = "https://localhost:5001";
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
 
