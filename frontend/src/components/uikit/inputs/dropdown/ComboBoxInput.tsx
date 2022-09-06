@@ -25,6 +25,7 @@ export function ComboBoxInput<
     <StyledAutocomplete<T, false, Required, true>
       filterOptions={props.enableSearch ? undefined : noFilter}
       {...rest}
+      multiple={false}
       freeSolo={true}
       onChange={onChange}
     />
