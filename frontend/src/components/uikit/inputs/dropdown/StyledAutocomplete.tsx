@@ -197,10 +197,7 @@ export function StyledAutocomplete<
   const componentProps = useMemo(() => {
     const popperProps: Partial<PopperAutocompleteProps> &
       PopperAutocompleteAdditionalProps = {
-      // When Autocomplete is placed in a Popup (e.g. Tooltip),
-      // we should not close the outer Popup when clicked on DropDown items.
-      // So we need to disablePortal.
-      disablePortal: true,
+      disablePortal: false,
       popupWidth: popupWidth,
       maxPopupWidth: maxPopupWidth,
       additionalWidth: additionalWidth,

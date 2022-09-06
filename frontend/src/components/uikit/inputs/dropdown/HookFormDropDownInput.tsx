@@ -54,7 +54,6 @@ export function HookFormDropDownInput<
             {...rest}
             value={value}
             onBlur={onBlur}
-            required={props.required}
             variant={props.variant ?? 'formInput'}
             onValueChanged={(v: T | null) => {
               if (useIdFunctionAsValue && idFunction && v) {

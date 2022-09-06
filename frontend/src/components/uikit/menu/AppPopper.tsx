@@ -1,7 +1,7 @@
 import PopperUnstyled from '@mui/base/PopperUnstyled';
 import clsx from 'clsx';
 import { useTriggerOnClickOutsideElement } from 'helpers/useTriggerOnClickOutsideElement';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { MouseEventHandler, useEffect, useRef, useState } from 'react';
 import styles from './AppPopper.module.scss';
 import { useTransitionClass } from './useTransitionClass';
 import type { PopperUnstyledOwnProps } from '@mui/base/PopperUnstyled/PopperUnstyled';
@@ -136,6 +136,8 @@ const PopperContent: React.FC<
     <div
       ref={ref}
       className={clsx(styles.popper, className, !noArrow && transitionClass)}
+      // prevent propagation of onMouseDown so that useTriggerOnClickOutside doesn't catch clicks inside the Popper
+      onMouseDown={stopPropagation}
     >
       {!noArrow && (
         <div className={styles.arrow} ref={arrowRef} data-popper-arrow></div>
@@ -143,6 +145,9 @@ const PopperContent: React.FC<
       <div className={styles.content}>{children}</div>
     </div>
   );
+};
+const stopPropagation: MouseEventHandler<any> = (e) => {
+  e.stopPropagation();
 };
 function resolveAnchorEl(anchorEl: PopperUnstyledOwnProps['anchorEl']) {
   return typeof anchorEl === 'function' ? anchorEl() : anchorEl;
