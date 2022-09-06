@@ -17,10 +17,12 @@ import styles from './UiKitPage.module.scss';
 import { useModal } from '../../../components/uikit/modal/useModal';
 import { PopperExample } from './components/PopperExample';
 import { MultiSelectDropDownInput } from 'components/uikit/inputs/dropdown/MultiSelectDropDownInput';
+import { HookFormComboBoxInput } from '../../../components/uikit/inputs/dropdown/HookFormComboBoxInput';
 
 type UiKitForm = {
   dropDown: ProductType;
   multiSelectDropDown: ProductType[];
+  combo: string | ProductType;
   timeInMilliseconds: number;
   date: Date;
   input: string;
@@ -102,8 +104,7 @@ export const UiKitPage: React.FC = () => {
             useVirtualization={true}
             popupWidth={'autosize'}
             name={'category'}
-            getOptionLabel={(x) => x.title}
-            isOptionEqualToValue={(x, y) => x?.id === y?.id}
+            getOptionLabel={'title'}
             idFunction={(x) => x.id}
             control={form.control}
           />
@@ -124,6 +125,14 @@ export const UiKitPage: React.FC = () => {
             variant={'formInput'}
             headerTitle={'Test'}
             onValueChanged={(newValues) => setMultiValues(newValues as any)}
+          />
+        </Field>
+        <Field title="Combo">
+          <HookFormComboBoxInput
+            name={'combo'}
+            control={form.control}
+            options={options}
+            variant={'formInput'}
           />
         </Field>
         <Field title={i18n.t('date')}>

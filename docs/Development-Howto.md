@@ -54,12 +54,13 @@
    1. Do not store Form state in redux (use `react-hook-form`)
    2. Do not store http-request-cache in redux (use `react-query`)
 2. Routing: we use [react-router v6](https://reactrouter.com/docs/en/v6/).
-   1. Define your route. We use a small [createLink](../frontend/src/application/constants/links.ts) wrapper to add typings to URLs.
+   1. Define your route. We use a small [createLink](/frontend/src/application/constants/links.ts) wrapper to add typings to URLs.
       1. Add e.g. `WorkItemDetails: createLink('/projects/:id')}`
-      2. Handle this route at [RootPage](../frontend/src/pages/authorized/RootPage.tsx) ```<Route path={Links.WorkItemDetails.route} element={<YOUR_PAGE_COMPONENT />} />```
+      2. Handle this route at [RootPage](/frontend/src/pages/authorized/RootPage.tsx) ```<Route path={Links.WorkItemDetails.route} element={<YOUR_PAGE_COMPONENT />} />```
       3. Within the page component you could access URL parameters using `Links.WorkItemDetails.useParams()`
    2. Optional parameters unfortunately are not supported. You have to define separate route for each optional parameter and `Links.WorkItemDetails.useMatch()` to get the values.
-3. We tend NOT to use default exports. Please export and use components via named exports (i.e. `export const MyPage = () => <div>blablabla</div>`). Only use default exports with lazy-loading (via `React.lazy`, or better using the [lazyRetry helper](../frontend/src/helpers/retry-helper.tsx))
+3. We have [UIKit](details/UIKit.md) (based on MUI) with some additional convenience options. Please check [the docs](details/UIKit.md) to know how/when to use it :)
+4. We tend NOT to use default exports. Please export and use components via named exports (i.e. `export const MyPage = () => <div>blablabla</div>`). Only use default exports with lazy-loading (via `React.lazy`, or better using the [lazyRetry helper](../frontend/src/helpers/retry-helper.tsx))
 
 ### FAQ
 1. You could pull updates from Template into your project by running `yarn pull-changes-from-template` (it will actually run [scripts/pull-changes-from-template.js](../scripts/pull-template-changes.js)).

@@ -22,6 +22,23 @@
   padding: 0;
   height: 100%;
 }
+.option-value:global(.MuiAutocomplete-option.Mui-focused) {
+  background: $background-input-hover;
+}
+
+.option-value[aria-disabled='true'] {
+  // disabled
+  opacity: 0.5;
+}
+
+.option-value[aria-disabled='true'][aria-selected='true'] {
+  // disabled and selected
+  opacity: 0.5;
+}
+
+.option-value:global(.MuiAutocomplete-option)[aria-selected='true'] {
+  // selected item
+}
 
 .li-with-prefix {
   justify-content: space-between !important;
@@ -29,18 +46,6 @@
 
 .non-editable-input {
   cursor: pointer;
-}
-
-.option-value:global(.Mui-focused) {
-  background: $background-input-hover !important;
-}
-
-.option-value[aria-disabled='true'] {
-  opacity: 0.5;
-}
-
-.option-value[aria-disabled='true'][aria-selected='true'] {
-  opacity: 0.5;
 }
 
 // we need to use common font config in dropdown-callout and option-value, to be able to use 'ch' units in callout

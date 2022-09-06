@@ -1,26 +1,30 @@
 import * as React from 'react';
 import { useMemo } from 'react';
-import { AutocompleteProps } from '@mui/material/Autocomplete/Autocomplete';
 import { StyledAutocomplete } from './StyledAutocomplete';
-import { StyledAutocompleteProps } from './types';
+import { DropDownInputProps, StyledAutocompleteProps } from './types';
 
-export function DropDownInput<T, Required extends boolean>(
-  props: Omit<
-    StyledAutocompleteProps<T, false, Required, false>,
-    'onChange'
-  > & {
-    onValueChanged: Required extends true
-      ? (newSelectedOption: T) => void
-      : (newSelectedOption: T | null) => void;
-  },
-) {
+export function DropDownInput<
+  T,
+  Required extends boolean | undefined = undefined,
+  UseIdAsValue extends boolean | undefined = undefined,
+>(props: DropDownInputProps<T, Required, UseIdAsValue>) {
   const { onValueChanged, ...rest } = props;
-  const onChange: AutocompleteProps<T, false, Required, false>['onChange'] =
-    useMemo(
-      () => (e, item) => {
-        onValueChanged(item!);
-      },
-      [onValueChanged],
-    );
-  return <StyledAutocomplete {...rest} onChange={onChange} />;
+  const onChange: StyledAutocompleteProps<
+    T,
+    false,
+    Required,
+    false
+  >['onChange'] = useMemo(
+    () => (e, item) => {
+      onValueChanged(item as any);
+    },
+    [onValueChanged],
+  );
+  return (
+    <StyledAutocomplete<T, false, Required, false>
+      {...rest}
+      multiple={false}
+      onChange={onChange}
+    />
+  );
 }

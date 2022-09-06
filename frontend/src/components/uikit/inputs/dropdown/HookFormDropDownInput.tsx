@@ -8,30 +8,30 @@ import {
   RegisterOptions,
 } from 'react-hook-form';
 import { convertPropertyAccessorToFunction } from './StyledAutocomplete';
-import { StyledAutocompleteProps } from './types';
+import { DropDownInputProps } from './types';
 
 type HookFormProps<
   T,
-  Required extends boolean | undefined,
   TFieldValues extends FieldValues = FieldValues,
-> = Omit<StyledAutocompleteProps<T, false, Required, false>, 'onChange'> & {
+  Required extends boolean | undefined = undefined,
+  UseIdAsValue extends boolean | undefined = undefined,
+> = Omit<
+  DropDownInputProps<T, Required, UseIdAsValue>,
+  'onChange' | 'onValueChanged' | 'value'
+> & {
   name: Path<TFieldValues>;
   control: Control<TFieldValues>;
   rules?: Exclude<RegisterOptions, 'valueAsDate' | 'setValueAs'>;
   onFocus?: () => void;
   defaultValue?: unknown;
-  /*
-   * If true, we assume that form `value` contains the result of `idFunction` of the option.
-   * true by default.
-   */
-  useIdFunctionAsValue?: boolean;
 };
 
 export function HookFormDropDownInput<
   T,
-  Required extends boolean,
   TFieldValues extends FieldValues = FieldValues,
->(props: HookFormProps<T, Required, TFieldValues>) {
+  Required extends boolean | undefined = undefined,
+  UseIdAsValue extends boolean | undefined = undefined,
+>(props: HookFormProps<T, TFieldValues, Required, UseIdAsValue>) {
   const { control, name, rules, useIdFunctionAsValue = true, ...rest } = props;
   const idFunction = props.idFunction
     ? convertPropertyAccessorToFunction<T, false, Required, false>(
@@ -46,7 +46,8 @@ export function HookFormDropDownInput<
       render={({ field: { onChange, onBlur, value } }) => {
         if (useIdFunctionAsValue && idFunction && value) {
           value =
-            (props.options.find((x) => idFunction(x) == value) as any) ?? value;
+            (props.options.find((x) => idFunction(x as any) == value) as any) ??
+            value;
         }
         return (
           <DropDownInput

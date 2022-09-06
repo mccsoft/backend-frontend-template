@@ -17,6 +17,10 @@ export type StyledAutocompleteProps<
   AutocompleteProps<T, Multiple, Required, FreeSolo>,
   'disableClearable' | 'renderInput' | 'getOptionLabel'
 > & {
+  /*
+   * Defines the text for the option.
+   * Could be either a function (as in default Autocomplete) or a property name.
+   */
   getOptionLabel?:
     | ((
         option: T | AutocompleteFreeSoloValueMapping<FreeSolo>,
@@ -60,11 +64,6 @@ export type StyledAutocompleteProps<
   postfixRenderer?: (option: T) => React.ReactElement<unknown>;
 
   /*
-   * if you are using custom
-   */
-  itemSize?: number;
-
-  /*
    * If true, the size of an input is determined by the currently selected element
    */
   autosizeInputWidth?: boolean;
@@ -74,6 +73,11 @@ export type StyledAutocompleteProps<
    * True by default.
    */
   useVirtualization?: boolean;
+
+  /*
+   * You need to specify this, if `useVirtualization` is true and default heights of `normal` or `form-input` (32px and 40px) are not ok
+   */
+  itemSize?: number;
 
   /*
    * Could be used to specify popupWidth.
@@ -95,6 +99,27 @@ export type StyledAutocompleteProps<
    * Defaults to '40px'
    */
   additionalWidth?: CSSProperties['width'];
+};
+
+export type DropDownInputProps<
+  T,
+  Required extends boolean | undefined = undefined,
+  UseIdAsValue extends boolean | undefined = undefined,
+> = Omit<
+  StyledAutocompleteProps<T, false, Required, false>,
+  'onChange' | 'value'
+> & {
+  onValueChanged: Required extends true
+    ? (newSelectedOption: T) => void
+    : (newSelectedOption: T | null) => void;
+
+  /*
+   * If true, we assume that `value` field contains the result of `idFunction` of the option.
+   * HookFormDropDownInput has this enabled by default.
+   */
+  useIdFunctionAsValue?: UseIdAsValue;
+
+  value: StyledAutocompleteProps<T, false, Required, false>['value'];
 };
 
 export type PropertyAccessor<T> = ((option: T) => string | number) | keyof T;

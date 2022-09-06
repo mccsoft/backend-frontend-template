@@ -59,7 +59,8 @@ export function StyledAutocomplete<
     placeholder:
       props.placeholder ?? i18next.t('uikit.inputs.nothing_selected'),
     variant: props.variant ?? 'normal',
-    useVirtualization: props.useVirtualization ?? true,
+    useVirtualization: props.useVirtualization ?? false,
+    itemSize: props.itemSize ?? (props.variant === 'formInput' ? 40 : 32),
   };
 
   const classes: Partial<AutocompleteClasses> = useMemo(
@@ -69,6 +70,7 @@ export function StyledAutocomplete<
         styles.optionValue,
         styles.fontConfig,
         variant === 'normal' && styles.optionValueNormal,
+        variant === 'formInput' && styles.optionValueFormInput,
         props.classes?.option,
       ),
       noOptions: styles.fontConfig,
@@ -105,7 +107,7 @@ export function StyledAutocomplete<
 
   const options: T[] = useMemo(() => {
     const result: T[] = [];
-    if (!required && !props.multiple) {
+    if (!required && !props.multiple && !props.freeSolo) {
       if (!props.options.includes(null!)) result.push(null!);
     }
 
@@ -148,6 +150,7 @@ export function StyledAutocomplete<
     AutocompleteProps<T, Multiple, Required, FreeSolo>['renderOption']
   > = useCallback(
     (liProps, option, state) => {
+      liProps.style = { height: itemSize };
       if (
         option &&
         typeof option === 'object' &&
@@ -188,7 +191,7 @@ export function StyledAutocomplete<
   }, []);
 
   const listboxProps: VirtualizedListboxComponentProps = useMemo(
-    () => ({ itemSize: itemSize ?? variant === 'formInput' ? 40 : 32 }),
+    () => ({ itemSize: itemSize }),
     [itemSize, variant],
   );
   const componentProps = useMemo(() => {
@@ -243,7 +246,7 @@ export function StyledAutocomplete<
               containerRef={params.InputProps.ref}
               style={
                 autosizeInputWidth && value
-                  ? { width: `calc(${(value as string).length}ch + 40px)` }
+                  ? { width: `calc(${(value as string).length}ch + 45px)` }
                   : undefined
               }
               placeholder={placeholder}
@@ -258,7 +261,7 @@ export function StyledAutocomplete<
               onBlur={undefined}
               value={value}
               size={undefined}
-              readOnly={!enableSearch}
+              readOnly={!enableSearch && !props.freeSolo}
               endAdornment={caretDown}
               variant={variant}
             />
