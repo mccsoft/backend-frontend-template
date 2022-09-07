@@ -52,7 +52,6 @@ export const UiKitPage: React.FC = () => {
     return [ProductType.Auto, ProductType.Electronic, ProductType.Other];
   }, []);
   const modals = useModal();
-
   const [multiValues, setMultiValues] = useState<ProductType[]>([]);
   return (
     <div>

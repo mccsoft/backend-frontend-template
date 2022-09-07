@@ -87,7 +87,7 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(function Input(
           variant === 'normal' ? styles.nonFormInput : null,
           className,
         )}
-        data-error={isError}
+        data-error={isError.toString()}
         onKeyDown={onEnterPressed ? onKeyDown : undefined}
         type={showPassword ? 'input' : type}
         data-test-id={testId}
@@ -109,7 +109,7 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(function Input(
       ) : null}
       {badge}
       {!!(helperText || errorText) && (
-        <div data-error={isError} className={styles.helperText}>
+        <div data-error={isError.toString()} className={styles.helperText}>
           {helperText || errorText}
         </div>
       )}

@@ -254,7 +254,11 @@ export function StyledAutocomplete<
               )}
               /* If `onBlur` has it's default value
                * the DropDown will close when input loses the focus.
-               * We need to prevent that, since there might be inputs inside the DropDown */
+               * We need to prevent that, since there might be inputs inside the DropDown.
+               *
+               * To close the DropDown when user clicks outside we assign onBlur handler to `closeAutocomplete.current`
+               * and call it when Popper is closed
+               */
               onBlur={undefined}
               value={value}
               size={undefined}
@@ -272,6 +276,8 @@ export function StyledAutocomplete<
         PaperComponent={PaperComponentWithHeaderFooter}
         PopperComponent={PopperComponentForAutocomplete as any}
         classes={classes}
+        // freeSolo requires autoSelect to be true to trigger onChange when input is blurred
+        autoSelect={props.autoSelect ?? props.freeSolo ? true : undefined}
         data-test-id={testId}
         data-error={!!errorText}
         placeholder={placeholder}
@@ -282,7 +288,11 @@ export function StyledAutocomplete<
         disableClearable={props.required}
         value={props.value ?? null!}
       />
-      {!!errorText && <div className={styles.errorText}>{errorText}</div>}
+      {!!errorText && (
+        <div data-error="true" className={styles.errorText}>
+          {errorText}
+        </div>
+      )}
     </div>
   );
 }
