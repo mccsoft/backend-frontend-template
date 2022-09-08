@@ -93,7 +93,7 @@ export function StyledAutocomplete<
     return (option) =>
       option === null || option === undefined
         ? placeholder
-        : baseFunction(option);
+        : baseFunction(option) ?? option;
   }, [props.getOptionLabel, placeholder]);
 
   const isOptionEqualToValue: AutocompleteProps<
