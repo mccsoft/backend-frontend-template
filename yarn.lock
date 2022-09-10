@@ -3372,6 +3372,7 @@ __metadata:
     react-hook-form: 7.19.0
     react-i18next: 11.15.0
     react-js-pagination: 3.0.3
+    react-merge-refs: 2.0.1
     react-paginate: 8.1.2
     react-query-swagger: 14.3.2
     react-redux: 8.0.2
@@ -9601,6 +9602,13 @@ fsevents@~2.3.2:
     react: 15.x.x - 16.x.x
     tar: 2.2.2
   checksum: 7b5c5420b685337cc531e16cbace2003fc34a0e6cba73811673b75d12568514e6c93e048632472b746a7852635b2679e7538648d4f2a67617b5f6dae47026bd8
+  languageName: node
+  linkType: hard
+
+"react-merge-refs@npm:2.0.1":
+  version: 2.0.1
+  resolution: "react-merge-refs@npm:2.0.1"
+  checksum: c0b6fdb384a92e9b2bb7d56128244a2db97b9343c0dcae70f172352c3732312266c078495902707e45f523625afcba78996a22edea3a8e7b2b17fe97347059fe
   languageName: node
   linkType: hard
 

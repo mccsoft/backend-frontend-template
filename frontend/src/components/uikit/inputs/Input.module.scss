@@ -13,20 +13,25 @@
 .input {
   @extend .base-input;
 }
+
 .inputContainer {
   // required for proper displaying of endAdornment
   position: relative;
 }
+
 .endAdornment {
   position: absolute;
-  right: 12px;
-  width: 16px;
-  top: 0;
-  height: $form-input-height;
+  right: 8px;
+  height: 70%;
+  top: 15%;
   display: flex;
   cursor: pointer;
   align-items: center;
   @extend .none-select;
+
+  > svg {
+    height: 100%;
+  }
 }
 
 .passwordEye {
@@ -41,6 +46,7 @@
 .non-form-input {
   height: $normal-input-height;
 }
-.non-form-input + .endAdornment {
-  height: $normal-input-height;
+
+.search-input-cross {
+  height: 50% !important;
 }
