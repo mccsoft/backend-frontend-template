@@ -10,7 +10,6 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using MccSoft.WebApi.Patching.Models;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using NJsonSchema;
 using NJsonSchema.CodeGeneration.TypeScript;
@@ -19,6 +18,7 @@ using NSwag.CodeGeneration.CSharp;
 using NSwag.CodeGeneration.TypeScript;
 using Xunit;
 using Xunit.Abstractions;
+using System.Text;
 
 namespace MccSoft.TemplateApp.ComponentTests
 {
@@ -51,12 +51,22 @@ namespace MccSoft.TemplateApp.ComponentTests
                 );
 
             using var scope = TestServer.Services.CreateScope();
+            var errors = new StringBuilder();
             foreach (Type controllerType in controllerTypes)
             {
-                // It will throw exception if any controller's dependency is not registered.
+                // It will throw exception if any controller's dependency is not registered.`
                 // (it doesn't require controllers themselves to be registered, as opposed to scope.GetService<T>())
-                ActivatorUtilities.CreateInstance(scope.ServiceProvider, controllerType);
+                try
+                {
+                    ActivatorUtilities.CreateInstance(scope.ServiceProvider, controllerType);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    errors.AppendLine(ex.Message);
+                }
             }
+
+            Assert.True(string.IsNullOrEmpty(errors.ToString()), errors.ToString());
         }
 
         /// <summary>
