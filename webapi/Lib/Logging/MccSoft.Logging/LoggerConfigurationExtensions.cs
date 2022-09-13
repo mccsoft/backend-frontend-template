@@ -135,8 +135,8 @@ namespace MccSoft.Logging
                         )
             );
 
-            // If the stage is not local development stage - push logs to Elasticsearch.
-            if (!string.IsNullOrEmpty(remoteLoggerOption?.Server))
+            // If the stage is not local development stage - push logs to Elasticsearch and loggly token is present.
+            if (!string.IsNullOrEmpty(remoteLoggerOption?.Server) && !string.IsNullOrEmpty(remoteLoggerOption.Token))
             {
                 loggerConfiguration.WriteTo.Logger(
                     lc =>
