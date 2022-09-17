@@ -79,6 +79,7 @@ export function StyledAutocomplete<
         props.classes?.option,
       ),
       noOptions: styles.fontConfig,
+      loading: styles.fontConfig,
       popper: clsx(
         styles.dropdownCallout,
         styles.fontConfig,
