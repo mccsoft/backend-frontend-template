@@ -1,4 +1,6 @@
+import { SearchInput } from './SearchInput';
 import clsx from 'clsx';
+import equal from 'fast-deep-equal';
 import * as React from 'react';
 import { useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,7 +21,6 @@ import {
   StyledAutocompleteProps,
 } from './types';
 import { useTriggerOnClickOutsideElement } from '../../../../helpers/useTriggerOnClickOutsideElement';
-import equal from 'fast-deep-equal/react';
 
 const caretDown = <ArrowDownIcon className={styles.expandIcon} />;
 
@@ -53,6 +54,10 @@ export function StyledAutocomplete<
     popupWidth,
     maxPopupWidth,
     additionalWidth,
+    isSearch,
+    endAdornment,
+    InputComponent,
+    renderInput,
     ...rest
   } = {
     ...props,
@@ -61,8 +66,8 @@ export function StyledAutocomplete<
     variant: props.variant ?? 'normal',
     useVirtualization: props.useVirtualization ?? false,
     itemSize: props.itemSize ?? (props.variant === 'formInput' ? 40 : 32),
+    InputComponent: props.renderInput ?? (props.isSearch ? SearchInput : Input),
   };
-
   const classes: Partial<AutocompleteClasses> = useMemo(
     () => ({
       ...props.classes,
@@ -133,7 +138,7 @@ export function StyledAutocomplete<
         const newSelectedValue = props.options.find((x) =>
           isOptionEqualToValue(x, props.value as any),
         );
-        if (newSelectedValue !== props.value) {
+        if (newSelectedValue && newSelectedValue !== props.value) {
           props.onChange?.(
             {} as any,
             (newSelectedValue ?? null) as any,
@@ -224,6 +229,7 @@ export function StyledAutocomplete<
     popupWidth,
     useVirtualization,
   ]);
+
   return (
     <div
       className={clsx(styles.rootContainer, rootClassName)}
@@ -239,22 +245,38 @@ export function StyledAutocomplete<
             : params.inputProps.value;
           closeAutocomplete.current = params.inputProps.onBlur;
           return (
-            <Input
+            <InputComponent
               containerRef={params.InputProps.ref}
               style={
                 autosizeInputWidth && value
-                  ? { width: `calc(${(value as string).length}ch + 45px)` }
+                  ? { width: `calc(${(value as string).length}ch + 40px)` }
                   : undefined
               }
               placeholder={placeholder}
               {...params.inputProps}
+              onChange={
+                isSearch
+                  ? (e) => {
+                      params.inputProps.onChange?.(e);
+
+                      // in Search mode we need to reset selected value if user changes the text in input
+                      const currentInputValue = e.target.value;
+                      if (
+                        props.value &&
+                        getOptionLabel(props.value as any) !== currentInputValue
+                      ) {
+                        props.onChange?.(e, null!, 'removeOption');
+                      }
+                    }
+                  : params.inputProps.onChange
+              }
               className={clsx(
                 params.inputProps.className,
                 styles.nonEditableInput,
               )}
               /* If `onBlur` has it's default value
                * the DropDown will close when input loses the focus.
-               * We need to prevent that, since there might be inputs inside the DropDown.
+               * We need to prevent that, since there might be inputs inside the DropDown
                *
                * To close the DropDown when user clicks outside we assign onBlur handler to `closeAutocomplete.current`
                * and call it when Popper is closed
@@ -263,11 +285,15 @@ export function StyledAutocomplete<
               value={value}
               size={undefined}
               readOnly={!enableSearch && !props.freeSolo}
-              endAdornment={caretDown}
+              endAdornment={endAdornment ?? caretDown}
               variant={variant}
+              errorText={errorText}
+              selectedValue={props.value as any}
             />
           );
         }}
+        // we simulate pressing escape when clicking on [X] button within input
+        clearOnEscape={true}
         componentsProps={componentProps as any}
         ListboxProps={useVirtualization ? listboxProps : undefined}
         ListboxComponent={
@@ -276,17 +302,19 @@ export function StyledAutocomplete<
         PaperComponent={PaperComponentWithHeaderFooter}
         PopperComponent={PopperComponentForAutocomplete as any}
         classes={classes}
-        // freeSolo requires autoSelect to be true to trigger onChange when input is blurred
-        autoSelect={props.autoSelect ?? props.freeSolo ? true : undefined}
-        data-test-id={testId}
+        // freeSolo requires autoSelect to be True to trigger onChange when input is blurred
+        // Search inputs require autoselect to be False
+        autoSelect={
+          props.autoSelect ?? (props.freeSolo && !isSearch) ? true : undefined
+        }
         data-error={!!errorText}
-        placeholder={placeholder}
         getOptionLabel={getOptionLabel}
         renderOption={renderOption}
         isOptionEqualToValue={isOptionEqualToValue}
         onChange={onChange}
         disableClearable={props.required}
         value={props.value ?? null!}
+        data-test-id={testId}
       />
       {!!errorText && (
         <div data-error="true" className={styles.errorText}>
