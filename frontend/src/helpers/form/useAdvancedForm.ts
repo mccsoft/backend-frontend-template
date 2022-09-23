@@ -13,7 +13,7 @@ import { useRef } from 'react';
 import { useErrorHandler } from './useErrorHandler';
 import { NavigateFunction } from 'react-router';
 
-type AdvancedFormReturnType<
+export type AdvancedFormReturnType<
   TFieldValues extends FieldValues = FieldValues,
   // ignored because it's used in react-hook-form as well
   // eslint-disable-next-line @typescript-eslint/ban-types

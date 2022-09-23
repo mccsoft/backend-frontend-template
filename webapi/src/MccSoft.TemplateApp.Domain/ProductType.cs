@@ -1,10 +1,9 @@
-namespace MccSoft.TemplateApp.Domain
+namespace MccSoft.TemplateApp.Domain;
+
+public enum ProductType
 {
-    public enum ProductType
-    {
-        Undefined,
-        Auto,
-        Electronic,
-        Other,
-    }
+    Undefined,
+    Auto,
+    Electronic,
+    Other,
 }
