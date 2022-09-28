@@ -50,13 +50,13 @@ app.UseSerilog(app.Environment);
 app.Logger.LogSentryTestError("TemplateApp");
 
 await SetupDatabase.RunMigration(app);
-SetupHangfire.UseHangfire(app);
 
 app.UseHttpsRedirection();
 
 SetupAspNet.UseFrontlineServices(app);
-
 SetupLocalization.UseLocalization(app);
+
+SetupHangfire.UseHangfire(app);
 
 SetupAuth.UseAuth(app);
 SetupSwagger.UseSwagger(app);
