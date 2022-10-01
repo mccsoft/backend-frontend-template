@@ -33,7 +33,7 @@ export const SignUrlImage = React.forwardRef<HTMLImageElement, Props>(
            */
           !src
             ? fallback
-            : cookieQuery.isLoading
+            : cookieQuery.isInitialLoading
             ? ''
             : cookieQuery.isError
             ? fallback

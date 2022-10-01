@@ -11,7 +11,7 @@ export const ProductDetailsPage: React.FC = (props) => {
   return (
     <>
       <AppLink to={Links.Authorized.Products.link()}>Back</AppLink>
-      <Loading loading={productQuery.isLoading}>
+      <Loading loading={productQuery.isInitialLoading}>
         <div>Product: {productQuery.data?.title}</div>
         <AppLink to={Links.Authorized.EditProduct.link({ id: productId })}>
           Edit

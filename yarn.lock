@@ -3404,10 +3404,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:^4.0.0-beta.1":
-  version: 4.2.1
-  resolution: "@tanstack/query-core@npm:4.2.1"
-  checksum: f71854969e02de6c2cfbe25e8b11e275b61e1297a902e0d5c4beac580a87db99555c1c21d536d838ce5e0664bc49da7b60a3c6b8de334c7004c5005fe2a48030
+"@tanstack/query-core@npm:4.8.0":
+  version: 4.8.0
+  resolution: "@tanstack/query-core@npm:4.8.0"
+  checksum: 1410cc255d24a1d83b7ed644834ad27458da272c37bf5732c954aaa02fa8fc41b96abeca25903af95b139b353fb8738d68259ad771ef1d1dbde166b7c0514135
   languageName: node
   linkType: hard
 
@@ -3418,12 +3418,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:4.2.1":
-  version: 4.2.1
-  resolution: "@tanstack/react-query@npm:4.2.1"
+"@tanstack/react-query@npm:4.8.0":
+  version: 4.8.0
+  resolution: "@tanstack/react-query@npm:4.8.0"
   dependencies:
-    "@tanstack/query-core": ^4.0.0-beta.1
-    "@types/use-sync-external-store": ^0.0.3
+    "@tanstack/query-core": 4.8.0
     use-sync-external-store: ^1.2.0
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -3434,7 +3433,7 @@ __metadata:
       optional: true
     react-native:
       optional: true
-  checksum: bbf3a808645c26c649971dc182bb9a7ed7a1d89f6456b60685c6081b8be6ae84ae83b39c7eacb96c4f3b6677ca001d8114037329951987b7a8d65de53b28c862
+  checksum: e2075ae91760d3a81774d5f405d30074c20811e35439828c5f6e3bb4426c554a1cbe332d095ad4d45bd699a48af94412178f331ddcbb210f4b0c2d346e41ae00
   languageName: node
   linkType: hard
 
@@ -3490,7 +3489,7 @@ __metadata:
     "@reduxjs/toolkit": 1.8.3
     "@sentry/react": 6.19.7
     "@sentry/tracing": 6.19.7
-    "@tanstack/react-query": 4.2.1
+    "@tanstack/react-query": 4.8.0
     "@tanstack/react-table": 8.5.5
     "@testing-library/jest-dom": 5.11.4
     "@testing-library/react": 11.1.0
