@@ -131,11 +131,9 @@ namespace MccSoft.TemplateApp.ComponentTests
             }
             JObject swagger = JObject.Parse(swaggerJsonString);
             //AssertEx.ApiDocumented(swagger);
-            await using (StreamWriter file = File.CreateText(exportPath))
-            {
-                using JsonTextWriter writer = new JsonTextWriter(file);
-                swagger.WriteTo(writer);
-            }
+            await using StreamWriter file = File.CreateText(exportPath);
+            using JsonTextWriter writer = new JsonTextWriter(file);
+            swagger.WriteTo(writer);
         }
 
         private async Task GenerateCSharpHttpClient(string exportPath)
