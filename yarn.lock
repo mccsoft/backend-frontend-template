@@ -2776,9 +2776,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/x-date-pickers@npm:5.0.0-beta.7":
-  version: 5.0.0-beta.7
-  resolution: "@mui/x-date-pickers@npm:5.0.0-beta.7"
+"@mui/x-date-pickers@npm:5.0.3":
+  version: 5.0.3
+  resolution: "@mui/x-date-pickers@npm:5.0.3"
   dependencies:
     "@babel/runtime": ^7.18.9
     "@date-io/core": ^2.15.0
@@ -2786,7 +2786,7 @@ __metadata:
     "@date-io/dayjs": ^2.15.0
     "@date-io/luxon": ^2.15.0
     "@date-io/moment": ^2.15.0
-    "@mui/utils": ^5.9.3
+    "@mui/utils": ^5.10.3
     "@types/react-transition-group": ^4.4.5
     clsx: ^1.2.1
     prop-types: ^15.7.2
@@ -2816,7 +2816,7 @@ __metadata:
       optional: true
     moment:
       optional: true
-  checksum: 985738535ccfc0b65eed891fe24dd1ba22afad68442f6af20126fff2f2e52c9f59ead52e7f2a737d4967a966a0b27527db626cf03ad36de9cf632b989618057c
+  checksum: d50b4e2906c30dc0435aa6905cb9423fb18191e3ee451f5f4bdec07ecb39494c84da344d645ce64b11d3c3f7898cab2e06230e1855b235b7e154359b04d667d7
   languageName: node
   linkType: hard
 
@@ -3485,7 +3485,7 @@ __metadata:
     "@import-meta-env/unplugin": 0.1.8
     "@mui/material": 5.10.3
     "@mui/styles": 5.10.3
-    "@mui/x-date-pickers": 5.0.0-beta.7
+    "@mui/x-date-pickers": 5.0.3
     "@reduxjs/toolkit": 1.8.3
     "@sentry/react": 6.19.7
     "@sentry/tracing": 6.19.7
