@@ -8,9 +8,9 @@ namespace MccSoft.TemplateApp.Domain;
 
 public class User : IdentityUser
 {
-    public string FirstName { get; private set; }
+    public string FirstName { get; private set; } = "";
 
-    public string LastName { get; private set; }
+    public string LastName { get; private set; } = "";
 
     /// <summary>
     /// Needed for Entity Framework, keep empty.
@@ -80,8 +80,8 @@ public class User : IdentityUser
 
     #region Domain Events
 
-    private List<IDomainEvent> _domainEvents;
-    public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents;
+    private List<IDomainEvent>? _domainEvents;
+    public IReadOnlyList<IDomainEvent>? DomainEvents => _domainEvents;
 
     public void AddEvent(IDomainEvent domainEvent, bool removeEventsOfSameType = false)
     {
@@ -96,7 +96,7 @@ public class User : IdentityUser
 
     public void ClearDomainEvents()
     {
-        _domainEvents.Clear();
+        _domainEvents?.Clear();
     }
     #endregion
 }

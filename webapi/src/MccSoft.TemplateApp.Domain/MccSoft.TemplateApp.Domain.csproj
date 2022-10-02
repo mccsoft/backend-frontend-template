@@ -9,6 +9,7 @@
       Responsible for representing concepts of the business, information about the
       business situation, and business rules.
     </Description>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup>

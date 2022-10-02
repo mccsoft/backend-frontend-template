@@ -5,7 +5,6 @@ namespace MccSoft.TemplateApp.Domain;
 
 public class Product : BaseOwnedEntity
 {
-    private string _title;
     public int Id { get; set; }
     public ProductType ProductType { get; set; }
 
@@ -13,12 +12,13 @@ public class Product : BaseOwnedEntity
     /// This is just to show how to get the userId in the Service.
     /// You should NOT add this field to every entity (unless explicitly needed)
     /// </summary>
-    public User CreatedByUser { get; set; }
-    public string CreatedByUserId { get; set; }
+    public User CreatedByUser { get; set; } = null!;
+
+    public string CreatedByUserId { get; set; } = null!;
 
     public DateOnly LastStockUpdatedAt { get; set; }
 
-    public string Title { get; set; }
+    public string Title { get; set; } = "";
 
     /// <summary>
     /// Needed for Entity Framework, keep empty.

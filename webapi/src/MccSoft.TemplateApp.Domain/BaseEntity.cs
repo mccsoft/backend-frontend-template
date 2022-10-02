@@ -7,8 +7,8 @@ public partial class BaseEntity : IDomainEventEntity
 {
     #region Domain Events
 
-    private List<IDomainEvent> _domainEvents;
-    public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents;
+    private List<IDomainEvent>? _domainEvents;
+    public IReadOnlyList<IDomainEvent>? DomainEvents => _domainEvents;
 
     public void AddEvent(IDomainEvent domainEvent, bool removeEventsOfSameType = false)
     {
@@ -23,7 +23,7 @@ public partial class BaseEntity : IDomainEventEntity
 
     public void ClearDomainEvents()
     {
-        _domainEvents.Clear();
+        _domainEvents?.Clear();
     }
     #endregion
 }
