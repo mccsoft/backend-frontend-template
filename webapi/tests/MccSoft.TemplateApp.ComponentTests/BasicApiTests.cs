@@ -172,12 +172,12 @@ namespace MccSoft.TemplateApp.ComponentTests
             process.OutputDataReceived += (_, args) =>
             {
                 if (!string.IsNullOrEmpty(args.Data))
-                    _outputHelper.WriteLine(args.Data);
+                    _outputHelper.WriteLine(JsonConvert.SerializeObject(args.Data));
             };
             process.ErrorDataReceived += (_, args) =>
             {
                 if (!string.IsNullOrEmpty(args.Data))
-                    _outputHelper.WriteLine(args.Data);
+                    _outputHelper.WriteLine(JsonConvert.SerializeObject(args.Data));
             };
 
             process.Start();
