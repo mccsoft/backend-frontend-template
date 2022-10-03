@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -138,83 +139,75 @@ namespace MccSoft.TemplateApp.ComponentTests
 
         private async Task GenerateCSharpHttpClient(string exportPath)
         {
-            var document = await OpenApiDocument.FromJsonAsync(File.ReadAllText(exportPath));
-            var csharpSettings = new CSharpClientGeneratorSettings
-            {
-                //UseBaseUrl = false,
-                ParameterDateTimeFormat = "s",
-                GenerateClientInterfaces = true,
-                ClientBaseClass = "BaseClient",
-                ExposeJsonSerializerSettings = true,
-                GenerateUpdateJsonSerializerSettingsMethod = false,
-                ClientBaseInterface = "IBaseClient",
-                CSharpGeneratorSettings =
-                {
-                    Namespace = "MccSoft.TemplateApp.Http.Generated",
-                    TemplateDirectory = "../../../../../src/MccSoft.TemplateApp.Http/template",
-                }
-            };
-
-            var csharpGenerator = new CSharpClientGenerator(document, csharpSettings);
-            var csharpCode = csharpGenerator.GenerateFile();
-
-            // && yarn replace \", NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore\" \" \"
-            csharpCode = Regex.Replace(
-                csharpCode,
-                @", NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore",
-                " "
+            await RunScriptFromFrontendFolder(
+                $"yarn nswag openapi2csclient /input:{exportPath} /output:../webapi/src/MccSoft.TemplateApp.Http/GeneratedClient.cs /templateDirectory:../webapi/src/MccSoft.TemplateApp.Http/template /namespace:MccSoft.TemplateApp.Http.Generated /generateClientInterfaces:true /clientBaseClass:BaseClient /exposeJsonSerializerSettings:true /generateUpdateJsonSerializerSettingsMethod:false /clientBaseInterface:IBaseClient"
             );
-
-            await File.WriteAllTextAsync(
-                "../../../../../src/MccSoft.TemplateApp.Http/GeneratedClient.cs",
-                csharpCode
+            await RunScriptFromFrontendFolder(
+                "yarn replace ', NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore' ' ' ../webapi/src/MccSoft.TemplateApp.Http/GeneratedClient.cs"
             );
         }
 
         private async Task GenerateTypescriptHttpClient(string exportPath)
         {
-            var document = await OpenApiDocument.FromJsonAsync(File.ReadAllText(exportPath));
+            await RunScriptFromFrontendFolder(
+                $"yarn react-query-swagger openapi2tsclient /tanstack /input:{exportPath} /output:src/services/api/api-client.ts /template:Axios /serviceHost:. /use-recommended-configuration"
+            );
+        }
 
-            var typescriptSettings = new TypeScriptClientGeneratorSettings()
+        private async Task RunScriptFromFrontendFolder(string script)
+        {
+            var startInfo = new ProcessStartInfo
             {
-                GenerateClientInterfaces = false,
-                GenerateOptionalParameters = true,
-                Template = TypeScriptTemplate.Axios,
-                TypeScriptGeneratorSettings =
-                {
-                    TemplateDirectory =
-                        "../../../../../../node_modules/react-query-swagger/templates",
-                    NullValue = TypeScriptNullValue.Undefined,
-                    MarkOptionalProperties = true,
-                    GenerateConstructorInterface = true,
-                    TypeStyle = TypeScriptTypeStyle.Class,
-                }
+                FileName = "powershell.exe",
+                // Arguments = $"yarn generate-api-client-axios /input:{exportPath}",
+                Arguments = script,
+                WorkingDirectory = "../../../../../../frontend",
+                UseShellExecute = false,
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
             };
-            var typeScriptClientGenerator = new TypeScriptClientGenerator(
-                document,
-                typescriptSettings
-            );
-            var typescriptCode = typeScriptClientGenerator.GenerateFile();
+            var process = new Process { StartInfo = startInfo, EnableRaisingEvents = true, };
 
-            // yarn replace "formatDate\\((.*?)\\) : <any>undefined" "formatDate($1) : $1" src/services/api/api-client.ts
-            // && yarn replace \"this\\.(\\w*?)\\.toISOString\\(\\) : <any>undefined\" \"this.$1.toISOString() : this.$1\" app/api/api-client.ts
-            // && yarn replace \"\\| undefined;\" \"| null;\"
-            typescriptCode = Regex.Replace(
-                typescriptCode,
-                @"formatDate\((\w*?)\) : <any>undefined",
-                "formatDate($1) : $1"
-            );
-            typescriptCode = Regex.Replace(
-                typescriptCode,
-                @"this\.(\w*?)\.toISOString\(\) : <any>undefined",
-                "this.$1.toISOString() : this.$1"
-            );
-            typescriptCode = Regex.Replace(typescriptCode, @"\| undefined;", "| null;");
-            typescriptCode = Regex.Replace(typescriptCode, @"""http://localhost""", @"""""");
-            File.WriteAllText(
-                "../../../../../../frontend/src/services/api/api-client.ts",
-                typescriptCode
-            );
+            process.OutputDataReceived += (_, args) =>
+            {
+                if (!string.IsNullOrEmpty(args.Data))
+                    _outputHelper.WriteLine(args.Data);
+            };
+            process.ErrorDataReceived += (_, args) =>
+            {
+                if (!string.IsNullOrEmpty(args.Data))
+                    _outputHelper.WriteLine(args.Data);
+            };
+
+            process.Start();
+
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+
+            var taskCompletionSource = new TaskCompletionSource<bool>();
+
+            // process.WaitForExit() causes infinite wait
+            // and i don't want to set a long timeout
+            process.Exited += (_, _) =>
+            {
+                process.CancelOutputRead();
+                process.CancelErrorRead();
+
+                var exitCode = process.ExitCode;
+
+                process.Dispose();
+
+                if (exitCode != 0)
+                {
+                    _outputHelper.WriteLine(
+                        "Running tool \'yarn\': exit code is not zero, but \'{ProcessExitCode}\'",
+                        exitCode
+                    );
+                }
+                taskCompletionSource.SetResult(exitCode == 0);
+            };
+
+            await taskCompletionSource.Task;
         }
 
         /// <summary>

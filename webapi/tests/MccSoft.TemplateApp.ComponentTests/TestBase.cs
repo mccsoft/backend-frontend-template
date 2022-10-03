@@ -30,7 +30,7 @@ namespace MccSoft.TemplateApp.ComponentTests
 
         protected Mock<IBackgroundJobClient> _backgroundJobClient;
 
-        private readonly ITestOutputHelper _outputHelper;
+        protected readonly ITestOutputHelper _outputHelper;
         private readonly bool _usePostgres = false;
         private readonly IDatabaseInitializer _databaseInitializer;
         private readonly string _connectionString;
