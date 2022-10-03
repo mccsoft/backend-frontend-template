@@ -158,7 +158,10 @@ namespace MccSoft.TemplateApp.ComponentTests
         {
             var startInfo = new ProcessStartInfo
             {
-                FileName = "powershell.exe",
+                FileName =
+                    Environment.OSVersion.Platform == PlatformID.Win32Windows
+                        ? "powershell"
+                        : "/bin/bash",
                 // Arguments = $"yarn generate-api-client-axios /input:{exportPath}",
                 Arguments = script,
                 WorkingDirectory = "../../../../../../frontend",
