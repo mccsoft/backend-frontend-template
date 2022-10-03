@@ -201,8 +201,7 @@ namespace MccSoft.TemplateApp.ComponentTests
                 if (exitCode != 0)
                 {
                     _outputHelper.WriteLine(
-                        "Running tool \'yarn\': exit code is not zero, but \'{ProcessExitCode}\'",
-                        exitCode
+                        "Running tool \'yarn\': exit code is not zero, but \'{exitCode}\'"
                     );
                 }
                 taskCompletionSource.SetResult(exitCode == 0);
