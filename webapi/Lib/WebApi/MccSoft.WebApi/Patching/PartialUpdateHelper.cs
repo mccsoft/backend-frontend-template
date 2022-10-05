@@ -30,6 +30,7 @@ namespace MccSoft.WebApi.Patching
                 .GetType()
                 .GetProperties()
                 .Where(x => x.GetGetMethod() != null)
+                .Where(x => x.GetCustomAttribute<DoNotPatchAttribute>() == null)
                 .ToList();
             var typeToUpdate = typeof(TObjectToUpdate);
 
@@ -53,11 +54,24 @@ namespace MccSoft.WebApi.Patching
                         ?? propertyInObjectToUpdate.PropertyType;
                     if (propertyType.IsEnum)
                     {
-                        if (!Enum.IsDefined(propertyType, Convert.ToInt32(propertyValue)))
+                        if (propertyValue == null)
+                        {
+                            if (
+                                Nullable.GetUnderlyingType(propertyInObjectToUpdate.PropertyType)
+                                == null
+                            )
+                            {
+                                throw new ValidationException(
+                                    propertyName,
+                                    $"Cannot assign null to non-nullable enum"
+                                );
+                            }
+                        }
+                        else if (!Enum.IsDefined(propertyType, Convert.ToInt32(propertyValue)))
                         {
                             throw new ValidationException(
                                 propertyName,
-                                $"Value '{propertyValue}' is out of range"
+                                $"Value '{propertyValue ?? "null!"}' is out of range"
                             );
                         }
                     }
@@ -129,7 +143,7 @@ namespace MccSoft.WebApi.Patching
                         else
                         {
                             throw new InvalidOperationException(
-                                "Arrays are not supported for mapping"
+                                $"Arrays are not supported for mapping, field: {propertyInObjectToUpdate.Name}"
                             );
                         }
                     }
