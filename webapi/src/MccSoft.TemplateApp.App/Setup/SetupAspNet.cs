@@ -1,7 +1,8 @@
-﻿using System.Net;
+﻿using System.Text.Json.Serialization;
 using MccSoft.LowLevelPrimitives.Serialization.DateOnlyConverters;
 using MccSoft.TemplateApp.App.Middleware;
 using MccSoft.WebApi;
+using MccSoft.WebApi.Patching;
 using MccSoft.WebApi.Sentry;
 using MccSoft.WebApi.Serialization;
 using Microsoft.AspNetCore.Authorization;
@@ -26,20 +27,23 @@ public static partial class SetupAspNet
             options.Providers.Add<GzipCompressionProvider>();
         });
 
-        JsonConvert.DefaultSettings = () =>
-            JsonSerializerSetup.SetupJson(new JsonSerializerSettings());
+        // JsonConvert.DefaultSettings = () =>
+        //     JsonSerializerSetup.SetupJson(new JsonSerializerSettings());
 
-        services
-            .AddControllers(
-                (options) =>
-                {
-                    AddGlobalFilters(options);
-                    options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
-                }
-            )
-            .AddNewtonsoftJson(
-                setupAction => JsonSerializerSetup.SetupJson(setupAction.SerializerSettings)
-            );
+        builder.Services.Configure<JsonOptions>(options =>
+        {
+            options.JsonSerializerOptions.Converters.Add(new PatchRequestConverter());
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            options.JsonSerializerOptions.Converters.Add(new DateOnlyConverter());
+        });
+
+        services.AddControllers(
+            (options) =>
+            {
+                AddGlobalFilters(options);
+                options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+            }
+        );
 
         services.AddRazorPages();
         if (builder.Environment.IsDevelopment())
