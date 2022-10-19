@@ -1,4 +1,5 @@
 ﻿using System.Data.Common;
+using System.Text.Json;
 using Audit.Core;
 using MccSoft.LowLevelPrimitives.Serialization.DateOnlyConverters;
 using MccSoft.TemplateApp.App.Settings;
@@ -6,6 +7,7 @@ using MccSoft.TemplateApp.App.Utils;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Domain.Audit;
 using MccSoft.TemplateApp.Persistence;
+using MccSoft.WebApi.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -58,19 +60,31 @@ public static partial class SetupAudit
                                 auditLog.ChangeDate = DateTime.UtcNow;
                                 auditLog.EntityType = entry.Name;
                                 auditLog.Action = entry.Action;
-                                auditLog.FullKey = entry.PrimaryKey;
-                                auditLog.Key = entry.PrimaryKey.Values.FirstOrDefault()?.ToString();
-                                auditLog.Change = entry.Changes?.ToDictionary(
-                                    x => x.ColumnName,
-                                    x => x.NewValue
+                                auditLog.FullKey = JsonSerializer.SerializeToDocument(
+                                    entry.PrimaryKey,
+                                    SystemTextJsonSerializerSetup.GlobalSerializationOptions
                                 );
-                                auditLog.Actual = entry.ColumnValues;
+                                auditLog.Key = entry.PrimaryKey.Values.FirstOrDefault()?.ToString();
+                                auditLog.Change = JsonSerializer.SerializeToDocument(
+                                    entry.Changes?.ToDictionary(x => x.ColumnName, x => x.NewValue),
+                                    SystemTextJsonSerializerSetup.GlobalSerializationOptions
+                                );
+                                auditLog.Actual = JsonSerializer.SerializeToDocument(
+                                    entry.ColumnValues,
+                                    SystemTextJsonSerializerSetup.GlobalSerializationOptions
+                                );
                                 Dictionary<string, object> old = entry.ColumnValues.ToDictionary(
                                     x => x.Key,
                                     x => x.Value
                                 );
                                 entry.Changes?.ForEach(x => old[x.ColumnName] = x.OriginalValue);
-                                auditLog.Old = entry.Changes == null ? null : old;
+                                auditLog.Old =
+                                    entry.Changes == null
+                                        ? null
+                                        : JsonSerializer.SerializeToDocument(
+                                            old,
+                                            SystemTextJsonSerializerSetup.GlobalSerializationOptions
+                                        );
                             }
                         )
                         .IgnoreMatchedProperties(true)

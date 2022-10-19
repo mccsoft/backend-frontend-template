@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json;
 
 namespace MccSoft.TemplateApp.Domain.Audit;
 
@@ -32,14 +33,14 @@ public class AuditLog
     public User? User { get; set; }
 
     [Column(TypeName = "jsonb")]
-    public object FullKey { get; set; } = null!;
+    public JsonDocument FullKey { get; set; } = null!;
 
     [Column(TypeName = "jsonb")]
-    public object? Actual { get; set; }
+    public JsonDocument? Actual { get; set; }
 
     [Column(TypeName = "jsonb")]
-    public object? Change { get; set; }
+    public JsonDocument? Change { get; set; }
 
     [Column(TypeName = "jsonb")]
-    public object? Old { get; set; }
+    public JsonDocument? Old { get; set; }
 }
