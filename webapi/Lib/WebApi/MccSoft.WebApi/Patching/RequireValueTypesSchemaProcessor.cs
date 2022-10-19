@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using MccSoft.WebApi.Patching.Models;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using NJsonSchema;
 using NJsonSchema.Generation;
 
@@ -40,7 +40,7 @@ public class RequireValueTypesSchemaProcessor : ISchemaProcessor
             return;
         }
 
-        if (context.Type.IsAssignableTo(typeof(JToken)))
+        if (context.Type.IsAssignableTo(typeof(JsonDocument)))
         {
             // there's no need to do detailed parsing of JToken types
             return;

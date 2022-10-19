@@ -408,28 +408,26 @@ namespace MccSoft.Testing
                         {
                             sourceProp = sourceType
                                 .GetProperties()
-                                .FirstOrDefault(
-                                    info =>
-                                    {
-                                        string name = RemoveUnit(info.Name);
+                                .FirstOrDefault(info =>
+                                {
+                                    string name = RemoveUnit(info.Name);
 
-                                        switch (nameSearchKind)
-                                        {
-                                            case PropertyNameSearchKind.EndsWith:
-                                                return name.EndsWith(propName)
-                                                    || propName.EndsWith(name);
-                                            case PropertyNameSearchKind.StartsWith:
-                                                return name.StartsWith(propName)
-                                                    || propName.StartsWith(name);
-                                            default:
-                                                throw new ArgumentOutOfRangeException(
-                                                    nameof(nameSearchKind),
-                                                    nameSearchKind,
-                                                    null
-                                                );
-                                        }
+                                    switch (nameSearchKind)
+                                    {
+                                        case PropertyNameSearchKind.EndsWith:
+                                            return name.EndsWith(propName)
+                                                || propName.EndsWith(name);
+                                        case PropertyNameSearchKind.StartsWith:
+                                            return name.StartsWith(propName)
+                                                || propName.StartsWith(name);
+                                        default:
+                                            throw new ArgumentOutOfRangeException(
+                                                nameof(nameSearchKind),
+                                                nameSearchKind,
+                                                null
+                                            );
                                     }
-                                );
+                                });
                         }
                     }
                 }

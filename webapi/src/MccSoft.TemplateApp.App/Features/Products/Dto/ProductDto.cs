@@ -1,6 +1,4 @@
-using System;
 using MccSoft.TemplateApp.Domain;
-using Newtonsoft.Json;
 
 namespace MccSoft.TemplateApp.App.Features.Products.Dto
 {

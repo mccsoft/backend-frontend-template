@@ -4,13 +4,11 @@ using MccSoft.TemplateApp.App.Middleware;
 using MccSoft.WebApi;
 using MccSoft.WebApi.Patching;
 using MccSoft.WebApi.Sentry;
-using MccSoft.WebApi.Serialization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.ResponseCompression;
-using Newtonsoft.Json;
 
 namespace MccSoft.TemplateApp.App.Setup;
 
