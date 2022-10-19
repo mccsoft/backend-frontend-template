@@ -28,7 +28,6 @@ builder.Services.AddDomainEventsWithMediatR(typeof(Program), typeof(LogDomainEve
 
 SetupAuth.ConfigureAuth(builder);
 SetupLocalization.AddLocalization(builder);
-builder.Services.AddUtcEverywhere();
 
 builder.Services.AddMailing(builder.Configuration.GetSection("Email"));
 

@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Testing\MccSoft.Testing\MccSoft.Testing.csproj" />
     <ProjectReference Include="..\MccSoft.WebApi\MccSoft.WebApi.csproj" />
   </ItemGroup>
 

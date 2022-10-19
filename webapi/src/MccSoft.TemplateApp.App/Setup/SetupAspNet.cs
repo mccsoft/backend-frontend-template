@@ -4,6 +4,8 @@ using MccSoft.TemplateApp.App.Middleware;
 using MccSoft.WebApi;
 using MccSoft.WebApi.Patching;
 using MccSoft.WebApi.Sentry;
+using MccSoft.WebApi.Serialization;
+using MccSoft.WebApi.Serialization.ModelBinding;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +19,8 @@ public static partial class SetupAspNet
     public static void AddAspNet(WebApplicationBuilder builder)
     {
         var services = builder.Services;
+
+        ConfigureSerialization(builder);
 
         builder.WebHost.UseAppSentry();
         builder.Services.AddResponseCompression(options =>
@@ -59,6 +63,25 @@ public static partial class SetupAspNet
         // This will make it easier to pull changes from Template when Template is updated
         // (actually this file will be overwritten by a file from template, which will make your changes disappear)
         AddProjectSpecifics(builder);
+    }
+
+    private static void ConfigureSerialization(WebApplicationBuilder builder)
+    {
+        // todo remove that
+        builder.Services.AddUtcEverywhere();
+
+        // add DateOnly/TimeOnly support
+        // also add UtcEverywhere approach
+        builder.Services.AddMvc(options =>
+        {
+            options.ModelBinderProviders.Insert(0, new UtcDateTimeModelBinderProvider());
+        });
+        builder.Services
+            .AddControllers(options => options.UseDateOnlyTimeOnlyStringConverters())
+            .AddJsonOptions(opts =>
+            {
+                opts.SetupJson();
+            });
     }
 
     static partial void AddProjectSpecifics(WebApplicationBuilder builder);
