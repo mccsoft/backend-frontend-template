@@ -1236,7 +1236,6 @@ export class ProblemDetails implements IProblemDetails {
     status?: number | null;
     detail?: string | null;
     instance?: string | null;
-    extensions?: { [key: string]: any; };
 
     constructor(data?: IProblemDetails) {
         if (data) {
@@ -1254,13 +1253,6 @@ export class ProblemDetails implements IProblemDetails {
             this.status = _data["status"];
             this.detail = _data["detail"];
             this.instance = _data["instance"];
-            if (_data["extensions"]) {
-                this.extensions = {} as any;
-                for (let key in _data["extensions"]) {
-                    if (_data["extensions"].hasOwnProperty(key))
-                        (<any>this.extensions)![key] = _data["extensions"][key];
-                }
-            }
         }
     }
 
@@ -1278,13 +1270,6 @@ export class ProblemDetails implements IProblemDetails {
         data["status"] = this.status;
         data["detail"] = this.detail;
         data["instance"] = this.instance;
-        if (this.extensions) {
-            data["extensions"] = {};
-            for (let key in this.extensions) {
-                if (this.extensions.hasOwnProperty(key))
-                    (<any>data["extensions"])[key] = (<any>this.extensions)[key];
-            }
-        }
         return data;
     }
 }
@@ -1295,7 +1280,6 @@ export interface IProblemDetails {
     status?: number | null;
     detail?: string | null;
     instance?: string | null;
-    extensions?: { [key: string]: any; };
 }
 
 export class HttpValidationProblemDetails extends ProblemDetails implements IHttpValidationProblemDetails {

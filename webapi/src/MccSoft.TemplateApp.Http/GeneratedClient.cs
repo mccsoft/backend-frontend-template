@@ -1794,9 +1794,6 @@ namespace MccSoft.TemplateApp.Http.Generated
         [Newtonsoft.Json.JsonProperty("instance", Required = Newtonsoft.Json.Required.Default )]
         public string Instance { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("extensions", Required = Newtonsoft.Json.Required.DisallowNull )]
-        public System.Collections.Generic.IDictionary<string, object> Extensions { get; set; }
-
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
 
         [Newtonsoft.Json.JsonExtensionData]
