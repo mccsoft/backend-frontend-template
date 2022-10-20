@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using FluentAssertions.Specialized;
 using MccSoft.HttpClientExtension;
 using MccSoft.TemplateApp.Http.Generated;
-using Newtonsoft.Json;
 using ValidationProblemDetails = MccSoft.TemplateApp.Http.Generated.ValidationProblemDetails;
 
 namespace MccSoft.TemplateApp.TestUtils
@@ -60,9 +60,8 @@ namespace MccSoft.TemplateApp.TestUtils
             }
             else
             {
-                string serialized = JsonConvert.SerializeObject(exception);
-                var validationProblemDetails =
-                    JsonConvert.DeserializeObject<ValidationProblemDetails>(serialized);
+                var serialized = JsonSerializer.SerializeToElement(exception);
+                var validationProblemDetails = serialized.Deserialize<ValidationProblemDetails>();
                 errors = validationProblemDetails.Errors.ToDictionary(
                     x => x.Key,
                     x => x.Value.ToList()
@@ -124,9 +123,9 @@ namespace MccSoft.TemplateApp.TestUtils
                 );
 
             var exception = assertion.Subject.First();
-            var validationProblemDetails = JsonConvert.DeserializeObject<ValidationProblemDetails>(
+            var validationProblemDetails = JsonSerializer.Deserialize<ValidationProblemDetails>(
                 exception.Content
-            );
+            )!;
 
             validationProblemDetails.Errors.Should().ContainKey(fieldName);
             if (!string.IsNullOrEmpty(error))
@@ -152,7 +151,7 @@ namespace MccSoft.TemplateApp.TestUtils
                 );
 
             var exception = assertion.Subject.First();
-            var errors = JsonConvert.DeserializeObject<ValidationProblemDetails>(exception.Content);
+            var errors = JsonSerializer.Deserialize<ValidationProblemDetails>(exception.Content)!;
 
             errors.Type.Should().BeEquivalentTo(type);
 
@@ -173,9 +172,7 @@ namespace MccSoft.TemplateApp.TestUtils
             var exception = assertion.Subject.First() as ApiException;
             exception.StatusCode.Should().Be(404, because, becauseArgs);
 
-            var errors = JsonConvert.DeserializeObject<ValidationProblemDetails>(
-                exception.Response
-            );
+            var errors = JsonSerializer.Deserialize<ValidationProblemDetails>(exception.Response)!;
             errors.Type.Should().BeEquivalentTo("urn:MccSoft.not-found");
 
             return assertion;

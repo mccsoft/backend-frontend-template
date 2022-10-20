@@ -3536,7 +3536,7 @@ __metadata:
     lottie-web: 5.9.6
     material-ui-popup-state: 4.0.2
     nock: 13.2.4
-    nswag: 13.16.1
+    nswag: 13.17.0
     oidc-client-ts: 2.0.1
     prettier: 2.6.2
     query-string: 7.1.1
@@ -3550,7 +3550,7 @@ __metadata:
     react-js-pagination: 3.0.3
     react-merge-refs: 2.0.1
     react-paginate: 8.1.2
-    react-query-swagger: 14.3.2
+    react-query-swagger: 14.4.4
     react-redux: 8.0.2
     react-router: 6.3.0
     react-router-dom: 6.3.0
@@ -9169,21 +9169,12 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"nswag@npm:13.16.1":
-  version: 13.16.1
-  resolution: "nswag@npm:13.16.1"
+"nswag@npm:13.17.0, nswag@npm:^13.17.0":
+  version: 13.17.0
+  resolution: "nswag@npm:13.17.0"
   bin:
     nswag: bin/nswag.js
-  checksum: 86fea25b4ad81a217d3c79b6184f4441d261d14411511ac51b7d9c41967830b854ebb787ded6af1dda896295d74cc73c0a5eaae4a391563df0b55ad6628e2fb1
-  languageName: node
-  linkType: hard
-
-"nswag@npm:^13.15.10":
-  version: 13.15.10
-  resolution: "nswag@npm:13.15.10"
-  bin:
-    nswag: bin/nswag.js
-  checksum: 7c0d3de065e5aafdf3d6340802ac047ccdec89394794e4df62649473413f640d949feeb9e77ebed6f9a28f5b484429d3239226860a11237ac0d8b726396258d2
+  checksum: 5a130d40c26f40c4eac8e61434f2ba26d9a48c304090266dd7a5c91d3ce2481833f23ad29e76826d1e04e7bb5152f39e2ac2919a1c6a48dfcb72434cde183b19
   languageName: node
   linkType: hard
 
@@ -10038,12 +10029,12 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"react-query-swagger@npm:14.3.2":
-  version: 14.3.2
-  resolution: "react-query-swagger@npm:14.3.2"
+"react-query-swagger@npm:14.4.4":
+  version: 14.4.4
+  resolution: "react-query-swagger@npm:14.4.4"
   dependencies:
     "@tanstack/react-query-persist-client": ^4.2.0
-    nswag: ^13.15.10
+    nswag: ^13.17.0
   peerDependencies:
     "@tanstack/react-query": "> 4.0"
     react: 17.x || 18.x
@@ -10051,7 +10042,7 @@ fsevents@~2.3.2:
     typescript: 3.x || 4.x
   bin:
     react-query-swagger: cli.js
-  checksum: 669e14d9c55c56549376a4d4abe2e7720e22ca1e7c781a8bef2c417cb4d64afa66b3547491cd9ec6bb43386e44b861572436a9feeb089ee2d500b91c5f38ea25
+  checksum: 0855da815dd862c10cded68c2bdaf67b78dfbc331b9308e37498511b3fd5fa991ebb967e921d25b4cd2197077258df1fb8145cc7bbfab3e79fdaba5e45093f1c
   languageName: node
   linkType: hard
 

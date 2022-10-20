@@ -29,9 +29,6 @@ public static partial class SetupAspNet
             options.Providers.Add<GzipCompressionProvider>();
         });
 
-        // JsonConvert.DefaultSettings = () =>
-        //     JsonSerializerSetup.SetupJson(new JsonSerializerSettings());
-
         builder.Services.Configure<JsonOptions>(options =>
         {
             options.JsonSerializerOptions.Converters.Add(new PatchRequestConverter());
@@ -67,9 +64,6 @@ public static partial class SetupAspNet
 
     private static void ConfigureSerialization(WebApplicationBuilder builder)
     {
-        // todo remove that
-        builder.Services.AddUtcEverywhere();
-
         // add DateOnly/TimeOnly support
         // also add UtcEverywhere approach
         builder.Services.AddMvc(options =>
