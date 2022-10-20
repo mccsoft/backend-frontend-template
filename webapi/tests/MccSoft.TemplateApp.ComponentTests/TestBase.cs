@@ -4,6 +4,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Hangfire;
+using Hangfire.Common;
+using Hangfire.States;
 using MccSoft.IntegreSql.EF;
 using MccSoft.IntegreSql.EF.DatabaseInitialization;
 using MccSoft.TemplateApp.App.Setup;
@@ -145,8 +147,33 @@ namespace MccSoft.TemplateApp.ComponentTests
 
         protected virtual void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<BasicApiTests.HangfireStubTestService>();
+
             _backgroundJobClient = new Mock<IBackgroundJobClient>();
             services.AddSingleton(_backgroundJobClient.Object);
+
+            _backgroundJobClient
+                .Setup(x => x.Create(It.IsAny<Job>(), It.IsAny<IState>()))
+                .Callback(
+                    (Job job, IState state) =>
+                    {
+                        using var scope = TestScope.ServiceProvider.CreateScope();
+                        object? result;
+                        if (job.Method.IsStatic)
+                        {
+                            result = job.Method.Invoke(null, job.Args.ToArray());
+                        }
+                        else
+                        {
+                            var service = scope.ServiceProvider.GetRequiredService(job.Type);
+                            result = job.Method.Invoke(service, job.Args.ToArray());
+                        }
+                        if (result is Task resultTask)
+                        {
+                            resultTask.GetAwaiter().GetResult();
+                        }
+                    }
+                );
         }
     }
 }

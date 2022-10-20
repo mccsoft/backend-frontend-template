@@ -72,7 +72,10 @@ public class TemplateAppDbContext
             new PostProcessEntitiesOnSaveInterceptor<IOwnedEntity, TemplateAppDbContext>(
                 (entity, context) =>
                 {
-                    entity.SetOwnerIdUnsafe(context.CurrentOwnerId);
+                    if (!string.IsNullOrEmpty(context.CurrentOwnerId))
+                    {
+                        entity.SetOwnerIdUnsafe(context.CurrentOwnerId);
+                    }
                 }
             )
         );
