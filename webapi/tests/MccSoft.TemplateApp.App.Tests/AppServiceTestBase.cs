@@ -1,47 +1,33 @@
 using System.Linq;
 using System.Threading.Tasks;
 using MccSoft.IntegreSql.EF.DatabaseInitialization;
-using MccSoft.NpgSql;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Persistence;
 using MccSoft.Testing;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Xunit.Abstractions;
 
-namespace MccSoft.TemplateApp.App.Tests
+namespace MccSoft.TemplateApp.App.Tests;
+
+/// <summary>
+/// The base class for application service test classes.
+/// </summary>
+public class AppServiceTestBase : TestBase<TemplateAppDbContext>
 {
-    /// <summary>
-    /// The base class for application service test classes.
-    /// </summary>
-    /// <typeparam name="TService">The type of the service under test.</typeparam>
-    public class AppServiceTestBase<TService> : AppServiceTestBase<TService, TemplateAppDbContext>
-        where TService : class
+    protected User _defaultUser;
+
+    protected AppServiceTestBase(
+        ITestOutputHelper outputHelper,
+        DatabaseType? testDatabaseType = DatabaseType.Postgres
+    ) : base(outputHelper, testDatabaseType)
     {
-        protected User _defaultUser;
+        Audit.Core.Configuration.AuditDisabled = true;
 
-        public AppServiceTestBase(DatabaseType? testDatabaseType = DatabaseType.Postgres)
-            : base(testDatabaseType)
-        {
-            if (testDatabaseType != null)
-            {
-                InitializeDatabase(
-                    new DatabaseSeedingOptions<TemplateAppDbContext>(
-                        Name: "DefaultUser",
-                        SeedingFunction: SeedDatabase
-                    )
-                );
-            }
-
-            PostgresSerialization.AdjustDateOnlySerialization();
-            Audit.Core.Configuration.AuditDisabled = true;
-        }
-
-        protected virtual async Task SeedDatabase(TemplateAppDbContext db)
-        {
-            db.Users.Add(new User("default@test.test"));
-            await db.SaveChangesAsync();
-        }
-
-        protected override void InitializeGlobalVariables()
+        // initialize some variables to be available in all tests
+        if (testDatabaseType != null)
         {
             WithDbContextSync(db =>
             {
@@ -49,24 +35,48 @@ namespace MccSoft.TemplateApp.App.Tests
             });
             _userAccessorMock.Setup(x => x.GetUserId()).Returns(_defaultUser.Id);
         }
+    }
 
-        protected override ServiceCollection CreateServiceCollection()
-        {
-            var serviceCollection = base.CreateServiceCollection();
+    /// <summary>
+    /// Insert some data that you want to be available in every test.
+    ///
+    /// Note, that this method is executed only once, when template database is initially created.
+    /// !!IT IS NOT CALLED IN EACH TEST!!!
+    /// (though, created data is available in each test by backing up
+    /// and restoring a DB from template for each test)
+    /// </summary>
+    protected override DatabaseSeedingOptions<TemplateAppDbContext> SeedDatabase() =>
+        new DatabaseSeedingOptions<TemplateAppDbContext>(
+            nameof(TemplateAppDbContext) + "AppServiceTest",
+            async (db) =>
+            {
+                db.Users.Add(new User("default@test.test"));
+                await db.SaveChangesAsync();
+            }
+        );
 
-            // Here you could register more project-specific types in a service collection
+    protected override void RegisterServices(
+        IServiceCollection services,
+        ConfigurationBuilder configurationBuilder,
+        IWebHostEnvironment environment
+    )
+    {
+        SetupServices.AddServices(services, configurationBuilder.Build(), environment);
 
-            return serviceCollection;
-        }
+        // Here you could override type registration (e.g. mock http clients that call other microservices).
+        // Most probably you'd need to remove existing registration before registering new one.
+        // You could remove the registration by calling:
+        // services.RemoveRegistration<TService>();
+    }
 
-        /// <summary>
-        /// Creates a new instance of <see cref="TemplateAppDbContext"/>.
-        /// Should be used in alternative implementations of <see cref="InitializeService" />.
-        /// </summary>
-        /// <returns>A new DbContext instance.</returns>
-        protected override TemplateAppDbContext CreateDbContext()
-        {
-            return new TemplateAppDbContext(_builder.Options, _userAccessorMock.Object);
-        }
+    /// <summary>
+    /// Creates a new instance of <see cref="TemplateAppDbContext"/>.
+    /// </summary>
+    /// <returns>A new DbContext instance.</returns>
+    protected override TemplateAppDbContext CreateDbContext(
+        DbContextOptions<TemplateAppDbContext> options
+    )
+    {
+        return new TemplateAppDbContext(options, _userAccessorMock.Object);
     }
 }

@@ -23,7 +23,7 @@ using System.Text;
 
 namespace MccSoft.TemplateApp.ComponentTests
 {
-    public class BasicApiTests : TestBase
+    public class BasicApiTests : ComponentTestBase
     {
         public BasicApiTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
@@ -172,12 +172,12 @@ namespace MccSoft.TemplateApp.ComponentTests
             process.OutputDataReceived += (_, args) =>
             {
                 if (!string.IsNullOrEmpty(args.Data))
-                    _outputHelper.WriteLine(JsonConvert.SerializeObject(args.Data));
+                    OutputHelper.WriteLine(JsonConvert.SerializeObject(args.Data));
             };
             process.ErrorDataReceived += (_, args) =>
             {
                 if (!string.IsNullOrEmpty(args.Data))
-                    _outputHelper.WriteLine(JsonConvert.SerializeObject(args.Data));
+                    OutputHelper.WriteLine(JsonConvert.SerializeObject(args.Data));
             };
 
             process.Start();
@@ -200,7 +200,7 @@ namespace MccSoft.TemplateApp.ComponentTests
 
                 if (exitCode != 0)
                 {
-                    _outputHelper.WriteLine(
+                    OutputHelper.WriteLine(
                         "Running tool \'yarn\': exit code is not zero, but \'{exitCode}\'"
                     );
                 }
