@@ -29,7 +29,7 @@ public static partial class SetupDatabase
         // If you'd like to modify this class, consider adding your custom code in the SetupDatabase.partial.cs
         // This will make it easier to pull changes from Template when Template is updated
         // (actually this file will be overwritten by a file from template, which will make your changes disappear)
-        await RunMigrationsProjectSpecific(app, scope, context);
+        await SeedDatabase(scope.ServiceProvider, context);
     }
 
     public static void AddDatabase(WebApplicationBuilder builder)
@@ -74,9 +74,13 @@ public static partial class SetupDatabase
 
     private static partial TemplateAppDbContext CreateDbContext(IServiceProvider provider);
 
-    private static partial Task RunMigrationsProjectSpecific(
-        WebApplication app,
-        IServiceScope scope,
+    /// <summary>
+    /// Performs database seeding operation.
+    /// It's public because it's also called from ComponentTests
+    /// </summary>
+    /// <returns></returns>
+    public static partial Task SeedDatabase(
+        IServiceProvider serviceProvider,
         TemplateAppDbContext context
     );
 

@@ -20,16 +20,19 @@ namespace MccSoft.TemplateApp.App.Features.Products
         private readonly TemplateAppDbContext _dbContext;
         private readonly DbRetryHelper<TemplateAppDbContext, ProductService> _retryHelper;
         private readonly IUserAccessor _userAccessor;
+        private readonly ILogger<ProductService> _logger;
 
         public ProductService(
             TemplateAppDbContext dbContext,
             DbRetryHelper<TemplateAppDbContext, ProductService> retryHelper,
-            IUserAccessor userAccessor
+            IUserAccessor userAccessor,
+            ILogger<ProductService> logger
         )
         {
             _dbContext = dbContext;
             _retryHelper = retryHelper;
             _userAccessor = userAccessor;
+            _logger = logger;
         }
 
         public async Task<ProductDto> Create(CreateProductDto dto)
@@ -37,32 +40,34 @@ namespace MccSoft.TemplateApp.App.Features.Products
             // could be used if needed
             var userId = _userAccessor.GetUserId();
 
-            var productId = await _retryHelper.RetryInTransactionAsync(async db =>
-            {
-                var isProductWithSameNameExists = await db.Products.AnyAsync(
-                    x => x.Title == dto.Title
-                );
-                if (isProductWithSameNameExists)
+            var productId = await _retryHelper.RetryInTransactionAsync(
+                async (db, logger) =>
                 {
-                    throw new ValidationException(
-                        nameof(dto.Title),
-                        "Product with same name already exists"
+                    var isProductWithSameNameExists = await db.Products.AnyAsync(
+                        x => x.Title == dto.Title
                     );
+                    if (isProductWithSameNameExists)
+                    {
+                        throw new ValidationException(
+                            nameof(dto.Title),
+                            "Product with same name already exists"
+                        );
+                    }
+
+                    var user = await db.Users.GetOne(User.HasId(userId));
+                    var product = new Product(dto.Title)
+                    {
+                        ProductType = dto.ProductType,
+                        LastStockUpdatedAt = dto.LastStockUpdatedAt,
+                        CreatedByUser = user,
+                    };
+                    db.Products.Add(product);
+
+                    await db.SaveChangesAsync();
+                    logger.LogInformation("Product {id} created", product.Id);
+                    return product.Id;
                 }
-
-                var user = await db.Users.GetOne(User.HasId(userId));
-                var product = new Product(dto.Title)
-                {
-                    ProductType = dto.ProductType,
-                    LastStockUpdatedAt = dto.LastStockUpdatedAt,
-                    CreatedByUser = user,
-                };
-                db.Products.Add(product);
-
-                await db.SaveChangesAsync();
-
-                return product.Id;
-            });
+            );
             return await Get(productId);
         }
 

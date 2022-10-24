@@ -3,24 +3,36 @@ using MccSoft.TemplateApp.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
-namespace MccSoft.TemplateApp.App.Services.Authentication;
+namespace MccSoft.TemplateApp.App.Services.Authentication.Seed;
 
 public class DefaultUserSeeder
 {
     private readonly IOptions<IdentityOptions> _identityOptions;
+    private readonly IOptions<DefaultUserOptions> _defaultUserOptions;
     private readonly UserManager<User> _userManager;
 
     public DefaultUserSeeder(
         IOptions<IdentityOptions> identityOptions,
+        IOptions<DefaultUserOptions> defaultUserOptions,
         UserManager<User> userManager
     )
     {
         _identityOptions = identityOptions;
+        _defaultUserOptions = defaultUserOptions;
         _userManager = userManager;
     }
 
-    public async Task SeedUser(string userName, string password)
+    public async Task SeedUser()
     {
+        DefaultUserOptions defaultUser = _defaultUserOptions.Value;
+        if (
+            string.IsNullOrEmpty(defaultUser.UserName) || string.IsNullOrEmpty(defaultUser.Password)
+        )
+            return;
+
+        var userName = defaultUser.UserName;
+        var password = defaultUser.Password;
+
         User existingUser = await _userManager.FindByNameAsync(userName);
         if (existingUser != null)
         {
@@ -63,6 +75,5 @@ public class DefaultUserSeeder
             _identityOptions.Value.Password = JsonSerializer.Deserialize<PasswordOptions>(
                 serializedPasswordOptions
             );
-        }
     }
 }

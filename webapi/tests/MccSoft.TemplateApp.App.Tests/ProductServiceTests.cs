@@ -8,15 +8,19 @@ using MccSoft.TemplateApp.TestUtils.Factories;
 using MccSoft.Testing;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace MccSoft.TemplateApp.App.Tests
 {
-    public class ProductServiceTests : AppServiceTestBase<ProductService>
+    public class ProductServiceTests : AppServiceTestBase
     {
-        public ProductServiceTests() : base(DatabaseType.Postgres)
+        public ProductServiceTests(ITestOutputHelper outputHelper)
+            : base(outputHelper, DatabaseType.Postgres)
         {
-            Sut = InitializeService();
+            Sut = CreateService<ProductService>();
         }
+
+        public ProductService Sut { get; set; }
 
         [Fact]
         public async Task Create()

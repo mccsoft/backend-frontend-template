@@ -94,6 +94,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="..\..\..\package.json">
+      <Link>package.json</Link>
+    </Content>
     <None Update="logs;idsrv4test.pfx;Dockerfile">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>

@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 
 namespace MccSoft.TemplateApp.ComponentTests
 {
-    public class ProductTests : TestBase
+    public class ProductTests : ComponentTestBase
     {
         private readonly ProductClient _productClient;
 

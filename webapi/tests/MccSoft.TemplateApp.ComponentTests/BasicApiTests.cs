@@ -22,7 +22,7 @@ using Newtonsoft.Json.Linq;
 
 namespace MccSoft.TemplateApp.ComponentTests;
 
-public class BasicApiTests : TestBase
+    public class BasicApiTests : ComponentTestBase
 {
     public BasicApiTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
@@ -164,12 +164,12 @@ public class BasicApiTests : TestBase
         process.OutputDataReceived += (_, args) =>
         {
             if (!string.IsNullOrEmpty(args.Data))
-                _outputHelper.WriteLine(JsonConvert.SerializeObject(args.Data));
+                    OutputHelper.WriteLine(JsonConvert.SerializeObject(args.Data));
         };
         process.ErrorDataReceived += (_, args) =>
         {
             if (!string.IsNullOrEmpty(args.Data))
-                _outputHelper.WriteLine(JsonConvert.SerializeObject(args.Data));
+                    OutputHelper.WriteLine(JsonConvert.SerializeObject(args.Data));
         };
 
         process.Start();
@@ -192,7 +192,7 @@ public class BasicApiTests : TestBase
 
             if (exitCode != 0)
             {
-                _outputHelper.WriteLine(
+                    OutputHelper.WriteLine(
                     "Running tool \'yarn\': exit code is not zero, but \'{exitCode}\'"
                 );
             }
