@@ -357,6 +357,7 @@ public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor
         ConnectionString = _databaseInitializer?.CreateDatabaseGetConnectionStringSync(
             seedingOptions
         );
+        OutputHelper.WriteLine($"Connection string: {ConnectionString}");
 
         _builder = GetBuilder(ConnectionString ?? "");
     }
