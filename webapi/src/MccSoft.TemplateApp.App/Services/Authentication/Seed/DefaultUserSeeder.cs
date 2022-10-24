@@ -75,5 +75,6 @@ public class DefaultUserSeeder
             _identityOptions.Value.Password = JsonSerializer.Deserialize<PasswordOptions>(
                 serializedPasswordOptions
             );
+        }
     }
 }

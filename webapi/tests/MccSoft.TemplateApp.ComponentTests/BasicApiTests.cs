@@ -22,7 +22,7 @@ using Newtonsoft.Json.Linq;
 
 namespace MccSoft.TemplateApp.ComponentTests;
 
-    public class BasicApiTests : ComponentTestBase
+public class BasicApiTests : ComponentTestBase
 {
     public BasicApiTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
@@ -164,12 +164,12 @@ namespace MccSoft.TemplateApp.ComponentTests;
         process.OutputDataReceived += (_, args) =>
         {
             if (!string.IsNullOrEmpty(args.Data))
-                    OutputHelper.WriteLine(JsonConvert.SerializeObject(args.Data));
+                OutputHelper.WriteLine(JsonConvert.SerializeObject(args.Data));
         };
         process.ErrorDataReceived += (_, args) =>
         {
             if (!string.IsNullOrEmpty(args.Data))
-                    OutputHelper.WriteLine(JsonConvert.SerializeObject(args.Data));
+                OutputHelper.WriteLine(JsonConvert.SerializeObject(args.Data));
         };
 
         process.Start();
@@ -192,7 +192,7 @@ namespace MccSoft.TemplateApp.ComponentTests;
 
             if (exitCode != 0)
             {
-                    OutputHelper.WriteLine(
+                OutputHelper.WriteLine(
                     "Running tool \'yarn\': exit code is not zero, but \'{exitCode}\'"
                 );
             }
@@ -275,7 +275,7 @@ namespace MccSoft.TemplateApp.ComponentTests;
     [Fact]
     public void HangfireStub_StaticMethod_Works()
     {
-        var backgroundJobClient = ResolveFromTestScope<IBackgroundJobClient>();
+        var backgroundJobClient = CreateService<IBackgroundJobClient>();
         var file = "1.txt";
         File.Delete(file);
         backgroundJobClient.Enqueue(() => File.WriteAllText(file, "123"));
@@ -287,7 +287,7 @@ namespace MccSoft.TemplateApp.ComponentTests;
     [Fact]
     public async Task HangfireStub_InstanceMethod_Works()
     {
-        var backgroundJobClient = ResolveFromTestScope<IBackgroundJobClient>();
+        var backgroundJobClient = CreateService<IBackgroundJobClient>();
         backgroundJobClient.Enqueue<HangfireStubTestService>(
             x => x.AddProduct("zxc", _defaultUser.Id)
         );
