@@ -243,8 +243,8 @@ public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor
     ) where TService : class
     {
         serviceProvider = CreateServiceProvider(configureRegistrations);
-
-        return serviceProvider.GetRequiredService<TService>();
+        var scope = serviceProvider.CreateScope();
+        return scope.ServiceProvider.GetRequiredService<TService>();
     }
 
     protected virtual IServiceProvider CreateServiceProvider(

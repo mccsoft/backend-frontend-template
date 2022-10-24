@@ -1,6 +1,7 @@
 ﻿using MccSoft.LowLevelPrimitives;
 using MccSoft.TemplateApp.App.Features.Products;
 using MccSoft.TemplateApp.App.Services.Authentication;
+using MccSoft.TemplateApp.App.Services.Authentication.Seed;
 using MccSoft.TemplateApp.App.Utils;
 
 namespace MccSoft.TemplateApp.App;

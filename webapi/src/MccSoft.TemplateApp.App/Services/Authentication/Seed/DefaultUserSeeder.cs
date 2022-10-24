@@ -1,89 +1,78 @@
-using System;
-using System.Threading.Tasks;
 using MccSoft.TemplateApp.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
-namespace MccSoft.TemplateApp.App.Services.Authentication
-{
-    public class DefaultUserSeeder
-    {
-        private readonly IOptions<IdentityOptions> _identityOptions;
-        private readonly IOptions<DefaultUserOptions> _defaultUserOptions;
-        private readonly UserManager<User> _userManager;
+namespace MccSoft.TemplateApp.App.Services.Authentication.Seed;
 
-        public DefaultUserSeeder(
-            IOptions<IdentityOptions> identityOptions,
-            IOptions<DefaultUserOptions> defaultUserOptions,
-            UserManager<User> userManager
+public class DefaultUserSeeder
+{
+    private readonly IOptions<IdentityOptions> _identityOptions;
+    private readonly IOptions<DefaultUserOptions> _defaultUserOptions;
+    private readonly UserManager<User> _userManager;
+
+    public DefaultUserSeeder(
+        IOptions<IdentityOptions> identityOptions,
+        IOptions<DefaultUserOptions> defaultUserOptions,
+        UserManager<User> userManager
+    )
+    {
+        _identityOptions = identityOptions;
+        _defaultUserOptions = defaultUserOptions;
+        _userManager = userManager;
+    }
+
+    public async Task SeedUser()
+    {
+        DefaultUserOptions defaultUser = _defaultUserOptions.Value;
+        if (
+            string.IsNullOrEmpty(defaultUser.UserName) || string.IsNullOrEmpty(defaultUser.Password)
         )
+            return;
+
+        var userName = defaultUser.UserName;
+        var password = defaultUser.Password;
+
+        User existingUser = await _userManager.FindByNameAsync(userName);
+        if (existingUser != null)
         {
-            _identityOptions = identityOptions;
-            _defaultUserOptions = defaultUserOptions;
-            _userManager = userManager;
+            var isPasswordCorrect = await _userManager.CheckPasswordAsync(existingUser, password);
+            if (isPasswordCorrect)
+                return;
         }
 
-        public async Task SeedUser()
+        // preserve password settings to later reset to them
+        PasswordOptions passwordOptions = _identityOptions.Value.Password;
+        var serializedPasswordOptions = JsonConvert.SerializeObject(passwordOptions);
+        try
         {
-            DefaultUserOptions defaultUser = _defaultUserOptions.Value;
-            if (
-                string.IsNullOrEmpty(defaultUser.UserName)
-                || string.IsNullOrEmpty(defaultUser.Password)
-            )
-                return;
+            // adjust Password settings to allow setting the default password
+            passwordOptions.RequireNonAlphanumeric = false;
+            passwordOptions.RequiredLength = 0;
+            passwordOptions.RequireUppercase = false;
+            passwordOptions.RequireLowercase = false;
+            passwordOptions.RequireDigit = false;
 
-            var userName = defaultUser.UserName;
-            var password = defaultUser.Password;
-
-            User existingUser = await _userManager.FindByNameAsync(userName);
-            if (existingUser != null)
+            if (existingUser == null)
             {
-                var isPasswordCorrect = await _userManager.CheckPasswordAsync(
-                    existingUser,
-                    password
-                );
-                if (isPasswordCorrect)
-                    return;
+                var user = new User() { UserName = userName, };
+                await _userManager.CreateAsync(user);
+                await _userManager.AddPasswordAsync(user, password);
             }
-
-            // preserve password settings to later reset to them
-            PasswordOptions passwordOptions = _identityOptions.Value.Password;
-            var serializedPasswordOptions = JsonConvert.SerializeObject(passwordOptions);
-            try
+            else
             {
-                // adjust Password settings to allow setting the default password
-                passwordOptions.RequireNonAlphanumeric = false;
-                passwordOptions.RequiredLength = 0;
-                passwordOptions.RequireUppercase = false;
-                passwordOptions.RequireLowercase = false;
-                passwordOptions.RequireDigit = false;
-
-                if (existingUser == null)
+                var token = await _userManager.GeneratePasswordResetTokenAsync(existingUser);
+                var result = await _userManager.ResetPasswordAsync(existingUser, token, password);
+                if (!result.Succeeded)
                 {
-                    var user = new User() { UserName = userName, };
-                    await _userManager.CreateAsync(user);
-                    await _userManager.AddPasswordAsync(user, password);
-                }
-                else
-                {
-                    var token = await _userManager.GeneratePasswordResetTokenAsync(existingUser);
-                    var result = await _userManager.ResetPasswordAsync(
-                        existingUser,
-                        token,
-                        password
-                    );
-                    if (!result.Succeeded)
-                    {
-                        throw new InvalidOperationException($"Reset password failed, {result}");
-                    }
+                    throw new InvalidOperationException($"Reset password failed, {result}");
                 }
             }
-            finally
-            {
-                //reset settings to default
-                JsonConvert.PopulateObject(serializedPasswordOptions, passwordOptions);
-            }
+        }
+        finally
+        {
+            //reset settings to default
+            JsonConvert.PopulateObject(serializedPasswordOptions, passwordOptions);
         }
     }
 }
