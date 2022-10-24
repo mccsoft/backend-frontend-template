@@ -115,7 +115,6 @@ public class ComponentTestBase : TestBase<TemplateAppDbContext>, IDisposable
     /// (though, created data is available in each test by backing up
     /// and restoring a DB from template for each test)
     /// </summary>
-
     protected override DatabaseSeedingOptions<TemplateAppDbContext> SeedDatabase() =>
         new DatabaseSeedingOptions<TemplateAppDbContext>(
             nameof(TemplateAppDbContext) + "ComponentTest",

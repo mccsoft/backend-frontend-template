@@ -68,6 +68,8 @@ public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor
 
     protected readonly DatabaseType? _databaseType;
     protected readonly IDatabaseInitializer _databaseInitializer;
+    protected Mock<IWebHostEnvironment> _webHostEnvironment;
+    protected IConfigurationRoot _configuration;
 
     protected TestBase(ITestOutputHelper outputHelper, DatabaseType? databaseType)
     {
@@ -275,6 +277,22 @@ public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor
          */
         RegisterServices(serviceCollection, configurationBuilder, environment);
 
+        RegisterBaseTypes(serviceCollection);
+        /*
+         * DO NOT register your project-specific services here!
+         * Register your app-specific services in RegisterServices method
+         */
+
+        return serviceCollection;
+    }
+
+    private void RegisterBaseTypes(ServiceCollection serviceCollection)
+    {
+        /*
+         * DO NOT register your project-specific services here!
+         * Register your app-specific services in RegisterServices method
+         */
+
         serviceCollection
             .AddScoped(x => CreateDbContext())
             .AddSingleton<Func<TDbContext>>(CreateDbContext)
@@ -288,19 +306,24 @@ public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor
         _userAccessorMock.Setup(x => x.IsHttpContextAvailable).Returns(true);
         serviceCollection.AddSingleton(_userAccessorMock.Object);
 
-        _backgroundJobClient = HangfireMock.CreateHangfireMock(() => _serviceProvider);
-        serviceCollection.AddSingleton(_backgroundJobClient.Object);
+        serviceCollection.AddSingleton(
+            (_backgroundJobClient = HangfireMock.CreateHangfireMock(() => _serviceProvider)).Object
+        );
+        serviceCollection.AddSingleton(
+            (_webHostEnvironment = new Mock<IWebHostEnvironment>()).Object
+        );
+        serviceCollection.AddSingleton<IConfiguration>(
+            _configuration = new ConfigurationBuilder().AddInMemoryCollection().Build()
+        );
 
         serviceCollection.AddLogging(
             loggingBuilder => loggingBuilder.ClearProviders().AddXUnit(this)
         );
 
         /*
-         * DO NOT register your services here!
+         * DO NOT register your project-specific services here!
          * Register your app-specific services in RegisterServices method
          */
-
-        return serviceCollection;
     }
 
     protected virtual (ConfigurationBuilder, IWebHostEnvironment) SetupEnvironment()
