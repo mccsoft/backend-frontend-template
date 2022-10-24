@@ -11,10 +11,12 @@ using MccSoft.IntegreSql.EF.DatabaseInitialization;
 using MccSoft.LowLevelPrimitives;
 using MccSoft.NpgSql;
 using MccSoft.PersistenceHelpers;
+using MccSoft.Testing.AspNet;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Debug;
 using Moq;
@@ -276,7 +278,12 @@ public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor
         serviceCollection
             .AddScoped(x => CreateDbContext())
             .AddSingleton<Func<TDbContext>>(CreateDbContext)
+            .AddSingleton(_builder.Options)
             .RegisterRetryHelper();
+
+        serviceCollection
+            .AddSingleton<IStringLocalizer>(new DummyStringLocalizer())
+            .AddSingleton(typeof(IStringLocalizer<>), typeof(DummyStringLocalizer<>));
 
         _userAccessorMock.Setup(x => x.IsHttpContextAvailable).Returns(true);
         serviceCollection.AddSingleton(_userAccessorMock.Object);
