@@ -288,6 +288,11 @@ public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor
             loggingBuilder => loggingBuilder.ClearProviders().AddXUnit(this)
         );
 
+        /*
+         * DO NOT register your services here!
+         * Register your app-specific services in RegisterServices method
+         */
+
         return serviceCollection;
     }
 
