@@ -69,9 +69,7 @@ public class ComponentTestBase : TestBase<TemplateAppDbContext>, IDisposable
                 services.AddDbContext<TemplateAppDbContext>(
                     options =>
                     {
-                        _databaseInitializer.UseProvider(options, connectionString);
-                        options.WithLambdaInjection();
-                        options.UseOpenIddict();
+                        ConfigureDatabaseOptions(options, connectionString);
                     },
                     contextLifetime: ServiceLifetime.Scoped,
                     optionsLifetime: ServiceLifetime.Singleton

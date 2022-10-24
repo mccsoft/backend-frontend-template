@@ -183,18 +183,19 @@ public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor
     /// <summary>
     /// Returns the DbContextOptionsBuilder
     /// </summary>
-    /// <param name="connectionString"></param>
-    protected virtual DbContextOptionsBuilder<TDbContext> GetBuilder(string connectionString)
+    protected virtual void ConfigureDatabaseOptions(
+        DbContextOptionsBuilder builder,
+        string connectionString
+    )
     {
-        var builder = new DbContextOptionsBuilder<TDbContext>();
         _databaseInitializer.UseProvider(builder, connectionString);
 
         builder
             .WithLambdaInjection()
             // .UseLoggerFactory(LoggerFactory)
             .EnableSensitiveDataLogging()
-            .EnableDetailedErrors();
-        return builder;
+            .EnableDetailedErrors()
+            .UseOpenIddict();
     }
 
     /// <summary>
@@ -359,7 +360,8 @@ public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor
         );
         OutputHelper.WriteLine($"Connection string: {ConnectionString}");
 
-        _builder = GetBuilder(ConnectionString ?? "");
+        _builder = new DbContextOptionsBuilder<TDbContext>();
+        ConfigureDatabaseOptions(_builder, ConnectionString ?? "");
     }
 
     #endregion
