@@ -29,11 +29,14 @@ public class AppServiceTestBase : TestBase<TemplateAppDbContext>
         // initialize some variables to be available in all tests
         if (testDatabaseType != null)
         {
-            WithDbContextSync(db =>
+            TaskUtils.RunSynchronously(async () =>
             {
-                _defaultUser = db.Users.First(x => x.Email == "default@test.test");
+                await WithDbContext(async db =>
+                {
+                    _defaultUser = await db.Users.FirstAsync(x => x.Email == "default@test.test");
+                });
+                _userAccessorMock.Setup(x => x.GetUserId()).Returns(_defaultUser.Id);
             });
-            _userAccessorMock.Setup(x => x.GetUserId()).Returns(_defaultUser.Id);
         }
     }
 
