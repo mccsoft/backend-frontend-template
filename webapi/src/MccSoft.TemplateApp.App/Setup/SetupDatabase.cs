@@ -19,17 +19,22 @@ public static partial class SetupDatabase
 
         using var scope = app.Services.CreateScope();
 
-        var context = scope.ServiceProvider.GetRequiredService<TemplateAppDbContext>();
+        await DoRunMigration(scope.ServiceProvider);
+    }
+
+    public static async Task DoRunMigration(IServiceProvider serviceProvider)
+    {
+        await using var context = serviceProvider.GetRequiredService<TemplateAppDbContext>();
         await context.Database.MigrateAsync();
 
-        await app.SeedOpenIdClientsAsync();
+        await serviceProvider.SeedOpenIdClientsAsync();
 
         context.ReloadTypesForEnumSupport();
 
         // If you'd like to modify this class, consider adding your custom code in the SetupDatabase.partial.cs
         // This will make it easier to pull changes from Template when Template is updated
         // (actually this file will be overwritten by a file from template, which will make your changes disappear)
-        await SeedDatabase(scope.ServiceProvider, context);
+        await SeedDatabase(serviceProvider, context);
     }
 
     public static void AddDatabase(WebApplicationBuilder builder)
