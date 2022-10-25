@@ -26,17 +26,6 @@ public static partial class SetupSwagger
         services.AddOpenApiDocument(options =>
         {
             ConfigureOpenApiDocument(options, swaggerOptions);
-            // maps JsonDocument to `{ [key: string]: any; }`
-            options.SchemaGenerator.Settings.TypeMappers.Add(
-                new PrimitiveTypeMapper(
-                    typeof(JsonDocument),
-                    s =>
-                    {
-                        s.Type = JsonObjectType.Object;
-                        s.AdditionalPropertiesSchema = JsonSchema.CreateAnySchema();
-                    }
-                )
-            );
             options.SchemaProcessors.Add(
                 new RequireValueTypesSchemaProcessor(makePatchRequestFieldsNullable: false)
             );
@@ -93,6 +82,17 @@ public static partial class SetupSwagger
             };
         };
         options.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("Bearer"));
+        // maps JsonDocument to `{ [key: string]: any; }`
+        options.SchemaGenerator.Settings.TypeMappers.Add(
+            new PrimitiveTypeMapper(
+                typeof(JsonDocument),
+                s =>
+                {
+                    s.Type = JsonObjectType.Object;
+                    s.AdditionalPropertiesSchema = JsonSchema.CreateAnySchema();
+                }
+            )
+        );
 
         options.GenerateEnumMappingDescription = true;
 
