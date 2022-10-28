@@ -230,6 +230,13 @@ export function StyledAutocomplete<
     popupWidth,
     useVirtualization,
   ]);
+  const isOpened = useRef(false);
+  const onClosed = useCallback(() => {
+    isOpened.current = false;
+  }, []);
+  const onOpened = useCallback(() => {
+    isOpened.current = true;
+  }, []);
 
   return (
     <div
@@ -244,7 +251,23 @@ export function StyledAutocomplete<
           const value = props.multiple
             ? (params.InputProps.startAdornment as string) ?? ''
             : params.inputProps.value;
-          closeAutocomplete.current = params.inputProps.onBlur;
+          closeAutocomplete.current = (e) => {
+            if (!isOpened.current || !props.freeSolo) {
+              params.inputProps.onBlur?.(e as any);
+            } else {
+              const keyboardEvent = new window.KeyboardEvent('keydown', {
+                code: '\n',
+                key: 'Escape',
+                bubbles: true,
+              });
+
+              // We simulate pressing escape to close the Popup before onBlur.
+              // Otherwise the item that is highlighted (was hovered last) in the Popup gets selected
+              (params.inputProps as any).ref?.current?.dispatchEvent?.(
+                keyboardEvent,
+              );
+            }
+          };
           return (
             <InputComponent
               containerRef={params.InputProps.ref}
@@ -293,6 +316,8 @@ export function StyledAutocomplete<
             />
           );
         }}
+        onClose={onClosed}
+        onOpen={onOpened}
         // we simulate pressing escape when clicking on [X] button within input
         clearOnEscape={true}
         componentsProps={componentProps as any}
