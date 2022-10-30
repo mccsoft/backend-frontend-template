@@ -191,6 +191,7 @@ export function StyledAutocomplete<
     [props.renderOption, postfixRenderer],
   );
 
+  const onBlurRef = useRef<React.FocusEventHandler>();
   const closeAutocomplete = useRef<React.FocusEventHandler>();
   const onClickOutsidePaper = useCallback((e: MouseEvent) => {
     closeAutocomplete.current?.(e as any);
@@ -251,6 +252,7 @@ export function StyledAutocomplete<
           const value = props.multiple
             ? (params.InputProps.startAdornment as string) ?? ''
             : params.inputProps.value;
+          onBlurRef.current = params.inputProps.onBlur;
           closeAutocomplete.current = (e) => {
             if (!isOpened.current || !props.freeSolo) {
               params.inputProps.onBlur?.(e as any);
@@ -266,6 +268,9 @@ export function StyledAutocomplete<
               (params.inputProps as any).ref?.current?.dispatchEvent?.(
                 keyboardEvent,
               );
+              setTimeout(() => {
+                onBlurRef.current?.(e as any);
+              }, 10);
             }
           };
           return (
