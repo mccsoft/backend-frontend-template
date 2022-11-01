@@ -114,6 +114,11 @@ export type StyledAutocompleteProps<
    * Overrides input's endAdornment
    */
   endAdornment?: React.ReactNode;
+
+  /*
+   * Input's ref
+   */
+  inputRef?: React.RefObject<HTMLInputElement>;
 };
 
 export type DropDownInputProps<

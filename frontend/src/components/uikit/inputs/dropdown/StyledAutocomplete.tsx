@@ -1,3 +1,4 @@
+import { mergeRefs } from 'react-merge-refs';
 import { SearchInput } from './SearchInput';
 import clsx from 'clsx';
 import equal from 'fast-deep-equal';
@@ -58,6 +59,7 @@ export function StyledAutocomplete<
     endAdornment,
     InputComponent,
     renderInput,
+    inputRef,
     ...rest
   } = {
     ...props,
@@ -191,10 +193,10 @@ export function StyledAutocomplete<
     [props.renderOption, postfixRenderer],
   );
 
-  const onBlurRef = useRef<React.FocusEventHandler>();
   const closeAutocomplete = useRef<React.FocusEventHandler>();
-  const onClickOutsidePaper = useCallback((e: MouseEvent) => {
-    closeAutocomplete.current?.(e as any);
+  const onBlurRef = useRef<React.FocusEventHandler>();
+  const onClickOutsidePaper = useCallback((event: MouseEvent) => {
+    closeAutocomplete.current?.(event as any);
   }, []);
 
   const listboxProps: VirtualizedListboxComponentProps = useMemo(
@@ -283,6 +285,7 @@ export function StyledAutocomplete<
               }
               placeholder={placeholder}
               {...params.inputProps}
+              ref={mergeRefs([inputRef as any, (params.inputProps as any).ref])}
               onChange={
                 isSearch
                   ? (e) => {
@@ -320,6 +323,18 @@ export function StyledAutocomplete<
               selectedValue={props.value as any}
             />
           );
+        }}
+        onKeyDown={(event) => {
+          // We need to add our own handling of the Enter key in FreeSolo inputs
+          // because otherwise it selects the currently highlighted value, not the one that you typed.
+          // Testing scenario: find a TimePicker, select '10:00', then type '12:00' and press Enter.
+          // Expected: '12:00' is selected. (without this code '10:00' would be selected)
+          if (props.freeSolo && !isSearch && event.key === 'Enter') {
+            closeAutocomplete.current?.(event as any);
+            (event as any).defaultMuiPrevented = true;
+            return;
+          }
+          rest.onKeyDown?.(event);
         }}
         onClose={onClosed}
         onOpen={onOpened}
