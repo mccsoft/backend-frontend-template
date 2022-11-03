@@ -1,3 +1,5 @@
+import { ButtonColor } from '../buttons/Button';
+
 export type UseModalOptions = {
   title: string;
   text: string;
@@ -13,6 +15,10 @@ export type UseModalOptions = {
     })
   | (PromptOptions & {
       type: 'prompt';
+      resolve: (result: string | null) => void;
+    })
+  | (MultiButtonOptions & {
+      type: 'multibutton';
       resolve: (result: string | null) => void;
     })
 );
@@ -35,8 +41,14 @@ export type PromptOptions = {
   okButtonText?: string;
   cancelButtonText?: string;
 };
+export type MultiButtonOptions = {
+  title: string;
+  text: string;
+  buttons: { id: string; text: string; color?: ButtonColor }[];
+};
 export type ModalContextType = {
   showAlert: (options: AlertOptions) => Promise<void>;
   showConfirm: (options: ConfirmOptions) => Promise<boolean>;
   showPrompt: (options: PromptOptions) => Promise<string | null>;
+  showMultiButton: (options: MultiButtonOptions) => Promise<string | null>;
 };
