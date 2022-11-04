@@ -10,5 +10,7 @@
   "eslint.run": "onSave",
 
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "git.pullTags": false,
+  "git.rebaseWhenSync": true
 }
