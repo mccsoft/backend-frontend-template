@@ -21,7 +21,6 @@ import { ProductDetailsPage } from './products/details/ProductDetailsPage';
 import { EditProductPage } from './products/edit/EditProductPage';
 
 export const RootPage: React.FC = () => {
-  const dispatch = useAppDispatch();
   const i18n = useTranslation();
   return (
     <>
@@ -61,7 +60,7 @@ export const RootPage: React.FC = () => {
               required={true}
               value={getCurrentSupportedLanguage(i18n.i18n)}
               onValueChanged={(x) => {
-                changeLanguage(x as Language);
+                changeLanguage(x as Language).catch((e) => Logger.error(e));
               }}
             />
           </div>
