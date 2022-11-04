@@ -7,6 +7,7 @@ import { useScopedTranslation } from '../../../application/localization/useScope
 import { ModalContextType, UseModalOptions } from './useModal.types';
 import styles from './CustomModal.module.scss';
 import { assertNever } from 'helpers/assert-never';
+import clsx from 'clsx';
 
 const ModalContext = React.createContext<ModalContextType>({} as any);
 
@@ -121,7 +122,7 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
                   <Button
                     key={x.id}
                     color={x.color ?? ButtonColor.Default}
-                    className={styles.multibutton}
+                    className={clsx(styles.button, styles.multibutton)}
                     title={x.text}
                     onClick={() => {
                       options.resolve(x.id);
@@ -133,6 +134,7 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
                 <>
                   {options.type === 'confirm' || options.type === 'prompt' ? (
                     <Button
+                      className={styles.button}
                       color={ButtonColor.Secondary}
                       title={
                         options.cancelButtonText ?? i18n.t('cancel_button')
@@ -141,6 +143,7 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
                     />
                   ) : null}
                   <Button
+                    className={styles.button}
                     color={ButtonColor.Default}
                     type={'submit'}
                     title={options.okButtonText ?? i18n.t('ok_button')}
