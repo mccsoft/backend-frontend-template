@@ -3550,7 +3550,7 @@ __metadata:
     react-js-pagination: 3.0.3
     react-merge-refs: 2.0.1
     react-paginate: 8.1.2
-    react-query-swagger: 14.3.2
+    react-query-swagger: 15.0.4
     react-redux: 8.0.2
     react-router: 6.3.0
     react-router-dom: 6.3.0
@@ -9178,12 +9178,12 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"nswag@npm:^13.15.10":
-  version: 13.15.10
-  resolution: "nswag@npm:13.15.10"
+"nswag@npm:^13.17.0":
+  version: 13.17.0
+  resolution: "nswag@npm:13.17.0"
   bin:
     nswag: bin/nswag.js
-  checksum: 7c0d3de065e5aafdf3d6340802ac047ccdec89394794e4df62649473413f640d949feeb9e77ebed6f9a28f5b484429d3239226860a11237ac0d8b726396258d2
+  checksum: 5a130d40c26f40c4eac8e61434f2ba26d9a48c304090266dd7a5c91d3ce2481833f23ad29e76826d1e04e7bb5152f39e2ac2919a1c6a48dfcb72434cde183b19
   languageName: node
   linkType: hard
 
@@ -10038,12 +10038,12 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"react-query-swagger@npm:14.3.2":
-  version: 14.3.2
-  resolution: "react-query-swagger@npm:14.3.2"
+"react-query-swagger@npm:15.0.4":
+  version: 15.0.4
+  resolution: "react-query-swagger@npm:15.0.4"
   dependencies:
     "@tanstack/react-query-persist-client": ^4.2.0
-    nswag: ^13.15.10
+    nswag: ^13.17.0
   peerDependencies:
     "@tanstack/react-query": "> 4.0"
     react: 17.x || 18.x
@@ -10051,7 +10051,7 @@ fsevents@~2.3.2:
     typescript: 3.x || 4.x
   bin:
     react-query-swagger: cli.js
-  checksum: 669e14d9c55c56549376a4d4abe2e7720e22ca1e7c781a8bef2c417cb4d64afa66b3547491cd9ec6bb43386e44b861572436a9feeb089ee2d500b91c5f38ea25
+  checksum: 7b7fd82170f89751642f3178fb57c1562a053ed3d7e318ee24f508ae26251abf963a58584e41355a108a2f9b9559ca10b852d66723461295fdb9df2079138eb5
   languageName: node
   linkType: hard
 
