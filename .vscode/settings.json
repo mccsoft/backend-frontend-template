@@ -4,9 +4,13 @@
   "eslint.debug": true,
   "eslint.format.enable": true,
   "eslint.packageManager": "yarn",
-
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  
+  "[csharp]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "csharpier.csharpier-vscode",
+  },
   "git.pullTags": false,
-  "git.rebaseWhenSync": true
+  "git.rebaseWhenSync": true,
+  "npm-scripts.showStartNotification": false
 }
