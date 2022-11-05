@@ -12,5 +12,6 @@
   },
   "git.pullTags": false,
   "git.rebaseWhenSync": true,
-  "npm-scripts.showStartNotification": false
+  "npm-scripts.showStartNotification": false,
+  "dotnet-test-explorer.testProjectPath": "webapi/tests/**"
 }
