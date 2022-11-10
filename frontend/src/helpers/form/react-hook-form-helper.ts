@@ -18,16 +18,15 @@ export function useResetFormWhenDataIsLoaded<
 ) {
   useEffect(() => {
     if (defaultValues) {
+      const defaultValuesUntypedCopy = { ...defaultValues } as any;
       if (form.formState.isDirty) {
-        const defaultValuesUntyped = defaultValues as any;
-        const currentValues = form.getValues() as any;
         Object.keys(form.formState.dirtyFields)
           .filter((x) => (form.formState.dirtyFields as any)[x])
           .forEach((dirtyKey) => {
-            defaultValuesUntyped[dirtyKey] = currentValues[dirtyKey] as any;
+            delete defaultValuesUntypedCopy[dirtyKey];
           });
       }
-      form.reset(defaultValues as any);
+      form.reset(defaultValuesUntypedCopy as any);
     }
   }, [defaultValues]);
 }
