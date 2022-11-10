@@ -1,12 +1,10 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using MccSoft.TemplateApp.App.Middleware;
+﻿using MccSoft.TemplateApp.App.Middleware;
 using MccSoft.TemplateApp.App.Utils.Localization;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Persistence;
 using MccSoft.WebApi.SignedUrl;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
 using OpenIddict.Abstractions;
 using OpenIddict.Validation.AspNetCore;
