@@ -15,7 +15,7 @@
     <PackageReference Include="JsonKnownTypes" Version="0.5.5" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.DataAnnotations" Version="2.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="NJsonSchema" Version="10.7.2" />
+    <PackageReference Include="NJsonSchema" Version="10.8.0" />
   </ItemGroup>
 
 

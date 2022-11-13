@@ -8,8 +8,8 @@
   <ItemGroup>
     <PackageReference Include="Destructurama.JsonNet" Version="2.0.0" />
     <PackageReference Include="IdentityModel" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
-    <PackageReference Include="Sentry.Serilog" Version="3.20.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+    <PackageReference Include="Sentry.Serilog" Version="3.23.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
     <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.4.1" />
     <PackageReference Include="Serilog.Sinks.Loggly" Version="5.4.0" />

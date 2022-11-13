@@ -7,10 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="NeinLinq.EntityFrameworkCore" Version="6.0.0" />
-    <PackageReference Include="NJsonSchema" Version="10.7.2" />
+    <PackageReference Include="NJsonSchema" Version="10.8.0" />
   </ItemGroup>
 
   <ItemGroup>
