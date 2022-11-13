@@ -15,7 +15,7 @@
   <ItemGroup>
     <PackageReference Include="Audit.EntityFramework.Core" Version="19.3.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.8"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.8" />
     <PackageReference Include="NeinLinq.EntityFrameworkCore" Version="6.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
@@ -27,6 +27,7 @@
     <ProjectReference Include="..\..\Lib\LowLevelPrimitives\MccSoft.LowLevelPrimitives\MccSoft.LowLevelPrimitives.csproj" />
     <ProjectReference Include="..\..\Lib\NpgSql\MccSoft.NpgSql\MccSoft.NpgSql.csproj" />
     <ProjectReference Include="..\..\Lib\PersistenceHelpers\MccSoft.PersistenceHelpers\MccSoft.PersistenceHelpers.csproj" />
+    <ProjectReference Include="..\..\Lib\WebHooks\MccSoft.WebHooks\MccSoft.WebHooks.csproj" />
     <ProjectReference Include="..\MccSoft.TemplateApp.Common\MccSoft.TemplateApp.Common.csproj" />
     <ProjectReference Include="..\MccSoft.TemplateApp.Domain\MccSoft.TemplateApp.Domain.csproj" />
   </ItemGroup>
