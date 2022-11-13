@@ -1,5 +1,13 @@
 public class WebHookConfiguration
 {
+    /// <summary>
+    /// Delay between checking is there any new web hooks to process
+    /// </summary>
+    public int PollingDelay { get; set; } = 10000;
+
+    /// <summary>
+    /// Delays to retry web hooks if it fails (StatusCode is not 200-299)
+    /// </summary>
     public int[] SendingDelaysInMinutes { get; set; } =
         new[]
         {
