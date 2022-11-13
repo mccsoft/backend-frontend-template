@@ -20,12 +20,12 @@ public static class WebHookRegistration
         {
             e.Property(x => x.Headers)
                 .HasConversion(
-                    v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+                    v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
                     v =>
                         JsonSerializer.Deserialize<Dictionary<string, string>>(
                             v,
-                            (JsonSerializerOptions)null
-                        )
+                            (JsonSerializerOptions?)null
+                        ) ?? new()
                 );
             e.OwnsOne(x => x.AdditionalData);
         });
