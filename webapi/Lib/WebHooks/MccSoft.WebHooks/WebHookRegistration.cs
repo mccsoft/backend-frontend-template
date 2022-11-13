@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 public static class WebHookRegistration
 {
-    public static Type DbContextType { get; private set; }
+    public static Type? DbContextType { get; private set; }
 
     public static DbSet<WebHook> WebHooks(this DbContext dbContext) => dbContext.Set<WebHook>();
 

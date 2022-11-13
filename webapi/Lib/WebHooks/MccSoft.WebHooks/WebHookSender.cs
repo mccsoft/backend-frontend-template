@@ -14,8 +14,8 @@ public class WebHookSender : IWebHookSender
     public async Task SendWebHook(
         string method,
         string url,
-        string body = null,
-        Dictionary<string, string> headers = null
+        string? body = null,
+        Dictionary<string, string>? headers = null
     )
     {
         var webHook = new WebHook(method, url, body, headers);

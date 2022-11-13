@@ -38,15 +38,15 @@ public class WebHook
         string httpMethod,
         string url,
         string? body,
-        Dictionary<string, string> headers,
+        Dictionary<string, string>? headers = null,
         WebHookAdditionalData? additionalData = null
     )
     {
         HttpMethod = httpMethod;
         TargetUrl = url;
         SerializedBody = body;
-        Headers = headers;
-        AdditionalData = additionalData ?? new WebHookAdditionalData();
+        Headers = headers ?? new();
+        AdditionalData = additionalData ?? new();
         CreatedAt = DateTime.UtcNow;
     }
 
