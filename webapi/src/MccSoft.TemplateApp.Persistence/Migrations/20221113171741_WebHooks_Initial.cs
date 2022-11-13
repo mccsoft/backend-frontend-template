@@ -20,7 +20,8 @@ namespace MccSoft.TemplateApp.Persistence.Migrations
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     LastRun = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     NextRun = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    IsSucceded = table.Column<bool>(type: "boolean", nullable: false),
+                    IsSucceeded = table.Column<bool>(type: "boolean", nullable: false),
+                    IsFinished = table.Column<bool>(type: "boolean", nullable: false),
                     LastError = table.Column<string>(type: "text", nullable: true),
                     Response = table.Column<string>(type: "text", nullable: true),
                     AttemptsPerformed = table.Column<int>(type: "integer", nullable: false),
@@ -45,9 +46,9 @@ namespace MccSoft.TemplateApp.Persistence.Migrations
                 column: "AdditionalData_String");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WebHook_IsSucceded_NextRun",
+                name: "IX_WebHook_IsSucceeded_NextRun",
                 table: "WebHook",
-                columns: new[] { "IsSucceded", "NextRun" });
+                columns: new[] { "IsSucceeded", "NextRun" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

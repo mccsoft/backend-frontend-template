@@ -3,33 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 
-[Owned]
-[Index("Int")]
-[Index("String")]
-public class WebHookAdditionalData
-{
-    /// <summary>
-    /// Required for EF
-    /// </summary>
-    protected WebHookAdditionalData() { }
-
-    public WebHookAdditionalData(
-        int? @int = null,
-        string? @string = null,
-        JsonDocument? json = null
-    )
-    {
-        Int = @int;
-        String = @string;
-        Json = json;
-    }
-
-    public int? Int { get; private set; }
-    public string? String { get; private set; }
-    public JsonDocument? Json { get; private set; }
-}
-
-[Index(nameof(WebHook.IsSucceded), nameof(WebHook.NextRun))]
+[Index(nameof(WebHook.IsSucceeded), nameof(WebHook.NextRun))]
 public class WebHook
 {
     protected WebHook() { }
@@ -48,13 +22,14 @@ public class WebHook
         Headers = headers ?? new();
         AdditionalData = additionalData ?? new();
         CreatedAt = DateTime.UtcNow;
+        NextRun = DateTime.UtcNow;
     }
 
     public int Id { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? LastRun { get; private set; }
     public DateTime? NextRun { get; private set; }
-    public bool IsSucceded { get; private set; }
+    public bool IsSucceeded { get; private set; }
 
     /// <summary>
     /// No more retries will be performed
@@ -89,19 +64,19 @@ public class WebHook
 
         NextRun = null;
         LastError = null;
-        IsSucceded = true;
+        IsSucceeded = true;
         IsFinished = true;
     }
 
     public void MarkFailed(Exception e)
     {
         LastError = JsonSerializer.Serialize(e);
-        IsSucceded = false;
+        IsSucceeded = false;
     }
 
     public void MarkFailedNoRetry()
     {
-        IsSucceded = false;
+        IsSucceeded = false;
         IsFinished = true;
     }
 

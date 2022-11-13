@@ -10,11 +10,11 @@ using Microsoft.Extensions.Logging;
 
 public class WebHookProcessor : IWebHookInterceptor
 {
-    private DbContext _dbContext;
+    private readonly DbContext _dbContext;
     private readonly IEnumerable<IWebHookInterceptor> _interceptors;
     private readonly WebHookConfiguration _webHookConfiguration;
     private readonly ILogger<WebHookProcessor> _logger;
-    private static DateTime LastRunNextDateTime;
+    private static readonly DateTime LastRunNextDateTime;
 
     static WebHookProcessor()
     {
@@ -29,6 +29,11 @@ public class WebHookProcessor : IWebHookInterceptor
         ILogger<WebHookProcessor> logger
     )
     {
+        if (WebHookRegistration.DbContextType == null)
+            throw new ArgumentNullException(
+                $"WebHookRegistration.DbContextType wasn't initialized. Did you call builder.AddWebHookEntities() from DbContext OnModelCreating?"
+            );
+
         _dbContext = (DbContext)
             serviceProvider.GetRequiredService(WebHookRegistration.DbContextType);
         _interceptors = interceptors;
@@ -38,19 +43,21 @@ public class WebHookProcessor : IWebHookInterceptor
 
     public virtual async Task RunJob(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("Starting {{Method}}", nameof(RunJob));
+        _logger.LogInformation("Starting {Method}", nameof(RunJob));
 
-        using var transaction = await _dbContext.Database.BeginTransactionAsync();
+        await using var transaction = await _dbContext.Database.BeginTransactionAsync(
+            stoppingToken
+        );
         var webHooks = await _dbContext
             .WebHooks()
-            .Where(x => !x.IsSucceded && x.NextRun < DateTime.UtcNow)
+            .Where(x => !x.IsSucceeded && x.NextRun < DateTime.UtcNow)
             .Take(10)
             .OrderByDescending(x => x.CreatedAt)
-            .ToListAsync();
+            .ToListAsync(cancellationToken: stoppingToken);
 
         AdjustNextRun(_webHookConfiguration, webHooks);
-        await _dbContext.SaveChangesAsync();
-        await transaction.CommitAsync();
+        await _dbContext.SaveChangesAsync(stoppingToken);
+        await transaction.CommitAsync(stoppingToken);
 
         foreach (var webHook in webHooks)
         {
@@ -80,7 +87,7 @@ public class WebHookProcessor : IWebHookInterceptor
             }
             finally
             {
-                await _dbContext.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync(stoppingToken);
             }
         }
     }
@@ -121,7 +128,7 @@ public class WebHookProcessor : IWebHookInterceptor
             );
             return content;
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             _logger.LogInformation(
                 e,

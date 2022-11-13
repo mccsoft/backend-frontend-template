@@ -14,7 +14,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MccSoft.TemplateApp.Persistence.Migrations
 {
     [DbContext(typeof(TemplateAppDbContext))]
-    [Migration("20221113144411_WebHooks_Initial")]
+    [Migration("20221113171741_WebHooks_Initial")]
     partial class WebHooks_Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -526,7 +526,10 @@ namespace MccSoft.TemplateApp.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsSucceded")
+                    b.Property<bool>("IsFinished")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsSucceeded")
                         .HasColumnType("boolean");
 
                     b.Property<string>("LastError")
@@ -543,7 +546,7 @@ namespace MccSoft.TemplateApp.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IsSucceded", "NextRun");
+                    b.HasIndex("IsSucceeded", "NextRun");
 
                     b.ToTable("WebHook");
                 });
