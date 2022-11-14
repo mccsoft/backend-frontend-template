@@ -18,16 +18,7 @@ export function useResetFormWhenDataIsLoaded<
 ) {
   useEffect(() => {
     if (defaultValues) {
-      if (form.formState.isDirty) {
-        const defaultValuesUntyped = defaultValues as any;
-        const currentValues = form.getValues() as any;
-        Object.keys(form.formState.dirtyFields)
-          .filter((x) => (form.formState.dirtyFields as any)[x])
-          .forEach((dirtyKey) => {
-            defaultValuesUntyped[dirtyKey] = currentValues[dirtyKey] as any;
-          });
-      }
-      form.reset(defaultValues as any);
+      form.reset(defaultValues, { keepDefaultValues: true });
     }
   }, [defaultValues]);
 }

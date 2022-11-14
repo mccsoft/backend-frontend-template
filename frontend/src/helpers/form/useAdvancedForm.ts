@@ -59,31 +59,26 @@ export function useAdvancedForm<
 
   return {
     ...form,
-    handleSubmit: <TSubmitFieldValues extends FieldValues = TFieldValues>(
-      onValid: SubmitHandler<TSubmitFieldValues>,
+    handleSubmit: (
+      onValid: SubmitHandler<TFieldValues>,
       onInvalid: SubmitErrorHandler<TFieldValues> | undefined,
     ) => {
-      return form.handleSubmit<TSubmitFieldValues>(
-        async (values: UnpackNestedValue<TSubmitFieldValues>) => {
-          if (form.formState.isSubmitting) return;
-          if (isSubmitting.current) return;
-          isSubmitting.current = true;
-          try {
-            await onValid(values);
-            return await handler.handler(values as any);
-          } finally {
-            isSubmitting.current = false;
-          }
-        },
-        onInvalid,
-      );
+      return form.handleSubmit(async (values) => {
+        if (form.formState.isSubmitting) return;
+        if (isSubmitting.current) return;
+        isSubmitting.current = true;
+        try {
+          await onValid(values);
+          return await handler.handler(values as any);
+        } finally {
+          isSubmitting.current = false;
+        }
+      }, onInvalid);
     },
     overallError: handler.overallServerError,
     formErrorCombined: handler.serverErrorsCombined,
-    handleSubmitDefault: form.handleSubmit<TFieldValues>(
-      async (values: UnpackNestedValue<TFieldValues>) => {
-        return await handler.handler(values as any);
-      },
-    ),
+    handleSubmitDefault: form.handleSubmit(async (values) => {
+      return await handler.handler(values as any);
+    }),
   };
 }

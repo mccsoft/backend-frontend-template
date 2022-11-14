@@ -121,9 +121,12 @@ public class ComponentTestBase : TestBase<TemplateAppDbContext>, IDisposable
                 var webFactory = CreateWebApplicationFactory(
                     dbContext.Database.GetConnectionString()
                 );
-                await SetupDatabase.SeedDatabase(webFactory.Services, dbContext);
+                await SetupDatabase.DoRunMigration(webFactory.Services);
             }
-        );
+        )
+        {
+            DisableEnsureCreated = true
+        };
 
     protected override TemplateAppDbContext CreateDbContext(
         DbContextOptions<TemplateAppDbContext> options

@@ -1,3 +1,4 @@
+import { mergeRefs } from 'react-merge-refs';
 import { SearchInput } from './SearchInput';
 import clsx from 'clsx';
 import equal from 'fast-deep-equal';
@@ -58,6 +59,7 @@ export function StyledAutocomplete<
     endAdornment,
     InputComponent,
     renderInput,
+    inputRef,
     ...rest
   } = {
     ...props,
@@ -192,8 +194,9 @@ export function StyledAutocomplete<
   );
 
   const closeAutocomplete = useRef<React.FocusEventHandler>();
-  const onClickOutsidePaper = useCallback((e: MouseEvent) => {
-    closeAutocomplete.current?.(e as any);
+  const onBlurRef = useRef<React.FocusEventHandler>();
+  const onClickOutsidePaper = useCallback((event: MouseEvent) => {
+    closeAutocomplete.current?.(event as any);
   }, []);
 
   const listboxProps: VirtualizedListboxComponentProps = useMemo(
@@ -230,6 +233,13 @@ export function StyledAutocomplete<
     popupWidth,
     useVirtualization,
   ]);
+  const isOpened = useRef(false);
+  const onClosed = useCallback(() => {
+    isOpened.current = false;
+  }, []);
+  const onOpened = useCallback(() => {
+    isOpened.current = true;
+  }, []);
 
   return (
     <div
@@ -244,7 +254,27 @@ export function StyledAutocomplete<
           const value = props.multiple
             ? (params.InputProps.startAdornment as string) ?? ''
             : params.inputProps.value;
-          closeAutocomplete.current = params.inputProps.onBlur;
+          onBlurRef.current = params.inputProps.onBlur;
+          closeAutocomplete.current = (e) => {
+            if (!isOpened.current || !props.freeSolo) {
+              params.inputProps.onBlur?.(e as any);
+            } else {
+              const keyboardEvent = new window.KeyboardEvent('keydown', {
+                code: '\n',
+                key: 'Escape',
+                bubbles: true,
+              });
+
+              // We simulate pressing escape to close the Popup before onBlur.
+              // Otherwise the item that is highlighted (was hovered last) in the Popup gets selected
+              (params.inputProps as any).ref?.current?.dispatchEvent?.(
+                keyboardEvent,
+              );
+              setTimeout(() => {
+                onBlurRef.current?.(e as any);
+              }, 10);
+            }
+          };
           return (
             <InputComponent
               containerRef={params.InputProps.ref}
@@ -255,6 +285,7 @@ export function StyledAutocomplete<
               }
               placeholder={placeholder}
               {...params.inputProps}
+              ref={mergeRefs([inputRef as any, (params.inputProps as any).ref])}
               onChange={
                 isSearch
                   ? (e) => {
@@ -293,6 +324,20 @@ export function StyledAutocomplete<
             />
           );
         }}
+        onKeyDown={(event) => {
+          // We need to add our own handling of the Enter key in FreeSolo inputs
+          // because otherwise it selects the currently highlighted value, not the one that you typed.
+          // Testing scenario: find a TimePicker, select '10:00', then type '12:00' and press Enter.
+          // Expected: '12:00' is selected. (without this code '10:00' would be selected)
+          if (props.freeSolo && !isSearch && event.key === 'Enter') {
+            closeAutocomplete.current?.(event as any);
+            (event as any).defaultMuiPrevented = true;
+            return;
+          }
+          rest.onKeyDown?.(event);
+        }}
+        onClose={onClosed}
+        onOpen={onOpened}
         // we simulate pressing escape when clicking on [X] button within input
         clearOnEscape={true}
         componentsProps={componentProps as any}

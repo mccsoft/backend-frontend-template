@@ -52,6 +52,7 @@ public class TemplateAppDbContext
         builder.SetupQueryFilter<IOwnedEntity>(
             (x) => CurrentOwnerId == null || x.OwnerId == CurrentOwnerId
         );
+        builder.AddWebHookEntities(this.GetType());
     }
 
     public IDbContextTransaction BeginTransaction()

@@ -1,0 +1,13 @@
+{
+    "recommendations": [
+        "csharpier.csharpier-vscode",
+        "formulahendry.dotnet-test-explorer",
+        "formulahendry.dotnet",
+        "ms-dotnettools.csharp",
+        "dbaeumer.vscode-eslint",
+        "orta.vscode-jest",
+        "ms-playwright.playwright",
+        "esbenp.prettier-vscode",
+        "mrmlnc.vscode-scss"
+    ]
+}
