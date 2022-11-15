@@ -47,7 +47,7 @@ public class TemplateAppDbContext
         // migrationBuilder.Sql(
         // @"ALTER TABLE ""Patients"" ALTER COLUMN ""NumberSource"" TYPE number_source using (enum_range(null::number_source))[""NumberSource""::int + 1];"
         //     );
-        // For details see https://github.com/mcctomsk/backend-frontend-template/wiki/_new#migration-of-existing-data
+        // For details see https://github.com/mccsoft/backend-frontend-template/wiki/_new#migration-of-existing-data
 
         builder.SetupQueryFilter<IOwnedEntity>(
             (x) => CurrentOwnerId == null || x.OwnerId == CurrentOwnerId
