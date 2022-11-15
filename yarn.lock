@@ -2927,7 +2927,7 @@ __metadata:
     react-devtools: 4.13.5
     react-dom: 18.2.0
     react-dropzone: 14.2.3
-    react-hook-form: 7.39.1
+    react-hook-form: 7.39.4
     react-i18next: 11.18.6
     react-merge-refs: 2.0.1
     react-paginate: 8.1.3
@@ -8906,12 +8906,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:7.39.1":
-  version: 7.39.1
-  resolution: "react-hook-form@npm:7.39.1"
+"react-hook-form@npm:7.39.4":
+  version: 7.39.4
+  resolution: "react-hook-form@npm:7.39.4"
   peerDependencies:
     react: ^16.8.0 || ^17 || ^18
-  checksum: 5a5a5530451c337f0366ceb7884b376cc20dec4b667789cd9aab4a9e6c8286308449bd6ba03bd89096541a81051c83307c8b45cd90970fa3c7ffc58ef2e3da78
+  checksum: 767337330a9ce305296adb435e05380fb138308931a0ca20f7a681604acf16a978f14f48d52279fb2eccc690f808622fa4db019835fd0e4fd6a768d2c13b83d0
   languageName: node
   linkType: hard
 

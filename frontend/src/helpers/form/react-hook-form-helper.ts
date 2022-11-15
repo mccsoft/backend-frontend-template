@@ -18,7 +18,7 @@ export function useResetFormWhenDataIsLoaded<
 ) {
   useEffect(() => {
     if (defaultValues) {
-      form.reset(defaultValues, { keepDefaultValues: true });
+      form.reset(defaultValues, { keepDirtyValues: true });
     }
   }, [defaultValues]);
 }
