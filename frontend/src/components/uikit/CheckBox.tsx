@@ -11,12 +11,15 @@ export const CheckBox = React.forwardRef<HTMLInputElement, Props>(
   function CheckBox(props, ref) {
     const { title, testId, ...rest } = props;
     const id =
-      props.name != undefined ? `uni-check-box-${props.name}` : undefined;
+      props.id ?? props.name != undefined
+        ? `uni-check-box-${props.name}`
+        : undefined;
     return (
       <div className={props.className}>
         <input
           ref={ref}
           {...rest}
+          id={id}
           className={styles.customCheckbox}
           type="checkbox"
           data-test-id={testId}

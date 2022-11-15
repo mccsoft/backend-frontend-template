@@ -5,7 +5,7 @@
   "eslint.format.enable": true,
   "eslint.packageManager": "yarn",
   "editor.formatOnSave": true,
-  
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[csharp]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "csharpier.csharpier-vscode",
