@@ -18,7 +18,9 @@ public static class HangfireMock
     /// it runs Console.WriteLine immediately).
     /// </summary>
     /// <param name="serviceProvider">Service provider to resolve classes from</param>
-    public static Mock<IBackgroundJobClient> CreateHangfireMock(IServiceProvider serviceProvider)
+    public static Mock<IBackgroundJobClient> CreateHangfireMock(
+        this IServiceProvider serviceProvider
+    )
     {
         return CreateHangfireMock(() => serviceProvider);
     }

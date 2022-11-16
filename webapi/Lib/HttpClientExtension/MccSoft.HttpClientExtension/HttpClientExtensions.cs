@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace MccSoft.HttpClientExtension
 {
@@ -21,13 +21,11 @@ namespace MccSoft.HttpClientExtension
         /// <returns>The response deserialized to the <typeparamref name="T"/> type.</returns>
         public static async Task<T> PostAsJson<T>(this HttpClient client, string url, object data)
         {
-            string json = JsonConvert.SerializeObject(data);
+            string json = JsonSerializer.Serialize(data);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            using (HttpResponseMessage response = await client.PostAsync(url, content))
-            {
-                return await ReadResponse<T>(response);
-            }
+            using HttpResponseMessage response = await client.PostAsync(url, content);
+            return await ReadResponse<T>(response);
         }
 
         /// <summary>
@@ -40,13 +38,11 @@ namespace MccSoft.HttpClientExtension
         /// <returns>The response deserialized to the <typeparamref name="T"/> type.</returns>
         public static async Task<T> PutAsJson<T>(this HttpClient client, string url, object data)
         {
-            string json = JsonConvert.SerializeObject(data);
+            string json = JsonSerializer.Serialize(data);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            using (HttpResponseMessage response = await client.PutAsync(url, content))
-            {
-                return await ReadResponse<T>(response);
-            }
+            using HttpResponseMessage response = await client.PutAsync(url, content);
+            return await ReadResponse<T>(response);
         }
 
         /// <summary>
@@ -70,7 +66,7 @@ namespace MccSoft.HttpClientExtension
         /// <param name="data">The body of the request.</param>
         public static async Task PutAsJson(this HttpClient client, string url, object data)
         {
-            string json = JsonConvert.SerializeObject(data);
+            string json = JsonSerializer.Serialize(data);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             using HttpResponseMessage response = await client.PutAsync(url, content);
@@ -85,7 +81,7 @@ namespace MccSoft.HttpClientExtension
         /// <param name="data">The body of the request.</param>
         public static async Task PatchAsJson(this HttpClient client, string url, object data)
         {
-            string json = JsonConvert.SerializeObject(data);
+            string json = JsonSerializer.Serialize(data);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             using HttpResponseMessage response = await client.PatchAsync(url, content);
@@ -100,7 +96,7 @@ namespace MccSoft.HttpClientExtension
             T result;
             try
             {
-                result = JsonConvert.DeserializeObject<T>(body);
+                result = JsonSerializer.Deserialize<T>(body);
             }
             catch (Exception e)
             {

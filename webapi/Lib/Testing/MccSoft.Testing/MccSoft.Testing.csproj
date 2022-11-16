@@ -16,12 +16,11 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
     <PackageReference Include="Moq" Version="4.18.2" />
     <PackageReference Include="NeinLinq.EntityFrameworkCore" Version="6.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
     <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="3.1.1" />
-    <PackageReference Include="MccSoft.IntegreSql.EF" Version="0.8.12" />
+    <PackageReference Include="MccSoft.IntegreSql.EF" Version="0.8.14" />
   </ItemGroup>
 
   <ItemGroup>

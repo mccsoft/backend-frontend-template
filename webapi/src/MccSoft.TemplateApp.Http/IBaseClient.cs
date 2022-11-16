@@ -2,6 +2,6 @@ namespace MccSoft.TemplateApp.Http
 {
     public interface IBaseClient
     {
-        public Newtonsoft.Json.JsonSerializerSettings JsonSerializerSettings { get; }
+        public System.Text.Json.JsonSerializerOptions JsonSerializerSettings { get; }
     }
 }

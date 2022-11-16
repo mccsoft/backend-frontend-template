@@ -11,8 +11,7 @@ namespace MccSoft.PersistenceHelpers
     /// </summary>
     /// <typeparam name="TDbContext">The type of the DbContext.</typeparam>
     /// <typeparam name="TCaller">The type of the service performing transaction.</typeparam>
-    public class DbRetryHelper<TDbContext, TCaller>
-        where TDbContext : DbContext, ITransactionFactory, IDisposable
+    public class DbRetryHelper<TDbContext, TCaller> where TDbContext : DbContext, IDisposable
     {
         private readonly TDbContext _dbContext;
         private readonly Func<TDbContext> _dbContextFactory;
@@ -45,16 +44,14 @@ namespace MccSoft.PersistenceHelpers
             TResult result = default;
 
             IExecutionStrategy strategy = _dbContext.Database.CreateExecutionStrategy();
-            await strategy.ExecuteAsync(
-                async () =>
-                {
-                    await using TDbContext db = _dbContextFactory();
-                    await using IDbContextTransaction transaction =
-                        await db.BeginTransactionAsync();
-                    result = await action(db, _transactionLogger);
-                    await transaction.CommitAsync();
-                }
-            );
+            await strategy.ExecuteAsync(async () =>
+            {
+                await using TDbContext db = _dbContextFactory();
+                await using IDbContextTransaction transaction =
+                    await db.Database.BeginTransactionAsync();
+                result = await action(db, _transactionLogger);
+                await transaction.CommitAsync();
+            });
 
             _transactionLogger.Succeed();
 
@@ -74,13 +71,11 @@ namespace MccSoft.PersistenceHelpers
             TResult result = default;
 
             IExecutionStrategy strategy = _dbContext.Database.CreateExecutionStrategy();
-            await strategy.ExecuteAsync(
-                async () =>
-                {
-                    await using TDbContext db = _dbContextFactory();
-                    result = await action(db, _transactionLogger);
-                }
-            );
+            await strategy.ExecuteAsync(async () =>
+            {
+                await using TDbContext db = _dbContextFactory();
+                result = await action(db, _transactionLogger);
+            });
 
             _transactionLogger.Succeed();
 

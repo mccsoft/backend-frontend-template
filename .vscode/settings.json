@@ -13,5 +13,12 @@
   "git.pullTags": false,
   "git.rebaseWhenSync": true,
   "npm-scripts.showStartNotification": false,
-  "dotnet-test-explorer.testProjectPath": "webapi/tests/**"
+  "dotnet-test-explorer.testProjectPath": "webapi/tests/**",
+  "git.autoStash": true,
+  "git.branchPrefix": "feature/",
+  "git.fetchOnPull": true,
+  "git.showActionButton": {
+    "sync": false
+  },
+  "git.showPushSuccessNotification": true
 }

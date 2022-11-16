@@ -1,15 +1,8 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Reflection;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 using MccSoft.Mailing;
 using MccSoft.TemplateApp.App.Views.Emails.Example;
-using MccSoft.WebApi.Domain.Helpers;
-using MccSoft.WebApi.Patching.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace MccSoft.TemplateApp.App.Controllers
 {
@@ -57,7 +50,7 @@ namespace MccSoft.TemplateApp.App.Controllers
         [Route("formdata")]
         public string FormData([FromForm] MyFormData dto)
         {
-            return JsonConvert.SerializeObject(dto);
+            return JsonSerializer.Serialize(dto);
         }
     }
 }

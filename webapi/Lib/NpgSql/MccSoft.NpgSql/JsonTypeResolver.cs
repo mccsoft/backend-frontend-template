@@ -17,7 +17,6 @@ public static class PostgresSerialization
         // https://github.com/npgsql/efcore.pg/issues/1107
         var options = new JsonSerializerOptions { };
 
-        options.Converters.Add(new DateOnlyConverter());
         NpgsqlConnection.GlobalTypeMapper.AddTypeResolverFactory(
             new JsonOverrideTypeHandlerResolverFactory(options)
         );

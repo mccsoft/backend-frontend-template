@@ -1,7 +1,6 @@
 ﻿using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace MccSoft.HttpClientExtension
 {
@@ -40,8 +39,8 @@ namespace MccSoft.HttpClientExtension
             {
                 try
                 {
-                    JObject o = JObject.Parse(responseContent);
-                    return (string)o["type"] ?? "about:blank";
+                    var o = JsonDocument.Parse(responseContent);
+                    return o.RootElement.GetProperty("type").GetString() ?? "about:blank";
                 }
                 catch (JsonException) { }
             }

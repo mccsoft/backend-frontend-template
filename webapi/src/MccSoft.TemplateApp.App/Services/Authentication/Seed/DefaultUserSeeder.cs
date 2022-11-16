@@ -1,7 +1,7 @@
+using System.Text.Json;
 using MccSoft.TemplateApp.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 
 namespace MccSoft.TemplateApp.App.Services.Authentication.Seed;
 
@@ -43,7 +43,7 @@ public class DefaultUserSeeder
 
         // preserve password settings to later reset to them
         PasswordOptions passwordOptions = _identityOptions.Value.Password;
-        var serializedPasswordOptions = JsonConvert.SerializeObject(passwordOptions);
+        var serializedPasswordOptions = JsonSerializer.Serialize(passwordOptions);
         try
         {
             // adjust Password settings to allow setting the default password
@@ -72,7 +72,9 @@ public class DefaultUserSeeder
         finally
         {
             //reset settings to default
-            JsonConvert.PopulateObject(serializedPasswordOptions, passwordOptions);
+            _identityOptions.Value.Password = JsonSerializer.Deserialize<PasswordOptions>(
+                serializedPasswordOptions
+            );
         }
     }
 }
