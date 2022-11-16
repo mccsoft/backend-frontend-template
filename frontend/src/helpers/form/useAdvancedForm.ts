@@ -5,7 +5,6 @@ import {
   SubmitErrorHandler,
   UseFormReturn,
   SubmitHandler,
-  UnpackNestedValue,
   UseFormProps,
 } from 'react-hook-form';
 import * as React from 'react';
@@ -38,7 +37,7 @@ export function useAdvancedForm<
   TContext extends object = object,
 >(
   submitHandler: (
-    data: UnpackNestedValue<TFieldValues>,
+    data: TFieldValues,
     navigate: NavigateFunction,
   ) => Promise<void>,
   options?: {
