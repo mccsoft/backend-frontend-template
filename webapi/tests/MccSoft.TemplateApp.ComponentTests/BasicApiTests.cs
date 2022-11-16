@@ -14,15 +14,13 @@ using Xunit.Abstractions;
 using System.Text;
 using FluentAssertions;
 using Hangfire;
-using MccSoft.TemplateApp.Persistence;
-using MccSoft.TemplateApp.TestUtils.Factories;
 using MccSoft.Testing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace MccSoft.TemplateApp.ComponentTests;
 
-public class BasicApiTests : ComponentTestBase
+public partial class BasicApiTests : ComponentTestBase
 {
     public BasicApiTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
 
@@ -270,49 +268,5 @@ public class BasicApiTests : ComponentTestBase
         }
 
         return false;
-    }
-
-    [Fact]
-    public void HangfireStub_StaticMethod_Works()
-    {
-        var backgroundJobClient = CreateService<IBackgroundJobClient>();
-        var file = "1.txt";
-        File.Delete(file);
-        backgroundJobClient.Enqueue(() => File.WriteAllText(file, "123"));
-
-        File.Exists(file).Should().BeTrue();
-        File.ReadAllText(file).Should().Be("123");
-    }
-
-    [Fact]
-    public async Task HangfireStub_InstanceMethod_Works()
-    {
-        var backgroundJobClient = CreateService<IBackgroundJobClient>();
-        backgroundJobClient.Enqueue<HangfireStubTestService>(
-            x => x.AddProduct("zxc", _defaultUser.Id)
-        );
-
-        await WithDbContext(async db =>
-        {
-            (await db.Products.CountAsync()).Should().Be(1);
-            var product = await db.Products.SingleAsync();
-            product.Title.Should().Be("zxc");
-        });
-    }
-
-    public class HangfireStubTestService
-    {
-        private readonly TemplateAppDbContext _dbContext;
-
-        public HangfireStubTestService(TemplateAppDbContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
-
-        public async Task AddProduct(string title, string userId)
-        {
-            _dbContext.Products.Add(a.Product(title: title, userId: userId));
-            await _dbContext.SaveChangesAsync();
-        }
     }
 }

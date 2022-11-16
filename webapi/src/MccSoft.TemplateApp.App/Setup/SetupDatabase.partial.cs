@@ -23,10 +23,7 @@ public static partial class SetupDatabase
         await seeder.SeedUser();
     }
 
-    static partial void AddProjectSpecifics(WebApplicationBuilder builder)
-    {
-        PostgresSerialization.AdjustDateOnlySerialization();
-    }
+    static partial void AddProjectSpecifics(WebApplicationBuilder builder) { }
 
     static partial void AddSeeders(IServiceCollection services, IConfiguration configuration)
     {

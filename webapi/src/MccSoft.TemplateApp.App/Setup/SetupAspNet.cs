@@ -31,9 +31,8 @@ public static partial class SetupAspNet
 
         builder.Services.Configure<JsonOptions>(options =>
         {
-            options.JsonSerializerOptions.Converters.Add(new PatchRequestConverter());
+            options.JsonSerializerOptions.Converters.Add(new PatchRequestConverterFactory());
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            options.JsonSerializerOptions.Converters.Add(new DateOnlyConverter());
         });
 
         services.AddControllers(

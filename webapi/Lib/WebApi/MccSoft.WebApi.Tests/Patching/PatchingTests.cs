@@ -10,18 +10,24 @@ public class PatchingTests
 {
     private readonly JsonSerializerOptions _deserializationOptions;
 
+    public class PatchDto2 : PatchRequest<object>
+    {
+        public string? Qwe { get; set; }
+        public string? Asd { get; set; }
+    }
+
     public class PatchDto1 : PatchRequest<object>
     {
         public string? Qwe { get; set; }
         public string? Asd { get; set; }
 
-        public PatchDto1? Zxc { get; set; }
+        public PatchDto2? Zxc { get; set; }
     }
 
     public PatchingTests()
     {
         _deserializationOptions = new JsonSerializerOptions() { };
-        _deserializationOptions.Converters.Add(new PatchRequestConverter());
+        _deserializationOptions.Converters.Add(new PatchRequestConverterFactory());
     }
 
     [Fact]

@@ -177,7 +177,7 @@ namespace MccSoft.TemplateApp.Http.Generated
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(dto, _settings.Value);
+                    var json_ = System.Text.Json.JsonSerializer.Serialize(dto, _settings.Value);
                     var content_ = new System.Net.Http.StringContent(json_);
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
@@ -470,7 +470,7 @@ namespace MccSoft.TemplateApp.Http.Generated
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(dto, _settings.Value);
+                    var json_ = System.Text.Json.JsonSerializer.Serialize(dto, _settings.Value);
                     var content_ = new System.Net.Http.StringContent(json_);
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
@@ -1973,7 +1973,7 @@ namespace MccSoft.TemplateApp.Http.Generated
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    internal class DateFormatConverter : Newtonsoft.Json.Converters.IsoDateTimeConverter
+    internal class DateFormatConverter : System.Text.Json.Serialization.JsonConverter<System.DateTimeOffset>
     {
         public override System.DateTimeOffset Read(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
         {

@@ -16,8 +16,7 @@ namespace MccSoft.TemplateApp.Persistence;
 public class TemplateAppDbContext
     :
     // DbContext
-    IdentityDbContext<User>,
-        ITransactionFactory
+    IdentityDbContext<User>
 {
     public IUserAccessor UserAccessor { get; }
     public DbSet<Product> Products { get; set; }
@@ -53,16 +52,6 @@ public class TemplateAppDbContext
             (x) => CurrentOwnerId == null || x.OwnerId == CurrentOwnerId
         );
         builder.AddWebHookEntities(this.GetType());
-    }
-
-    public IDbContextTransaction BeginTransaction()
-    {
-        return Database.BeginTransaction(IsolationLevel.Serializable);
-    }
-
-    public Task<IDbContextTransaction> BeginTransactionAsync()
-    {
-        return Database.BeginTransactionAsync(IsolationLevel.Serializable);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

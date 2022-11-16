@@ -39,8 +39,7 @@ namespace MccSoft.Testing;
 /// (the state of objects loaded in a separate DbContext will be incorrect, if SaveChanges is
 /// forgotten).
 /// </remarks>
-public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor
-    where TDbContext : DbContext, ITransactionFactory
+public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor where TDbContext : DbContext
 {
     protected string ConnectionString { get; private set; }
     public ITestOutputHelper OutputHelper { get; set; }
@@ -95,7 +94,6 @@ public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor
         {
             // ReSharper disable once VirtualMemberCallInConstructor
             InitializeDatabase(SeedDatabase());
-            PostgresSerialization.AdjustDateOnlySerialization();
         }
     }
 
