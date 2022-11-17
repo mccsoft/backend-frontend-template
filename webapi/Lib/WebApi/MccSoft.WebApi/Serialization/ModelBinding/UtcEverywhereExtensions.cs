@@ -1,6 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace MccSoft.WebApi.Serialization.ModelBinding;
 
@@ -18,18 +17,10 @@ public static class UtcEverywhereExtensions
         });
 
         services
-            .AddControllers(options => options.UseDateOnlyTimeOnlyStringConverters())
+            .AddControllers()
             .AddJsonOptions(opts =>
             {
-                opts.UseDateOnlyTimeOnlyStringConverters();
                 opts.JsonSerializerOptions.Converters.Add(new JsonNetDateTimeUtcConverter());
-            })
-            .AddNewtonsoftJson(opts =>
-            {
-                opts.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-                opts.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                opts.SerializerSettings.ContractResolver =
-                    new CamelCasePropertyNamesContractResolver();
             });
 
         HttpClientDefaults
@@ -37,15 +28,5 @@ public static class UtcEverywhereExtensions
             .JsonFormatter
             .SerializerSettings
             .DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-        JsonConvert.DefaultSettings = () =>
-        {
-            var serializerSettings = new JsonSerializerSettings
-            {
-                DateTimeZoneHandling = DateTimeZoneHandling.Utc,
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            return serializerSettings;
-        };
     }
 }
