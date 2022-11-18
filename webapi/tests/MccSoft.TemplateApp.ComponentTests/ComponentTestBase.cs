@@ -137,7 +137,7 @@ public class ComponentTestBase : TestBase<TemplateAppDbContext>, IDisposable
 
     protected override void RegisterServices(
         IServiceCollection services,
-        ConfigurationBuilder configurationBuilder,
+        IConfiguration configuration,
         IWebHostEnvironment environment
     )
     {

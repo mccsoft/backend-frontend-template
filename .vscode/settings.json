@@ -10,10 +10,11 @@
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "csharpier.csharpier-vscode",
   },
-  "git.pullTags": false,
-  "git.rebaseWhenSync": true,
+
   "npm-scripts.showStartNotification": false,
   "dotnet-test-explorer.testProjectPath": "webapi/tests/**",
+  "git.pullTags": false,
+  "git.rebaseWhenSync": true,
   "git.autoStash": true,
   "git.branchPrefix": "feature/",
   "git.fetchOnPull": true,
