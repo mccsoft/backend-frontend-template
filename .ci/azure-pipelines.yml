@@ -25,14 +25,18 @@ stages:
             fetchDepth: 1 # we can't limit fetch depth, see https://yarnpkg.com/features/release-workflow#commit-history
             submodules: true
 
-          - template: ./azure-pipelines-tests-shared.yml
-
           - script: |
+              # this is for `yarn version` to work correctly
+              # it doesn't play well with git shallow fetch by default
+              # for deails see https://yarnpkg.com/features/release-workflow#commit-history
               git init
+              git checkout -b main
               yarn version $(BUILD_NUMBER)
               cd frontend
               yarn version $(BUILD_NUMBER)
             displayName: 'set version'
+
+          - template: ./azure-pipelines-tests-shared.yml
 
           - script: |
               yarn build-dotnet
