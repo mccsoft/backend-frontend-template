@@ -1,7 +1,8 @@
-﻿using System.Net;
+﻿using System.Text.Json.Serialization;
 using MccSoft.LowLevelPrimitives.Serialization.DateOnlyConverters;
 using MccSoft.TemplateApp.App.Middleware;
 using MccSoft.WebApi;
+using MccSoft.WebApi.Patching;
 using MccSoft.WebApi.Sentry;
 using MccSoft.WebApi.Serialization;
 using MccSoft.WebApi.Serialization.ModelBinding;
@@ -10,7 +11,6 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.ResponseCompression;
-using Newtonsoft.Json;
 
 namespace MccSoft.TemplateApp.App.Setup;
 
@@ -29,20 +29,19 @@ public static partial class SetupAspNet
             options.Providers.Add<GzipCompressionProvider>();
         });
 
-        JsonConvert.DefaultSettings = () =>
-            JsonSerializerSetup.SetupJson(new JsonSerializerSettings());
+        builder.Services.Configure<JsonOptions>(options =>
+        {
+            options.JsonSerializerOptions.Converters.Add(new PatchRequestConverterFactory());
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
 
-        services
-            .AddControllers(
-                (options) =>
-                {
-                    AddGlobalFilters(options);
-                    options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
-                }
-            )
-            .AddNewtonsoftJson(
-                setupAction => JsonSerializerSetup.SetupJson(setupAction.SerializerSettings)
-            );
+        services.AddControllers(
+            (options) =>
+            {
+                AddGlobalFilters(options);
+                options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+            }
+        );
 
         services.AddRazorPages();
         if (builder.Environment.IsDevelopment())
@@ -64,9 +63,6 @@ public static partial class SetupAspNet
 
     private static void ConfigureSerialization(WebApplicationBuilder builder)
     {
-        // todo remove that
-        builder.Services.AddUtcEverywhere();
-
         // add DateOnly/TimeOnly support
         // also add UtcEverywhere approach
         builder.Services.AddMvc(options =>

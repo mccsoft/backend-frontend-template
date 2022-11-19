@@ -140,7 +140,7 @@ function cloneTemplate(folder) {
     fs.rmdirSync(folder, { recursive: true });
   }
   execSync(
-    `git clone https://github.com/mcctomsk/backend-frontend-template.git \"${folder}\"`,
+    `git clone https://github.com/mccsoft/backend-frontend-template.git \"${folder}\"`,
   );
 }
 

@@ -60,11 +60,11 @@ public class AppServiceTestBase : TestBase<TemplateAppDbContext>
 
     protected override void RegisterServices(
         IServiceCollection services,
-        ConfigurationBuilder configurationBuilder,
+        IConfiguration configuration,
         IWebHostEnvironment environment
     )
     {
-        SetupServices.AddServices(services, configurationBuilder.Build(), environment);
+        SetupServices.AddServices(services, configuration, environment);
 
         // Here you could override type registration (e.g. mock http clients that call other microservices).
         // Most probably you'd need to remove existing registration before registering new one.

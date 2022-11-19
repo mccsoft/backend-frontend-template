@@ -25,7 +25,6 @@ public static partial class SetupAudit
         var typedSettings = settings.Get<AuditSettings>();
 
         Configuration.AuditDisabled = !typedSettings.Enabled;
-        Configuration.JsonSettings.Converters.Add(new DateOnlyConverter());
 
         Configuration
             .Setup()

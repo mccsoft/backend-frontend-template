@@ -5,13 +5,21 @@
   "eslint.format.enable": true,
   "eslint.packageManager": "yarn",
   "editor.formatOnSave": true,
-  
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[csharp]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "csharpier.csharpier-vscode",
   },
+
+  "npm-scripts.showStartNotification": false,
+  "dotnet-test-explorer.testProjectPath": "webapi/tests/**",
   "git.pullTags": false,
   "git.rebaseWhenSync": true,
-  "npm-scripts.showStartNotification": false,
-  "dotnet-test-explorer.testProjectPath": "webapi/tests/**"
+  "git.autoStash": true,
+  "git.branchPrefix": "feature/",
+  "git.fetchOnPull": true,
+  "git.showActionButton": {
+    "sync": false
+  },
+  "git.showPushSuccessNotification": true
 }

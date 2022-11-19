@@ -31,7 +31,7 @@ namespace MccSoft.Mailing.Models
         public string From { get; set; }
 
         /// <summary>
-        /// Text description of sender. E.g. 'MCC Soft' (in 'MCC Soft <info@mcc-tomsk.de>')
+        /// Text description of sender. E.g. 'MCC Soft' (in 'MCC Soft <info@mcc-soft.de>')
         /// </summary>
         public string FromName { get; set; }
     }

@@ -9,7 +9,6 @@ using MartinCostello.Logging.XUnit;
 using MccSoft.IntegreSql.EF;
 using MccSoft.IntegreSql.EF.DatabaseInitialization;
 using MccSoft.LowLevelPrimitives;
-using MccSoft.NpgSql;
 using MccSoft.PersistenceHelpers;
 using MccSoft.Testing.AspNet;
 using Microsoft.AspNetCore.Hosting;
@@ -18,7 +17,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Debug;
 using Moq;
 using NeinLinq;
 using Xunit.Abstractions;
@@ -39,8 +37,7 @@ namespace MccSoft.Testing;
 /// (the state of objects loaded in a separate DbContext will be incorrect, if SaveChanges is
 /// forgotten).
 /// </remarks>
-public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor
-    where TDbContext : DbContext, ITransactionFactory
+public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor where TDbContext : DbContext
 {
     protected string ConnectionString { get; private set; }
     public ITestOutputHelper OutputHelper { get; set; }
@@ -95,7 +92,6 @@ public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor
         {
             // ReSharper disable once VirtualMemberCallInConstructor
             InitializeDatabase(SeedDatabase());
-            PostgresSerialization.AdjustDateOnlySerialization();
         }
     }
 
@@ -271,14 +267,16 @@ public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor
         var serviceCollection = new ServiceCollection();
 
         var (configurationBuilder, environment) = SetupEnvironment();
+        var configuration = configurationBuilder.Build();
 
         /*
          * Please, register your services in RegisterServices method, not here!
          * This place should remain project-independent (it's a Library that's used in many projects)
          */
-        RegisterServices(serviceCollection, configurationBuilder, environment);
+        RegisterServices(serviceCollection, configuration, environment);
 
-        RegisterBaseTypes(serviceCollection);
+        RegisterBaseTypes(serviceCollection, configuration);
+
         /*
          * DO NOT register your project-specific services here!
          * Register your app-specific services in RegisterServices method
@@ -287,7 +285,7 @@ public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor
         return serviceCollection;
     }
 
-    private void RegisterBaseTypes(ServiceCollection serviceCollection)
+    private void RegisterBaseTypes(ServiceCollection serviceCollection, IConfiguration configuration)
     {
         /*
          * DO NOT register your project-specific services here!
@@ -321,6 +319,8 @@ public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor
             loggingBuilder => loggingBuilder.ClearProviders().AddXUnit(this)
         );
 
+        serviceCollection.AddSingleton<IConfiguration>(configuration);
+
         /*
          * DO NOT register your project-specific services here!
          * Register your app-specific services in RegisterServices method
@@ -331,6 +331,7 @@ public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor
     {
         var configurationBuilder = new ConfigurationBuilder();
         configurationBuilder
+            .AddJsonFile("appsettings.json", true)
             .AddJsonFile("appsettings.test.json", true)
             .AddInMemoryCollection(new Dictionary<string, string>() { });
         var environment = new Mock<IWebHostEnvironment>().SetupAllProperties();
@@ -343,7 +344,7 @@ public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor
     /// </summary>
     protected abstract void RegisterServices(
         IServiceCollection services,
-        ConfigurationBuilder configurationBuilder,
+        IConfiguration configuration,
         IWebHostEnvironment environment
     );
 

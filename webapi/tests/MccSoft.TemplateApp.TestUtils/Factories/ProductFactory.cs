@@ -7,9 +7,15 @@ namespace MccSoft.TemplateApp.TestUtils.Factories
 {
     public static class ProductFactory
     {
-        public static Product Product(this MotherFactory a, string title = "Default Product 1")
+        public static Product Product(
+            this MotherFactory a,
+            string title = "Default Product 1",
+            string? userId = null
+        )
         {
-            return new Product(title);
+            var product = new Product(title) { CreatedByUserId = userId };
+            product.SetOwnerIdUnsafe(userId);
+            return product;
         }
 
         public static Http.Generated.CreateProductDto CreateProductGeneratedDto(

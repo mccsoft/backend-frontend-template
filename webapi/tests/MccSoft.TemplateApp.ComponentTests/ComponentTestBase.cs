@@ -137,14 +137,17 @@ public class ComponentTestBase : TestBase<TemplateAppDbContext>, IDisposable
 
     protected override void RegisterServices(
         IServiceCollection services,
-        ConfigurationBuilder configurationBuilder,
+        IConfiguration configuration,
         IWebHostEnvironment environment
     )
     {
         // Here you could override type registration (e.g. mock http clients that call other microservices).
-        // Most probably you'd need to remove existing registration before registering new one.
-        // You could remove the registration by calling:
+        // If you need to remove existing registration before registering you could do this by calling:
         // services.RemoveRegistration<TService>();
+
+        services.AddSingleton(
+            (_backgroundJobClient = HangfireMock.CreateHangfireMock(() => _serviceProvider)).Object
+        );
     }
 
     protected override void DisposeImpl()

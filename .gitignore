@@ -15,9 +15,11 @@ nugetpkg/
 
 
 !frontend/.vscode/settings.json
+!frontend/.vscode/extensions.json
 .vscode/*
 */.vscode/*
 !.vscode/settings.json
+!.vscode/extensions.json
 !.vscode/launch.json
 !.vscode/tasks.json
 

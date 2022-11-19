@@ -72,8 +72,6 @@
     <PackageReference Include="Npgsql.Json.NET" Version="7.0.0" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.18.0" />
 
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 using MccSoft.LowLevelPrimitives;
 using MccSoft.TemplateApp.Domain;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Newtonsoft.Json;
 
 namespace MccSoft.TemplateApp.App.Middleware
 {
@@ -33,7 +30,7 @@ namespace MccSoft.TemplateApp.App.Middleware
                     httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
                     httpContext.Response.ContentType = "application/json";
                     await httpContext.Response.WriteAsync(
-                        JsonConvert.SerializeObject(
+                        JsonSerializer.Serialize(
                             new
                             {
                                 Message = user == null
