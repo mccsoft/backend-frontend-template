@@ -22,14 +22,14 @@ stages:
 
         steps:
           - checkout: self
-            fetchDepth: 1 # we can't limit fetch depth, see https://yarnpkg.com/features/release-workflow#commit-history
+            fetchDepth: 1
             submodules: true
 
           - template: ./azure-pipelines-tests-shared.yml
 
           - script: |
               # this is for `yarn version` to work correctly
-              # it doesn't play well with git shallow fetch by default
+              # it doesn't play well with git shallow clone by default
               # for deails see https://yarnpkg.com/features/release-workflow#commit-history
               git init
               git checkout -b main
