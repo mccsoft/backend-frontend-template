@@ -1,10 +1,9 @@
-namespace MccSoft.DomainHelpers.DomainEvents
+namespace MccSoft.DomainHelpers.DomainEvents;
+
+public interface IDomainEventWithIntegerId : IDomainEvent
 {
-    public interface IDomainEventWithIntegerId : IDomainEvent
-    {
-        /// <summary>
-        /// Id will be assigned by EntityFramework when entity is saved
-        /// </summary>
-        public int Id { get; set; }
-    }
+    /// <summary>
+    /// Id will be assigned by EntityFramework when entity is saved
+    /// </summary>
+    public int Id { get; set; }
 }

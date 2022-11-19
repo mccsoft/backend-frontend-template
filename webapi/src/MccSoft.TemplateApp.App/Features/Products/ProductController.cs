@@ -4,47 +4,46 @@ using MccSoft.WebApi.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MccSoft.TemplateApp.App.Features.Products
+namespace MccSoft.TemplateApp.App.Features.Products;
+
+[Authorize]
+[Route("api/products")]
+public class ProductController
 {
-    [Authorize]
-    [Route("api/products")]
-    public class ProductController
+    private readonly ProductService _productService;
+
+    public ProductController(ProductService productService)
     {
-        private readonly ProductService _productService;
+        _productService = productService;
+    }
 
-        public ProductController(ProductService productService)
-        {
-            _productService = productService;
-        }
+    [HttpPost("")]
+    public async Task<ProductDto> Create(CreateProductDto dto)
+    {
+        return await _productService.Create(dto);
+    }
 
-        [HttpPost("")]
-        public async Task<ProductDto> Create(CreateProductDto dto)
-        {
-            return await _productService.Create(dto);
-        }
+    [HttpPatch("{id:int}")]
+    public async Task<ProductDto> Patch(int id, [FromBody] PatchProductDto dto)
+    {
+        return await _productService.Patch(id, dto);
+    }
 
-        [HttpPatch("{id:int}")]
-        public async Task<ProductDto> Patch(int id, [FromBody] PatchProductDto dto)
-        {
-            return await _productService.Patch(id, dto);
-        }
+    [HttpDelete("")]
+    public async Task Delete(int id)
+    {
+        await _productService.Delete(id);
+    }
 
-        [HttpDelete("")]
-        public async Task Delete(int id)
-        {
-            await _productService.Delete(id);
-        }
+    [HttpGet]
+    public async Task<PagedResult<ProductListItemDto>> Search([FromQuery] SearchProductDto dto)
+    {
+        return await _productService.Search(dto);
+    }
 
-        [HttpGet]
-        public async Task<PagedResult<ProductListItemDto>> Search([FromQuery] SearchProductDto dto)
-        {
-            return await _productService.Search(dto);
-        }
-
-        [HttpGet("{id:int}")]
-        public async Task<ProductDto> Get(int id)
-        {
-            return await _productService.Get(id);
-        }
+    [HttpGet("{id:int}")]
+    public async Task<ProductDto> Get(int id)
+    {
+        return await _productService.Get(id);
     }
 }

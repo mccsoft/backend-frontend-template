@@ -5,101 +5,96 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace MccSoft.WebApi.Throttler
+namespace MccSoft.WebApi.Throttler;
+
+public class Throttler
 {
-    public class Throttler
+    /// <summary>
+    /// Request will be defined by such unique entity, called ThrottleGroup.
+    /// </summary>
+    public string ThrottleGroup { get; set; }
+
+    /// <summary>
+    /// Defines amount of requests in timeout after request will be throttled.
+    /// </summary>
+    private int RequestLimit { get; set; }
+
+    private readonly ConcurrentDictionary<string, ThrottleInfo> _cache =
+        new ConcurrentDictionary<string, ThrottleInfo>();
+
+    private readonly TimeSpan _timeout;
+
+    public Throttler(string key, int requestLimit, TimeSpan timeout)
     {
-        /// <summary>
-        /// Request will be defined by such unique entity, called ThrottleGroup.
-        /// </summary>
-        public string ThrottleGroup { get; set; }
+        RequestLimit = requestLimit;
+        _timeout = timeout;
+        ThrottleGroup = key;
+    }
 
-        /// <summary>
-        /// Defines amount of requests in timeout after request will be throttled.
-        /// </summary>
-        private int RequestLimit { get; set; }
+    /// <summary>
+    /// Determines whether current request should be throttled or not.
+    /// </summary>
+    public bool ShouldRequestBeThrottled(out ThrottleInfo throttleInfo)
+    {
+        throttleInfo = GetThrottleInfoFromCache();
+        return (throttleInfo.RequestCount >= RequestLimit);
+    }
 
-        private readonly ConcurrentDictionary<string, ThrottleInfo> _cache =
-            new ConcurrentDictionary<string, ThrottleInfo>();
-
-        private readonly TimeSpan _timeout;
-
-        public Throttler(string key, int requestLimit, TimeSpan timeout)
-        {
-            RequestLimit = requestLimit;
-            _timeout = timeout;
-            ThrottleGroup = key;
-        }
-
-        /// <summary>
-        /// Determines whether current request should be throttled or not.
-        /// </summary>
-        public bool ShouldRequestBeThrottled(out ThrottleInfo throttleInfo)
-        {
-            throttleInfo = GetThrottleInfoFromCache();
-            return (throttleInfo.RequestCount >= RequestLimit);
-        }
-
-        /// <summary>
-        /// Increment request count for current <see cref="ThrottleGroup"/>.
-        /// </summary>
-        public void IncrementRequestCount()
-        {
-            _cache.AddOrUpdate(
-                ThrottleGroup,
-                new ThrottleInfo
-                {
-                    ExpiresAt = DateTimeOffset.UtcNow.Add(_timeout),
-                    RequestCount = 1
-                },
-                (retrievedKey, throttleInfo) =>
-                {
-                    throttleInfo.RequestCount++;
-                    return throttleInfo;
-                }
-            );
-        }
-
-        /// <summary>
-        /// Returns limit-headers for request.
-        /// </summary>
-        public Dictionary<string, string> GetRateLimitHeaders()
-        {
-            ThrottleInfo throttleInfo = GetThrottleInfoFromCache();
-
-            int requestsRemaining = Math.Max(RequestLimit - throttleInfo.RequestCount, 0);
-
-            var headers = new Dictionary<string, string>
+    /// <summary>
+    /// Increment request count for current <see cref="ThrottleGroup"/>.
+    /// </summary>
+    public void IncrementRequestCount()
+    {
+        _cache.AddOrUpdate(
+            ThrottleGroup,
+            new ThrottleInfo { ExpiresAt = DateTimeOffset.UtcNow.Add(_timeout), RequestCount = 1 },
+            (retrievedKey, throttleInfo) =>
             {
-                { "X-RateLimit-Limit", RequestLimit.ToString() },
-                { "X-RateLimit-Remaining", requestsRemaining.ToString() },
-                { "X-RateLimit-Reset", throttleInfo.ExpiresAt.ToUnixTimeSeconds().ToString() }
-            };
-            return headers;
-        }
-
-        private ThrottleInfo GetThrottleInfoFromCache()
-        {
-            _cache.TryGetValue(ThrottleGroup, out ThrottleInfo throttleInfo);
-
-            if (throttleInfo == null || throttleInfo.ExpiresAt <= DateTimeOffset.UtcNow)
-            {
-                throttleInfo = new ThrottleInfo
-                {
-                    ExpiresAt = DateTimeOffset.UtcNow.Add(_timeout),
-                    RequestCount = 0
-                };
-                _cache[ThrottleGroup] = throttleInfo;
+                throttleInfo.RequestCount++;
+                return throttleInfo;
             }
+        );
+    }
 
-            return throttleInfo;
-        }
+    /// <summary>
+    /// Returns limit-headers for request.
+    /// </summary>
+    public Dictionary<string, string> GetRateLimitHeaders()
+    {
+        ThrottleInfo throttleInfo = GetThrottleInfoFromCache();
 
-        public class ThrottleInfo
+        int requestsRemaining = Math.Max(RequestLimit - throttleInfo.RequestCount, 0);
+
+        var headers = new Dictionary<string, string>
         {
-            public DateTimeOffset ExpiresAt { get; set; }
+            { "X-RateLimit-Limit", RequestLimit.ToString() },
+            { "X-RateLimit-Remaining", requestsRemaining.ToString() },
+            { "X-RateLimit-Reset", throttleInfo.ExpiresAt.ToUnixTimeSeconds().ToString() }
+        };
+        return headers;
+    }
 
-            public int RequestCount { get; set; }
+    private ThrottleInfo GetThrottleInfoFromCache()
+    {
+        _cache.TryGetValue(ThrottleGroup, out ThrottleInfo throttleInfo);
+
+        if (throttleInfo == null || throttleInfo.ExpiresAt <= DateTimeOffset.UtcNow)
+        {
+            throttleInfo = new ThrottleInfo
+            {
+                ExpiresAt = DateTimeOffset.UtcNow.Add(_timeout),
+                RequestCount = 0
+            };
+            _cache[ThrottleGroup] = throttleInfo;
         }
+
+        return throttleInfo;
+    }
+
+    public class ThrottleInfo
+    {
+        public DateTimeOffset ExpiresAt { get; set; }
+
+        public int RequestCount { get; set; }
     }
 }

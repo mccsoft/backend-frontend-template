@@ -3,49 +3,48 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Security.Principal;
 
-namespace MccSoft.HttpClientExtension
+namespace MccSoft.HttpClientExtension;
+
+public static class ClaimExtensions
 {
-    public static class ClaimExtensions
+    public static string? GetClaimValueOrNull(this IIdentity identity, string claimType)
     {
-        public static string? GetClaimValueOrNull(this IIdentity identity, string claimType)
+        if (identity == null)
+            return null;
+
+        if (identity is ClaimsIdentity id)
         {
-            if (identity == null)
+            var claim = id.FindFirst(claimType);
+
+            if (claim == null)
+            {
                 return null;
-
-            if (identity is ClaimsIdentity id)
-            {
-                var claim = id.FindFirst(claimType);
-
-                if (claim == null)
-                {
-                    return null;
-                }
-
-                return claim.Value;
             }
 
-            throw new InvalidOperationException($"Identity {identity} is not ClaimsIdentity");
+            return claim.Value;
         }
 
-        public static string GetClaimValue(this IIdentity identity, string claimType)
+        throw new InvalidOperationException($"Identity {identity} is not ClaimsIdentity");
+    }
+
+    public static string GetClaimValue(this IIdentity identity, string claimType)
+    {
+        var result = GetClaimValueOrNull(identity, claimType);
+        if (result == null)
         {
-            var result = GetClaimValueOrNull(identity, claimType);
-            if (result == null)
-            {
-                throw new InvalidOperationException($"Claim '{claimType}' is missing");
-            }
-
-            return result;
+            throw new InvalidOperationException($"Claim '{claimType}' is missing");
         }
 
-        public static IEnumerable<Claim> GetAllClaims(this IIdentity identity, string claimType)
+        return result;
+    }
+
+    public static IEnumerable<Claim> GetAllClaims(this IIdentity identity, string claimType)
+    {
+        if (identity is ClaimsIdentity id)
         {
-            if (identity is ClaimsIdentity id)
-            {
-                return id.FindAll(claimType);
-            }
-
-            throw new InvalidOperationException($"Identity {identity} is not ClaimsIdentity");
+            return id.FindAll(claimType);
         }
+
+        throw new InvalidOperationException($"Identity {identity} is not ClaimsIdentity");
     }
 }

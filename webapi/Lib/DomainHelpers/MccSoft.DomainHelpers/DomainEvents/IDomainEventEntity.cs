@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 
-namespace MccSoft.DomainHelpers.DomainEvents
+namespace MccSoft.DomainHelpers.DomainEvents;
+
+public interface IDomainEventEntity
 {
-    public interface IDomainEventEntity
-    {
-        IReadOnlyList<IDomainEvent> DomainEvents { get; }
-        void AddEvent(IDomainEvent domainEvent, bool removeEventsOfSameType = false);
-        void ClearDomainEvents();
-    }
+    IReadOnlyList<IDomainEvent> DomainEvents { get; }
+    void AddEvent(IDomainEvent domainEvent, bool removeEventsOfSameType = false);
+    void ClearDomainEvents();
 }

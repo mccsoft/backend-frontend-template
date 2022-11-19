@@ -3,36 +3,35 @@ using MccSoft.LowLevelPrimitives.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace MccSoft.TemplateApp.App.Middleware
+namespace MccSoft.TemplateApp.App.Middleware;
+
+/// <summary>
+///     Converts exception from Persistence to WebApi Exceptions that are handled by ErrorHandlerMiddleware
+/// </summary>
+public class RethrowErrorsFromPersistenceMiddleware
 {
-    /// <summary>
-    ///     Converts exception from Persistence to WebApi Exceptions that are handled by ErrorHandlerMiddleware
-    /// </summary>
-    public class RethrowErrorsFromPersistenceMiddleware
+    private RequestDelegate _next;
+    private readonly ILogger<RethrowErrorsFromPersistenceMiddleware> _logger;
+
+    public RethrowErrorsFromPersistenceMiddleware(
+        RequestDelegate next,
+        ILogger<RethrowErrorsFromPersistenceMiddleware> logger
+    )
     {
-        private RequestDelegate _next;
-        private readonly ILogger<RethrowErrorsFromPersistenceMiddleware> _logger;
+        _next = next;
+        _logger = logger;
+    }
 
-        public RethrowErrorsFromPersistenceMiddleware(
-            RequestDelegate next,
-            ILogger<RethrowErrorsFromPersistenceMiddleware> logger
-        )
+    public async Task Invoke(HttpContext httpContext)
+    {
+        try
         {
-            _next = next;
-            _logger = logger;
+            await _next(httpContext);
         }
-
-        public async Task Invoke(HttpContext httpContext)
+        catch (PersistenceAccessDeniedException ex)
         {
-            try
-            {
-                await _next(httpContext);
-            }
-            catch (PersistenceAccessDeniedException ex)
-            {
-                _logger.LogWarning($"{ex.GetType().Name}: {ex.Message}");
-                throw new AccessDeniedException(ex.Message);
-            }
+            _logger.LogWarning($"{ex.GetType().Name}: {ex.Message}");
+            throw new AccessDeniedException(ex.Message);
         }
     }
 }

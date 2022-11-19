@@ -1,15 +1,14 @@
 using Microsoft.AspNetCore.Http;
 
-namespace MccSoft.LowLevelPrimitives.Exceptions
+namespace MccSoft.LowLevelPrimitives.Exceptions;
+
+public class ConflictException : WebApiBaseException
 {
-    public class ConflictException : WebApiBaseException
-    {
-        public ConflictException(string message)
-            : base(
-                ErrorTypes.Conflict,
-                "Resource conflict occurred.",
-                StatusCodes.Status409Conflict,
-                message
-            ) { }
-    }
+    public ConflictException(string message)
+        : base(
+            ErrorTypes.Conflict,
+            "Resource conflict occurred.",
+            StatusCodes.Status409Conflict,
+            message
+        ) { }
 }

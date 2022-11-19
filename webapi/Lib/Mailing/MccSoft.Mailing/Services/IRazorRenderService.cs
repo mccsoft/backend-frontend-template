@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
 
-namespace MccSoft.Mailing
+namespace MccSoft.Mailing;
+
+public interface IRazorRenderService
 {
-    public interface IRazorRenderService
-    {
-        Task<string> RenderToStringAsync<T>(string viewName, T model);
-    }
+    Task<string> RenderToStringAsync<T>(string viewName, T model);
 }

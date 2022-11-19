@@ -1,8 +1,7 @@
-namespace MccSoft.Mailing
+namespace MccSoft.Mailing;
+
+public enum EmailTemplateType
 {
-    public enum EmailTemplateType
-    {
-        Subject,
-        Content,
-    }
+    Subject,
+    Content,
 }

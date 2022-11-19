@@ -1,7 +1,6 @@
-﻿namespace MccSoft.TemplateApp.App.Settings
+﻿namespace MccSoft.TemplateApp.App.Settings;
+
+public class AuditSettings
 {
-    public class AuditSettings
-    {
-        public bool Enabled { get; set; }
-    }
+    public bool Enabled { get; set; }
 }
