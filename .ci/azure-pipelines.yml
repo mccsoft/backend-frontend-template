@@ -36,6 +36,9 @@ stages:
               yarn version $(BUILD_NUMBER)
               cd frontend
               yarn version $(BUILD_NUMBER)
+
+              # `set version` step should go after `yarn install`, 
+              # otherwise `yarn version` install packages by itself without use of cache
             displayName: 'set version'
 
           - script: |
