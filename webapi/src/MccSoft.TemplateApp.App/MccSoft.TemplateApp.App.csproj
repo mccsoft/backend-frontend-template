@@ -97,6 +97,9 @@
     <Content Include="..\..\..\package.json">
       <Link>package.json</Link>
     </Content>
+    <Content Include="..\..\..\README.md">
+      <Link>README.md</Link>
+    </Content>
     <None Update="logs;idsrv4test.pfx;Dockerfile">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>

@@ -2,13 +2,13 @@
 
 ## What's that
 
-This is a template to set up a backend ASP.Net project with React frontend. You could check it out at [https://template.mcc-soft.de](https://template.mcc-soft.de) (credentials: admin/BSjo1M8jU760).
+This is a template to set up a backend ASP.NET Core project with React frontend. You could check it out at [https://template.mcc-soft.de](https://template.mcc-soft.de) (credentials: admin/BSjo1M8jU760).
 
 Developers are encouraged to start with [setting up the environment](docs/Setting-up-development-environment.md) and proceed to [development how-to](docs/Development-Howto.md).
 
-Template contains:
+Template contains (you could also check [CHANGELOG](./docs/CHANGELOG.md) for latest changes):
 
-1. ASP.NET Core backend (.NET 6)
+1. ASP.NET Core backend (.NET 7)
    1. OpenIddict authentication (with support for Social Networks authentication)
    2. Guidance/example on how to structure backend
    3. Helpers for easy implementation of REST API for CRUD (with PATCH instead of UPDATE)
@@ -34,6 +34,7 @@ Template contains:
    1. Deploys Image to preconfigured agent
 1. Instructions about configuring an agent to deploy aforementioned Docker Image on any linux PC (Digital Ocean prefered :))
 1. Kubernetes deployment files and guidance regarding deploy to kubernetes (in progress)
+
 
 ## Setting up new project from template
 
