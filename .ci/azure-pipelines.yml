@@ -33,7 +33,7 @@ stages:
               # for deails see https://yarnpkg.com/features/release-workflow#commit-history
               git init
               git checkout -b main
-              yarn workspaces foreach yarn version $(BUILD_NUMBER)
+              yarn workspaces foreach version $(BUILD_NUMBER)
 
               # `set version` step should go after `yarn install`,
               # otherwise `yarn version` install packages by itself without use of cache
