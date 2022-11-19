@@ -21,7 +21,7 @@ steps:
     inputs:
       command: 'test'
       arguments:
-      projects: 'webapi/tests/*/*.csproj'
+      projects: 'webapi/**/*tests.csproj'
       publishTestResults: true
     env:
       DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE: false
