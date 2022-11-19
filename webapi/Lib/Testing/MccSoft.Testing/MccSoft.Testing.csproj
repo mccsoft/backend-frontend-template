@@ -15,12 +15,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
     <PackageReference Include="Moq" Version="4.18.2" />
-<<<<<<< HEAD
     <PackageReference Include="NeinLinq.EntityFrameworkCore" Version="6.1.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-=======
-    <PackageReference Include="NeinLinq.EntityFrameworkCore" Version="6.0.0" />
->>>>>>> origin/master
     <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
