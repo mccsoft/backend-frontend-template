@@ -70,7 +70,7 @@ public static partial class SetupAspNet
             options.ModelBinderProviders.Insert(0, new UtcDateTimeModelBinderProvider());
         });
         builder.Services
-            .AddControllers(options => options.UseDateOnlyTimeOnlyStringConverters())
+            .AddControllers()
             .AddJsonOptions(opts =>
             {
                 opts.SetupJson();

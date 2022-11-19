@@ -1,4 +1,4 @@
-[![Build Status](https://dev.azure.com/mcctomsk/Common/_apis/build/status/mcctomsk.backend-frontend-template?branchName=master)](https://dev.azure.com/mcctomsk/Common/_build/latest?definitionId=6&branchName=master) [![MIT](https://img.shields.io/dub/l/vibe-d.svg)](https://opensource.org/licenses/MIT) [![NET6](https://img.shields.io/badge/-.NET%206.0-blueviolet)](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
+[![Build Status](https://dev.azure.com/mcctomsk/Backend-Frontend-Template/_apis/build/status/mcctomsk.backend-frontend-template?branchName=master)](https://dev.azure.com/mcctomsk/Common/_build/latest?definitionId=6&branchName=master) [![MIT](https://img.shields.io/dub/l/vibe-d.svg)](https://opensource.org/licenses/MIT) [![NET6](https://img.shields.io/badge/-.NET%206.0-blueviolet)](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 
 ## What's that
 
@@ -34,7 +34,6 @@ Template contains (you could also check [CHANGELOG](./docs/CHANGELOG.md) for lat
    1. Deploys Image to preconfigured agent
 1. Instructions about configuring an agent to deploy aforementioned Docker Image on any linux PC (Digital Ocean prefered :))
 1. Kubernetes deployment files and guidance regarding deploy to kubernetes (in progress)
-
 
 ## Setting up new project from template
 

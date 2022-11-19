@@ -23,7 +23,7 @@ public class WebApiTestBase : TestBase<MyDbContext>
 
     protected override void RegisterServices(
         IServiceCollection services,
-        ConfigurationBuilder configurationBuilder,
+        IConfiguration configuration,
         IWebHostEnvironment environment
     )
     {

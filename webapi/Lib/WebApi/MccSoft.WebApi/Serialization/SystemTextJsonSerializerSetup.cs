@@ -14,7 +14,6 @@ public static partial class SystemTextJsonSerializerSetup
 
     public static JsonOptions SetupJson(this JsonOptions options)
     {
-        options.UseDateOnlyTimeOnlyStringConverters();
         options.JsonSerializerOptions.Converters.Add(new JsonNetDateTimeUtcConverter());
 
         CustomizeSettings(options.JsonSerializerOptions);
