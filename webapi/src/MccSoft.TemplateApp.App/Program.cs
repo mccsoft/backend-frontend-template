@@ -34,6 +34,7 @@ builder.Services.AddMailing(builder.Configuration.GetSection("Email"));
 SetupAspNet.AddAspNet(builder);
 
 SetupSwagger.AddSwagger(builder);
+builder.Services.AddWebHooks();
 
 // Set up your application-specific services here
 SetupServices.AddServices(builder.Services, builder.Configuration, builder.Environment);
