@@ -1,4 +1,4 @@
-[![Build Status](https://dev.azure.com/mcctomsk/Backend-Frontend-Template/_apis/build/status/mcctomsk.backend-frontend-template?branchName=master)](https://dev.azure.com/mcctomsk/Common/_build/latest?definitionId=6&branchName=master) [![MIT](https://img.shields.io/dub/l/vibe-d.svg)](https://opensource.org/licenses/MIT) [![NET6](https://img.shields.io/badge/-.NET%206.0-blueviolet)](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
+[![Build Status](https://dev.azure.com/mcctomsk/Backend-Frontend-Template/_apis/build/status/mccsoft.backend-frontend-template?branchName=master)](https://dev.azure.com/mcctomsk/Common/_build/latest?definitionId=6&branchName=master) [![MIT](https://img.shields.io/dub/l/vibe-d.svg)](https://opensource.org/licenses/MIT) [![NET6](https://img.shields.io/badge/-.NET%206.0-blueviolet)](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 
 ## What's that
 
@@ -37,11 +37,11 @@ Template contains (you could also check [CHANGELOG](./docs/CHANGELOG.md) for lat
 
 ## Setting up new project from template
 
-Before using the template for your brand-new app run `yarn rename -n YourProjectName`. Additionally you can use `-c YourCompanyName` to change solution's root namespace. Use CamelCase for your project name. The script does the following (you could do this manually if you like to):
+Before using the template for your brand-new app run `yarn rename -n YourProjectName`. Additionally you can use `-c YourCompanyName` to change solution's root namespace. Use CamelCase for your project name. The [script](./scripts/rename-script.js) does the following (you could check the [script](./scripts/rename-script.js) and do this manually if you like to):
 
 1. Rename all files/folders from 'TemplateApp' to your project name.
 1. Change all namespaces, classnames, database names, dockerfiles and deployment scripts to suit your project
-1. Adjust SPA port number to something random, so that it doesn't clash with other projects (in package.json: 'start' script, PORT=3011; in Startup.cs: spa.UseProxyToSpaDevelopmentServer("http://localhost:3011/"))
+1. Adjust SPA port number to something random, so that it doesn't clash with other projects (in package.json: 'start' script, PORT=3011; in main app .csproj: `<SpaProxyServerUrl>http://localhost:3011/</SpaProxyServerUrl>)
 
 Create a new git repository and copy everything (except `.git` folder) to it. Don't forget to change the favicons/tiles in `frontend/public` folder to the logo of your project (use https://realfavicongenerator.net/ to create favicons in all required sizes)
 
