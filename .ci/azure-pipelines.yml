@@ -21,6 +21,10 @@ stages:
           vmImage: 'ubuntu-latest'
 
         steps:
+          - checkout: self
+            fetchDepth: 0
+            submodules: true
+
           - template: ./azure-pipelines-tests-shared.yml
 
           - script: |
