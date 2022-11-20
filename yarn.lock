@@ -2849,6 +2849,7 @@ __metadata:
     concurrently: 5.2.0
     copyfiles: 2.3.0
     cross-env: 7.0.3
+    json: 11.0.0
     node-replace: 0.3.3
     prettier: 2.6.2
     renamer: 4.0.0
@@ -7412,6 +7413,15 @@ __metadata:
   bin:
     json5: lib/cli.js
   checksum: 74b8a23b102a6f2bf2d224797ae553a75488b5adbaee9c9b6e5ab8b510a2fc6e38f876d4c77dea672d4014a44b2399e15f2051ac2b37b87f74c0c7602003543b
+  languageName: node
+  linkType: hard
+
+"json@npm:11.0.0":
+  version: 11.0.0
+  resolution: "json@npm:11.0.0"
+  bin:
+    json: lib/json.js
+  checksum: 0beb8689722fc30251638543caf791bedc1a25199c18eb0281de115a0dadb00a07d4d36cbd7ff7680e04157fcb2bba76f29ed940b1e4e92f60c6fbaa74523fce
   languageName: node
   linkType: hard
 
