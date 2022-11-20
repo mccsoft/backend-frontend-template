@@ -6,7 +6,9 @@
   "eslint.packageManager": "yarn",
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  
   "[csharp]": {
+    "editor.formatOnType": true,
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "csharpier.csharpier-vscode",
   },
@@ -21,5 +23,6 @@
   "git.showActionButton": {
     "sync": false
   },
-  "git.showPushSuccessNotification": true
+  "git.showPushSuccessNotification": true,
+  "csharp.format.enable": true
 }
