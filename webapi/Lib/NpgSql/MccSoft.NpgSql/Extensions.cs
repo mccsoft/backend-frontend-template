@@ -1,3 +1,4 @@
+using System.Data;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
@@ -16,7 +17,7 @@ public static class Extensions
         // This is for enum support in PostgreSQL.
         // Details here: https://www.npgsql.org/efcore/mapping/enum.html#creating-your-database-enum
         var conn = (NpgsqlConnection)context.Database.GetDbConnection();
-        conn.Open();
+        if (conn.State != ConnectionState.Open)  conn.Open();
         conn.ReloadTypes();
     }
 }
