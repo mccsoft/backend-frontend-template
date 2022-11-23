@@ -240,7 +240,28 @@ export function StyledAutocomplete<
   const onOpened = useCallback(() => {
     isOpened.current = true;
   }, []);
-
+  const onChangeOverride: StyledAutocompleteProps<
+    T,
+    Multiple,
+    Required,
+    FreeSolo
+  >['onChange'] = useCallback(
+    (e, value, reason, details) => {
+      // We are handling the case when in FreeSolo input user selected some item in dropdown list and then pressed Enter.
+      // Without this code onChange is fired with string value, while it should fire with selected option.
+      if (props.freeSolo && typeof value === 'string') {
+        const selectedOptionValue = props.options.find(
+          (x) => value === getOptionLabel(x),
+        );
+        if (selectedOptionValue) {
+          onChange?.(e, selectedOptionValue as any, reason, details);
+          return;
+        }
+      }
+      onChange?.(e, value, reason, details);
+    },
+    [onChange, props.options, getOptionLabel],
+  );
   return (
     <div
       className={clsx(styles.rootContainer, rootClassName)}
@@ -357,7 +378,7 @@ export function StyledAutocomplete<
         getOptionLabel={getOptionLabel}
         renderOption={renderOption}
         isOptionEqualToValue={isOptionEqualToValue}
-        onChange={onChange}
+        onChange={onChangeOverride}
         disableClearable={props.required}
         value={props.value ?? null!}
         data-test-id={testId}
