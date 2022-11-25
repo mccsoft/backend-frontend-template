@@ -244,12 +244,9 @@ export function StyledAutocomplete<
     isOpened.current = true;
   }, []);
 
-  const onChangeOverride: StyledAutocompleteProps<
-    T,
-    Multiple,
-    Required,
-    FreeSolo
-  >['onChange'] = useCallback(
+  const onChangeOverride: NonNullable<
+    StyledAutocompleteProps<T, Multiple, Required, FreeSolo>['onChange']
+  > = useCallback(
     (e, value, reason, details) => {
       // We are handling the case when in FreeSolo input user selected some item in dropdown list and then pressed Enter.
       // Without this code onChange is fired with string value, while it should fire with selected option.
