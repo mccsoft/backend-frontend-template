@@ -158,6 +158,9 @@ export function StyledAutocomplete<
     AutocompleteProps<T, Multiple, Required, FreeSolo>['renderOption']
   > = useCallback(
     (liProps, option, state) => {
+      // to prevent hovered element from being selected.
+      // (otherwise in search combo box if you hover over one of the found results and pressing Enter, the result gets opened)
+      delete liProps['onMouseOver'];
       liProps.style = { height: itemSize };
       if (
         option &&
@@ -240,6 +243,7 @@ export function StyledAutocomplete<
   const onOpened = useCallback(() => {
     isOpened.current = true;
   }, []);
+
   const onChangeOverride: StyledAutocompleteProps<
     T,
     Multiple,
@@ -262,6 +266,7 @@ export function StyledAutocomplete<
     },
     [onChange, props.options, getOptionLabel],
   );
+
   return (
     <div
       className={clsx(styles.rootContainer, rootClassName)}
@@ -352,6 +357,8 @@ export function StyledAutocomplete<
           // Expected: '12:00' is selected. (without this code '10:00' would be selected)
           if (props.freeSolo && !isSearch && event.key === 'Enter') {
             closeAutocomplete.current?.(event as any);
+            // we need to preventDefault, so that containing Form would not be submitted
+            (event as any).preventDefault();
             (event as any).defaultMuiPrevented = true;
             return;
           }
