@@ -141,7 +141,7 @@ export function StyledAutocomplete<
         const newSelectedValue = props.options.find((x) =>
           isOptionEqualToValue(x, props.value as any),
         );
-        if (newSelectedValue && newSelectedValue !== props.value) {
+        if (newSelectedValue && !equal(newSelectedValue, props.value)) {
           props.onChange?.(
             {} as any,
             (newSelectedValue ?? null) as any,
