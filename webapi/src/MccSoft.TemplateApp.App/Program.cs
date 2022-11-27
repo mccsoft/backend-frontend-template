@@ -5,22 +5,24 @@ using MccSoft.TemplateApp.App;
 using MccSoft.TemplateApp.App.DomainEventHandlers;
 using MccSoft.TemplateApp.App.Setup;
 using MccSoft.WebApi.Sentry;
-using MccSoft.WebApi.Serialization.ModelBinding;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("appsettings.local.json", true).AddEnvironmentVariables();
 
-builder.Host.UseSerilog(
-    (hostingContext, loggerConfiguration) =>
-    {
-        loggerConfiguration.ConfigureSerilog(
-            hostingContext.HostingEnvironment,
-            hostingContext.Configuration
-        );
-    }
-);
+if (!builder.Environment.IsEnvironment("Test"))
+{
+    builder.Host.UseSerilog(
+        (hostingContext, loggerConfiguration) =>
+        {
+            loggerConfiguration.ConfigureSerilog(
+                hostingContext.HostingEnvironment,
+                hostingContext.Configuration
+            );
+        }
+    );
+}
 
 SetupDatabase.AddDatabase(builder);
 SetupAudit.ConfigureAudit(builder.Services, builder.Configuration);
