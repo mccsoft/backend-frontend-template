@@ -49,7 +49,7 @@ public partial class ComponentTestFixture
                 })
                 .AddTestAuthentication(options => { });
 
-                // Disable all policies.
+            // Disable all policies.
             services.RemoveAll<IPolicyEvaluator>();
             services.AddSingleton<IPolicyEvaluator, DisableAuthenticationPolicyEvaluator>();
         });
