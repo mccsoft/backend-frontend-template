@@ -1,11 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using MartinCostello.Logging.XUnit;
 using MccSoft.TemplateApp.ComponentTests.Infrastructure;
+using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Xunit.Abstractions;
 
@@ -46,7 +48,13 @@ public partial class ComponentTestFixture
                     options.DefaultChallengeScheme = TestAuthenticationOptions.Scheme;
                 })
                 .AddTestAuthentication(options => { });
+
+                // Disable all policies.
+            services.RemoveAll<IPolicyEvaluator>();
+            services.AddSingleton<IPolicyEvaluator, DisableAuthenticationPolicyEvaluator>();
         });
+
+        
 
         // Consider adding your project-specific things in ConfigureWebHostProjectSpecific function
         // (defined in a ComponentTestFixture.partial.cs).
