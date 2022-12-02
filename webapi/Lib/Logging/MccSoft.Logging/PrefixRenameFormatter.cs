@@ -8,7 +8,7 @@ using Serilog.Formatting.Elasticsearch;
 namespace MccSoft.Logging;
 
 /// <summary>
-/// Replaces a special underscore-containing prefix denoting a PrismaCloud field with
+/// Replaces a special underscore-containing prefix denoting a field with
 /// a dot-containing prefix (in messages sent to Elasticsearch).
 /// This is a workaround for Serilog not allowing dots in message templates.
 /// See https://github.com/serilog/serilog/issues/1384
