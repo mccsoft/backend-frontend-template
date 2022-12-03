@@ -6,8 +6,12 @@ using Microsoft.AspNetCore.Identity;
 
 namespace MccSoft.TemplateApp.Domain;
 
-public class User : IdentityUser
+public class User : IdentityUser, ITenantEntity
 {
+    public int TenantId { get; private set; }
+
+    public Tenant Tenant { get; private set; }
+
     public string FirstName { get; private set; } = "";
 
     public string LastName { get; private set; } = "";
@@ -97,6 +101,11 @@ public class User : IdentityUser
     public void ClearDomainEvents()
     {
         _domainEvents?.Clear();
+    }
+
+    public void SetTenantIdUnsafe(int tenantId)
+    {
+        TenantId = tenantId;
     }
     #endregion
 }

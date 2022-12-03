@@ -30,7 +30,7 @@ public static class DbContextQueryFilterExtensions
     {
         typesToExclude ??= new List<Type>();
 
-        builder.Model
+        var entityTypes = builder.Model
             .GetEntityTypes()
             .Where(
                 entityType =>
@@ -38,13 +38,14 @@ public static class DbContextQueryFilterExtensions
                     && !typesToExclude.Contains(entityType.ClrType)
                     && entityType.BaseType == null
             )
-            .ToList()
-            .ForEach(entityType =>
-            {
-                builder
-                    .Entity(entityType.ClrType)
-                    .HasQueryFilter(ConvertFilterExpression(filter, entityType.ClrType));
-            });
+            .ToList();
+
+        entityTypes.ForEach(entityType =>
+        {
+            builder
+                .Entity(entityType.ClrType)
+                .HasQueryFilter(ConvertFilterExpression(filter, entityType.ClrType));
+        });
     }
 
     private static LambdaExpression ConvertFilterExpression<TInterface>(

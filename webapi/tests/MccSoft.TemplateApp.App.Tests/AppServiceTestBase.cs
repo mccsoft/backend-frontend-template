@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using MccSoft.IntegreSql.EF.DatabaseInitialization;
+using MccSoft.LowLevelPrimitives;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Persistence;
 using MccSoft.Testing;
@@ -36,6 +37,7 @@ public class AppServiceTestBase : TestBase<TemplateAppDbContext>
                     _defaultUser = await db.Users.FirstAsync(x => x.Email == "default@test.test");
                 });
                 _userAccessorMock.Setup(x => x.GetUserId()).Returns(_defaultUser.Id);
+                _userAccessorMock.Setup(x => x.GetTenantId()).Returns(_defaultUser.TenantId);
             });
         }
     }
@@ -53,9 +55,16 @@ public class AppServiceTestBase : TestBase<TemplateAppDbContext>
             nameof(TemplateAppDbContext) + "AppServiceTest",
             async (db) =>
             {
-                db.Users.Add(new User("default@test.test"));
+                var tenant = new Tenant();
+                db.Tenants.Add(tenant);
                 await db.SaveChangesAsync();
-            }
+
+                var user = new User("default@test.test");
+                db.Users.Add(user);
+                user.SetTenantIdUnsafe(tenant.Id);
+                await db.SaveChangesAsync();
+            },
+            CreateDbContext
         );
 
     protected override void RegisterServices(

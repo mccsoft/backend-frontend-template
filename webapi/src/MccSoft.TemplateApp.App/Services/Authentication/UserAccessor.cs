@@ -37,12 +37,7 @@ public class UserAccessor : IUserAccessor
 
     /// <inheritdoc/>
     public bool IsUserAuthenticated =>
-        _httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated == true
-        && !IsAuthenticationInProgress;
-
-    private bool IsAuthenticationInProgress =>
-        IsHttpContextAvailable
-        && _httpContextAccessor.HttpContext.Request.Path.StartsWithSegments("/connect/token");
+        _httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated == true;
 
     private IIdentity GetUserIdentity()
     {
@@ -51,5 +46,16 @@ public class UserAccessor : IUserAccessor
             throw new AccessDeniedException("User is not authenticated");
 
         return identity;
+    }
+
+    public int GetTenantId()
+    {
+        var customTenantId = ((IUserAccessor)this).GetCustomTenantId();
+        if (customTenantId != null)
+        {
+            return customTenantId.Value;
+        }
+
+        return int.Parse(GetUserIdentity().GetClaimValue(CustomTenantIdAccessor.TenantIdClaim));
     }
 }

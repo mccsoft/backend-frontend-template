@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using MccSoft.IntegreSql.EF.DatabaseInitialization;
+using MccSoft.LowLevelPrimitives;
 using MccSoft.TemplateApp.App.Setup;
 using MccSoft.TemplateApp.ComponentTests.Infrastructure;
 using MccSoft.TemplateApp.Domain;
@@ -53,6 +54,7 @@ public class ComponentTestBase : TestBase<TemplateAppDbContext>, IDisposable
 
         Identity.RemoveClaims("sub");
         Identity.AddClaim("sub", _defaultUser.Id);
+        Identity.AddClaim(CustomTenantIdAccessor.TenantIdClaim, _defaultUser.TenantId.ToString());
     }
 
     private ComponentTestFixture CreateWebApplicationFactory(string connectionString)

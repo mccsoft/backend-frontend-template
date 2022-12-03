@@ -1,14 +1,12 @@
-﻿using System.Data;
-using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
 using Audit.EntityFramework;
 using MccSoft.LowLevelPrimitives;
-using MccSoft.NpgSql;
 using MccSoft.PersistenceHelpers;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Domain.Audit;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Npgsql;
 
 namespace MccSoft.TemplateApp.Persistence;
@@ -20,6 +18,7 @@ public class TemplateAppDbContext
 {
     public IUserAccessor UserAccessor { get; }
     public DbSet<Product> Products { get; set; }
+    public DbSet<Tenant> Tenants { get; set; }
     public DbSet<AuditLog> AuditLogs { get; set; }
 
     public TemplateAppDbContext(
@@ -48,10 +47,17 @@ public class TemplateAppDbContext
         //     );
         // For details see https://github.com/mccsoft/backend-frontend-template/wiki/_new#migration-of-existing-data
 
-        builder.SetupQueryFilter<IOwnedEntity>(
-            (x) => CurrentOwnerId == null || x.OwnerId == CurrentOwnerId
-        );
+        SetupQueryFilters(builder);
+
         builder.AddWebHookEntities(this.GetType());
+    }
+
+    private void SetupQueryFilters(ModelBuilder builder)
+    {
+        builder.SetupQueryFilter<ITenantEntity>(
+            x =>
+                CurrentTenantIdForQueryFilter == null || x.TenantId == CurrentTenantIdForQueryFilter
+        );
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -59,12 +65,19 @@ public class TemplateAppDbContext
         base.OnConfiguring(optionsBuilder);
 
         optionsBuilder.AddInterceptors(
-            new PostProcessEntitiesOnSaveInterceptor<IOwnedEntity, TemplateAppDbContext>(
+            new PostProcessEntitiesOnSaveInterceptor<ITenantEntity, TemplateAppDbContext>(
                 (entity, context) =>
                 {
-                    if (!string.IsNullOrEmpty(context.CurrentOwnerId))
+                    // We need this check, because sometimes we work through all tenants and manage TenantId manually.
+                    // One of examples is new user creation, where there is no good place to
+                    // wrap .SaveChanges with .SetCustomTenantId
+                    if (entity.TenantId != 0)
+                        return;
+
+                    var currentTenantId = context.CurrentTenantId;
+                    if (currentTenantId != null && currentTenantId != 0)
                     {
-                        entity.SetOwnerIdUnsafe(context.CurrentOwnerId);
+                        entity.SetTenantIdUnsafe(currentTenantId.Value);
                     }
                 }
             )
@@ -73,6 +86,11 @@ public class TemplateAppDbContext
         optionsBuilder.AddInterceptors(new AuditSaveChangesInterceptor());
     }
 
-    public string? CurrentOwnerId =>
-        UserAccessor.IsHttpContextAvailable ? UserAccessor.GetUserId() : null;
+    private int? CurrentTenantIdForQueryFilter =>
+        CustomTenantIdAccessor.IsTenantIdQueryFilterDisabled ? null : CurrentTenantId;
+
+    public int? CurrentTenantId =>
+        UserAccessor.IsHttpContextAvailable
+            ? UserAccessor.GetTenantId()
+            : CustomTenantIdAccessor.GetCustomTenantId();
 }

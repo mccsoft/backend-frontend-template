@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using MccSoft.LowLevelPrimitives;
 using Microsoft.AspNetCore.Authorization;
 using MccSoft.TemplateApp.Domain;
 using Microsoft.AspNetCore.Authentication;
@@ -112,6 +113,9 @@ public class LoginModel : PageModel
 
         if (ModelState.IsValid)
         {
+            using var ignoreTenantIdQueryFilter =
+                CustomTenantIdAccessor.IgnoreTenantIdQueryFilter();
+
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, set lockoutOnFailure: true
             var result = await _signInManager.PasswordSignInAsync(

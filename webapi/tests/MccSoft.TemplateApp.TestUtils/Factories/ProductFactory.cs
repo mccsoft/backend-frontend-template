@@ -10,11 +10,12 @@ public static class ProductFactory
     public static Product Product(
         this MotherFactory a,
         string title = "Default Product 1",
-        string? userId = null
+        string? userId = null,
+        int tenantId = 1
     )
     {
         var product = new Product(title) { CreatedByUserId = userId };
-        product.SetOwnerIdUnsafe(userId);
+        product.SetTenantIdUnsafe(tenantId);
         return product;
     }
 

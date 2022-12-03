@@ -3,7 +3,7 @@ using MccSoft.DomainHelpers;
 
 namespace MccSoft.TemplateApp.Domain;
 
-public class Product : BaseOwnedEntity
+public class Product : BaseTenantEntity
 {
     public int Id { get; set; }
     public ProductType ProductType { get; set; }

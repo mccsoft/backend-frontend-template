@@ -1,5 +1,7 @@
 using System.Text.Json;
+using MccSoft.LowLevelPrimitives;
 using MccSoft.TemplateApp.Domain;
+using MccSoft.TemplateApp.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
@@ -10,20 +12,27 @@ public class DefaultUserSeeder
     private readonly IOptions<IdentityOptions> _identityOptions;
     private readonly IOptions<DefaultUserOptions> _defaultUserOptions;
     private readonly UserManager<User> _userManager;
+    private readonly TemplateAppDbContext _dbContext;
 
     public DefaultUserSeeder(
         IOptions<IdentityOptions> identityOptions,
         IOptions<DefaultUserOptions> defaultUserOptions,
-        UserManager<User> userManager
+        UserManager<User> userManager,
+        TemplateAppDbContext dbContext
     )
     {
         _identityOptions = identityOptions;
         _defaultUserOptions = defaultUserOptions;
         _userManager = userManager;
+        _dbContext = dbContext;
     }
 
     public async Task SeedUser()
     {
+        var tenant = await SeedTenant();
+
+        using var forceTenant = CustomTenantIdAccessor.SetCustomTenantId(tenant.Id);
+
         DefaultUserOptions defaultUser = _defaultUserOptions.Value;
         if (
             string.IsNullOrEmpty(defaultUser.UserName) || string.IsNullOrEmpty(defaultUser.Password)
@@ -76,5 +85,17 @@ public class DefaultUserSeeder
                 serializedPasswordOptions
             );
         }
+    }
+
+    private async Task<Tenant> SeedTenant()
+    {
+        var tenant = _dbContext.Tenants.OrderBy(x => x.Id).FirstOrDefault() ?? new Tenant();
+        if (tenant.Id != 0)
+            return tenant;
+
+        _dbContext.Add(tenant);
+        await _dbContext.SaveChangesAsync();
+
+        return tenant;
     }
 }
