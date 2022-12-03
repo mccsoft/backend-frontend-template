@@ -1,5 +1,9 @@
 ﻿# Changelog
 
+### 2022-12-03 .NET 7
+
+Support multi-tenant out of the box
+
 ### 2022-11-19 .NET 7
 
 Upgrade to .NET 7
