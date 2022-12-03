@@ -1,25 +1,22 @@
-using System.Linq;
-using System.Threading.Tasks;
 using MccSoft.LowLevelPrimitives;
 using MccSoft.LowLevelPrimitives.Exceptions;
-using MccSoft.NpgSql;
 using MccSoft.TemplateApp.App.Features.Products.Dto;
-using MccSoft.TemplateApp.App.Utils;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Persistence;
 using MccSoft.PersistenceHelpers;
 using MccSoft.WebApi.Pagination;
 using MccSoft.WebApi.Patching;
 using Microsoft.EntityFrameworkCore;
-using NeinLinq;
 
 namespace MccSoft.TemplateApp.App.Features.Products;
 
+[Log]
 public class ProductService
 {
     private readonly TemplateAppDbContext _dbContext;
     private readonly DbRetryHelper<TemplateAppDbContext, ProductService> _retryHelper;
     private readonly IUserAccessor _userAccessor;
+
     private readonly ILogger<ProductService> _logger;
 
     public ProductService(
