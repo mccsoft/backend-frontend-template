@@ -18,10 +18,12 @@ export const OpenIdCallback: React.FC<
     signInRedirectHandler: SignInRedirectHandler;
     signOutRedirectHandler: SignOutRedirectHandler;
     loading?: React.ReactNode | undefined;
-    error?: (params: {
-      error: string;
-      error_description: string;
-    }) => React.ReactNode | undefined;
+    error?:
+      | ((props: {
+          error: string;
+          error_description: string;
+        }) => React.ReactElement | null)
+      | undefined;
   }>
 > = (props) => {
   const url = window.location.pathname;
@@ -62,7 +64,7 @@ export const OpenIdCallback: React.FC<
       props.error?.({
         error: error,
         error_description: error_description ?? '',
-      }) ?? `ERROR: ${error}. ${error_description}`
+      }) ?? <>{`ERROR: ${error}. ${error_description}`}</>
     );
   }
   if (isAuthCallback || isSignOutCallback)
