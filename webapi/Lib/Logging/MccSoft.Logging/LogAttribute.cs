@@ -67,10 +67,10 @@ public class LogAttribute : OverrideMethodAspect, IAspect<INamedType>
         var logger = (ILogger)meta.This._logger;
         object resultRef = null;
 
-        var parameters = new Dictionary<string, object>();
+        var parameters = new Dictionary<Field, object>();
         foreach (var p in meta.Target.Parameters.Where(p => p.RefKind != RefKind.Out))
         {
-            parameters.Add(p.Name, p.Value);
+            parameters.Add(Field.Named(p.Name), p.Value);
         }
 
         using var log = logger.LogOperation(parameters, _withResult ? () => resultRef : null);

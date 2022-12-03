@@ -69,12 +69,7 @@ public static class LoggerExtensions
         [CallerMemberName] string operationName = ""
     )
     {
-        return LogOperation(
-            logger,
-            parameters.ToDictionary(x => x.Key.Name, x => x.Value),
-            null,
-            operationName
-        );
+        return LogOperation(logger, parameters, null, operationName);
     }
 
     /// <summary>
@@ -94,7 +89,7 @@ public static class LoggerExtensions
     /// <param name="operationName">Name of the operation that should be logged.</param>
     internal static IDisposable LogOperation(
         this ILogger logger,
-        Dictionary<string, object> parameters,
+        Dictionary<Field, object> parameters,
         Func<object> resultFunction = null,
         [CallerMemberName] string operationName = ""
     )
@@ -133,7 +128,7 @@ public static class LoggerExtensions
     public static void LogWithFields(
         this Microsoft.Extensions.Logging.ILogger logger,
         string message,
-        Dictionary<string, object> @params,
+        Dictionary<Field, object> @params,
         LogLevel level = LogLevel.Information
     )
     {
@@ -144,9 +139,9 @@ public static class LoggerExtensions
 
         var msg = new StringBuilder(message);
         var paramList = new List<object>(@params.Count);
-        foreach ((string fieldName, object value) in @params)
+        foreach ((Field fieldName, object value) in @params)
         {
-            msg.Append($" {fieldName}: {{{fieldName}}}");
+            msg.Append($" {fieldName.Name}: {{{fieldName.PrefixedName}}}");
             paramList.Add(value);
         }
 
@@ -235,10 +230,7 @@ public static class LoggerExtensions
         {
             T result;
             {
-                logger.LogWithFields(
-                    $"Starting operation {operationName}.",
-                    MakeStartMessageParams(context)
-                );
+                logger.LogWithFields($"Starting operation {operationName}.", context);
                 result = await action();
                 stopwatch.Stop();
                 logger.LogInformation(
@@ -284,10 +276,7 @@ public static class LoggerExtensions
         {
             T result;
             {
-                logger.LogWithFields(
-                    $"Starting operation {operationName}.",
-                    MakeStartMessageParams(startParams)
-                );
+                logger.LogWithFields($"Starting operation {operationName}.", startParams);
                 result = await action();
                 stopwatch.Stop();
                 logger.LogInformation(
@@ -323,10 +312,7 @@ public static class LoggerExtensions
         stopwatch.Start();
         using (LogContext.Push(new OperationContextEnricher(context, operationName)))
         {
-            logger.LogWithFields(
-                $"Starting operation {operationName}.",
-                MakeStartMessageParams(context)
-            );
+            logger.LogWithFields($"Starting operation {operationName}.", context);
             result = action();
             stopwatch.Stop();
             logger.LogInformation(
@@ -388,7 +374,7 @@ public static class LoggerExtensions
     public static T LogOperation<T>(
         this Microsoft.Extensions.Logging.ILogger logger,
         OperationContext context,
-        Dictionary<string, object> startParams,
+        Dictionary<Field, object> startParams,
         Func<T> action,
         [CallerMemberName] string operationName = ""
     )
@@ -432,7 +418,7 @@ public static class LoggerExtensions
     public static void LogOperation(
         this Microsoft.Extensions.Logging.ILogger logger,
         OperationContext context,
-        Dictionary<string, object> startParams,
+        Dictionary<Field, object> startParams,
         Action action = default,
         [CallerMemberName] string operationName = ""
     )
