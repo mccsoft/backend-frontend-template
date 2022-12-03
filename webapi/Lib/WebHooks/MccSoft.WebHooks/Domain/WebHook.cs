@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 
+public class WebHookEvent
+{
+    public int Id { get; private set; }
+}
+
 [Index(nameof(WebHook.IsSucceeded), nameof(WebHook.NextRun))]
 public class WebHook
 {
