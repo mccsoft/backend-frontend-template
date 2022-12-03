@@ -53,6 +53,73 @@ public static class LoggerExtensions
     }
 
     /// <summary>
+    /// Logs operation.
+    /// Dispose the result when operation is finished (e.g. by wrapping the result in a `using` statement)
+    /// </summary>
+    /// <param name="logger">
+    /// Instance of <see cref="ILogger" />
+    /// </param>
+    /// <param name="parameters">
+    /// Parameters that should be logged
+    /// </param>
+    /// <param name="operationName">Name of the operation that should be logged.</param>
+    public static IDisposable LogOperation(
+        this ILogger logger,
+        Dictionary<Field, object> parameters,
+        [CallerMemberName] string operationName = ""
+    )
+    {
+        return LogOperation(
+            logger,
+            parameters.ToDictionary(x => x.Key.Name, x => x.Value),
+            null,
+            operationName
+        );
+    }
+
+    /// <summary>
+    /// Logs operation.
+    /// Dispose the result when operation is finished (e.g. by wrapping the result in a `using` statement)
+    /// </summary>
+    /// <param name="logger">
+    /// Instance of <see cref="ILogger" />
+    /// </param>
+    /// <param name="parameters">
+    /// Parameters that should be logged
+    /// </param>
+    /// <param name="resultFunction">
+    /// Function returning the result of executing a function.
+    /// The function will be executed and the result will be logged when function finishes.
+    /// </param>
+    /// <param name="operationName">Name of the operation that should be logged.</param>
+    internal static IDisposable LogOperation(
+        this ILogger logger,
+        Dictionary<string, object> parameters,
+        Func<object> resultFunction = null,
+        [CallerMemberName] string operationName = ""
+    )
+    {
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+
+        var logContext = LogContext.PushProperty(Field.Method.Name, operationName);
+
+        logger.LogWithFields($"Starting operation {operationName}.", parameters);
+
+        return new Disposable(() =>
+        {
+            var result = resultFunction?.Invoke();
+            stopwatch.Stop();
+            logger.LogInformation(
+                $"Finished operation {operationName}. Result: {Field.Result}. Elapsed: {Field.Elapsed} ms.",
+                result,
+                stopwatch.ElapsedMilliseconds
+            );
+            logContext.Dispose();
+        });
+    }
+
+    /// <summary>
     /// Logs a message with additional parameters appended in the format "name: value".
     /// </summary>
     /// <param name="logger">The logger.</param>
@@ -66,7 +133,7 @@ public static class LoggerExtensions
     public static void LogWithFields(
         this Microsoft.Extensions.Logging.ILogger logger,
         string message,
-        AdditionalParams @params,
+        Dictionary<string, object> @params,
         LogLevel level = LogLevel.Information
     )
     {
@@ -77,9 +144,9 @@ public static class LoggerExtensions
 
         var msg = new StringBuilder(message);
         var paramList = new List<object>(@params.Count);
-        foreach ((Field field, object value) in @params)
+        foreach ((string fieldName, object value) in @params)
         {
-            msg.Append($" {field.Name}: {field}");
+            msg.Append($" {fieldName}: {{{fieldName}}}");
             paramList.Add(value);
         }
 
@@ -130,7 +197,7 @@ public static class LoggerExtensions
     public static async Task LogOperation(
         this Microsoft.Extensions.Logging.ILogger logger,
         OperationContext context,
-        AdditionalParams startParams,
+        Dictionary<string, object> startParams,
         Func<Task> action,
         [CallerMemberName] string operationName = ""
     )
@@ -201,7 +268,7 @@ public static class LoggerExtensions
     public static async Task<T> LogOperation<T>(
         this Microsoft.Extensions.Logging.ILogger logger,
         OperationContext context,
-        AdditionalParams startParams,
+        Dictionary<Field, object> startParams,
         Func<Task<T>> action,
         [CallerMemberName] string operationName = ""
     )
@@ -219,7 +286,7 @@ public static class LoggerExtensions
             {
                 logger.LogWithFields(
                     $"Starting operation {operationName}.",
-                    MakeStartMessageParams(context, startParams)
+                    MakeStartMessageParams(startParams)
                 );
                 result = await action();
                 stopwatch.Stop();
@@ -271,41 +338,11 @@ public static class LoggerExtensions
         return result;
     }
 
-    /// <summary>
-    /// Logs operation finish only.
-    /// Used on the hot paths to minimize the amount of logging.
-    /// </summary>
-    /// <param name="logger">
-    /// Instance of <see cref="ILogger" />
-    /// </param>
-    /// <param name="context">
-    /// Logging context that would be logged as the scope, for each logged message.
-    /// </param>
-    /// <param name="action">Action that would be dispatched in scope of logged context.</param>
-    /// <param name="operationName">Name of the operation that should be logged.</param>
-    public static async Task<T> LogOperationFinish<T>(
-        this Microsoft.Extensions.Logging.ILogger logger,
-        OperationContext context,
-        Func<Task<T>> action,
-        [CallerMemberName] string operationName = ""
+    private static Dictionary<string, object> MakeStartMessageParams(
+        Dictionary<Field, object> context
     )
     {
-        var stopwatch = new Stopwatch();
-        stopwatch.Start();
-        using (LogContext.Push(new OperationContextEnricher(context, operationName)))
-        {
-            T result;
-            {
-                result = await action();
-                stopwatch.Stop();
-                logger.LogInformation(
-                    $"Finished operation {operationName}. Elapsed: {Field.Elapsed} ms.",
-                    stopwatch.ElapsedMilliseconds
-                );
-            }
-
-            return result;
-        }
+        return context.ToDictionary(x => x.Key.Name, x => x.Value);
     }
 
     /// <summary>
@@ -351,7 +388,7 @@ public static class LoggerExtensions
     public static T LogOperation<T>(
         this Microsoft.Extensions.Logging.ILogger logger,
         OperationContext context,
-        AdditionalParams startParams,
+        Dictionary<string, object> startParams,
         Func<T> action,
         [CallerMemberName] string operationName = ""
     )
@@ -366,10 +403,7 @@ public static class LoggerExtensions
         stopwatch.Start();
         using (LogContext.Push(new OperationContextEnricher(context, operationName)))
         {
-            logger.LogWithFields(
-                $"Starting operation {operationName}.",
-                MakeStartMessageParams(context, startParams)
-            );
+            logger.LogWithFields($"Starting operation {operationName}.", startParams);
             result = action();
             stopwatch.Stop();
             logger.LogInformation(
@@ -398,7 +432,7 @@ public static class LoggerExtensions
     public static void LogOperation(
         this Microsoft.Extensions.Logging.ILogger logger,
         OperationContext context,
-        AdditionalParams startParams,
+        Dictionary<string, object> startParams,
         Action action = default,
         [CallerMemberName] string operationName = ""
     )
@@ -409,20 +443,5 @@ public static class LoggerExtensions
             return 1;
         };
         logger.LogOperation(context, startParams, func, operationName);
-    }
-
-    /// <summary>
-    /// Embeds all context parameters into the operation start message, to be
-    /// able to find operations by field names/values using full text search by `message`.
-    /// </summary>
-    private static AdditionalParams MakeStartMessageParams(
-        OperationContext context,
-        AdditionalParams @params = null
-    )
-    {
-        IEnumerable<KeyValuePair<Field, object>> source =
-            @params == null ? context : context.Concat(@params);
-        // We embed Method explicitly into the start message, so don't need it here.
-        return new AdditionalParams(source.Where(kv => kv.Key.Name != "Method"));
     }
 }

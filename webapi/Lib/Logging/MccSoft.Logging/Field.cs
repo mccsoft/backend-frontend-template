@@ -38,6 +38,11 @@ public class Field
     public static Field Method = new(nameof(Method));
 
     /// <summary>
+    /// Represents the result of the method (return value).
+    /// </summary>
+    public static Field Result = new(nameof(Result));
+
+    /// <summary>
     /// A generic error message, e.g. extracted from an exception.
     /// </summary>
     /// <remarks>

@@ -40,6 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Metalama.Framework" Version="0.5.63-preview" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="7.0.0" />
     <PackageReference Include="Audit.NET.PostgreSql" Version="20.0.3" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.31" />
