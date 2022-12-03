@@ -10,4 +10,8 @@ variables:
   project: 'webapi/src/MccSoft.TemplateApp.App/MccSoft.TemplateApp.App.csproj'
 
 steps:
+  - checkout: self
+    fetchDepth: 1
+    submodules: true
+
   - template: ./azure-pipelines-tests-shared.yml
