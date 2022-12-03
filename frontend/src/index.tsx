@@ -11,6 +11,7 @@ import {
 } from './helpers/interceptors/auth/auth-interceptor';
 import { backendUri } from './pages/unauthorized/openid/openid-settings';
 import { Loading } from './components/uikit/suspense/Loading';
+import { LoginErrorPage } from 'pages/unauthorized/LoginErrorPage';
 
 //to send dates to backend in local timezone (not in UTC)
 Date.prototype.toISOString = function () {
@@ -35,6 +36,7 @@ root.render(
         postServerLogOut();
       }}
       loading={<Loading loading={true} />}
+      error={LoginErrorPage}
     >
       <App />
     </OpenIdCallback>
