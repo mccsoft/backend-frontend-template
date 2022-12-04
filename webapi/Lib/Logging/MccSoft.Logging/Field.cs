@@ -6,7 +6,7 @@ namespace MccSoft.Logging;
 /// Represents commonly used logging fields,
 /// to avoid different names for the same thing.
 /// </summary>
-public class Field
+public partial class Field
 {
     /// <summary>
     /// A prefix added to fields, making it possible to enable dynamic mapping in Elasticsearch
@@ -89,6 +89,8 @@ public class Field
     {
         return new(name);
     }
+
+    public static implicit operator string(Field f) => f.PrefixedName;
 
     public override string ToString()
     {

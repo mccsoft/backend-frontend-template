@@ -1,10 +1,6 @@
 using System.Security.Claims;
-using FluentAssertions;
-using MccSoft.Testing;
 using MccSoft.WebApi.SignedUrl;
 using Microsoft.Extensions.Options;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace MccSoft.TemplateApp.App.Tests;
 

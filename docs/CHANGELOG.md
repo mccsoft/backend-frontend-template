@@ -1,6 +1,10 @@
 ﻿# Changelog
 
-### 2022-12-03 .NET 7
+### 2022-12-04 [Log] attribute
+
+Implement logging of starting/finishing the method with AOP `[Log]` attribute.
+
+### 2022-12-03 Multi-tenancy
 
 Support multi-tenant out of the box
 

@@ -1,8 +1,10 @@
 using System.Threading.Tasks;
+using MccSoft.Logging;
 using MccSoft.TemplateApp.App.Features.Products.Dto;
 using MccSoft.WebApi.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Serilog.Context;
 
 namespace MccSoft.TemplateApp.App.Features.Products;
 
@@ -26,12 +28,16 @@ public class ProductController
     [HttpPatch("{id:int}")]
     public async Task<ProductDto> Patch(int id, [FromBody] PatchProductDto dto)
     {
+        using var logContext = LogContext.PushProperty(Field.ProductId, id);
+
         return await _productService.Patch(id, dto);
     }
 
     [HttpDelete("")]
     public async Task Delete(int id)
     {
+        using var logContext = LogContext.PushProperty(Field.ProductId, id);
+
         await _productService.Delete(id);
     }
 
@@ -44,6 +50,8 @@ public class ProductController
     [HttpGet("{id:int}")]
     public async Task<ProductDto> Get(int id)
     {
+        using var logContext = LogContext.PushProperty(Field.ProductId, id);
+
         return await _productService.Get(id);
     }
 }
