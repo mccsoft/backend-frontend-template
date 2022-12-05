@@ -18,7 +18,7 @@ import {
 } from 'services/api/api-client';
 import { HookFormDropDownInput } from 'components/uikit/inputs/dropdown/HookFormDropDownInput';
 import { useNavigate } from 'react-router';
-import { HookFormDatePicker } from '../../../../components/uikit/inputs/date-time/HookFormDatePicker';
+import { HookFormDatePicker } from 'components/uikit/inputs/date-time/HookFormDatePicker';
 import { Grid } from '@mui/material';
 
 export const CreateProductPage: React.FC = () => {
