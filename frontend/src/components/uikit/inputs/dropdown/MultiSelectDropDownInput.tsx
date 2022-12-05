@@ -6,7 +6,6 @@ import {
   convertPropertyAccessorToFunction,
   StyledAutocomplete,
 } from './StyledAutocomplete';
-import { emptyArray } from '../../table/AppTable';
 
 import styles from './StyledAutocomplete.module.scss';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +13,7 @@ import clsx from 'clsx';
 import { StyledAutocompleteProps } from './types';
 import { createFilterOptions } from '@mui/material';
 import { SearchInput } from './SearchInput';
+import { emptyArray } from 'helpers/empty-array';
 
 export type MultiSelectDropDownInputProps<
   T,
@@ -171,7 +171,7 @@ export function MultiSelectDropDownInput<
     <StyledAutocomplete<T, true, Required, false>
       {...rest}
       options={options}
-      value={rest.value ?? emptyArray}
+      value={rest.value ?? emptyArray()}
       onChange={onChange}
       multiple={true}
       disableCloseOnSelect={true}

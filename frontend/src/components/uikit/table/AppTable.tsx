@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import styles from './AppTable.module.scss';
 
-export const emptyArray: any[] = [];
 // ignored because it's used in react-table as well
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function AppTable<D extends object = object>(props: {

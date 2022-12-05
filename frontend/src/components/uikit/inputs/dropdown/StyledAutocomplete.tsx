@@ -354,6 +354,8 @@ export function StyledAutocomplete<
           // Expected: '12:00' is selected. (without this code '10:00' would be selected)
           if (props.freeSolo && !isSearch && event.key === 'Enter') {
             closeAutocomplete.current?.(event as any);
+            // onBlur is needed when this autocomplete is part of another control (e.g. DataGrid), so that it knows we finished editing
+            onBlurRef.current?.(event as any);
             // we need to preventDefault, so that containing Form would not be submitted
             (event as any).preventDefault();
             (event as any).defaultMuiPrevented = true;
