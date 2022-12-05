@@ -15,18 +15,14 @@ public class ProductDataLoggerJob : JobBase
         _db = db;
     }
 
+    [Log]
     protected override async Task ExecuteCore()
     {
-        var operationName = nameof(ProductDataLoggerJob);
-        _logger.LogInformation($"Starting {operationName} scheduler job");
-
         var dbEntities = _db.Products.ToList();
 
         foreach (var dbEntity in dbEntities)
         {
             _logger.LogInformation($"Product in DB: {dbEntity.Title} ");
         }
-
-        _logger.LogInformation($"Finished {operationName}");
     }
 }

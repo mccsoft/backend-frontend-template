@@ -10,9 +10,11 @@ using Shaddix.OpenIddict.ExternalAuthentication.Infrastructure;
 
 namespace MccSoft.TemplateApp.App.Controllers;
 
+[Log]
 public class OpenIdAuthorizationController : OpenIdAuthorizationControllerBase<User, string>
 {
     private readonly TemplateAppDbContext _dbContext;
+    private readonly ILogger<OpenIdAuthorizationController> _logger;
 
     public OpenIdAuthorizationController(
         SignInManager<User> signInManager,
@@ -23,6 +25,7 @@ public class OpenIdAuthorizationController : OpenIdAuthorizationControllerBase<U
     ) : base(signInManager, userManager, configurationProvider, logger)
     {
         _dbContext = dbContext;
+        _logger = logger;
     }
 
     protected override async Task<IList<Claim>> GetClaims(

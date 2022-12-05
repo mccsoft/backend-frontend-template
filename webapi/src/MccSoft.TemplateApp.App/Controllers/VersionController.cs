@@ -8,9 +8,15 @@ namespace MccSoft.TemplateApp.App.Controllers;
 /// Shows the info about the service.
 /// </summary>
 [ApiController]
+[Log]
 public class VersionController
 {
-    public VersionController() { }
+    private readonly ILogger<VersionController> _logger;
+
+    public VersionController(ILogger<VersionController> logger)
+    {
+        _logger = logger;
+    }
 
     /// <summary>
     /// Gets the version of the service.
