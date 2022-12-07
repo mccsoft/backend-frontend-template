@@ -103,13 +103,28 @@ public static class LoggerExtensions
 
         return new Disposable(() =>
         {
-            var result = resultFunction?.Invoke();
-            stopwatch.Stop();
-            logger.LogInformation(
-                $"Finished operation {operationName}. Result: {Field.Result}. Elapsed: {Field.Elapsed} ms.",
-                result,
-                stopwatch.ElapsedMilliseconds
-            );
+            object result;
+            try
+            {
+                result = resultFunction?.Invoke();
+                stopwatch.Stop();
+                logger.LogInformation(
+                    $"Finished operation {operationName}. Result: {Field.Result}. Elapsed: {Field.Elapsed} ms.",
+                    result,
+                    stopwatch.ElapsedMilliseconds
+                );
+            }
+            catch (Exception e)
+            {
+                stopwatch.Stop();
+                logger.LogError(
+                    e,
+                    $"Operation {operationName} failed after {Field.Elapsed} ms.",
+                    stopwatch.ElapsedMilliseconds
+                );
+                throw;
+            }
+
             logContext.Dispose();
         });
     }

@@ -26,19 +26,6 @@ public static class DomainEventsExtensions
     {
         services.AddTransient<DomainEventsSaveChangesInterceptor>();
         services.AddTransient<DomainEventsTransactionInterceptor>();
-
-        // to resolve all Handlers in a separate scope, or in a HTTP scope
-        services.AddTransient<ServiceFactory>(p =>
-        {
-            var httpContextAccessor = p.GetRequiredService<IHttpContextAccessor>();
-            if (httpContextAccessor.HttpContext != null)
-            {
-                return httpContextAccessor.HttpContext.RequestServices.GetRequiredService;
-            }
-
-            var scope = p.CreateScope();
-            return scope.ServiceProvider.GetRequiredService;
-        });
         services.AddMediatR(handlerAssemblyMarkerTypes);
     }
 }
