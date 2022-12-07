@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { FieldValues } from 'react-hook-form';
-import {
-  UnpackNestedValue,
-  UseFormSetError,
-} from 'react-hook-form/dist/types/form';
+import { UseFormSetError } from 'react-hook-form/dist/types/form';
 import { DeepPartial } from 'react-hook-form/dist/types/utils';
 import { NavigateFunction, useNavigate } from 'react-router';
 
@@ -11,7 +8,7 @@ export type UseSendFormReturn<T> = {
   /*
   Function to be passed to form.handleSubmit
    */
-  handler: (data: UnpackNestedValue<T>) => Promise<void>;
+  handler: (data: T) => Promise<void>;
   /*
   Server-side error which doesn't belong to any particular field
    */
@@ -100,7 +97,7 @@ export function handleSubmitFormError<T extends FieldValues>(
  */
 export function useErrorHandler<TFieldValues extends FieldValues = FieldValues>(
   submitFunction: (
-    data: UnpackNestedValue<TFieldValues>,
+    data: TFieldValues,
     navigate: NavigateFunction,
   ) => Promise<void>,
   setError: UseFormSetError<TFieldValues>,
@@ -110,7 +107,7 @@ export function useErrorHandler<TFieldValues extends FieldValues = FieldValues>(
   const [formErrorsCombined, setFormErrorsCombined] = useState('');
   const navigate = useNavigate();
 
-  async function submitForm(data: UnpackNestedValue<TFieldValues>) {
+  async function submitForm(data: TFieldValues) {
     try {
       setOverallServerError('');
       await submitFunction(data, navigate);
