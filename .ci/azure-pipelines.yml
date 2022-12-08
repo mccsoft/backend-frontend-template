@@ -36,6 +36,10 @@ stages:
             displayName: 'set version'
 
           - script: |
+              yarn copy-translations-to-backend
+            displayName: 'copy translations to backend'
+
+          - script: |
               yarn build-dotnet
             displayName: 'build backend'
 
