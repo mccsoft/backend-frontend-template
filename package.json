@@ -38,7 +38,7 @@
     "build-with-docker": "yarn build && yarn docker-build",
     "build": "yarn prestart && yarn build-dotnet && yarn build-frontend && yarn copy-frontend",
     "prestart": "yarn copy-translations-to-backend",
-    "copy-translations-to-backend": "yarn cpy frontend/public/dictionaries/* dictionaries_tmp/ --flat && yarn renamer --verbose -f \"/translation.(.*).json/\" -r '../webapi/src/MccSoft.TemplateApp.App/Dictionaries/$1/Frontend.json' './dictionaries_tmp/*'",
+    "copy-translations-to-backend": "yarn cpy frontend/public/dictionaries/* dictionaries_tmp/ --flat && yarn renamer --force --verbose -f \"/translation.(.*).json/\" -r '../webapi/src/MccSoft.TemplateApp.App/Dictionaries/$1/Frontend.json' './dictionaries_tmp/*'",
     "postinstall": "cd webapi && dotnet tool restore",
     "run-csharpier": "cd webapi && dotnet csharpier .",
     "run-prettier": "prettier -w ."
