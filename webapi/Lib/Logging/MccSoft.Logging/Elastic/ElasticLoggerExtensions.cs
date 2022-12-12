@@ -115,7 +115,7 @@ public static class ElasticLoggerConfigurationExtensions
         elasticSearchSinkOptions.TypeName = null;
 
         elasticSearchSinkOptions.ModifyConnectionSettings = x =>
-            x..BasicAuthentication(options.User, options.Password)
+            x.BasicAuthentication(options.User, options.Password)
                 // TODO: add a config flag to skip server certificate check
                 // and a proper server certificate check.
                 .ServerCertificateValidationCallback((o, certificate, chain, errors) => true);
