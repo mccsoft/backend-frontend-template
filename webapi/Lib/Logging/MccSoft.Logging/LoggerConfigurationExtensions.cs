@@ -68,19 +68,6 @@ public static class LoggerConfigurationExtensions
         string fileLogDirectory = "logs"
     )
     {
-        string sentryDsn = configuration.GetValue<string>("Sentry:Dsn");
-        RemoteLoggerOptions remoteLoggerOption = configuration
-            .GetSection("Serilog:Remote")
-            .Get<RemoteLoggerOptions>();
-
-        // By default DateTime in messages is formatted as "10/25/2020 00:00:00", so we create a custom formatter.
-        var isoCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
-        isoCulture.DateTimeFormat = new DateTimeFormatInfo
-        {
-            ShortDatePattern = "yyyy-MM-dd",
-            LongTimePattern = "HH:mm:ss"
-        };
-
         // Write errors that happen in the logger itself to the stderr and to a file, to enable two use cases:
         // 1. Immediately see lost (rejected by ES) messages in the output of `docker service logs service_name`.
         // 2. To keep errors related to lost messages in a file between service restarts.
@@ -89,22 +76,95 @@ public static class LoggerConfigurationExtensions
             Console.Error.WriteLine(msg);
         });
 
-        // Entry assembly is service App project, so version should be correct. If you'll replace it with
-        // GetExecutingAssembly then you'll get version of Lmt.Logging library.
         AssemblyName entryAssembly = Assembly.GetEntryAssembly()?.GetName();
         string entryAssemblyVersion = entryAssembly?.Version?.ToString(fieldCount: 3) ?? "";
-        string serviceName = entryAssembly?.Name ?? "backend";
 
         loggerConfiguration.Destructure
             .JsonNetTypes()
             .ReadFrom.Configuration(configuration)
             .Enrich.FromLogContext()
-            .Enrich.WithProperty(
-                "InstanceName",
-                remoteLoggerOption.InstanceName ?? Environment.MachineName
-            )
+            .Enrich.WithProperty("InstanceName", Environment.MachineName)
             .Enrich.WithProperty("Version", entryAssemblyVersion);
 
+        loggerConfiguration.WriteToSentry(configuration);
+        loggerConfiguration.WriteToElasticSearch(configuration);
+        if (configuration.GetValue<bool>("Serilog:EnableFileOutput"))
+            loggerConfiguration.WriteToFile(fileLogDirectory);
+        loggerConfiguration.WriteToLoggly(configuration);
+
+        if (
+            hostingEnvironment.IsDevelopment()
+            || hostingEnvironment.IsEnvironment("Test")
+            || configuration.GetValue<bool>("Serilog:EnableConsoleOutput")
+        )
+        {
+            loggerConfiguration.WriteTo.Console(formatProvider: GetFormatProvider());
+        }
+        else
+        {
+            // On a stage we write only errors and warnings to the console to quickly see problems when doing
+            // `docker service logs service_name`.
+            loggerConfiguration.WriteTo.Logger(
+                lc => lc.MinimumLevel.Warning().WriteTo.Console(formatProvider: GetFormatProvider())
+            );
+        }
+    }
+
+    private static void WriteToFile(
+        this LoggerConfiguration loggerConfiguration,
+        string fileLogDirectory
+    )
+    {
+        loggerConfiguration.WriteTo.Logger(
+            lc =>
+                lc.ExcludeEfInformation()
+                    .WriteTo.File(
+                        new CompactJsonFormatter(),
+                        $"{fileLogDirectory.TrimEnd('/')}/TemplateApp.txt",
+                        rollingInterval: RollingInterval.Day,
+                        fileSizeLimitBytes: 100 * 1000 * 1000,
+                        rollOnFileSizeLimit: true
+                    )
+        );
+    }
+
+    private static void WriteToLoggly(
+        this LoggerConfiguration loggerConfiguration,
+        IConfiguration configuration
+    )
+    {
+        LogglyOptions logglyOption =
+            configuration.GetSection("Serilog:Loggly").Get<LogglyOptions>()
+            ?? configuration.GetSection("Serilog:Remote").Get<LogglyOptions>();
+
+        // If the stage is not local development stage - push logs to Elasticsearch and loggly token is present.
+        if (
+            !string.IsNullOrEmpty(logglyOption?.Server) && !string.IsNullOrEmpty(logglyOption.Token)
+        )
+        {
+            loggerConfiguration.WriteTo.Logger(
+                lc =>
+                    lc.ExcludeEfInformation()
+                        .WriteTo.Loggly(
+                            formatProvider: GetFormatProvider(),
+                            logglyConfig: new LogglyConfiguration()
+                            {
+                                CustomerToken = logglyOption.Token,
+                                ApplicationName = logglyOption.InstanceName,
+                                EndpointPort = logglyOption.Port,
+                                EndpointHostName = logglyOption.Server,
+                            }
+                        )
+            );
+        }
+    }
+
+    private static void WriteToSentry(
+        this LoggerConfiguration loggerConfiguration,
+        IConfiguration configuration
+    )
+    {
+        string sentryDsn = configuration.GetValue<string>("Sentry:Dsn");
         if (!string.IsNullOrEmpty(sentryDsn))
         {
             loggerConfiguration.WriteTo.Logger(
@@ -119,59 +179,13 @@ public static class LoggerConfigurationExtensions
                         })
             );
         }
-
-        loggerConfiguration.WriteTo.Logger(
-            lc =>
-                lc.ExcludeEfInformation()
-                    .WriteTo.File(
-                        new CompactJsonFormatter(),
-                        $"{fileLogDirectory.TrimEnd('/')}/{serviceName}.txt",
-                        rollingInterval: RollingInterval.Day,
-                        fileSizeLimitBytes: 100 * 1000 * 1000,
-                        rollOnFileSizeLimit: true
-                    )
-        );
-
-        // If the stage is not local development stage - push logs to Elasticsearch and loggly token is present.
-        if (
-            !string.IsNullOrEmpty(remoteLoggerOption?.Server)
-            && !string.IsNullOrEmpty(remoteLoggerOption.Token)
-        )
-        {
-            loggerConfiguration.WriteTo.Logger(
-                lc =>
-                    lc.ExcludeEfInformation()
-                        .WriteTo.Loggly(
-                            formatProvider: isoCulture,
-                            logglyConfig: new LogglyConfiguration()
-                            {
-                                CustomerToken = remoteLoggerOption.Token,
-                                ApplicationName = remoteLoggerOption.InstanceName,
-                                EndpointPort = remoteLoggerOption.Port,
-                                EndpointHostName = remoteLoggerOption.Server,
-                            }
-                        )
-            );
-        }
-
-        if (hostingEnvironment.IsDevelopment() || hostingEnvironment.IsEnvironment("Test"))
-        {
-            loggerConfiguration.WriteTo.Console(formatProvider: isoCulture);
-        }
-        else
-        {
-            // On a stage we write only errors and warnings to the console to quickly see problems when doing
-            // `docker service logs service_name`.
-            loggerConfiguration.WriteTo.Logger(
-                lc => lc.MinimumLevel.Warning().WriteTo.Console(formatProvider: isoCulture)
-            );
-        }
     }
 
-    private static LoggerConfiguration ExcludeEfInformation(
+    internal static LoggerConfiguration ExcludeEfInformation(
         this LoggerConfiguration loggerConfiguration
     )
     {
+        // EF logs are too noisy even on Information level.
         return loggerConfiguration.Filter.ByExcluding(
             le =>
                 le.Level == LogEventLevel.Information
@@ -186,5 +200,17 @@ public static class LoggerConfigurationExtensions
         return loggerConfiguration.Filter.ByExcluding(
             le => le.Exception is ValidationException || le.Exception is INoSentryException
         );
+    }
+
+    internal static CultureInfo GetFormatProvider()
+    {
+        // By default DateTime in messages is formatted as "10/25/2020 00:00:00", so we create a custom formatter.
+        var isoCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+        isoCulture.DateTimeFormat = new DateTimeFormatInfo
+        {
+            ShortDatePattern = "yyyy-MM-dd",
+            LongTimePattern = "HH:mm:ss"
+        };
+        return isoCulture;
     }
 }

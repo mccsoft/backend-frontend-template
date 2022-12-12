@@ -1,6 +1,6 @@
 namespace MccSoft.Logging;
 
-public class RemoteLoggerOptions
+public class LogglyOptions
 {
     /// <summary>
     /// Loggly token

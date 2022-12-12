@@ -29,4 +29,15 @@ public enum FieldType
     /// Datetime type used for timestamp fields.
     /// </summary>
     Date,
+
+    /// <summary>
+    /// The field is found by exact match only, but has a "subfield" `.num`, range queries and sorting
+    /// on which are done numerically. Make sure to only log strings in this field that are parseable to a number.
+    /// </summary>
+    KeywordNumeric,
+
+    /// <summary>
+    /// The field is found by match on the boolean flag.
+    /// </summary>
+    Boolean
 }
