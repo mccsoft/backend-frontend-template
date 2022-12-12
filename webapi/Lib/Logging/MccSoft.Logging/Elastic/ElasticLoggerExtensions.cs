@@ -244,7 +244,7 @@ public static class ElasticLoggerConfigurationExtensions
             properties = new Dictionary<string, object>
             {
                 {
-                    // Fields defined in PrismaCloud via the `Field` class get a special prefix to distinguish
+                    // Fields defined via the `Field` class get a special prefix to distinguish
                     // them from 3rd party fields. We allow dynamic field creation of such prefixed fields only.
                     // If a top-level field (not having the prefix) is needed to be searchable, add a static
                     // mapping for it (see e.g. RequestPath below).
@@ -344,7 +344,7 @@ public static class ElasticLoggerConfigurationExtensions
     }
 
     /// <summary>
-    /// Defines explicit (static) mappings for PrismaCloud fields in Elasticsearch.
+    /// Defines explicit (static) mappings for fields in Elasticsearch.
     /// All fields not marked with an <see cref="ElasticFieldAttribute"/> attribute will get their type dynamically,
     /// see the rules in `dynamic_templates` above.
     /// </summary>

@@ -21,6 +21,7 @@ export function useBlocker(
       if (!shouldBlock) {
         unblock();
         tx.retry();
+        return;
       }
 
       const autoUnblockingTx = {
