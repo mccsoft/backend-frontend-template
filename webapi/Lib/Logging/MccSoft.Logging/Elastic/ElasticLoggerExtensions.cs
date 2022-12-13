@@ -74,7 +74,6 @@ public static class ElasticLoggerConfigurationExtensions
 
         Uri siteUri = new Uri(configuration.GetValue<string>("General:SiteUrl"));
         string stage = siteUri.Host;
-        bool isLocal = stage.Contains("localhost");
         string serviceName = "TemplateApp".ToLower();
         bool initSchema = true;
 
@@ -155,31 +154,29 @@ public static class ElasticLoggerConfigurationExtensions
             "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}";
 
         // If the stage is not local development stage - push logs to Elasticsearch.
-        //if (!isLocal)
-        {
-            // We use deprecated FileSink as for now only this way of configure is supported.
+
+        // We use deprecated FileSink as for now only this way of configure is supported.
 #pragma warning disable CS0618 // Type or member is obsolete
-            // Set Sink only in case if we add option to elastic,
-            // because otherwise FileSink gets not released correctly inside of tests
-            elasticSearchSinkOptions.FailureSink = new FileSink(
-                $"./logs/{serviceName}@replica-{replicaId}.failure.txt",
-                new CompactJsonFormatter(),
-                fileSizeLimitBytes: null
-            );
+        // Set Sink only in case if we add option to elastic,
+        // because otherwise FileSink gets not released correctly inside of tests
+        elasticSearchSinkOptions.FailureSink = new FileSink(
+            $"./logs/{serviceName}@replica-{replicaId}.failure.txt",
+            new CompactJsonFormatter(),
+            fileSizeLimitBytes: null
+        );
 #pragma warning restore CS0618 // Type or member is obsolete
 
-            loggerConfiguration.WriteTo.Logger(
-                lc =>
-                    lc
-                    // Workaround for Override not working in sub-loggers,
-                    // see https://github.com/serilog/serilog/issues/1346
-                    // and https://github.com/serilog/serilog/issues/1453#issuecomment-654254454
-                    .MinimumLevel
-                        .Verbose()
-                        .ExcludeEfInformation()
-                        .WriteTo.Elasticsearch(elasticSearchSinkOptions)
-            );
-        }
+        loggerConfiguration.WriteTo.Logger(
+            lc =>
+                lc
+                // Workaround for Override not working in sub-loggers,
+                // see https://github.com/serilog/serilog/issues/1346
+                // and https://github.com/serilog/serilog/issues/1453#issuecomment-654254454
+                .MinimumLevel
+                    .Verbose()
+                    .ExcludeEfInformation()
+                    .WriteTo.Elasticsearch(elasticSearchSinkOptions)
+        );
     }
 
     private static ITextFormatter CreateFormatter(IFormatProvider formatProvider, bool isDurable)
