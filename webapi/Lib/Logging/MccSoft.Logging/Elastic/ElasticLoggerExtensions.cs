@@ -16,7 +16,7 @@ using Serilog.Sinks.File;
 
 namespace MccSoft.Logging;
 
-public static class ElasticLoggerConfigurationExtensions
+public static class ElasticLoggerExtensions
 {
     /// <summary>
     /// A keyword has no internal structure, such fields are searched by exact match only.
@@ -72,9 +72,8 @@ public static class ElasticLoggerConfigurationExtensions
         )
             return;
 
-        Uri siteUri = new Uri(configuration.GetValue<string>("General:SiteUrl"));
-        string stage = siteUri.Host;
-        string serviceName = "TemplateApp".ToLower();
+        string stage = string.IsNullOrEmpty(options.IndexName) ? options.User : options.IndexName;
+        string serviceName = "Magadan".ToLower();
         bool initSchema = true;
 
         string replicaId = configuration.GetValue<string>("ReplicaId") ?? "1";
@@ -90,12 +89,11 @@ public static class ElasticLoggerConfigurationExtensions
             // Make each stage have its own set of indices, so if we change the "schema" or settings on one stage,
             // it doesn't affect settings on the other.
             // Make each service have its own index template and index name prefix to enable independent deployment.
-            TemplateName = $"{serviceName}-{stage}---events-template",
-            IndexFormat = $"{serviceName}--{stage}---" + "{0:yyyy.MM.dd}" + $"-{GetFieldsHash()}",
+            TemplateName = $"{stage}--events-template",
+            IndexFormat = $"{stage}--" + "{0:yyyy.MM.dd}" + $"-{GetFieldsHash()}",
             CustomFormatter = CreateFormatter(isoCulture, isDurable: false),
             CustomDurableFormatter = CreateFormatter(isoCulture, isDurable: true),
-            GetTemplateContent = () =>
-                GetTemplateES(stage, templateMatchString: $"{serviceName}-{stage}---*"),
+            GetTemplateContent = () => GetTemplateES(templateMatchString: $"{stage}--*"),
             AutoRegisterTemplate = initSchema,
             // Use FailSink to fail service if elastic is not available during startup.
             // We use auto registration only when we run infrastructure in this place we want to fail when elastic
@@ -108,16 +106,15 @@ public static class ElasticLoggerConfigurationExtensions
                 EmitEventFailureHandling.WriteToFailureSink
                 | EmitEventFailureHandling.WriteToSelfLog,
             FormatProvider = isoCulture,
+            // Disable sending "_type":"_doc" in bulk requests for Elastic v7 and higher.
+            // See https://github.com/serilog-contrib/serilog-sinks-elasticsearch/blob/f14e29ffd8eb1b536efd9b5e8e150b60f49971ec/test/Serilog.Sinks.Elasticsearch.Tests/BulkActionTests.cs#L51
+            TypeName = null,
+            ModifyConnectionSettings = x =>
+                x.BasicAuthentication(options.User, options.Password)
+                    // TODO: add a config flag to skip server certificate check
+                    // and a proper server certificate check.
+                    .ServerCertificateValidationCallback((o, certificate, chain, errors) => true)
         };
-        // Disable sending "_type":"_doc" in bulk requests for Elastic v7 and higher.
-        // See https://github.com/serilog-contrib/serilog-sinks-elasticsearch/blob/f14e29ffd8eb1b536efd9b5e8e150b60f49971ec/test/Serilog.Sinks.Elasticsearch.Tests/BulkActionTests.cs#L51
-        elasticSearchSinkOptions.TypeName = null;
-
-        elasticSearchSinkOptions.ModifyConnectionSettings = x =>
-            x.BasicAuthentication(options.User, options.Password)
-                // TODO: add a config flag to skip server certificate check
-                // and a proper server certificate check.
-                .ServerCertificateValidationCallback((o, certificate, chain, errors) => true);
 
         // The implementation of the file buffer is buggy in the Elasticsearch sink, it loses messages,
         // see https://github.com/serilog/serilog-sinks-elasticsearch/issues/382
@@ -208,7 +205,7 @@ public static class ElasticLoggerConfigurationExtensions
     /// Only when the pattern matches, the created template is applied to an index.
     /// </param>
     /// <returns>An object based on which the index template is created.</returns>
-    private static object GetTemplateES(string stage, string templateMatchString)
+    private static object GetTemplateES(string templateMatchString)
     {
         // Based on
         // https://github.com/serilog/serilog-sinks-elasticsearch/blob/463c878a805153dc3f97f938c2aa46de0bc815e0/src/Serilog.Sinks.Elasticsearch/Sinks/ElasticSearch/ElasticSearchTemplateProvider.cs#L182
