@@ -40,11 +40,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Metalama.Framework" Version="0.5.63-preview" />
+    <PackageReference Include="Metalama.Framework" Version="0.5.71-preview" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="7.0.0" />
-    <PackageReference Include="Audit.NET.PostgreSql" Version="20.0.3" />
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.31" />
-    <PackageReference Include="Hangfire.Core" Version="1.7.31" />
+    <PackageReference Include="Audit.NET.PostgreSql" Version="20.1.1" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.32" />
+    <PackageReference Include="Hangfire.Core" Version="1.7.32" />
     <PackageReference Include="Hangfire.Dashboard.BasicAuthorization" Version="1.0.2" />
     <PackageReference Include="Hangfire.PostgreSql" Version="1.9.9" />
     <PackageReference Include="I18Next.Net" Version="1.0.0" />
