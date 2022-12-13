@@ -87,7 +87,7 @@ public static class LoggerExtensions
     /// The function will be executed and the result will be logged when function finishes.
     /// </param>
     /// <param name="operationName">Name of the operation that should be logged.</param>
-    internal static IDisposable LogOperation(
+    public static IDisposable LogOperation(
         this ILogger logger,
         Dictionary<Field, object> parameters,
         Func<object> resultFunction = null,
@@ -103,16 +103,25 @@ public static class LoggerExtensions
 
         return new Disposable(() =>
         {
-            object result;
             try
             {
-                result = resultFunction?.Invoke();
                 stopwatch.Stop();
-                logger.LogInformation(
-                    $"Finished operation {operationName}. Result: {Field.Result}. Elapsed: {Field.Elapsed} ms.",
-                    result,
-                    stopwatch.ElapsedMilliseconds
-                );
+                if (resultFunction != null)
+                {
+                    object result = resultFunction?.Invoke();
+                    logger.LogInformation(
+                        $"Finished operation {operationName}. Result: {Field.Result}. Elapsed: {Field.Elapsed} ms.",
+                        result,
+                        stopwatch.ElapsedMilliseconds
+                    );
+                }
+                else
+                {
+                    logger.LogInformation(
+                        $"Finished operation {operationName}. Elapsed: {Field.Elapsed} ms.",
+                        stopwatch.ElapsedMilliseconds
+                    );
+                }
             }
             catch (Exception e)
             {

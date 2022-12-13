@@ -82,7 +82,11 @@ public class LogAttribute : OverrideMethodAspect, IAspect<INamedType>
             }
         }
 
-        using var log = logger.LogOperation(parameters, _withResult ? () => resultRef : null);
+        using var log = logger.LogOperation(
+            parameters,
+            _withResult ? () => resultRef : null,
+            meta.Target.Method.Name
+        );
 
         // Invoke the method.
         var result = meta.Proceed();
