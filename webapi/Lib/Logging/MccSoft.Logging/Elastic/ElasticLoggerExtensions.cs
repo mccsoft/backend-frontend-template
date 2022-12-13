@@ -224,7 +224,7 @@ public static class ElasticLoggerConfigurationExtensions
             {
                 new
                 {
-                    prisamcloud_obj_fields = new
+                    obj_fields = new
                     {
                         match_mapping_type = "object",
                         path_match = Field.FieldPrefix + ".*",
@@ -233,7 +233,7 @@ public static class ElasticLoggerConfigurationExtensions
                 },
                 new
                 {
-                    prisamcloud_keyword_fields = new
+                    keyword_fields = new
                     {
                         path_match = Field.FieldPrefix + ".*",
                         match_mapping_type = "*",
