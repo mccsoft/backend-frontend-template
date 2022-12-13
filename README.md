@@ -15,7 +15,9 @@ Template contains (you could also check [CHANGELOG](./docs/CHANGELOG.md) for lat
    4. Configured Domain events to apply DDD principles
    5. Localization (i18next), background jobs (Hangfire), etc.
    6. Audit logging for DB entities
-   7. Logging via Serilog to [Loggly](https://loggly.com) (free up to 250MB/day). You could check out logs [yourself](https://mcctemplateapp.loggly.com/) (credentials: mcc.template.app@gmail.com/dBAeFm7_y5mq3)
+   7. Logging via Serilog to:
+      1. [OpenSearch](https://logs.mcc-soft.de) (credentials: backend-frontend-template/$a55IVHBhAJ@)
+      2. [Loggly](https://loggly.com) (free up to 250MB/day). You could check out logs [yourself](https://mcctemplateapp.loggly.com/) (credentials: mcc.template.app@gmail.com/dBAeFm7_y5mq3)
 1. React frontend
    1. CRA-based template
    1. API client autogeneration (including react-query hooks)
