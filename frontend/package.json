@@ -34,7 +34,7 @@
     "js-logger": "1.6.1",
     "jwt-decode": "3.1.2",
     "lottie-web": "5.9.6",
-    "material-ui-popup-state": "4.1.0",
+    "material-ui-popup-state": "5.0.3",
     "nock": "13.2.9",
     "nswag": "13.17.0",
     "oidc-client-ts": "2.0.1",
