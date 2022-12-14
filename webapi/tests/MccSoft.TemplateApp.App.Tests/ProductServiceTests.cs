@@ -6,6 +6,7 @@ using MccSoft.TemplateApp.App.Features.Products.Dto;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.TestUtils.Factories;
 using MccSoft.Testing;
+using MccSoft.WebApi.Patching;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Abstractions;

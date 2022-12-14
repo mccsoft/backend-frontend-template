@@ -1,9 +1,9 @@
 ﻿using MccSoft.WebApi.Patching.Models;
 using Microsoft.EntityFrameworkCore.Internal;
 
-namespace MccSoft.Testing;
+namespace MccSoft.WebApi.Patching;
 
-public static class PatchTestHelper
+public static class PatchHelper
 {
     /// <summary>
     /// Calls <see cref="IPatchRequest.SetHasProperty"/> for all properties with non-default values.
