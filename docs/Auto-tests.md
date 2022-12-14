@@ -1,3 +1,5 @@
+[[_TOC_]]
+
 # TL/DR
 1. Run `scripts/integresql/run-compose.bat` (it will start a docker instance of [IntegreSQL](https://github.com/allaboutapps/integresql) and Postgres that will be dedicated to tests).
 

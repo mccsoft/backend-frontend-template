@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog.Context;
 using System.Diagnostics;
+using System.Linq;
 using BadHttpRequestException = Microsoft.AspNetCore.Http.BadHttpRequestException;
 
 namespace MccSoft.WebApi.Middleware;
@@ -43,6 +44,18 @@ public class ErrorHandlerMiddleware
         {
             httpContext.Request.EnableBuffering();
             await _next(httpContext);
+        }
+        catch (System.ComponentModel.DataAnnotations.ValidationException ex)
+        {
+            var fieldName = ex.ValidationResult.MemberNames.FirstOrDefault();
+
+            var webApiException = string.IsNullOrEmpty(fieldName)
+                ? new ValidationException(ex.ValidationResult.ErrorMessage)
+                : new ValidationException(
+                    ex.ValidationResult.MemberNames.FirstOrDefault() ?? "",
+                    ex.ValidationResult.ErrorMessage
+                );
+            await ProcessWebApiException(httpContext, ex, webApiException.Result);
         }
         catch (Exception ex) when (ex is IWebApiException wae)
         {

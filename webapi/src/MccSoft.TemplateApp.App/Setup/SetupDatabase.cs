@@ -59,7 +59,7 @@ public static partial class SetupDatabase
                 {
                     opt.UseNpgsql(
                             connectionString,
-                            builder => builder.EnableRetryOnFailure(PostgresTransientErrorCodes)
+                            builder => builder.EnableRetryOnFailureWithAdditionalErrorCodes()
                         )
                         .WithLambdaInjection()
                         .AddDomainEventsInterceptors(provider);
@@ -95,32 +95,4 @@ public static partial class SetupDatabase
     static partial void AddSeeders(IServiceCollection services, IConfiguration configuration);
 
     static partial void AddProjectSpecifics(WebApplicationBuilder builder);
-
-    /// <summary>
-    /// These codes were got from <see cref="PostgresException.IsTransient">PostgresException.IsTransient</see>.
-    /// These are not used by <see cref="NpgsqlRetryingExecutionStrategy"/> by default,
-    /// but it's recommended to retry transaction when you get exception with these codes.
-    /// </summary>
-    private static readonly string[] PostgresTransientErrorCodes =
-    {
-        PostgresErrorCodes.InsufficientResources,
-        PostgresErrorCodes.DiskFull,
-        PostgresErrorCodes.OutOfMemory,
-        PostgresErrorCodes.TooManyConnections,
-        PostgresErrorCodes.ConfigurationLimitExceeded,
-        PostgresErrorCodes.CannotConnectNow,
-        PostgresErrorCodes.SystemError,
-        PostgresErrorCodes.IoError,
-        PostgresErrorCodes.SerializationFailure,
-        PostgresErrorCodes.DeadlockDetected,
-        PostgresErrorCodes.LockNotAvailable,
-        PostgresErrorCodes.ObjectInUse,
-        PostgresErrorCodes.ObjectNotInPrerequisiteState,
-        PostgresErrorCodes.ConnectionException,
-        PostgresErrorCodes.ConnectionDoesNotExist,
-        PostgresErrorCodes.ConnectionFailure,
-        PostgresErrorCodes.SqlClientUnableToEstablishSqlConnection,
-        PostgresErrorCodes.SqlServerRejectedEstablishmentOfSqlConnection,
-        PostgresErrorCodes.TransactionResolutionUnknown,
-    };
 }

@@ -199,7 +199,6 @@ public static class ElasticLoggerExtensions
     /// and sometimes as "OK". The text-formatted messages are rejected, because sometimes an integer-formatted
     /// message arrives first and defines the type of StatusCode in the index to be "integer".
     /// </remarks>
-    /// <param name="stage">The current stage name (Host of the SiteUrl).</param>
     /// <param name="templateMatchString">
     /// The pattern to match the index name.
     /// Only when the pattern matches, the created template is applied to an index.

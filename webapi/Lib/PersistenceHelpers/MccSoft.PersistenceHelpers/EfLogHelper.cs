@@ -23,13 +23,15 @@ public static class EfLogHelper
         // - Microsoft.EntityFrameworkCore.Update.SaveChangesFailed
         // - Microsoft.EntityFrameworkCore.Database.Command.CommandError
         // - Microsoft.EntityFrameworkCore.Database.Transaction.TransactionError
+        // - Microsoft.EntityFrameworkCore.Query.QueryIterationFailed
         // (These are the names, we refer to them by numeric ids.)
         builder.ConfigureWarnings(
             c =>
                 c.Log(
                     (RelationalEventId.CommandError, LogLevel.Warning),
                     (RelationalEventId.TransactionError, LogLevel.Warning),
-                    (CoreEventId.SaveChangesFailed, LogLevel.Warning)
+                    (CoreEventId.SaveChangesFailed, LogLevel.Warning),
+                    (CoreEventId.QueryIterationFailed, LogLevel.Warning)
                 )
         );
     }

@@ -15,7 +15,8 @@ public class AuthenticationHandler : DelegatingHandler
 
     private readonly SemaphoreSlim _refreshTokenSemaphore = new SemaphoreSlim(1);
 
-    public AuthenticationHandler(ITokenHandler tokenHandler) : base(new HttpClientHandler())
+    public AuthenticationHandler(ITokenHandler tokenHandler, HttpClientHandler httpClientHandler)
+        : base(httpClientHandler ?? new HttpClientHandler())
     {
         _tokenHandler = tokenHandler;
     }
