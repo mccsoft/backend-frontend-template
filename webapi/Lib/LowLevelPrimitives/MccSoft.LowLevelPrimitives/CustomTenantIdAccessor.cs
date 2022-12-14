@@ -5,7 +5,7 @@ namespace MccSoft.LowLevelPrimitives;
 
 public class CustomTenantIdAccessor
 {
-    public const string TenantIdClaim = "tenantId";
+    public const string TenantIdClaim = "tenant";
 
     /// <summary>
     /// We store last created tenant ID to set it up for every new created entity in case if Http context for current operation does not exist. I.e. for data seeding
