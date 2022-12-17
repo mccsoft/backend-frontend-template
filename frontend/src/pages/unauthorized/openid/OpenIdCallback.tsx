@@ -27,7 +27,6 @@ export const OpenIdCallback: React.FC<
   }>
 > = (props) => {
   const url = window.location.pathname;
-  console.log(window.location);
   const searchParams = new URLSearchParams(window.location.search);
   const error = searchParams.get('error');
   const error_description = searchParams.get('error_description');

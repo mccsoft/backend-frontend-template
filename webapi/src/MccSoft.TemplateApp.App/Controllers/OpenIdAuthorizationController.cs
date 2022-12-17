@@ -47,6 +47,11 @@ public class OpenIdAuthorizationController : OpenIdAuthorizationControllerBase<U
         return base.Exchange();
     }
 
+    protected override async Task UpdateUser(User user, ExternalLoginInfo externalLoginInfo)
+    {
+        await base.UpdateUser(user, externalLoginInfo);
+    }
+
     protected override async Task<User?> CreateNewUser(ExternalLoginInfo externalUserInfo)
     {
         var tenant = new Tenant();
