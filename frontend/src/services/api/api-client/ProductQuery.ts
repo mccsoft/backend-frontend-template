@@ -8,10 +8,12 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 import * as Types from '../api-client';
-import { useQuery, UseQueryResult, QueryFunctionContext, UseQueryOptions, QueryClient, QueryKey, useMutation, MutationKey, UseMutationOptions, UseMutationResult, QueryMeta, MutationMeta } from '@tanstack/react-query';
-import { QueryMetaContext, QueryMetaContextValue } from 'react-query-swagger';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import type { UseQueryResult, QueryFunctionContext, UseQueryOptions, QueryClient, QueryKey, MutationKey, UseMutationOptions, UseMutationResult, QueryMeta, MutationMeta } from '@tanstack/react-query';
+import { trimArrayEnd, isParameterObject, getBaseUrl, addMetaToOptions  } from './helpers';
+import type { QueryMetaContextValue } from 'react-query-swagger';
+import { QueryMetaContext } from 'react-query-swagger';
 import { useContext } from 'react';
-import { addMetaToOptions,  trimArrayEnd, isParameterObject, getBaseUrl } from './helpers';
 export const Client = Types.ProductClient;
 
 export type SearchProductQueryParameters = {
@@ -102,7 +104,9 @@ else if (sortOrder !== undefined)
   return url_;
 }
 
-let searchDefaultOptions: UseQueryOptions<Types.PagedResultOfProductListItemDto, unknown, Types.PagedResultOfProductListItemDto> = {};
+let searchDefaultOptions: UseQueryOptions<Types.PagedResultOfProductListItemDto, unknown, Types.PagedResultOfProductListItemDto> = {
+  queryFn: __search,
+};
 export function getSearchDefaultOptions(): UseQueryOptions<Types.PagedResultOfProductListItemDto, unknown, Types.PagedResultOfProductListItemDto> {
   return searchDefaultOptions;
 };
@@ -247,7 +251,9 @@ url_ = url_.replace("{id}", encodeURIComponent("" + id));
   return url_;
 }
 
-let getDefaultOptions: UseQueryOptions<Types.ProductDto, unknown, Types.ProductDto> = {};
+let getDefaultOptions: UseQueryOptions<Types.ProductDto, unknown, Types.ProductDto> = {
+  queryFn: __get,
+};
 export function getGetDefaultOptions(): UseQueryOptions<Types.ProductDto, unknown, Types.ProductDto> {
   return getDefaultOptions;
 };

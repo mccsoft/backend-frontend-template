@@ -8,10 +8,12 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 import * as Types from '../api-client';
-import { useQuery, UseQueryResult, QueryFunctionContext, UseQueryOptions, QueryClient, QueryKey, useMutation, MutationKey, UseMutationOptions, UseMutationResult, QueryMeta, MutationMeta } from '@tanstack/react-query';
-import { QueryMetaContext, QueryMetaContextValue } from 'react-query-swagger';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import type { UseQueryResult, QueryFunctionContext, UseQueryOptions, QueryClient, QueryKey, MutationKey, UseMutationOptions, UseMutationResult, QueryMeta, MutationMeta } from '@tanstack/react-query';
+import { trimArrayEnd, isParameterObject, getBaseUrl, addMetaToOptions  } from './helpers';
+import type { QueryMetaContextValue } from 'react-query-swagger';
+import { QueryMetaContext } from 'react-query-swagger';
 import { useContext } from 'react';
-import { addMetaToOptions,  trimArrayEnd, isParameterObject, getBaseUrl } from './helpers';
 export const Client = Types.SignUrlClient;
 
     
@@ -21,7 +23,9 @@ export function getSignatureUrl(): string {
   return url_;
 }
 
-let getSignatureDefaultOptions: UseQueryOptions<string, unknown, string> = {};
+let getSignatureDefaultOptions: UseQueryOptions<string, unknown, string> = {
+  queryFn: __getSignature,
+};
 export function getGetSignatureDefaultOptions(): UseQueryOptions<string, unknown, string> {
   return getSignatureDefaultOptions;
 };
@@ -76,7 +80,9 @@ export function setSignatureCookieUrl(): string {
   return url_;
 }
 
-let setSignatureCookieDefaultOptions: UseQueryOptions<void, unknown, void> = {};
+let setSignatureCookieDefaultOptions: UseQueryOptions<void, unknown, void> = {
+  queryFn: __setSignatureCookie,
+};
 export function getSetSignatureCookieDefaultOptions(): UseQueryOptions<void, unknown, void> {
   return setSignatureCookieDefaultOptions;
 };
