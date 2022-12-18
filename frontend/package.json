@@ -62,8 +62,8 @@
     "web-vitals": "1.1.2"
   },
   "devDependencies": {
-    "@import-meta-env/cli": "0.2.2",
-    "@import-meta-env/unplugin": "0.2.1",
+    "@import-meta-env/cli": "0.4.1",
+    "@import-meta-env/unplugin": "0.4.1",
     "@testing-library/jest-dom": "5.11.4",
     "@testing-library/react": "11.1.0",
     "@testing-library/user-event": "12.1.10",
