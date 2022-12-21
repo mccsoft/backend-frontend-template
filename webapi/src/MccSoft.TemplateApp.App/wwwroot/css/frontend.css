@@ -1,4 +1,4 @@
-.none-select, .passwordEye {
+.none-select, .endAdornment {
   -moz-user-select: none;
   -khtml-user-select: none;
   user-select: none;
@@ -107,7 +107,6 @@ html {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  padding-bottom: 5px;
 }
 
 .field-link {
@@ -138,7 +137,7 @@ html {
   fill: #9cb1d3 !important;
 }
 
-.none-select, .passwordEye {
+.none-select, .endAdornment {
   -moz-user-select: none;
   -khtml-user-select: none;
   user-select: none;
@@ -221,15 +220,22 @@ html {
   position: relative;
 }
 
-.passwordEye {
+.endAdornment {
   position: absolute;
-  right: 12px;
-  width: 16px;
-  top: 0;
-  height: 40px;
+  right: 8px;
+  height: 70%;
+  top: 15%;
   display: flex;
   cursor: pointer;
   align-items: center;
+}
+.endAdornment > svg {
+  height: 100%;
+}
+
+.passwordEye {
+  margin-right: -4px;
+  width: 24px;
 }
 
 .input-with-adornment {
@@ -240,8 +246,8 @@ html {
   height: 32px;
 }
 
-.non-form-input + .passwordEye {
-  height: 32px;
+.search-input-cross {
+  height: 50% !important;
 }
 
 .button {
