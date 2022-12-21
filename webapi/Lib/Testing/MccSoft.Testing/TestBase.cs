@@ -37,7 +37,7 @@ namespace MccSoft.Testing;
 /// (the state of objects loaded in a separate DbContext will be incorrect, if SaveChanges is
 /// forgotten).
 /// </remarks>
-public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor where TDbContext : DbContext
+public abstract class TestBase<TDbContext> where TDbContext : DbContext
 {
     protected string ConnectionString { get; private set; }
     public ITestOutputHelper OutputHelper { get; set; }
@@ -225,6 +225,11 @@ public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor where TDb
         return CreateService<DbRetryHelper<TDbContext, TService>>();
     }
 
+    /// <summary>
+    /// Creates the Service Under Test.
+    /// If you want to override/mock some dependencies, please do it in the <see cref="configureRegistrations"/>
+    /// </summary>
+    /// <param name="configureRegistrations">provides ability to register mocks for some services</param>
     protected TService CreateService<TService>(
         Action<IServiceCollection> configureRegistrations = null
     ) where TService : class
@@ -232,12 +237,22 @@ public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor where TDb
         return CreateService<TService>(configureRegistrations, out _);
     }
 
+    /// <summary>
+    /// Creates the Service Under Test.
+    /// Returns <see cref="serviceProvider"/> as `out` parameter, so you could resolve other services from it (in the same Scope as SUT).
+    /// </summary>
     protected TService CreateService<TService>(out IServiceProvider serviceProvider)
         where TService : class
     {
         return CreateService<TService>(null, out serviceProvider);
     }
 
+    /// <summary>
+    /// Creates the Service Under Test.
+    /// If you want to override/mock some dependencies, please do it in the <see cref="configureRegistrations"/>
+    /// Returns <see cref="serviceProvider"/> as `out` parameter, so you could resolve other services from it (in the same Scope as SUT).
+    /// </summary>
+    /// <param name="configureRegistrations">provides ability to register mocks for some services</param>
     protected TService CreateService<TService>(
         Action<IServiceCollection> configureRegistrations,
         out IServiceProvider serviceProvider
@@ -285,7 +300,10 @@ public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor where TDb
         return serviceCollection;
     }
 
-    private void RegisterBaseTypes(ServiceCollection serviceCollection, IConfiguration configuration)
+    private void RegisterBaseTypes(
+        ServiceCollection serviceCollection,
+        IConfiguration configuration
+    )
     {
         /*
          * DO NOT register your project-specific services here!
@@ -316,7 +334,7 @@ public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor where TDb
         );
 
         serviceCollection.AddLogging(
-            loggingBuilder => loggingBuilder.ClearProviders().AddXUnit(this)
+            loggingBuilder => loggingBuilder.ClearProviders().AddXUnit(OutputHelper)
         );
 
         serviceCollection.AddSingleton<IConfiguration>(configuration);
