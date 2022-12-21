@@ -3,3 +3,25 @@
 @import './components/uikit/Field.module';
 @import './components/uikit/inputs/Input.module';
 @import './components/uikit/buttons/Button.module';
+
+/*SVG load from resources as image and cannot be updated
+  Original color should be #a5aaa5
+  https://stackoverflow.com/a/53336754/291695*/
+.passwordEyeImage:hover {
+  filter: brightness(88%) contrast(88%);
+}
+
+.passwordEye {
+  position: absolute;
+  right: 7px;
+  top: 7px;
+  cursor: pointer;
+}
+
+input.input-validation-error {
+  border-bottom: 1px solid $danger;
+}
+
+input.input-validation-error:focus {
+  border-color: $danger;
+}

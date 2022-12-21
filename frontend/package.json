@@ -101,8 +101,9 @@
     "vitest": "0.26.2"
   },
   "scripts": {
-    "start": "vite",
-    "start-remote": "BACKEND_URI=https://template.mcc-soft.de vite",
+    "start": "yarn prestart && vite",
+    "start-remote": "yarn prestart && BACKEND_URI=https://template.mcc-soft.de vite",
+    "prestart": "yarn build-scss-for-razor",
     "typecheck": "tsc && eslint \\*\\*/\\*.ts \\*\\*/\\*.tsx --quiet",
     "test": "vitest",
     "build": "vite build && yarn build-scss-for-razor",

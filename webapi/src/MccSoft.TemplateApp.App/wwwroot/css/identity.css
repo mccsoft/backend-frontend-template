@@ -168,7 +168,7 @@ form {
 .social-buttons-container {
   justify-content: flex-end;
   display: flex;
-  padding-right: 12px;
+  /*padding-right: 12px;*/
 }
 
 .text-danger{

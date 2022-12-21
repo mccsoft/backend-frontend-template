@@ -359,3 +359,5 @@ fabric.properties
 /frontend/dist/
 /frontend/stats.html
 **/.idea/riderMarkupCache.xml
+webapi/src/MccSoft.TemplateApp.App/wwwroot/css/frontend.css
+webapi/src/MccSoft.TemplateApp.App/wwwroot/css/frontend.css.map
