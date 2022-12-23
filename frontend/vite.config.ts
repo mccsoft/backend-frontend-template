@@ -75,13 +75,18 @@ export default defineConfig(({ command, mode }) => {
         localsConvention: 'camelCase',
       },
     },
-    //optimizeDeps: { disabled: false },
     build: {
       outDir: 'build',
       sourcemap: true,
-      //commonjsOptions: {
-      //  include: [],
-      //},
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules') && !id.includes('chunk')) {
+              return 'vendor';
+            }
+          },
+        },
+      },
     },
   };
 });
