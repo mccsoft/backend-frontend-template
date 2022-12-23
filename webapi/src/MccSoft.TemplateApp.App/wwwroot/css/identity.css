@@ -1,3 +1,6 @@
+body {
+  background: #1A2745 !important;
+}
 .justify-center {
   justify-content: center;
 }
@@ -21,6 +24,8 @@
 .info-container{
   display: flex;
   flex-direction: column;
+  color: white;
+  font-family: Roboto, Sans-Serif;
 }
 
 .app-info{
@@ -31,7 +36,7 @@
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
-  font-family: Inter;
+  /*font-family: Inter;*/
 }
 
 .address{
@@ -43,7 +48,7 @@
   margin-top: auto;
   font-size: 64px;
   font-weight: 600;
-  font-family: Inter;
+  /*font-family: Inter;*/
   width: 288px;
   height: 94px;
 }
@@ -132,6 +137,8 @@
   display: flex;
   flex-direction: row;
   width: fit-content;
+
+
 }
 
 .align-flex-center {
