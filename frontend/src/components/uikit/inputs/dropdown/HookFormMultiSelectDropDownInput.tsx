@@ -6,6 +6,7 @@ import {
   FieldValues,
   Path,
   RegisterOptions,
+  FieldPath,
 } from 'react-hook-form';
 import { StyledAutocompleteProps } from './types';
 
@@ -13,8 +14,9 @@ type HookFormProps<
   T,
   Required extends boolean | undefined,
   TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = Omit<StyledAutocompleteProps<T, true, Required, false>, 'onChange'> & {
-  name: Path<TFieldValues>;
+  name: TName;
   control: Control<TFieldValues>;
   rules?: Exclude<RegisterOptions, 'valueAsDate' | 'setValueAs'>;
   onFocus?: () => void;

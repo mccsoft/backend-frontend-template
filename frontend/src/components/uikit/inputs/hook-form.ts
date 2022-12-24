@@ -1,4 +1,9 @@
-import { BrowserNativeObject, Path, Primitive } from 'react-hook-form';
+import {
+  BrowserNativeObject,
+  Path,
+  Primitive,
+  UnPackAsyncDefaultValues,
+} from 'react-hook-form';
 import {
   ArrayKey,
   IsTuple,
@@ -12,9 +17,9 @@ declare type PathImpl<K extends string | number, V> = V extends
   : `${K}` | `${K}.${Path<V>}`;
 
 /*
-Same as Path<T> (from react-hook-form), but requires the type of a target property to be Date
+Same as FieldPath<T> (from react-hook-form), but requires the type of a target property to be Date
  */
-export type DatePath<T> = TypedPath<T, Date>;
+export type DatePath<T> = TypedPath<UnPackAsyncDefaultValues<T>, Date>;
 
 /*
 Same as Path<T> (from react-hook-form), but requires the type of a target property to be TTargetType

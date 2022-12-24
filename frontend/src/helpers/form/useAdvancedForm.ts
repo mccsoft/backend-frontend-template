@@ -6,6 +6,7 @@ import {
   UseFormReturn,
   SubmitHandler,
   UseFormProps,
+  DefaultValues,
 } from 'react-hook-form';
 import * as React from 'react';
 import { useRef } from 'react';
@@ -43,7 +44,8 @@ export function useAdvancedForm<
   options?: {
     shouldResetOnSuccess?: boolean;
     initialize?: (form: UseFormReturn<TFieldValues, TContext>) => void;
-  } & UseFormProps<TFieldValues, TContext>,
+    defaultValues?: DefaultValues<TFieldValues>;
+  } & Omit<UseFormProps<TFieldValues, TContext>, 'defaultValues'>,
 ): AdvancedFormReturnType<TFieldValues, TContext> {
   const form = useForm<TFieldValues, TContext>(options);
   const isSubmitting = useRef(false);

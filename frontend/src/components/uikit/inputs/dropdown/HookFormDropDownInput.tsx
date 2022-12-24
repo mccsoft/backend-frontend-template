@@ -6,6 +6,7 @@ import {
   FieldValues,
   Path,
   RegisterOptions,
+  FieldPath,
 } from 'react-hook-form';
 import { convertPropertyAccessorToFunction } from './StyledAutocomplete';
 import { DropDownInputProps } from './types';
@@ -15,11 +16,12 @@ type HookFormProps<
   TFieldValues extends FieldValues = FieldValues,
   Required extends boolean | undefined = undefined,
   UseIdAsValue extends boolean | undefined = undefined,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = Omit<
   DropDownInputProps<T, Required, UseIdAsValue>,
   'onChange' | 'onValueChanged' | 'value'
 > & {
-  name: Path<TFieldValues>;
+  name: TName;
   control: Control<TFieldValues>;
   rules?: Exclude<RegisterOptions, 'valueAsDate' | 'setValueAs'>;
   onFocus?: () => void;
