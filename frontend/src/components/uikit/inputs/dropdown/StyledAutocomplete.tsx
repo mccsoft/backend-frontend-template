@@ -490,6 +490,9 @@ const PopperComponentForAutocomplete = React.memo(
 
     return (
       <Popper
+        nonce={undefined}
+        onResize={undefined}
+        onResizeCapture={undefined}
         {...rest}
         // we override the style to make Popper width bigger than Input
         style={{
