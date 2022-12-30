@@ -96,6 +96,9 @@ stages:
                   $(BUILD_NUMBER)
             displayName: 'build and push docker image'
 
+          - publish: './publish'
+            artifact: 'publish'
+
           - publish: './docker-compose.yaml'
             artifact: 'docker-compose'
 
