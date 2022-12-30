@@ -79,12 +79,16 @@ export default defineConfig(({ command, mode }) => {
       outDir: 'build',
       sourcemap: true,
       rollupOptions: {
-        output: {
-          manualChunks(id) {
-            if (id.includes('node_modules') && !id.includes('chunk')) {
-              return 'vendor';
-            }
-          },
+        // Using manualChunks is discouraged, because all chunks are loaded when app is loaded.
+        // Normally you would want Lazy Loading (load chunk when certain page/component is loaded).
+        // Consider using `lazyRetry` instead of `manualChunks`
+        // Workaround: Vite is bundling its plugins to the main index chunk,
+        // causing circular dependencies and cascading hash changes.
+        manualChunks(id) {
+          if (id.startsWith('vite/') || id.startsWith('\0vite/')) {
+            // Put the Vite modules and virtual modules (beginning with \0) into a vite chunk.
+            return 'vite';
+          }
         },
       },
     },
