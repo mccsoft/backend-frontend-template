@@ -99,6 +99,9 @@ export default defineConfig(({ command, mode }) => {
           // consider using `lazyRetry` instead of `manualChunks` !!!
           // (and exclude heavy dependencies that you want to lazy load from 'vendors' chunk below)
           manualChunks(id) {
+            if (id.includes('env-variables')) {
+              return 'env-variables';
+            }
             if (id.includes('lottie-web')) {
               return 'lottie-web';
             }
