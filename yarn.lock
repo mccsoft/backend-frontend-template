@@ -3436,6 +3436,7 @@ __metadata:
     i18next-browser-languagedetector: 7.0.1
     i18next-http-backend: 2.1.1
     i18next-intervalplural-postprocessor: 3.0.0
+    importmap-plugin: 0.8.0
     js-base64: 3.7.3
     js-logger: 1.6.1
     jwt-decode: 3.1.2
@@ -7258,6 +7259,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"hash.js@npm:^1.1.7":
+  version: 1.1.7
+  resolution: "hash.js@npm:1.1.7"
+  dependencies:
+    inherits: ^2.0.3
+    minimalistic-assert: ^1.0.1
+  checksum: e350096e659c62422b85fa508e4b3669017311aa4c49b74f19f8e1bc7f3a54a584fdfd45326d4964d6011f2b2d882e38bea775a96046f2a61b7779a979629d8f
+  languageName: node
+  linkType: hard
+
 "header-case@npm:^2.0.4":
   version: 2.0.4
   resolution: "header-case@npm:2.0.4"
@@ -7433,6 +7444,17 @@ __metadata:
   version: 2.1.0
   resolution: "import-lazy@npm:2.1.0"
   checksum: 05294f3b9dd4971d3a996f0d2f176410fb6745d491d6e73376429189f5c1c3d290548116b2960a7cf3e89c20cdf11431739d1d2d8c54b84061980795010e803a
+  languageName: node
+  linkType: hard
+
+"importmap-plugin@npm:0.8.0":
+  version: 0.8.0
+  resolution: "importmap-plugin@npm:0.8.0"
+  dependencies:
+    hash.js: ^1.1.7
+    rollup: ^3.7.1
+    systemjs: ^6.13.0
+  checksum: 9f528e1f3340c5a9aff683a260caaa79f89458615c46486f14cff01020e29362761c711597172a67185514e05c2b353239f1e14cdeca3d419878752ffe229b02
   languageName: node
   linkType: hard
 
@@ -8640,6 +8662,13 @@ __metadata:
   version: 1.0.1
   resolution: "min-indent@npm:1.0.1"
   checksum: bfc6dd03c5eaf623a4963ebd94d087f6f4bbbfd8c41329a7f09706b0cb66969c4ddd336abeb587bc44bc6f08e13bf90f0b374f9d71f9f01e04adc2cd6f083ef1
+  languageName: node
+  linkType: hard
+
+"minimalistic-assert@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "minimalistic-assert@npm:1.0.1"
+  checksum: cc7974a9268fbf130fb055aff76700d7e2d8be5f761fb5c60318d0ed010d839ab3661a533ad29a5d37653133385204c503bfac995aaa4236f4e847461ea32ba7
   languageName: node
   linkType: hard
 
@@ -10535,6 +10564,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"rollup@npm:^3.7.1":
+  version: 3.9.0
+  resolution: "rollup@npm:3.9.0"
+  dependencies:
+    fsevents: ~2.3.2
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  bin:
+    rollup: dist/bin/rollup
+  checksum: b0ce4baa8db8ee77ab096a4e066b20fb0719efb9cbd84f230838517d35bf159311487112852cfa687126896b58084c8e6cb9ab222f7559c4b6138ca693d63439
+  languageName: node
+  linkType: hard
+
 "rtl-css-js@npm:^1.14.0":
   version: 1.16.0
   resolution: "rtl-css-js@npm:1.16.0"
@@ -11316,6 +11359,13 @@ __metadata:
   bin:
     svgo: ./bin/svgo
   checksum: 28a5680a61245eb4a1603bc03459095bb01ad5ebd23e95882d886c3c81752313c0a9a9fe48dd0bcbb9a27c52e11c603640df952971573b2b550d9e15a9ee6116
+  languageName: node
+  linkType: hard
+
+"systemjs@npm:^6.13.0":
+  version: 6.13.0
+  resolution: "systemjs@npm:6.13.0"
+  checksum: df8d7374249778291f3a85278fdb3e1b9d81ac07767b0a7f9edeca0ee45d847c19bceb01522c817605e2908d32a4fcfed6bacd707bfb7bd577774ab900d3707d
   languageName: node
   linkType: hard
 

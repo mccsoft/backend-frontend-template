@@ -1,4 +1,5 @@
-﻿using Microsoft.Net.Http.Headers;
+﻿using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Net.Http.Headers;
 
 namespace MccSoft.TemplateApp.App.Setup;
 
@@ -21,6 +22,10 @@ public static partial class SetupStaticFiles
     public static StaticFileOptions CacheAll =>
         new StaticFileOptions()
         {
+            ContentTypeProvider = new FileExtensionContentTypeProvider()
+            {
+                Mappings = { { ".importmap", "text/plain" } }
+            },
             OnPrepareResponse = ctx =>
             {
                 var headers = ctx.Context.Response.GetTypedHeaders();
