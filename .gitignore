@@ -22,6 +22,11 @@ nugetpkg/
 !.vscode/extensions.json
 !.vscode/launch.json
 !.vscode/tasks.json
+!webapi/.vscode/settings.json
+!webapi/.vscode/extensions.json
+!webapi/.vscode/launch.json
+!webapi/.vscode/tasks.json
+
 
 # User-specific files
 *.suo
