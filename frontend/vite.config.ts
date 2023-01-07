@@ -95,9 +95,11 @@ export default defineConfig(({ command, mode }) => {
           ],
           // Using manualChunks only split's out what is included in the main bundle!
           // (i.e. the loading if splitted chunks is NOT deferred, it's loaded immediately)
-          // !!! If you want Lazy Loading (load chunk when certain page/component is loaded),
-          // consider using `lazyRetry` instead of `manualChunks` !!!
-          // (and exclude heavy dependencies that you want to lazy load from 'vendors' chunk below)
+          // !!!-----------------!!!
+          // If you want Lazy Loading (load chunk when certain page/component is loaded),
+          // consider using `lazyRetry` instead of `manualChunks`
+          // (and exclude these heavy dependencies that you want to lazy load from 'vendors' chunk below)
+          // !!!-----------------!!!
           manualChunks(id) {
             if (id.includes('env-variables')) {
               return 'env-variables';
