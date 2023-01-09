@@ -36,12 +36,16 @@ public partial class SetupAudit
                     "EFAudit",
                     eventEntry.Action,
                     eventEntry.Table,
-                    eventEntry.PrimaryKey?.Count == 1
-                        ? eventEntry.PrimaryKey?.Values.First().ToString()
-                        : string.Join(", ", eventEntry.PrimaryKey.Values),
-                    Audit.Core.Configuration.JsonAdapter.Serialize(
-                        eventEntry.Changes?.Where(x => x.NewValue != x.OriginalValue)
-                    ),
+                    eventEntry.PrimaryKey == null
+                        ? null
+                        : eventEntry.PrimaryKey.Count == 1
+                            ? eventEntry.PrimaryKey.Values.First().ToString()
+                            : string.Join(", ", eventEntry.PrimaryKey.Values),
+                    eventEntry.Changes == null
+                        ? null
+                        : Audit.Core.Configuration.JsonAdapter.Serialize(
+                            eventEntry.Changes.Where(x => x.NewValue != x.OriginalValue)
+                        ),
                     eventEntry.ColumnValues
                 );
             }
