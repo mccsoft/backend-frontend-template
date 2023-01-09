@@ -31,21 +31,30 @@ public partial class SetupAudit
         {
             foreach (var eventEntry in entityFrameworkEvent.EntityFrameworkEvent.Entries)
             {
+                var changes =
+                    eventEntry.Changes == null
+                        ? null
+                        : Audit.Core.Configuration.JsonAdapter.Serialize(
+                            eventEntry.Changes.Where(
+                                x =>
+                                    !(x.NewValue == null && x.OriginalValue == null)
+                                    && x.NewValue?.Equals(x.OriginalValue) != true
+                            )
+                        );
+                var primaryKey =
+                    eventEntry.PrimaryKey == null
+                        ? null
+                        : eventEntry.PrimaryKey.Count == 1
+                            ? eventEntry.PrimaryKey.Values.First().ToString()
+                            : string.Join(", ", eventEntry.PrimaryKey.Values);
+
                 logger.Information(
                     $"{Field.Method}, {Field.Named("Action")}, Table: {Field.Named("Table")}, Id: {Field.Named("Id")}, Changes: {Field.Named("Changes")}, CurrentValues: {Field.Named("CurrentValues")}",
                     "EFAudit",
                     eventEntry.Action,
                     eventEntry.Table,
-                    eventEntry.PrimaryKey == null
-                        ? null
-                        : eventEntry.PrimaryKey.Count == 1
-                            ? eventEntry.PrimaryKey.Values.First().ToString()
-                            : string.Join(", ", eventEntry.PrimaryKey.Values),
-                    eventEntry.Changes == null
-                        ? null
-                        : Audit.Core.Configuration.JsonAdapter.Serialize(
-                            eventEntry.Changes.Where(x => x.NewValue != x.OriginalValue)
-                        ),
+                    primaryKey,
+                    changes,
                     eventEntry.ColumnValues
                 );
             }
