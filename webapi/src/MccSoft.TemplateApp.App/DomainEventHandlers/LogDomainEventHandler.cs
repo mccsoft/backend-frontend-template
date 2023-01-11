@@ -15,7 +15,10 @@ namespace MccSoft.TemplateApp.App.DomainEventHandlers
             _logger = logger;
         }
 
-        public Task Handle(LogDomainEvent notification, CancellationToken cancellationToken) { _logger.Log(notification.Level, notification.Message, notification.Parameters); return Task.CompletedTask;
+        public Task Handle(LogDomainEvent notification, CancellationToken cancellationToken)
+        {
+            _logger.Log(notification.Level, notification.Message, notification.Parameters);
+            return Task.CompletedTask;
         }
     }
 }
