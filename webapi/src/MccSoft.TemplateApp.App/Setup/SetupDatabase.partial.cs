@@ -1,6 +1,7 @@
 ﻿using MccSoft.LowLevelPrimitives;
 using MccSoft.NpgSql;
 using MccSoft.TemplateApp.App.Services.Authentication;
+using MccSoft.TemplateApp.App.Services.Authentication.Seed;
 using MccSoft.TemplateApp.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -13,29 +14,16 @@ namespace MccSoft.TemplateApp.App.Setup;
 /// </summary>
 public static partial class SetupDatabase
 {
-    private static async partial Task RunMigrationsProjectSpecific(
-        WebApplication app,
-        IServiceScope scope,
+    public static async partial Task SeedDatabase(
+        IServiceProvider serviceProvider,
         TemplateAppDbContext context
     )
     {
-        DefaultUserSeeder seeder = scope.ServiceProvider.GetRequiredService<DefaultUserSeeder>();
-        DefaultUserOptions defaultUser = scope.ServiceProvider
-            .GetRequiredService<IOptions<DefaultUserOptions>>()
-            .Value;
-        if (
-            !string.IsNullOrEmpty(defaultUser.UserName)
-            && !string.IsNullOrEmpty(defaultUser.Password)
-        )
-        {
-            await seeder.SeedUser(defaultUser.UserName, defaultUser.Password);
-        }
+        DefaultUserSeeder seeder = serviceProvider.GetRequiredService<DefaultUserSeeder>();
+        await seeder.SeedUser();
     }
 
-    static partial void AddProjectSpecifics(WebApplicationBuilder builder)
-    {
-        PostgresSerialization.AdjustDateOnlySerialization();
-    }
+    static partial void AddProjectSpecifics(WebApplicationBuilder builder) { }
 
     static partial void AddSeeders(IServiceCollection services, IConfiguration configuration)
     {

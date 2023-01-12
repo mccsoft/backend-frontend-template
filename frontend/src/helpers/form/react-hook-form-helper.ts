@@ -18,16 +18,8 @@ export function useResetFormWhenDataIsLoaded<
 ) {
   useEffect(() => {
     if (defaultValues) {
-      if (form.formState.isDirty) {
-        const defaultValuesUntyped = defaultValues as any;
-        const currentValues = form.getValues() as any;
-        Object.keys(form.formState.dirtyFields)
-          .filter((x) => (form.formState.dirtyFields as any)[x])
-          .forEach((dirtyKey) => {
-            defaultValuesUntyped[dirtyKey] = currentValues[dirtyKey] as any;
-          });
-      }
-      form.reset(defaultValues as any);
+      // { ...defaultValues } is required to not modify original defaultValues
+      form.reset(defaultValues, { keepDirtyValues: true });
     }
   }, [defaultValues]);
 }
@@ -36,7 +28,7 @@ export function requiredRule() {
   return {
     required: {
       value: true,
-      message: i18n.t('uikit.inputs.required'),
+      message: i18n.t('translation:uikit.inputs.required'),
     },
   };
 }

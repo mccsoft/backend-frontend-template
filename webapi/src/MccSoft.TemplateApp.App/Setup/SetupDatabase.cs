@@ -4,6 +4,8 @@ using MccSoft.PersistenceHelpers.DomainEvents;
 using MccSoft.TemplateApp.Persistence;
 using Microsoft.EntityFrameworkCore;
 using NeinLinq;
+using Npgsql;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 using Shaddix.OpenIddict.ExternalAuthentication.Infrastructure;
 
 namespace MccSoft.TemplateApp.App.Setup;
@@ -19,17 +21,22 @@ public static partial class SetupDatabase
 
         using var scope = app.Services.CreateScope();
 
-        var context = scope.ServiceProvider.GetRequiredService<TemplateAppDbContext>();
+        await DoRunMigration(scope.ServiceProvider);
+    }
+
+    public static async Task DoRunMigration(IServiceProvider serviceProvider)
+    {
+        await using var context = serviceProvider.GetRequiredService<TemplateAppDbContext>();
         await context.Database.MigrateAsync();
 
-        await app.SeedOpenIdClientsAsync();
+        await serviceProvider.SeedOpenIdClientsAsync();
 
         context.ReloadTypesForEnumSupport();
 
         // If you'd like to modify this class, consider adding your custom code in the SetupDatabase.partial.cs
         // This will make it easier to pull changes from Template when Template is updated
         // (actually this file will be overwritten by a file from template, which will make your changes disappear)
-        await RunMigrationsProjectSpecific(app, scope, context);
+        await SeedDatabase(serviceProvider, context);
     }
 
     public static void AddDatabase(WebApplicationBuilder builder)
@@ -50,17 +57,18 @@ public static partial class SetupDatabase
             .AddDbContext<TemplateAppDbContext>(
                 (provider, opt) =>
                 {
-                    opt.UseNpgsql(connectionString, builder => builder.EnableRetryOnFailure())
+                    opt.UseNpgsql(
+                            connectionString,
+                            builder => builder.EnableRetryOnFailureWithAdditionalErrorCodes()
+                        )
                         .WithLambdaInjection()
                         .AddDomainEventsInterceptors(provider);
                     opt.UseOpenIddict();
-                },
-                contextLifetime: ServiceLifetime.Scoped,
-                optionsLifetime: ServiceLifetime.Singleton
+                }
             );
 
         services
-            .AddSingleton<Func<TemplateAppDbContext>>(provider => () => CreateDbContext(provider))
+            .AddScoped<Func<TemplateAppDbContext>>(provider => () => CreateDbContext(provider))
             .RegisterRetryHelper();
 
         SetupHangfire.AddHangfire(services, connectionString, configuration);
@@ -74,9 +82,13 @@ public static partial class SetupDatabase
 
     private static partial TemplateAppDbContext CreateDbContext(IServiceProvider provider);
 
-    private static partial Task RunMigrationsProjectSpecific(
-        WebApplication app,
-        IServiceScope scope,
+    /// <summary>
+    /// Performs database seeding operation.
+    /// It's public because it's also called from ComponentTests
+    /// </summary>
+    /// <returns></returns>
+    public static partial Task SeedDatabase(
+        IServiceProvider serviceProvider,
         TemplateAppDbContext context
     );
 

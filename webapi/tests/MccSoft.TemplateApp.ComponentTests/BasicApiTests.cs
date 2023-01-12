@@ -1,282 +1,272 @@
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using MccSoft.WebApi.Patching.Models;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
-using NJsonSchema;
-using NJsonSchema.CodeGeneration.TypeScript;
-using NSwag;
-using NSwag.CodeGeneration.CSharp;
-using NSwag.CodeGeneration.TypeScript;
 using Xunit;
 using Xunit.Abstractions;
+using System.Text;
+using FluentAssertions;
+using Hangfire;
+using MccSoft.Testing;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
-namespace MccSoft.TemplateApp.ComponentTests
+namespace MccSoft.TemplateApp.ComponentTests;
+
+public partial class BasicApiTests : ComponentTestBase
 {
-    public class BasicApiTests : TestBase
+    public BasicApiTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
+
+    [Fact]
+    public async Task GetApiVersion_ReturnsVersionString()
     {
-        public BasicApiTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
+        var response = await Client.GetAsync("/api");
+        response.EnsureSuccessStatusCode();
+        var versionString = await response.Content.ReadAsStringAsync();
 
-        [Fact]
-        public async Task GetApiVersion_ReturnsVersionString()
-        {
-            var response = await Client.GetAsync("/api");
-            response.EnsureSuccessStatusCode();
-            var versionString = await response.Content.ReadAsStringAsync();
+        var exception = Record.Exception(() => new Version(versionString));
+        Assert.Null(exception);
+    }
 
-            var exception = Record.Exception(() => new Version(versionString));
-            Assert.Null(exception);
-        }
-
-        [Fact]
-        public void AllControllersAreResolvable()
-        {
-            var controllerTypes = typeof(Program).Assembly
-                .GetTypes()
-                .Where(
-                    x =>
-                        (
-                            typeof(Microsoft.AspNetCore.Mvc.Controller).IsAssignableFrom(x)
-                            || typeof(Microsoft.AspNetCore.Mvc.ControllerBase).IsAssignableFrom(x)
-                        ) && !x.IsAbstract
-                );
-
-            using var scope = TestServer.Services.CreateScope();
-            foreach (Type controllerType in controllerTypes)
-            {
-                // It will throw exception if any controller's dependency is not registered.
-                // (it doesn't require controllers themselves to be registered, as opposed to scope.GetService<T>())
-                ActivatorUtilities.CreateInstance(scope.ServiceProvider, controllerType);
-            }
-        }
-
-        /// <summary>
-        /// Generates database structure as dgml-file for automated documentation.
-        /// </summary>
-        [Fact]
-        public void GetDbStructure_Exported()
-        {
-            string exportPath = Configuration["Documentation:databaseExportPath"];
-            Assert.False(
-                string.IsNullOrEmpty(exportPath),
-                "Export path for database schema export not found."
+    [Fact]
+    public void AllControllersAreResolvable()
+    {
+        var controllerTypes = typeof(Program).Assembly
+            .GetTypes()
+            .Where(
+                x =>
+                    (
+                        typeof(Microsoft.AspNetCore.Mvc.Controller).IsAssignableFrom(x)
+                        || typeof(Microsoft.AspNetCore.Mvc.ControllerBase).IsAssignableFrom(x)
+                    ) && !x.IsAbstract
             );
 
-            WithDbContextSync(context =>
-            {
-                string dgmlStr = context.AsDgml();
-                File.WriteAllText(exportPath, dgmlStr);
-            });
-        }
-
-        /// <summary>
-        /// Generates HTTP Client for the API and places it in Lmt.Unicorn.Http project
-        /// </summary>
-        [Fact]
-        public async Task GenerateHttpClient_ValidAndExported()
+        using var scope = TestServer.Services.CreateScope();
+        var errors = new StringBuilder();
+        foreach (Type controllerType in controllerTypes)
         {
-            string exportPath = Path.GetTempFileName();
-            string url = Configuration["Swagger:Endpoint:Url"];
-            await SaveSwaggerJsonToFile(url, exportPath, null);
-            await GenerateTypescriptHttpClient(exportPath);
-
-            await SaveSwaggerJsonToFile(
-                url.Replace("v1", "csharp"),
-                exportPath,
-                "https://localhost"
-            );
-            await GenerateCSharpHttpClient(exportPath);
-        }
-
-        private async Task SaveSwaggerJsonToFile(string url, string exportPath, string baseUrl)
-        {
-            Assert.False(string.IsNullOrEmpty(url), "No url for swagger found");
-            Assert.False(string.IsNullOrEmpty(exportPath), "Export path for swagger not found.");
-
-            HttpClient client = TestServer.CreateClient();
-            client.Timeout = Client.Timeout;
-            if (baseUrl != null)
-            {
-                client.BaseAddress = new Uri(baseUrl);
-            }
-
-            var response = await client.GetAsync(url);
-            string swaggerJsonString = await response.Content.ReadAsStringAsync();
+            // It will throw exception if any controller's dependency is not registered.`
+            // (it doesn't require controllers themselves to be registered, as opposed to scope.GetService<T>())
             try
             {
-                response.EnsureSuccessStatusCode();
+                ActivatorUtilities.CreateInstance(scope.ServiceProvider, controllerType);
             }
-            catch (Exception e)
+            catch (InvalidOperationException ex)
             {
-                throw new Exception(swaggerJsonString, e);
-            }
-            JObject swagger = JObject.Parse(swaggerJsonString);
-            //AssertEx.ApiDocumented(swagger);
-            await using (StreamWriter file = File.CreateText(exportPath))
-            {
-                using JsonTextWriter writer = new JsonTextWriter(file);
-                swagger.WriteTo(writer);
+                errors.AppendLine(ex.Message);
             }
         }
 
-        private async Task GenerateCSharpHttpClient(string exportPath)
+        Assert.True(string.IsNullOrEmpty(errors.ToString()), errors.ToString());
+    }
+
+    /// <summary>
+    /// Generates database structure as dgml-file for automated documentation.
+    /// </summary>
+    [Fact]
+    public void GetDbStructure_Exported()
+    {
+        string exportPath = Configuration["Documentation:databaseExportPath"];
+        Assert.False(
+            string.IsNullOrEmpty(exportPath),
+            "Export path for database schema export not found."
+        );
+
+        WithDbContextSync(context =>
         {
-            var document = await OpenApiDocument.FromJsonAsync(File.ReadAllText(exportPath));
-            var csharpSettings = new CSharpClientGeneratorSettings
-            {
-                //UseBaseUrl = false,
-                ParameterDateTimeFormat = "s",
-                GenerateClientInterfaces = true,
-                ClientBaseClass = "BaseClient",
-                ExposeJsonSerializerSettings = true,
-                GenerateUpdateJsonSerializerSettingsMethod = false,
-                ClientBaseInterface = "IBaseClient",
-                CSharpGeneratorSettings =
-                {
-                    Namespace = "MccSoft.TemplateApp.Http.Generated",
-                    TemplateDirectory = "../../../../../src/MccSoft.TemplateApp.Http/template",
-                }
-            };
+            string dgmlStr = context.AsDgml();
+            File.WriteAllText(exportPath, dgmlStr);
+        });
+    }
 
-            var csharpGenerator = new CSharpClientGenerator(document, csharpSettings);
-            var csharpCode = csharpGenerator.GenerateFile();
+    /// <summary>
+    /// Generates HTTP Client for the API and places it in Lmt.Unicorn.Http project
+    /// </summary>
+    [Fact]
+    public async Task GenerateHttpClient_ValidAndExported()
+    {
+        string exportPath = Path.GetTempFileName();
+        string url = Configuration["Swagger:Endpoint:Url"];
+        await SaveSwaggerJsonToFile(url, exportPath, null);
+        await GenerateTypescriptHttpClient(exportPath);
 
-            // && yarn replace \", NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore\" \" \"
-            csharpCode = Regex.Replace(
-                csharpCode,
-                @", NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore",
-                " "
-            );
+        await SaveSwaggerJsonToFile(url.Replace("v1", "csharp"), exportPath, "https://localhost");
+        await GenerateCSharpHttpClient(exportPath);
+    }
 
-            await File.WriteAllTextAsync(
-                "../../../../../src/MccSoft.TemplateApp.Http/GeneratedClient.cs",
-                csharpCode
-            );
+    private async Task SaveSwaggerJsonToFile(string url, string exportPath, string baseUrl)
+    {
+        Assert.False(string.IsNullOrEmpty(url), "No url for swagger found");
+        Assert.False(string.IsNullOrEmpty(exportPath), "Export path for swagger not found.");
+
+        HttpClient client = TestServer.CreateClient();
+        client.Timeout = Client.Timeout;
+        if (baseUrl != null)
+        {
+            client.BaseAddress = new Uri(baseUrl);
         }
 
-        private async Task GenerateTypescriptHttpClient(string exportPath)
+        var response = await client.GetAsync(url);
+        string swaggerJsonString = await response.Content.ReadAsStringAsync();
+        try
         {
-            var document = await OpenApiDocument.FromJsonAsync(File.ReadAllText(exportPath));
-
-            var typescriptSettings = new TypeScriptClientGeneratorSettings()
-            {
-                GenerateClientInterfaces = false,
-                GenerateOptionalParameters = true,
-                Template = TypeScriptTemplate.Axios,
-                TypeScriptGeneratorSettings =
-                {
-                    TemplateDirectory =
-                        "../../../../../../node_modules/react-query-swagger/templates",
-                    NullValue = TypeScriptNullValue.Undefined,
-                    MarkOptionalProperties = true,
-                    GenerateConstructorInterface = true,
-                    TypeStyle = TypeScriptTypeStyle.Class,
-                }
-            };
-            var typeScriptClientGenerator = new TypeScriptClientGenerator(
-                document,
-                typescriptSettings
-            );
-            var typescriptCode = typeScriptClientGenerator.GenerateFile();
-
-            // yarn replace "formatDate\\((.*?)\\) : <any>undefined" "formatDate($1) : $1" src/services/api/api-client.ts
-            // && yarn replace \"this\\.(\\w*?)\\.toISOString\\(\\) : <any>undefined\" \"this.$1.toISOString() : this.$1\" app/api/api-client.ts
-            // && yarn replace \"\\| undefined;\" \"| null;\"
-            typescriptCode = Regex.Replace(
-                typescriptCode,
-                @"formatDate\((\w*?)\) : <any>undefined",
-                "formatDate($1) : $1"
-            );
-            typescriptCode = Regex.Replace(
-                typescriptCode,
-                @"this\.(\w*?)\.toISOString\(\) : <any>undefined",
-                "this.$1.toISOString() : this.$1"
-            );
-            typescriptCode = Regex.Replace(typescriptCode, @"\| undefined;", "| null;");
-            typescriptCode = Regex.Replace(typescriptCode, @"""http://localhost""", @"""""");
-            File.WriteAllText(
-                "../../../../../../frontend/src/services/api/api-client.ts",
-                typescriptCode
-            );
+            response.EnsureSuccessStatusCode();
         }
-
-        /// <summary>
-        /// Verifies that all DTOs inheriting from PatchRequest have only those properties
-        /// that are present in the Entity they are patching.
-        /// E.g. PatchPatientDto : PatchRequest<Patient> should only contain properties that are present in Patient.
-        /// </summary>
-        [Fact]
-        public void PatchRequest_AllFieldsMatch()
+        catch (Exception e)
         {
-            var dtoTypes = typeof(Program).Assembly
-                .GetTypes()
-                .Where(x => IsSubclassOfRawGeneric(typeof(PatchRequest<>), x))
-                .ToList();
+            throw new Exception(swaggerJsonString, e);
+        }
+        var swagger = JObject.Parse(swaggerJsonString);
+        AssertEx.ApiDocumented(swagger);
+        File.WriteAllText(exportPath, swaggerJsonString);
+    }
 
-            var exclusions = new Dictionary<Type, IList<string>>()
+    private async Task GenerateCSharpHttpClient(string exportPath)
+    {
+        await RunScriptFromFrontendFolder(
+            $"yarn nswag openapi2csclient /input:{exportPath} /output:../webapi/src/MccSoft.TemplateApp.Http/GeneratedClient.cs /templateDirectory:../webapi/src/MccSoft.TemplateApp.Http/template /namespace:MccSoft.TemplateApp.Http.Generated /generateClientInterfaces:true /clientBaseClass:BaseClient /exposeJsonSerializerSettings:true /generateUpdateJsonSerializerSettingsMethod:false /clientBaseInterface:IBaseClient /jsonLibrary:SystemTextJson"
+        );
+        await RunScriptFromFrontendFolder(
+            "yarn replace ', NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore' ' ' ../webapi/src/MccSoft.TemplateApp.Http/GeneratedClient.cs"
+        );
+    }
+
+    private async Task GenerateTypescriptHttpClient(string exportPath)
+    {
+        await RunScriptFromFrontendFolder(
+            $"yarn react-query-swagger openapi2tsclient /tanstack /input:{exportPath} /output:src/services/api/api-client.ts /template:Axios /serviceHost:. /use-recommended-configuration"
+        );
+    }
+
+    private async Task RunScriptFromFrontendFolder(string script)
+    {
+        var startInfo = new ProcessStartInfo
+        {
+            FileName = Environment.OSVersion.Platform == PlatformID.Win32NT ? "powershell" : "node",
+            // Arguments = $"yarn generate-api-client-axios /input:{exportPath}",
+            Arguments = script,
+            WorkingDirectory = "../../../../../../frontend",
+            UseShellExecute = false,
+            RedirectStandardError = true,
+            RedirectStandardOutput = true,
+        };
+        var process = new Process { StartInfo = startInfo, EnableRaisingEvents = true, };
+
+        process.OutputDataReceived += (_, args) =>
+        {
+            if (!string.IsNullOrEmpty(args.Data))
+                OutputHelper.WriteLine(JsonConvert.SerializeObject(args.Data));
+        };
+        process.ErrorDataReceived += (_, args) =>
+        {
+            if (!string.IsNullOrEmpty(args.Data))
+                OutputHelper.WriteLine(JsonConvert.SerializeObject(args.Data));
+        };
+
+        process.Start();
+
+        process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
+
+        var taskCompletionSource = new TaskCompletionSource<bool>();
+
+        // process.WaitForExit() causes infinite wait
+        // and i don't want to set a long timeout
+        process.Exited += (_, _) =>
+        {
+            process.CancelOutputRead();
+            process.CancelErrorRead();
+
+            var exitCode = process.ExitCode;
+
+            process.Dispose();
+
+            if (exitCode != 0)
             {
-                // { typeof(PatchPatientDto), new[] { nameof(PatchPatientDto.DeviceSerialNumber) } },
-            };
+                OutputHelper.WriteLine(
+                    "Running tool \'yarn\': exit code is not zero, but \'{exitCode}\'"
+                );
+            }
+            taskCompletionSource.SetResult(exitCode == 0);
+        };
 
-            foreach (Type patchRequestType in dtoTypes)
+        await taskCompletionSource.Task;
+    }
+
+    /// <summary>
+    /// Verifies that all DTOs inheriting from PatchRequest have only those properties
+    /// that are present in the Entity they are patching.
+    /// E.g. PatchPatientDto : PatchRequest<Patient> should only contain properties that are present in Patient.
+    /// </summary>
+    [Fact]
+    public void PatchRequest_AllFieldsMatch()
+    {
+        var dtoTypes = typeof(Program).Assembly
+            .GetTypes()
+            .Where(x => IsSubclassOfRawGeneric(typeof(PatchRequest<>), x))
+            .ToList();
+
+        var exclusions = new Dictionary<Type, IList<string>>()
+        {
+            // { typeof(PatchPatientDto), new[] { nameof(PatchPatientDto.DeviceSerialNumber) } },
+        };
+
+        foreach (Type patchRequestType in dtoTypes)
+        {
+            var domainType = patchRequestType.BaseType!.GenericTypeArguments.FirstOrDefault();
+            if (domainType == null)
             {
-                var domainType = patchRequestType.BaseType!.GenericTypeArguments.FirstOrDefault();
-                if (domainType == null)
-                {
-                    continue;
-                }
+                continue;
+            }
 
-                var properties = patchRequestType
-                    .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                    .Where(x => x.GetGetMethod() != null)
-                    .Where(x => x.GetCustomAttribute<DoNotPatchAttribute>() == null);
-                var domainProperties = domainType
-                    .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                    .ToDictionary(x => x.Name);
+            var properties = patchRequestType
+                .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Where(x => x.GetGetMethod() != null)
+                .Where(x => x.GetCustomAttribute<DoNotPatchAttribute>() == null);
+            var domainProperties = domainType
+                .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .ToDictionary(x => x.Name);
 
-                foreach (var property in properties)
+            foreach (var property in properties)
+            {
+                if (!domainProperties.ContainsKey(property.Name))
                 {
-                    if (!domainProperties.ContainsKey(property.Name))
+                    if (exclusions.TryGetValue(patchRequestType, out var excludedProperties))
                     {
-                        if (exclusions.TryGetValue(patchRequestType, out var excludedProperties))
+                        if (excludedProperties.Contains(property.Name))
                         {
-                            if (excludedProperties.Contains(property.Name))
-                            {
-                                continue;
-                            }
+                            continue;
                         }
-
-                        throw new ArgumentException(
-                            $"{patchRequestType.Name}.{property.Name} is absent in domain class {domainType}"
-                        );
                     }
+
+                    throw new ArgumentException(
+                        $"{patchRequestType.Name}.{property.Name} is absent in domain class {domainType}"
+                    );
                 }
             }
         }
+    }
 
-        static bool IsSubclassOfRawGeneric(Type generic, Type toCheck)
+    static bool IsSubclassOfRawGeneric(Type generic, Type toCheck)
+    {
+        while (toCheck != null && toCheck != typeof(object))
         {
-            while (toCheck != null && toCheck != typeof(object))
+            var cur = toCheck.IsGenericType ? toCheck.GetGenericTypeDefinition() : toCheck;
+            if (generic == cur)
             {
-                var cur = toCheck.IsGenericType ? toCheck.GetGenericTypeDefinition() : toCheck;
-                if (generic == cur)
-                {
-                    return true;
-                }
-
-                toCheck = toCheck.BaseType;
+                return true;
             }
 
-            return false;
+            toCheck = toCheck.BaseType;
         }
+
+        return false;
     }
 }

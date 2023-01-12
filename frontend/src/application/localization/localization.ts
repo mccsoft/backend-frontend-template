@@ -32,6 +32,10 @@ export function initializeLocalization() {
       interpolation: {
         escapeValue: false, // react already safes from xss
       },
+      detection: {
+        // to share cookie with Authentication UI (which is server-side)
+        caches: ['cookie'],
+      },
       backend: {
         loadPath: '/dictionaries/{{ns}}.{{lng}}.json',
         queryStringParams: { v: appVersion() },

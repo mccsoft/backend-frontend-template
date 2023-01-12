@@ -1,3 +1,4 @@
+import Logger from 'js-logger';
 import React, { useEffect, useState } from 'react';
 import { initializeLocalization } from './localization';
 
@@ -10,7 +11,7 @@ export const LanguageProvider: React.FC<React.PropsWithChildren> = (props) => {
       setLoading(false);
     };
 
-    bootstrapAsync();
+    bootstrapAsync().catch((e) => Logger.error(e));
   }, []);
 
   return isLoading ? null : (props.children as any);

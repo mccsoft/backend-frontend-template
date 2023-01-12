@@ -12,8 +12,7 @@ using Xunit.Abstractions;
 namespace MccSoft.TemplateApp.ComponentTests;
 
 public partial class ComponentTestFixture
-    : WebApplicationFactory<Program>,
-        ITestOutputHelperAccessor
+    : WebApplicationFactory<Program>
 {
     public ITestOutputHelper OutputHelper { get; set; }
 
@@ -29,7 +28,7 @@ public partial class ComponentTestFixture
     {
         base.ConfigureWebHost(builder);
 
-        builder.ConfigureLogging(loggingBuilder => loggingBuilder.ClearProviders().AddXUnit(this));
+        builder.ConfigureLogging(loggingBuilder => loggingBuilder.ClearProviders().AddXUnit(OutputHelper));
         builder.UseEnvironment("Test");
 
         builder.UseSolutionRelativeContentRoot(

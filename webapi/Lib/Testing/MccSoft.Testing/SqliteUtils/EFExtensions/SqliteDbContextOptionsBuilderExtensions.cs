@@ -2,18 +2,17 @@
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Query;
 
-namespace MccSoft.Testing.SqliteUtils.EFExtensions
+namespace MccSoft.Testing.SqliteUtils.EFExtensions;
+
+public static class SqliteDbContextOptionsBuilderExtensions
 {
-    public static class SqliteDbContextOptionsBuilderExtensions
+    public static DbContextOptionsBuilder UsePostgresFunctionsInSqlite(
+        this DbContextOptionsBuilder optionsBuilder
+    )
     {
-        public static DbContextOptionsBuilder UsePostgresFunctionsInSqlite(
-            this DbContextOptionsBuilder optionsBuilder
-        )
-        {
-            return optionsBuilder.ReplaceService<
-                IMethodCallTranslatorProvider,
-                CustomSqliteMethodCallTranslatorPlugin
-            >();
-        }
+        return optionsBuilder.ReplaceService<
+            IMethodCallTranslatorProvider,
+            CustomSqliteMethodCallTranslatorPlugin
+        >();
     }
 }

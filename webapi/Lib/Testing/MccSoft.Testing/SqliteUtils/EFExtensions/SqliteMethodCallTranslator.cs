@@ -5,38 +5,36 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
-namespace MccSoft.Testing.SqliteUtils.EFExtensions
+namespace MccSoft.Testing.SqliteUtils.EFExtensions;
+
+public class PostgresToSqliteMethodCallTranslator : IMethodCallTranslator
 {
-    public class PostgresToSqliteMethodCallTranslator : IMethodCallTranslator
+    private readonly ISqlExpressionFactory _expressionFactory;
+
+    private static readonly MethodInfo iLikeMethod = typeof(NpgsqlDbFunctionsExtensions).GetMethod(
+        nameof(NpgsqlDbFunctionsExtensions.ILike),
+        new[] { typeof(DbFunctions), typeof(string), typeof(string) }
+    );
+
+    public PostgresToSqliteMethodCallTranslator(ISqlExpressionFactory expressionFactory)
     {
-        private readonly ISqlExpressionFactory _expressionFactory;
+        _expressionFactory = expressionFactory;
+    }
 
-        private static readonly MethodInfo iLikeMethod =
-            typeof(NpgsqlDbFunctionsExtensions).GetMethod(
-                nameof(NpgsqlDbFunctionsExtensions.ILike),
-                new[] { typeof(DbFunctions), typeof(string), typeof(string) }
-            );
-
-        public PostgresToSqliteMethodCallTranslator(ISqlExpressionFactory expressionFactory)
+    public SqlExpression Translate(
+        SqlExpression instance,
+        MethodInfo method,
+        IReadOnlyList<SqlExpression> arguments,
+        IDiagnosticsLogger<DbLoggerCategory.Query> logger
+    )
+    {
+        if (method == iLikeMethod)
         {
-            _expressionFactory = expressionFactory;
+            var args = new List<SqlExpression> { arguments[1], arguments[2] }; // cut the first parameter (DBFunctions) from extension function
+
+            return _expressionFactory.Like(args[0], args[1]);
         }
 
-        public SqlExpression Translate(
-            SqlExpression instance,
-            MethodInfo method,
-            IReadOnlyList<SqlExpression> arguments,
-            IDiagnosticsLogger<DbLoggerCategory.Query> logger
-        )
-        {
-            if (method == iLikeMethod)
-            {
-                var args = new List<SqlExpression> { arguments[1], arguments[2] }; // cut the first parameter (DBFunctions) from extension function
-
-                return _expressionFactory.Like(args[0], args[1]);
-            }
-
-            return null;
-        }
+        return null;
     }
 }

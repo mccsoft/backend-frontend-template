@@ -1,5 +1,6 @@
-import { AutocompleteProps } from '@mui/material/Autocomplete/Autocomplete';
+import type { Input } from '../Input';
 import { AutocompleteFreeSoloValueMapping } from '@mui/base/AutocompleteUnstyled/useAutocomplete';
+import { AutocompleteProps } from '@mui/material/Autocomplete/Autocomplete';
 import * as React from 'react';
 import { CSSProperties } from 'react';
 
@@ -35,6 +36,10 @@ export type StyledAutocompleteProps<
   required?: Required;
   testId?: string;
   errorText?: string;
+  renderInput?: React.ComponentType<
+    React.ComponentProps<typeof Input> & { selectedValue?: T }
+  >;
+
   /*
    * Makes it possible to type right into the input to filter results
    */
@@ -99,6 +104,21 @@ export type StyledAutocompleteProps<
    * Defaults to '40px'
    */
   additionalWidth?: CSSProperties['width'];
+
+  /*
+   * If true renders <SearchInput> instead of <Input />
+   */
+  isSearch?: boolean | undefined;
+
+  /*
+   * Overrides input's endAdornment
+   */
+  endAdornment?: React.ReactNode;
+
+  /*
+   * Input's ref
+   */
+  inputRef?: React.RefObject<HTMLInputElement>;
 };
 
 export type DropDownInputProps<
@@ -119,7 +139,9 @@ export type DropDownInputProps<
    */
   useIdFunctionAsValue?: UseIdAsValue;
 
-  value: StyledAutocompleteProps<T, false, Required, false>['value'];
+  value: UseIdAsValue extends true
+    ? string | number | undefined | null
+    : StyledAutocompleteProps<T, false, Required, false>['value'];
 };
 
 export type PropertyAccessor<T> = ((option: T) => string | number) | keyof T;

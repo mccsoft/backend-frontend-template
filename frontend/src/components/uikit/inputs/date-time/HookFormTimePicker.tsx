@@ -4,18 +4,21 @@ import {
   FieldValues,
   Path,
   RegisterOptions,
+  FieldPath,
 } from 'react-hook-form';
 import React from 'react';
 import { TimePicker, TimePickerProps } from './TimePicker';
 
-type HookFormTimePickerProps<TFieldValues extends FieldValues = FieldValues> =
-  Omit<TimePickerProps, 'onTimeChanged' | 'timeInMills'> & {
-    name: Path<TFieldValues>;
-    control: Control<TFieldValues>;
-    rules?: Exclude<RegisterOptions, 'valueAsDate' | 'setValueAs'>;
-    onFocus?: () => void;
-    defaultValue?: unknown;
-  };
+type HookFormTimePickerProps<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+> = Omit<TimePickerProps, 'onTimeChanged' | 'timeInMills'> & {
+  name: TName;
+  control: Control<TFieldValues>;
+  rules?: Exclude<RegisterOptions, 'valueAsDate' | 'setValueAs'>;
+  onFocus?: () => void;
+  defaultValue?: unknown;
+};
 
 /*
 We have to use Controlled components for native html datepickers,

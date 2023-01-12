@@ -40,7 +40,7 @@ if (FeatureFlags.isMiniProfilerEnabled()) {
   axios.interceptors.response.use(miniProfilerInterceptor, undefined);
 }
 
-if (import.meta.env.PROD) {
+if (sentryDsn()) {
   Sentry.init({
     dsn: sentryDsn(),
     // integrations: [new Integrations.BrowserTracing()],

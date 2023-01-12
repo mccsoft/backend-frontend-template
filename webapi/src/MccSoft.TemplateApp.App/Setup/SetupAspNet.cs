@@ -1,15 +1,16 @@
-﻿using System.Net;
+﻿using System.Text.Json.Serialization;
 using MccSoft.LowLevelPrimitives.Serialization.DateOnlyConverters;
 using MccSoft.TemplateApp.App.Middleware;
 using MccSoft.WebApi;
+using MccSoft.WebApi.Patching;
 using MccSoft.WebApi.Sentry;
 using MccSoft.WebApi.Serialization;
+using MccSoft.WebApi.Serialization.ModelBinding;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.ResponseCompression;
-using Newtonsoft.Json;
 
 namespace MccSoft.TemplateApp.App.Setup;
 
@@ -19,6 +20,8 @@ public static partial class SetupAspNet
     {
         var services = builder.Services;
 
+        ConfigureSerialization(builder);
+
         builder.WebHost.UseAppSentry();
         builder.Services.AddResponseCompression(options =>
         {
@@ -26,20 +29,19 @@ public static partial class SetupAspNet
             options.Providers.Add<GzipCompressionProvider>();
         });
 
-        JsonConvert.DefaultSettings = () =>
-            JsonSerializerSetup.SetupJson(new JsonSerializerSettings());
+        builder.Services.Configure<JsonOptions>(options =>
+        {
+            options.JsonSerializerOptions.Converters.Add(new PatchRequestConverterFactory());
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
 
-        services
-            .AddControllers(
-                (options) =>
-                {
-                    AddGlobalFilters(options);
-                    options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
-                }
-            )
-            .AddNewtonsoftJson(
-                setupAction => JsonSerializerSetup.SetupJson(setupAction.SerializerSettings)
-            );
+        services.AddControllers(
+            (options) =>
+            {
+                AddGlobalFilters(options);
+                options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+            }
+        );
 
         services.AddRazorPages();
         if (builder.Environment.IsDevelopment())
@@ -59,13 +61,27 @@ public static partial class SetupAspNet
         AddProjectSpecifics(builder);
     }
 
+    private static void ConfigureSerialization(WebApplicationBuilder builder)
+    {
+        // add DateOnly/TimeOnly support
+        // also add UtcEverywhere approach
+        builder.Services.AddMvc(options =>
+        {
+            options.ModelBinderProviders.Insert(0, new UtcDateTimeModelBinderProvider());
+        });
+        builder.Services
+            .AddControllers()
+            .AddJsonOptions(opts =>
+            {
+                opts.SetupJson();
+            });
+    }
+
     static partial void AddProjectSpecifics(WebApplicationBuilder builder);
 
     static partial void UseProjectSpecifics(WebApplication app);
 
     static partial void UseProjectSpecificEndpoints(WebApplication app);
-
-    static partial void AddEndpoints(IEndpointRouteBuilder endpoints);
 
     private const string DefaultCorsPolicyName = "DefaultCorsPolicy";
 
@@ -153,20 +169,14 @@ public static partial class SetupAspNet
     public static void UseEndpoints(WebApplication app)
     {
         app.UseStaticFiles(SetupStaticFiles.CacheAll);
+        app.MapControllers();
+        app.MapRazorPages()
+            .RequireAuthorization(
+                new AuthorizeAttribute() { AuthenticationSchemes = "Identity.Application" }
+            );
+        app.MapHealthChecks("/health");
+        app.MapFallbackToFile("index.html", SetupStaticFiles.DoNotCache);
 
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-            endpoints
-                .MapRazorPages()
-                .RequireAuthorization(
-                    new AuthorizeAttribute() { AuthenticationSchemes = "Identity.Application" }
-                );
-            endpoints.MapHealthChecks("/health");
-            endpoints.MapFallbackToFile("index.html", SetupStaticFiles.DoNotCache);
-
-            AddEndpoints(endpoints);
-        });
         app.Use404ForMissingStaticFiles();
 
         UseProjectSpecificEndpoints(app);

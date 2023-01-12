@@ -3,6 +3,7 @@ using I18Next.Net.Backends;
 using I18Next.Net.Extensions;
 using I18Next.Net.Plugins;
 using MccSoft.TemplateApp.App.Utils.Localization;
+using MccSoft.WebApi.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -37,6 +38,7 @@ public static partial class SetupLocalization
     {
         app.UseRequestLocalization(options =>
         {
+            options.RequestCultureProviders.Insert(0, new CustomCookieRequestCultureProvider());
             options.SupportedCultures = new[] { "en", "fr", "de" }
                 .Select(
                     lang =>

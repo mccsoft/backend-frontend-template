@@ -9,14 +9,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 [assembly: HostingStartup(typeof(MccSoft.TemplateApp.App.Areas.Identity.IdentityHostingStartup))]
-namespace MccSoft.TemplateApp.App.Areas.Identity
+
+namespace MccSoft.TemplateApp.App.Areas.Identity;
+
+public class IdentityHostingStartup : IHostingStartup
 {
-    public class IdentityHostingStartup : IHostingStartup
+    public void Configure(IWebHostBuilder builder)
     {
-        public void Configure(IWebHostBuilder builder)
-        {
-            builder.ConfigureServices((context, services) => {
-            });
-        }
+        builder.ConfigureServices((context, services) => { });
     }
 }

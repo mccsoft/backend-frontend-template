@@ -1,10 +1,10 @@
 # Shared steps to test everything within repository.
 steps:
   - task: UseDotNet@2
-    displayName: 'Use .NET Core sdk 6'
+    displayName: 'Use .NET Core sdk 7'
     inputs:
       packageType: sdk
-      version: 6.x
+      version: 7.x
 
   - template: ./azure-pipelines-cache-template.yml
 
@@ -21,7 +21,9 @@ steps:
     inputs:
       command: 'test'
       arguments:
-      projects: 'webapi/tests/*/*.csproj'
+      projects: |
+        webapi/tests/**/*.csproj
+        webapi/Lib/**/*Tests.csproj
       publishTestResults: true
     env:
       DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE: false

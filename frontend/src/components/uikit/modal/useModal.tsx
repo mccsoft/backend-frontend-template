@@ -7,6 +7,7 @@ import { useScopedTranslation } from '../../../application/localization/useScope
 import { ModalContextType, UseModalOptions } from './useModal.types';
 import styles from './CustomModal.module.scss';
 import { assertNever } from 'helpers/assert-never';
+import clsx from 'clsx';
 
 const ModalContext = React.createContext<ModalContextType>({} as any);
 
@@ -53,6 +54,16 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
           setIsShown(true);
         });
       },
+      showMultiButton: async (options) => {
+        return new Promise<string | null>((resolve, reject) => {
+          setOptions({
+            type: 'multibutton',
+            ...options,
+            resolve: resolve,
+          });
+          setIsShown(true);
+        });
+      },
     };
   }, []);
 
@@ -71,6 +82,10 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
         break;
 
       case 'prompt':
+        options.resolve(null);
+        break;
+
+      case 'multibutton':
         options.resolve(null);
         break;
 
@@ -102,26 +117,47 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
               ) : null}
             </div>
             <div className={styles.footer}>
-              {options.type === 'confirm' || options.type === 'prompt' ? (
-                <Button
-                  color={ButtonColor.Secondary}
-                  title={options.cancelButtonText ?? i18n.t('cancel_button')}
-                  onClick={onClose}
-                />
-              ) : null}
-              <Button
-                color={ButtonColor.Default}
-                type={'submit'}
-                title={options.okButtonText ?? i18n.t('ok_button')}
-                onClick={async () => {
-                  if (options.type === 'confirm') options.resolve(true);
-                  else if (options.type === 'prompt') {
-                    options.resolve(fieldValue);
-                    setFieldValue('');
-                  } else if (options.type === 'alert') options.resolve();
-                  setIsShown(false);
-                }}
-              />
+              {options.type === 'multibutton' ? (
+                options.buttons.map((x) => (
+                  <Button
+                    key={x.id}
+                    color={x.color ?? ButtonColor.Default}
+                    className={clsx(styles.button, styles.multibutton)}
+                    title={x.text}
+                    onClick={() => {
+                      options.resolve(x.id);
+                      onClose();
+                    }}
+                  />
+                ))
+              ) : (
+                <>
+                  {options.type === 'confirm' || options.type === 'prompt' ? (
+                    <Button
+                      className={styles.button}
+                      color={ButtonColor.Secondary}
+                      title={
+                        options.cancelButtonText ?? i18n.t('cancel_button')
+                      }
+                      onClick={onClose}
+                    />
+                  ) : null}
+                  <Button
+                    className={styles.button}
+                    color={ButtonColor.Default}
+                    type={'submit'}
+                    title={options.okButtonText ?? i18n.t('ok_button')}
+                    onClick={async () => {
+                      if (options.type === 'confirm') options.resolve(true);
+                      else if (options.type === 'prompt') {
+                        options.resolve(fieldValue);
+                        setFieldValue('');
+                      } else if (options.type === 'alert') options.resolve();
+                      setIsShown(false);
+                    }}
+                  />
+                </>
+              )}
             </div>
           </>
         ) : null}

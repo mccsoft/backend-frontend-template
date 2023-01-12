@@ -5,22 +5,24 @@ using MccSoft.TemplateApp.App;
 using MccSoft.TemplateApp.App.DomainEventHandlers;
 using MccSoft.TemplateApp.App.Setup;
 using MccSoft.WebApi.Sentry;
-using MccSoft.WebApi.Serialization.ModelBinding;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("appsettings.local.json", true).AddEnvironmentVariables();
 
-builder.Host.UseSerilog(
-    (hostingContext, loggerConfiguration) =>
-    {
-        loggerConfiguration.ConfigureSerilog(
-            hostingContext.HostingEnvironment,
-            hostingContext.Configuration
-        );
-    }
-);
+if (!builder.Environment.IsEnvironment("Test"))
+{
+    builder.Host.UseSerilog(
+        (hostingContext, loggerConfiguration) =>
+        {
+            loggerConfiguration.ConfigureSerilog(
+                hostingContext.HostingEnvironment,
+                hostingContext.Configuration
+            );
+        }
+    );
+}
 
 SetupDatabase.AddDatabase(builder);
 SetupAudit.ConfigureAudit(builder.Services, builder.Configuration);
@@ -28,7 +30,6 @@ builder.Services.AddDomainEventsWithMediatR(typeof(Program), typeof(LogDomainEve
 
 SetupAuth.ConfigureAuth(builder);
 SetupLocalization.AddLocalization(builder);
-builder.Services.AddUtcEverywhere();
 
 builder.Services.AddMailing(builder.Configuration.GetSection("Email"));
 
@@ -36,8 +37,10 @@ SetupAspNet.AddAspNet(builder);
 
 SetupSwagger.AddSwagger(builder);
 
+// builder.Services.AddWebHooks();
+
 // Set up your application-specific services here
-SetupServices.AddServices(builder);
+SetupServices.AddServices(builder.Services, builder.Configuration, builder.Environment);
 
 // ---------------------------------
 //
@@ -50,13 +53,13 @@ app.UseSerilog(app.Environment);
 app.Logger.LogSentryTestError("TemplateApp");
 
 await SetupDatabase.RunMigration(app);
-SetupHangfire.UseHangfire(app);
 
 app.UseHttpsRedirection();
 
 SetupAspNet.UseFrontlineServices(app);
-
 SetupLocalization.UseLocalization(app);
+
+SetupHangfire.UseHangfire(app);
 
 SetupAuth.UseAuth(app);
 SetupSwagger.UseSwagger(app);

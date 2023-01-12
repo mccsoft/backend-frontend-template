@@ -7,212 +7,223 @@ using System.Reflection;
 using MccSoft.LowLevelPrimitives.Exceptions;
 using MccSoft.WebApi.Patching.Models;
 
-namespace MccSoft.WebApi.Patching
+namespace MccSoft.WebApi.Patching;
+
+/// <summary>
+/// Class is used in most HttpPatch requests for updating the DB entity
+/// with properties that are present in BODY of request.
+/// Properties that are not passed preserve their previous values.
+/// </summary>
+public static class PartialUpdateHelper
 {
     /// <summary>
-    /// Class is used in most HttpPatch requests for updating the DB entity
+    /// Used in most HttpPatch requests for updating the DB entity
     /// with properties that are present in BODY of request.
     /// Properties that are not passed preserve their previous values.
     /// </summary>
-    public static class PartialUpdateHelper
+    public static void Update<TObjectToUpdate, TObjectWithNewValues>(
+        this TObjectToUpdate objectToUpdate,
+        TObjectWithNewValues objectWithNewValues
+    ) where TObjectWithNewValues : IPatchRequest
     {
-        /// <summary>
-        /// Used in most HttpPatch requests for updating the DB entity
-        /// with properties that are present in BODY of request.
-        /// Properties that are not passed preserve their previous values.
-        /// </summary>
-        public static void Update<TObjectToUpdate, TObjectWithNewValues>(
-            this TObjectToUpdate objectToUpdate,
-            TObjectWithNewValues objectWithNewValues
-        ) where TObjectWithNewValues : IPatchRequest
-        {
-            var objectWithNewValuesProperties = objectWithNewValues
-                .GetType()
-                .GetProperties()
-                .Where(x => x.GetGetMethod() != null)
-                .ToList();
-            var typeToUpdate = typeof(TObjectToUpdate);
+        var objectWithNewValuesProperties = objectWithNewValues
+            .GetType()
+            .GetProperties()
+            .Where(x => x.GetGetMethod() != null)
+            .Where(x => x.GetCustomAttribute<DoNotPatchAttribute>() == null)
+            .ToList();
+        var typeToUpdate = typeof(TObjectToUpdate);
 
-            foreach (var propertyInNewValuesObject in objectWithNewValuesProperties)
-            {
-                var propertyName = propertyInNewValuesObject.Name;
-                var propertyInObjectToUpdate = typeToUpdate.GetProperty(propertyName);
-                if (
-                    propertyInObjectToUpdate != null
-                    && (
-                        objectWithNewValues.IsFieldPresent(propertyName)
-                        || propertyInObjectToUpdate.PropertyType.IsIList()
-                    )
-                    && propertyInObjectToUpdate.SetMethod != null
-                    && propertyInObjectToUpdate.SetMethod.IsPublic
+        foreach (var propertyInNewValuesObject in objectWithNewValuesProperties)
+        {
+            var propertyName = propertyInNewValuesObject.Name;
+            var propertyInObjectToUpdate = typeToUpdate.GetProperty(propertyName);
+            if (
+                propertyInObjectToUpdate != null
+                && (
+                    objectWithNewValues.IsFieldPresent(propertyName)
+                    || propertyInObjectToUpdate.PropertyType.IsIList()
                 )
+                && propertyInObjectToUpdate.SetMethod != null
+                && propertyInObjectToUpdate.SetMethod.IsPublic
+            )
+            {
+                var propertyValue = propertyInNewValuesObject.GetValue(objectWithNewValues);
+                Type propertyType =
+                    Nullable.GetUnderlyingType(propertyInObjectToUpdate.PropertyType)
+                    ?? propertyInObjectToUpdate.PropertyType;
+                if (propertyType.IsEnum)
                 {
-                    var propertyValue = propertyInNewValuesObject.GetValue(objectWithNewValues);
-                    Type propertyType =
-                        Nullable.GetUnderlyingType(propertyInObjectToUpdate.PropertyType)
-                        ?? propertyInObjectToUpdate.PropertyType;
-                    if (propertyType.IsEnum)
+                    if (propertyValue == null)
                     {
-                        if (!Enum.IsDefined(propertyType, Convert.ToInt32(propertyValue)))
+                        if (
+                            Nullable.GetUnderlyingType(propertyInObjectToUpdate.PropertyType)
+                            == null
+                        )
                         {
                             throw new ValidationException(
                                 propertyName,
-                                $"Value '{propertyValue}' is out of range"
+                                $"Cannot assign null to non-nullable enum"
                             );
                         }
                     }
-
-                    if (
-                        propertyInNewValuesObject.PropertyType
-                            .GetInterfaces()
-                            .Contains(typeof(IPatchRequest))
-                    )
+                    else if (!Enum.IsDefined(propertyType, Convert.ToInt32(propertyValue)))
                     {
-                        var newValue =
-                            propertyInObjectToUpdate.GetValue(objectToUpdate)
-                            ?? Activator.CreateInstance(propertyType);
-
-                        try
-                        {
-                            typeof(PartialUpdateHelper)
-                                .GetMethod("Update")
-                                .MakeGenericMethod(
-                                    propertyInObjectToUpdate.PropertyType,
-                                    propertyInNewValuesObject.PropertyType
-                                )
-                                .Invoke(null, new[] { newValue, propertyValue });
-                        }
-                        catch (TargetInvocationException e)
-                        {
-                            throw e.InnerException;
-                        }
-
-                        propertyInObjectToUpdate.SetValue(objectToUpdate, newValue);
+                        throw new ValidationException(
+                            propertyName,
+                            $"Value '{propertyValue ?? "null!"}' is out of range"
+                        );
                     }
-                    else if (propertyType.IsIList())
-                    {
-                        if (propertyValue is not IEnumerable enumerable)
-                            continue;
+                }
 
-                        if (propertyType.HasDefaultConstructor())
+                if (
+                    propertyInNewValuesObject.PropertyType
+                        .GetInterfaces()
+                        .Contains(typeof(IPatchRequest))
+                )
+                {
+                    var newValue =
+                        propertyInObjectToUpdate.GetValue(objectToUpdate)
+                        ?? Activator.CreateInstance(propertyType);
+
+                    try
+                    {
+                        typeof(PartialUpdateHelper)
+                            .GetMethod("Update")
+                            .MakeGenericMethod(
+                                propertyInObjectToUpdate.PropertyType,
+                                propertyInNewValuesObject.PropertyType
+                            )
+                            .Invoke(null, new[] { newValue, propertyValue });
+                    }
+                    catch (TargetInvocationException e)
+                    {
+                        throw e.InnerException;
+                    }
+
+                    propertyInObjectToUpdate.SetValue(objectToUpdate, newValue);
+                }
+                else if (propertyType.IsIList())
+                {
+                    if (propertyValue is not IEnumerable enumerable)
+                        continue;
+
+                    if (propertyType.HasDefaultConstructor())
+                    {
+                        var newEnumerable = Activator.CreateInstance(propertyType);
+                        // ReSharper disable once PossibleNullReferenceException
+                        // enumerable is IList
+                        foreach (var o in enumerable)
                         {
-                            var newEnumerable = Activator.CreateInstance(propertyType);
-                            // ReSharper disable once PossibleNullReferenceException
-                            // enumerable is IList
-                            foreach (var o in enumerable)
+                            var enumerableElementType = o.GetType();
+                            if (
+                                !enumerableElementType.IsValueType
+                                && !enumerableElementType.IsPrimitive
+                                && enumerableElementType.HasDefaultConstructor()
+                            )
                             {
-                                var enumerableElementType = o.GetType();
-                                if (
-                                    !enumerableElementType.IsValueType
-                                    && !enumerableElementType.IsPrimitive
-                                    && enumerableElementType.HasDefaultConstructor()
-                                )
-                                {
-                                    var newObject = Activator.CreateInstance(
-                                        propertyType.GetTFromListT()!
-                                    );
-                                    BlindMap(newObject, o);
-                                    // ReSharper disable once PossibleNullReferenceException
-                                    // newEnumerable is IList
-                                    (newEnumerable as IList).Add(newObject);
-                                }
-                                else
-                                {
-                                    // ReSharper disable once PossibleNullReferenceException
-                                    // newEnumerable is IList
-                                    (newEnumerable as IList).Add(o);
-                                }
+                                var newObject = Activator.CreateInstance(
+                                    propertyType.GetTFromListT()!
+                                );
+                                BlindMap(newObject, o);
+                                // ReSharper disable once PossibleNullReferenceException
+                                // newEnumerable is IList
+                                (newEnumerable as IList).Add(newObject);
                             }
+                            else
+                            {
+                                // ReSharper disable once PossibleNullReferenceException
+                                // newEnumerable is IList
+                                (newEnumerable as IList).Add(o);
+                            }
+                        }
 
-                            propertyInObjectToUpdate.SetValue(objectToUpdate, newEnumerable);
-                        }
-                        else
-                        {
-                            throw new InvalidOperationException(
-                                "Arrays are not supported for mapping"
-                            );
-                        }
+                        propertyInObjectToUpdate.SetValue(objectToUpdate, newEnumerable);
                     }
                     else
                     {
-                        propertyInObjectToUpdate.SetValue(objectToUpdate, propertyValue);
+                        throw new InvalidOperationException(
+                            $"Arrays are not supported for mapping, field: {propertyInObjectToUpdate.Name}"
+                        );
                     }
+                }
+                else
+                {
+                    propertyInObjectToUpdate.SetValue(objectToUpdate, propertyValue);
                 }
             }
         }
+    }
 
-        public static TResult GetValue<T, TResult>(
-            this PatchRequest<T> patchRequest,
-            Expression<Func<T, TResult>> field
-        )
+    public static TResult GetValue<T, TResult>(
+        this PatchRequest<T> patchRequest,
+        Expression<Func<T, TResult>> field
+    )
+    {
+        var propertyName = ((System.Linq.Expressions.MemberExpression)field.Body).Member.Name;
+        return (TResult)patchRequest.GetType().GetProperty(propertyName).GetValue(patchRequest);
+    }
+
+    private static bool HasDefaultConstructor(this Type t)
+    {
+        return t.IsValueType || t.GetConstructor(Type.EmptyTypes) != null;
+    }
+
+    private static bool IsIList(this Type type)
+    {
+        return type.GetInterfaces()
+            .Append(type)
+            .Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IList<>));
+    }
+
+    private static Type? GetTFromListT(this Type type)
+    {
+        return type.GetInterfaces()
+            .Append(type)
+            .FirstOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IList<>))
+            ?.GetGenericArguments()
+            .FirstOrDefault();
+    }
+
+    private static void BlindMap<TObjectToUpdate, TObjectWithNewValues>(
+        this TObjectToUpdate objectToUpdate,
+        TObjectWithNewValues objectWithNewValues
+    )
+    {
+        var objectWithNewValuesProperties = objectWithNewValues
+            .GetType()
+            .GetProperties()
+            .Where(x => x.GetGetMethod() != null)
+            .ToList();
+        var typeToUpdate = objectToUpdate.GetType();
+
+        foreach (var propertyInNewValuesObject in objectWithNewValuesProperties)
         {
-            var propertyName = ((System.Linq.Expressions.MemberExpression)field.Body).Member.Name;
-            return (TResult)patchRequest.GetType().GetProperty(propertyName).GetValue(patchRequest);
-        }
-
-        private static bool HasDefaultConstructor(this Type t)
-        {
-            return t.IsValueType || t.GetConstructor(Type.EmptyTypes) != null;
-        }
-
-        private static bool IsIList(this Type type)
-        {
-            return type.GetInterfaces()
-                .Append(type)
-                .Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IList<>));
-        }
-
-        private static Type? GetTFromListT(this Type type)
-        {
-            return type.GetInterfaces()
-                .Append(type)
-                .FirstOrDefault(
-                    x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IList<>)
-                )
-                ?.GetGenericArguments()
-                .FirstOrDefault();
-        }
-
-        private static void BlindMap<TObjectToUpdate, TObjectWithNewValues>(
-            this TObjectToUpdate objectToUpdate,
-            TObjectWithNewValues objectWithNewValues
-        )
-        {
-            var objectWithNewValuesProperties = objectWithNewValues
-                .GetType()
-                .GetProperties()
-                .Where(x => x.GetGetMethod() != null)
-                .ToList();
-            var typeToUpdate = objectToUpdate.GetType();
-
-            foreach (var propertyInNewValuesObject in objectWithNewValuesProperties)
+            var propertyName = propertyInNewValuesObject.Name;
+            var propertyInObjectToUpdate = typeToUpdate.GetProperty(propertyName);
+            if (
+                propertyInObjectToUpdate != null
+                && propertyInObjectToUpdate.SetMethod != null
+                && propertyInObjectToUpdate.SetMethod.IsPublic
+            )
             {
-                var propertyName = propertyInNewValuesObject.Name;
-                var propertyInObjectToUpdate = typeToUpdate.GetProperty(propertyName);
-                if (
-                    propertyInObjectToUpdate != null
-                    && propertyInObjectToUpdate.SetMethod != null
-                    && propertyInObjectToUpdate.SetMethod.IsPublic
-                )
+                var propertyValue = propertyInNewValuesObject.GetValue(objectWithNewValues);
+                Type propertyType =
+                    Nullable.GetUnderlyingType(propertyInObjectToUpdate.PropertyType)
+                    ?? propertyInObjectToUpdate.PropertyType;
+                if (propertyType.IsEnum)
                 {
-                    var propertyValue = propertyInNewValuesObject.GetValue(objectWithNewValues);
-                    Type propertyType =
-                        Nullable.GetUnderlyingType(propertyInObjectToUpdate.PropertyType)
-                        ?? propertyInObjectToUpdate.PropertyType;
-                    if (propertyType.IsEnum)
+                    if (!Enum.IsDefined(propertyType, Convert.ToInt32(propertyValue)))
                     {
-                        if (!Enum.IsDefined(propertyType, Convert.ToInt32(propertyValue)))
-                        {
-                            throw new ValidationException(
-                                propertyName,
-                                $"Value '{propertyValue}' is out of range"
-                            );
-                        }
+                        throw new ValidationException(
+                            propertyName,
+                            $"Value '{propertyValue}' is out of range"
+                        );
                     }
-                    else
-                    {
-                        propertyInObjectToUpdate.SetValue(objectToUpdate, propertyValue);
-                    }
+                }
+                else
+                {
+                    propertyInObjectToUpdate.SetValue(objectToUpdate, propertyValue);
                 }
             }
         }

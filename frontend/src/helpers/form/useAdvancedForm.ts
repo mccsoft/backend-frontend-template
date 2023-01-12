@@ -5,15 +5,15 @@ import {
   SubmitErrorHandler,
   UseFormReturn,
   SubmitHandler,
-  UnpackNestedValue,
   UseFormProps,
+  DefaultValues,
 } from 'react-hook-form';
 import * as React from 'react';
 import { useRef } from 'react';
 import { useErrorHandler } from './useErrorHandler';
 import { NavigateFunction } from 'react-router';
 
-type AdvancedFormReturnType<
+export type AdvancedFormReturnType<
   TFieldValues extends FieldValues = FieldValues,
   // ignored because it's used in react-hook-form as well
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -38,13 +38,14 @@ export function useAdvancedForm<
   TContext extends object = object,
 >(
   submitHandler: (
-    data: UnpackNestedValue<TFieldValues>,
+    data: TFieldValues,
     navigate: NavigateFunction,
   ) => Promise<void>,
   options?: {
     shouldResetOnSuccess?: boolean;
     initialize?: (form: UseFormReturn<TFieldValues, TContext>) => void;
-  } & UseFormProps<TFieldValues, TContext>,
+    defaultValues?: DefaultValues<TFieldValues>;
+  } & Omit<UseFormProps<TFieldValues, TContext>, 'defaultValues'>,
 ): AdvancedFormReturnType<TFieldValues, TContext> {
   const form = useForm<TFieldValues, TContext>(options);
   const isSubmitting = useRef(false);
@@ -59,31 +60,26 @@ export function useAdvancedForm<
 
   return {
     ...form,
-    handleSubmit: <TSubmitFieldValues extends FieldValues = TFieldValues>(
-      onValid: SubmitHandler<TSubmitFieldValues>,
+    handleSubmit: (
+      onValid: SubmitHandler<TFieldValues>,
       onInvalid: SubmitErrorHandler<TFieldValues> | undefined,
     ) => {
-      return form.handleSubmit<TSubmitFieldValues>(
-        async (values: UnpackNestedValue<TSubmitFieldValues>) => {
-          if (form.formState.isSubmitting) return;
-          if (isSubmitting.current) return;
-          isSubmitting.current = true;
-          try {
-            await onValid(values);
-            return await handler.handler(values as any);
-          } finally {
-            isSubmitting.current = false;
-          }
-        },
-        onInvalid,
-      );
+      return form.handleSubmit(async (values) => {
+        if (form.formState.isSubmitting) return;
+        if (isSubmitting.current) return;
+        isSubmitting.current = true;
+        try {
+          await onValid(values);
+          return await handler.handler(values as any);
+        } finally {
+          isSubmitting.current = false;
+        }
+      }, onInvalid);
     },
     overallError: handler.overallServerError,
     formErrorCombined: handler.serverErrorsCombined,
-    handleSubmitDefault: form.handleSubmit<TFieldValues>(
-      async (values: UnpackNestedValue<TFieldValues>) => {
-        return await handler.handler(values as any);
-      },
-    ),
+    handleSubmitDefault: form.handleSubmit(async (values) => {
+      return await handler.handler(values as any);
+    }),
   };
 }

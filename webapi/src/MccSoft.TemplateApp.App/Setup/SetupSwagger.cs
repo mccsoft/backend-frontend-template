@@ -1,5 +1,8 @@
-﻿using MccSoft.TemplateApp.App.Settings;
+﻿using System.Text.Json;
+using MccSoft.TemplateApp.App.Settings;
 using MccSoft.WebApi.Patching;
+using NJsonSchema;
+using NJsonSchema.Generation.TypeMappers;
 using NSwag;
 using NSwag.AspNetCore;
 using NSwag.Generation.AspNetCore;
@@ -79,6 +82,17 @@ public static partial class SetupSwagger
             };
         };
         options.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("Bearer"));
+        // maps JsonDocument to `{ [key: string]: any; }`
+        options.SchemaGenerator.Settings.TypeMappers.Add(
+            new PrimitiveTypeMapper(
+                typeof(JsonDocument),
+                s =>
+                {
+                    s.Type = JsonObjectType.Object;
+                    s.AdditionalPropertiesSchema = JsonSchema.CreateAnySchema();
+                }
+            )
+        );
 
         options.GenerateEnumMappingDescription = true;
 

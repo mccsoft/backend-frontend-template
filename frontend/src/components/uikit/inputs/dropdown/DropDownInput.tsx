@@ -24,6 +24,7 @@ export function DropDownInput<
     <StyledAutocomplete<T, false, Required, false>
       {...rest}
       multiple={false}
+      value={props.value as any}
       onChange={onChange}
     />
   );

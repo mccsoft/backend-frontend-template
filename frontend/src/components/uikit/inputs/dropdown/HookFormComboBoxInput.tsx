@@ -5,6 +5,7 @@ import {
   FieldValues,
   Path,
   RegisterOptions,
+  FieldPath,
 } from 'react-hook-form';
 import { ComboBoxInput } from './ComboBoxInput';
 
@@ -12,8 +13,12 @@ type HookFormProps<
   T,
   TFieldValues extends FieldValues = FieldValues,
   Required extends boolean | undefined = undefined,
-> = Omit<React.ComponentProps<typeof ComboBoxInput<T, Required>>, 'onValueChanged'> & {
-  name: Path<TFieldValues>;
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+> = Omit<
+  React.ComponentProps<typeof ComboBoxInput<T, Required>>,
+  'onValueChanged'
+> & {
+  name: TName;
   control: Control<TFieldValues>;
   rules?: Exclude<RegisterOptions, 'valueAsDate' | 'setValueAs'>;
   onFocus?: () => void;

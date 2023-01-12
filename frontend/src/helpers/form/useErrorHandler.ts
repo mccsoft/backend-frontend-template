@@ -1,17 +1,16 @@
 import { useState } from 'react';
 import { FieldValues } from 'react-hook-form';
-import {
-  UnpackNestedValue,
-  UseFormSetError,
-} from 'react-hook-form/dist/types/form';
+import { UseFormSetError } from 'react-hook-form/dist/types/form';
 import { DeepPartial } from 'react-hook-form/dist/types/utils';
 import { NavigateFunction, useNavigate } from 'react-router';
+
+export const NetworkError = 'Network Error';
 
 export type UseSendFormReturn<T> = {
   /*
   Function to be passed to form.handleSubmit
    */
-  handler: (data: UnpackNestedValue<T>) => Promise<void>;
+  handler: (data: T) => Promise<void>;
   /*
   Server-side error which doesn't belong to any particular field
    */
@@ -100,7 +99,7 @@ export function handleSubmitFormError<T extends FieldValues>(
  */
 export function useErrorHandler<TFieldValues extends FieldValues = FieldValues>(
   submitFunction: (
-    data: UnpackNestedValue<TFieldValues>,
+    data: TFieldValues,
     navigate: NavigateFunction,
   ) => Promise<void>,
   setError: UseFormSetError<TFieldValues>,
@@ -110,7 +109,7 @@ export function useErrorHandler<TFieldValues extends FieldValues = FieldValues>(
   const [formErrorsCombined, setFormErrorsCombined] = useState('');
   const navigate = useNavigate();
 
-  async function submitForm(data: UnpackNestedValue<TFieldValues>) {
+  async function submitForm(data: TFieldValues) {
     try {
       setOverallServerError('');
       await submitFunction(data, navigate);
@@ -196,23 +195,28 @@ function convertToErrorStringInternal(error: any): string {
   }
 
   if (error.code === 'CSS_CHUNK_LOAD_FAILED') {
-    return 'Network Error';
+    return NetworkError;
   }
   if (error.name === 'ChunkLoadError') {
-    return 'Network Error';
+    return NetworkError;
+  }
+  if (error.message?.includes('fetch dynamically imported module')) {
+    return NetworkError;
   }
   if (error.message?.includes("Cannot read property 'status' of undefined")) {
     // nswag generated client throws it when there's no response
-    return 'Network Error';
+    return NetworkError;
   }
   if (error.message) {
     // e.g. Network Error
+    console.log('Error:', error, JSON.stringify(error));
     return error.message;
   } else if (error.title) {
     return error.title;
   } else if (error instanceof String || typeof error === 'string') {
     return error as string;
   }
+  console.log('Unknown Error:', error, JSON.stringify(error));
   return error.toString();
 }
 

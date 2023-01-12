@@ -3,19 +3,22 @@ import {
   Control,
   Controller,
   FieldValues,
+  Path,
   RegisterOptions,
 } from 'react-hook-form';
 import React from 'react';
 import { DatePath } from '../hook-form';
 
-type HookFormDatePickerProps<TFieldValues extends FieldValues = FieldValues> =
-  Omit<DatePickerProps, 'onChange' | 'name'> & {
-    name: DatePath<TFieldValues>;
-    control: Control<TFieldValues>;
-    rules?: Exclude<RegisterOptions, 'valueAsDate' | 'setValueAs'>;
-    onFocus?: () => void;
-    defaultValue?: unknown;
-  };
+type HookFormDatePickerProps<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends DatePath<TFieldValues> = DatePath<TFieldValues>,
+> = Omit<DatePickerProps, 'onChange' | 'name'> & {
+  name: TName;
+  control: Control<TFieldValues>;
+  rules?: Exclude<RegisterOptions, 'valueAsDate' | 'setValueAs'>;
+  onFocus?: () => void;
+  defaultValue?: unknown;
+};
 
 /*
 We have to use Controlled components for native html datepickers,

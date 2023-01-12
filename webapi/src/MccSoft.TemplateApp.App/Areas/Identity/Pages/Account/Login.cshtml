@@ -1,82 +1,92 @@
 ﻿@page
+@using Microsoft.Extensions.Localization;
+@using System.Reflection;
 @model LoginModel
+@inject IStringLocalizer Localizer
 
 @{
   ViewData["Title"] = "Log in";
 }
+
+
 <div class="align-flex-center">
+  <div class="grid-container ">
 
-    <div class="grid-container justify-center">
-      <div class="col-md-6 col-xs-12 col-lg-4">
-        <form method="post" asp-route-returnUrl="@Model.ReturnUrl">
-          <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-          <div class="container">
-            <div class="title-container">
-              <div class="title">
-                <label asp-for="Input.Email"></label>
-              </div>
-            </div>
-            <div class="field">
-              <div class="inputContainer">
-                <input asp-for="Input.Email" class="input" autocomplete="username" aria-required="true"/>
-
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-
-              </div>
-            </div>
-          </div>
-
-          <div class="container">
-            <div class="title-container">
-              <div class="title">
-                <label asp-for="Input.Password" class="form-label"></label>
-              </div>
-            </div>
-            <div class="field">
-              <div class="inputContainer">
-                <input asp-for="Input.Password" class="input" autocomplete="current-password" aria-required="true"/>
-
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-              </div>
-            </div>
-          </div>
-          <div class="container" style="justify-content: space-between">
-            <button id="login-submit" type="submit" class="button default-button content-button">Log in</button>
-          </div>
-
-          @* <label asp-for="Input.RememberMe" class="form-label"> *@
-          @*   <input class="form-check-input" asp-for="Input.RememberMe"/> *@
-          @*   @Html.DisplayNameFor(m => m.Input.RememberMe) *@
-          @* </label> *@
-        </form>
-
-        <div class="social-buttons-container">
-          <form id="external-account" asp-controller="OpenIdAuthorization" asp-action="ExternalRedirect" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal social-login-form">
-            <button type="submit" class="button default-button content-button" name="provider" value="Google" title="Log in using your Google account">Google</button>
-            @* <div> *@
-            @*   @foreach (var provider in Model.ExternalLogins) *@
-            @*   { *@
-            @*     <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button> *@
-            @*   } *@
-            @* </div> *@
-          </form>
-
-        </div>
+    <div class="info-container justify-center">
+      <div class="app-name">TemplateApp</div>
+      <div class="main-background"></div>
+      <div class="app-info">
+        <span>
+          © 2016—<span>@DateTime.Now.Year</span> MCC Soft GmbH + Co. KG
+        </span>
+        <span>
+          Server-Version: <span>@Assembly.GetEntryAssembly().GetName().Version.ToString(3)</span>
+        </span>
       </div>
-
     </div>
 
+    <div class="login-container">
+      <form method="post">
+
+        <div class="input-container">
+          <div class="title-container">
+            <div class="title">
+              <label asp-for="Input.Email">@Localizer["Frontend:Page.Login.login_field"]</label>
+            </div>
+          </div>
+          <div class="field">
+            <div class="inputContainer">
+              <input asp-for="Input.Email" class="input" autocomplete="username" aria-required="true"/>
+
+              <span asp-validation-for="Input.Email" class="text-danger"></span>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="input-container">
+          <div class="title-container">
+            <div class="title">
+              <label asp-for="Input.Password">@Localizer["Frontend:Page.Login.password_field"]</label>
+            </div>
+          </div>
+          <div class="field">
+            <div class="inputContainer">
+              <input asp-for="Input.Password" class="input" autocomplete="current-password" aria-required="true"/>
+              <div class="passwordEye passwordEyeOpen" onclick="togglePassword()">
+                <img id="Password_Eye" class="passwordEyeImage" src="/resources/password-eye.svg">
+              </div>
+              <span asp-validation-for="Input.Password" class="text-danger"></span>
+              <div class="summary-valid-container">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="button-container">
+          <button id="login-submit" type="submit" class="button default-button content-button">
+            @Localizer["Frontend:Page.Login.login_button"]
+          </button>
+        </div>
+      </form>
+      <div class="social-buttons-container">
+        <form id="external-account" asp-controller="OpenIdAuthorization" asp-action="ExternalRedirect" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal social-login-form">
+          <button type="submit" class="button default-button content-button" name="provider" value="OpenIdConnect">
+            Google
+          </button>
+        </form>
+      </div>
+      </div>
+  </div>
 
 </div>
+
 
 @* <div class="row"> *@
 @*   <div class="col-md-4"> *@
 @*     <section> *@
-@* *@
 @*       <h2>Use a local account to log in.</h2> *@
 @*       <hr/> *@
-@* *@
 @*       <div class="form-floating"> *@
 @*       </div> *@
 @*       <div class="form-floating"> *@
@@ -140,4 +150,39 @@
 
 @section Scripts {
   <partial name="_ValidationScriptsPartial"/>
+
+  <script>
+    function togglePassword() {
+      const passwordInput = document.getElementById('Input_Password');
+      const passwordEye = document.getElementById('Password_Eye');
+      if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+          passwordEye.src = "/resources/password-eye-hidden.svg";
+
+        } else {
+          passwordInput.type = "password";
+          passwordEye.src = "/resources/password-eye.svg";
+        }
+      }
+    jQuery(() => {
+      jQuery("form").each(function () {
+        var validator = jQuery(this).data("validator");
+        if (validator?.settings) {
+          validator.settings.submitHandler = function (form) {
+            onFormSubmit(form);
+            form.submit();
+          };
+        } else {
+          this.onsubmit = function () {
+            onFormSubmit(jQuery(this));
+          };
+        }
+      });
+    });
+
+    function onFormSubmit(form) {
+      setTimeout(()=>{jQuery('button', form).attr('disabled', 'disabled');});
+      document.body.style = document.body.style + '; opacity: 0.5';
+    }
+  </script>
 }

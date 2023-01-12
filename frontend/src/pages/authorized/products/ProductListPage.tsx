@@ -1,5 +1,5 @@
 import { Links } from 'application/constants/links';
-import { AppTable, emptyArray } from 'components/uikit/table/AppTable';
+import { AppTable } from 'components/uikit/table/AppTable';
 import { AppLink } from 'components/uikit/buttons/AppLink';
 import { ButtonColor } from 'components/uikit/buttons/Button';
 import { Input } from 'components/uikit/inputs/Input';
@@ -25,6 +25,7 @@ import { DotMenu } from 'components/uikit/menu/DotMenu';
 import { useNavigate } from 'react-router';
 import { AppPagination } from 'components/uikit/pagination/AppPagination';
 import { MenuDirection } from '../../../components/uikit/menu/MenuDirection';
+import { emptyArray } from 'helpers/empty-array';
 
 export const ProductListPage: React.FC = () => {
   const i18n = useScopedTranslation('Page.Products.list');
@@ -47,7 +48,7 @@ export const ProductListPage: React.FC = () => {
     state: {
       sorting: sortBy.sortingState,
     },
-    data: productsQuery.data?.data ?? emptyArray,
+    data: productsQuery.data?.data ?? emptyArray(),
     columns: useMemo(() => {
       return [
         {
@@ -117,7 +118,7 @@ export const ProductListPage: React.FC = () => {
         onChange={(e) => setQueryParams({ search: e.target.value, page: 1 })}
       />
 
-      <Loading loading={productsQuery.isLoading}>
+      <Loading loading={productsQuery.isInitialLoading}>
         <AppTable table={table} />
         <AppPagination
           page={queryParams.page}

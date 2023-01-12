@@ -74,6 +74,7 @@ console.log('Starting to copy files...');
 const defaultOptions = {
   ignorePattern: /partial\./,
 };
+copyProjectFolder(`.ci`);
 copyProjectFolder(`scripts`, { ignorePattern: 'pull-template-post-processor' });
 copyProjectFolder('webapi/Lib', defaultOptions);
 copyProjectFolder('docs');
@@ -140,7 +141,7 @@ function cloneTemplate(folder) {
     fs.rmdirSync(folder, { recursive: true });
   }
   execSync(
-    `git clone https://github.com/mcctomsk/backend-frontend-template.git \"${folder}\"`,
+    `git clone --depth=1 https://github.com/mccsoft/backend-frontend-template.git \"${folder}\"`,
   );
 }
 

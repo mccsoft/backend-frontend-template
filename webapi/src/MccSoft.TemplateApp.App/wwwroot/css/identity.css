@@ -1,16 +1,148 @@
+body {
+  background: #1A2745 !important;
+}
 .justify-center {
   justify-content: center;
 }
 
-.grid-container {
-  width: 100%;
+.input-container{
+  margin-bottom: 16px;
+}
+
+.login-container{
+  background-color: #FFFFFF;
+  max-width: 320px;
+  min-width: 320px;
+  max-height: 312px;
+//  min-height: 312px;
+  margin-left: 135px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  padding: 20px 24px 20px 24px
+}
+
+.info-container{
   display: flex;
-  flex-wrap: wrap;
-  box-sizing: border-box;
-  flex: 1;
+  flex-direction: column;
+  color: white;
+  font-family: Roboto, Sans-Serif;
+}
+
+.app-info{
+  display: flex;
+  flex-direction: column;
+  max-width: 381px;
+  margin-bottom: 28px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  /*font-family: Inter;*/
+}
+
+.address{
+  white-space:pre-wrap;
+}
+
+.app-name{
+  margin-bottom: 32px;
+  margin-top: auto;
+  font-size: 64px;
+  font-weight: 600;
+  /*font-family: Inter;*/
+  width: 288px;
+  height: 94px;
+}
+
+.manufacturer-name{
+  margin-top: 0;
+  margin-bottom: auto;
+  width: 140px;
+  height: 40px;
+  background: url("../resources/manufacter_logo.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.button-container{
+  margin-top: 16px;
+}
+
+.login-separator{
+  display: flex;
+  flex-direction:row;
+  font-size: 12px;
+  font-family: Inter;
+  font-weight: 400;
+  text-align: center;
+  color: #7E8B8B;
+  margin-top: 24px;
+  margin-bottom: 16px;
+}
+
+.login-separator::before{
+  content: "";
+  width: 116px;
+  height: 1px;
+  background: #BFC5C5;
+  margin-top: 8px;
+  margin-right: 11px;
+}
+
+.login-separator::after{
+  content: "";
+  width: 116px;
+  height: 1px;
+  background: #BFC5C5;
+  margin-top: 8px;
+  margin-left: 11px;
+}
+
+.link-container{
+  display: flex;
+  flex-direction: row;
+}
+
+.azure-link{
+  font-family: Inter;
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: none;
+  color: #39A935;
+  background: transparent;
+  border: 0;
+  display: flex;
+}
+
+.azure-link:hover{
+  color: #30902D;
+}
+
+.azure-link:active{
+  color: #2D762F;
+}
+
+.main-background{
+  background: url("../resources/login-background.jpg");
+  background-repeat: repeat;
+  background-size:cover;
+  position: absolute;
+  width: 100%;
+  height: calc(50% + 52px);
+  left: 0;
+  top: 0;
+  z-index: -1;
+}
+
+.grid-container {
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+
+
 }
 
 .align-flex-center {
+  justify-content: center;
   align-items: center;
   flex: 1 1;
   display: flex;
@@ -29,10 +161,6 @@ form {
   flex-direction: column;
 }
 
-#external-account {
-  position: absolute;
-  margin-top: -55px;
-}
 
 .relative {
   position: relative;
@@ -40,10 +168,29 @@ form {
 
 .social-login-form {
   flex: unset;
+  position: absolute;
+  margin-top: -30px;
 }
 
 .social-buttons-container {
   justify-content: flex-end;
   display: flex;
-  padding-right: 12px;
+  /*padding-right: 12px;*/
+}
+
+.text-danger{
+  height: 16px;
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.summary-valid-container{
+  display: flex;
+  justify-content: center;
+  height: 16px;
+}
+
+.summary-valid-container ul{
+  padding: 0;
+  list-style-type: none;
 }

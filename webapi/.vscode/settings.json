@@ -1,0 +1,29 @@
+{
+  "eslint.enable": true,
+  "eslint.alwaysShowStatus": true,
+  "eslint.debug": true,
+  "eslint.format.enable": true,
+  "eslint.packageManager": "yarn",
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  
+  "[csharp]": {
+    "editor.formatOnType": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "csharpier.csharpier-vscode",
+  },
+
+  "npm-scripts.showStartNotification": false,
+  "dotnet-test-explorer.testProjectPath": "tests/**",
+  "git.pullTags": false,
+  "git.rebaseWhenSync": true,
+  "git.autoStash": true,
+  "git.branchPrefix": "feature/",
+  "git.fetchOnPull": true,
+  "git.showActionButton": {
+//    "sync": false
+  },
+  "git.showPushSuccessNotification": true,
+  "csharp.format.enable": true,
+  "files.autoSave": "onFocusChange"
+}

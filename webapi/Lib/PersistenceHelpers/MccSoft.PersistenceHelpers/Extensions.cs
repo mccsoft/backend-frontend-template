@@ -1,14 +1,11 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace MccSoft.PersistenceHelpers
+namespace MccSoft.PersistenceHelpers;
+
+public static class Extensions
 {
-    public static class Extensions
+    public static void RegisterRetryHelper(this IServiceCollection services)
     {
-        public static void RegisterRetryHelper(this IServiceCollection services)
-        {
-            services
-                .AddScoped(typeof(TransactionLogger<>))
-                .AddScoped(typeof(DbRetryHelper<,>));
-        }
-  }
+        services.AddScoped(typeof(TransactionLogger<>)).AddScoped(typeof(DbRetryHelper<,>));
+    }
 }

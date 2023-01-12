@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Builder;
 
-namespace MccSoft.TemplateApp.App.Middleware
+namespace MccSoft.TemplateApp.App.Middleware;
+
+public static class SignOutLockedUserMiddlewareExtensions
 {
-    public static class SignOutLockedUserMiddlewareExtensions
+    public static IApplicationBuilder UseSignOutLockedUser(this IApplicationBuilder builder)
     {
-        public static IApplicationBuilder UseSignOutLockedUser(this IApplicationBuilder builder)
-        {
-            return builder.UseMiddleware<SignOutLockedUserMiddleware>();
-        }
+        return builder.UseMiddleware<SignOutLockedUserMiddleware>();
     }
 }

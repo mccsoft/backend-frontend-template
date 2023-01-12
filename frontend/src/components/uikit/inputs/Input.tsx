@@ -24,6 +24,13 @@ export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
    * 'formInput' - input will have the standard width (as all form elements)
    */
   variant?: 'normal' | 'formInput';
+
+  /*
+   * This prop might be set if input is part of Autocomplete (DropDown/Combobox/etc).
+   * If we don't do this, `selectedValue` ends up as DOM attribute which isn't what we want.
+   * It might be better implemented by wrapping inputs that are used in Autocomplete, but it's less of a hassle like it is now.
+   */
+  selectedValue?: unknown;
 };
 
 export const Input = React.forwardRef<HTMLInputElement, Props>(function Input(
@@ -44,6 +51,7 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(function Input(
     endAdornmentClassname,
     variant,
     testId,
+    selectedValue,
     ...rest
   } = props;
   const isError = !!errorText;

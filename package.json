@@ -7,7 +7,9 @@
     "change-case": "4.1.2",
     "concurrently": "5.2.0",
     "copyfiles": "2.3.0",
+    "cpy-cli": "4.2.0",
     "cross-env": "7.0.3",
+    "json": "11.0.0",
     "node-replace": "0.3.3",
     "prettier": "2.6.2",
     "renamer": "4.0.0",
@@ -34,10 +36,12 @@
     "copy-frontend": "yarn copyfiles -u 2 \"frontend/build/**/*\" \"publish/wwwroot\" && yarn copyfiles -u 1 frontend/.env publish/wwwroot",
     "docker-build": "cross-env-shell docker build -t templateapp:latest templateapp:$npm_package_version -f publish/Dockerfile publish",
     "build-with-docker": "yarn build && yarn docker-build",
-    "build": "yarn build-dotnet && yarn build-frontend && yarn copy-frontend",
+    "build": "yarn prestart && yarn build-dotnet && yarn build-frontend && yarn copy-frontend",
+    "prestart": "yarn copy-translations-to-backend",
+    "copy-translations-to-backend": "yarn cpy frontend/public/dictionaries/* dictionaries_tmp/ --flat && yarn renamer --force --verbose -f \"/translation.(.*).json/\" -r '../webapi/src/MccSoft.TemplateApp.App/Dictionaries/$1/Frontend.json' './dictionaries_tmp/*'",
     "postinstall": "cd webapi && dotnet tool restore",
     "run-csharpier": "cd webapi && dotnet csharpier .",
     "run-prettier": "prettier -w ."
   },
-  "packageManager": "yarn@3.2.1"
+  "packageManager": "yarn@3.3.0"
 }

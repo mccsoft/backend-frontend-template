@@ -1,9 +1,8 @@
 using System;
 
-namespace MccSoft.TemplateApp.Http
+namespace MccSoft.TemplateApp.Http;
+
+public class SignInException : Exception
 {
-    public class SignInException : Exception
-    {
-        public SignInException(string stringContent) : base(stringContent) { }
-    }
+    public SignInException(string stringContent) : base(stringContent) { }
 }

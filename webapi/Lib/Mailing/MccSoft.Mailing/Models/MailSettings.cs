@@ -1,9 +1,8 @@
 using System;
 
-namespace MccSoft.Mailing.Models
+namespace MccSoft.Mailing.Models;
+
+public class MailSettings
 {
-    public class MailSettings
-    {
-        public Func<EmailModelBase, EmailTemplateType, string> EmailViewPathProvider { get; set; }
-    }
+    public Func<EmailModelBase, EmailTemplateType, string> EmailViewPathProvider { get; set; }
 }

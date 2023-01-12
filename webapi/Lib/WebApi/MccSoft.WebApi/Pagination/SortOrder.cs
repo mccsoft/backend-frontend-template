@@ -1,8 +1,7 @@
-﻿namespace MccSoft.WebApi.Pagination
+﻿namespace MccSoft.WebApi.Pagination;
+
+public enum SortOrder
 {
-    public enum SortOrder
-    {
-        Asc,
-        Desc
-    }
+    Asc,
+    Desc
 }

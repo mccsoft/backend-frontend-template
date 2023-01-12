@@ -4,58 +4,58 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MccSoft.HttpClientExtension
+namespace MccSoft.HttpClientExtension;
+
+/// <summary>
+/// Handler to add the Bearer Token into a Http-Request and perform refresh token operation if needed
+/// </summary>
+public class AuthenticationHandler : DelegatingHandler
 {
-    /// <summary>
-    /// Handler to add the Bearer Token into a Http-Request and perform refresh token operation if needed
-    /// </summary>
-    public class AuthenticationHandler : DelegatingHandler
+    private readonly ITokenHandler _tokenHandler;
+
+    private readonly SemaphoreSlim _refreshTokenSemaphore = new SemaphoreSlim(1);
+
+    public AuthenticationHandler(ITokenHandler tokenHandler, HttpClientHandler httpClientHandler)
+        : base(httpClientHandler ?? new HttpClientHandler())
     {
-        private readonly ITokenHandler _tokenHandler;
+        _tokenHandler = tokenHandler;
+    }
 
-        private readonly SemaphoreSlim _refreshTokenSemaphore = new SemaphoreSlim(1);
+    protected override async Task<HttpResponseMessage> SendAsync(
+        HttpRequestMessage request,
+        CancellationToken cancellationToken
+    )
+    {
+        var token = await _tokenHandler.GetAccessToken();
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await base.SendAsync(request, cancellationToken);
 
-        public AuthenticationHandler(ITokenHandler tokenHandler) : base(new HttpClientHandler())
-        {
-            _tokenHandler = tokenHandler;
-        }
-
-        protected override async Task<HttpResponseMessage> SendAsync(
-            HttpRequestMessage request,
-            CancellationToken cancellationToken
+        if (
+            response.StatusCode == HttpStatusCode.Unauthorized
+            || response.StatusCode == HttpStatusCode.Forbidden
         )
         {
-            var token = await _tokenHandler.GetAccessToken();
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var response = await base.SendAsync(request, cancellationToken);
-
-            if (
-                response.StatusCode == HttpStatusCode.Unauthorized
-                || response.StatusCode == HttpStatusCode.Forbidden
-            )
+            // only one Handler should refresh token at a time
+            await _refreshTokenSemaphore.WaitAsync(cancellationToken);
+            try
             {
-                // only one Handler should refresh token at a time
-                await _refreshTokenSemaphore.WaitAsync(cancellationToken);
-                try
+                // compare current token with initial one, and if it changed, reissue the request
+                var newToken = await _tokenHandler.GetAccessToken();
+                if (newToken != token)
                 {
-                    // compare current token with initial one, and if it changed, reissue the request
-                    var newToken = await _tokenHandler.GetAccessToken();
-                    if (newToken != token)
-                    {
-                        return await SendAsync(request, cancellationToken);
-                    }
+                    return await SendAsync(request, cancellationToken);
+                }
 
-                    token = await _tokenHandler.RefreshToken();
-                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                    response = await base.SendAsync(request, cancellationToken);
-                }
-                finally
-                {
-                    _refreshTokenSemaphore.Release();
-                }
+                token = await _tokenHandler.RefreshToken();
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                response = await base.SendAsync(request, cancellationToken);
             }
-
-            return response;
+            finally
+            {
+                _refreshTokenSemaphore.Release();
+            }
         }
+
+        return response;
     }
 }

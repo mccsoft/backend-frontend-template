@@ -10,12 +10,18 @@ export const RadioButton = React.forwardRef<HTMLInputElement, Props>(
   function RadioButton(props, ref) {
     const { title, ...rest } = props;
     const id =
-      props.name != undefined
+      props.id ?? props.name != undefined
         ? `uni-radio-${props.name}-${props.value}`
         : undefined;
     return (
       <div className={props.className}>
-        <input type="radio" ref={ref} {...rest} className={styles.radio} />
+        <input
+          type="radio"
+          ref={ref}
+          {...rest}
+          id={id}
+          className={styles.radio}
+        />
         <label className={styles.label} htmlFor={id}>
           {title}
         </label>

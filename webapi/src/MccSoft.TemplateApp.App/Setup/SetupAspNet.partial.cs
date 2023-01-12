@@ -12,5 +12,5 @@ public static partial class SetupAspNet
 
     static partial void UseProjectSpecifics(WebApplication app) { }
 
-    static partial void AddEndpoints(IEndpointRouteBuilder endpoints) { }
+    static partial void UseProjectSpecificEndpoints(WebApplication app) { }
 }

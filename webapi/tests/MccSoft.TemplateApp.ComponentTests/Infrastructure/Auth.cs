@@ -6,61 +6,60 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace MccSoft.TemplateApp.ComponentTests.Infrastructure
+namespace MccSoft.TemplateApp.ComponentTests.Infrastructure;
+
+public class TestAuthenticationOptions : AuthenticationSchemeOptions
 {
-    public class TestAuthenticationOptions : AuthenticationSchemeOptions
+    public ClaimsIdentity Identity { get; set; } =
+        new ClaimsIdentity(
+            new Claim[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Name, "test"),
+                new Claim("sub", "admin-should-be-replaced-by-user-id"),
+            },
+            "test"
+        );
+
+    public const string Scheme = "TestAuthenticationScheme";
+
+    public TestAuthenticationOptions()
     {
-        public ClaimsIdentity Identity { get; set; } =
-            new ClaimsIdentity(
-                new Claim[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
-                    new Claim(ClaimTypes.Name, "test"),
-                    new Claim("sub", "admin-should-be-replaced-by-user-id"),
-                },
-                "test"
-            );
-
-        public const string Scheme = "TestAuthenticationScheme";
-
-        public TestAuthenticationOptions()
-        {
-            ClaimsIssuer = "test";
-        }
+        ClaimsIssuer = "test";
     }
+}
 
-    public class TestAuthenticationHandler : AuthenticationHandler<TestAuthenticationOptions>
+public class TestAuthenticationHandler : AuthenticationHandler<TestAuthenticationOptions>
+{
+    public TestAuthenticationHandler(
+        IOptionsMonitor<TestAuthenticationOptions> options,
+        ILoggerFactory logger,
+        UrlEncoder encoder,
+        ISystemClock clock
+    ) : base(options, logger, encoder, clock) { }
+
+    protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        public TestAuthenticationHandler(
-            IOptionsMonitor<TestAuthenticationOptions> options,
-            ILoggerFactory logger,
-            UrlEncoder encoder,
-            ISystemClock clock
-        ) : base(options, logger, encoder, clock) { }
+        var authenticationTicket = new AuthenticationTicket(
+            new ClaimsPrincipal(Options.Identity),
+            new AuthenticationProperties(),
+            TestAuthenticationOptions.Scheme
+        );
 
-        protected override Task<AuthenticateResult> HandleAuthenticateAsync()
-        {
-            var authenticationTicket = new AuthenticationTicket(
-                new ClaimsPrincipal(Options.Identity),
-                new AuthenticationProperties(),
-                TestAuthenticationOptions.Scheme
-            );
-
-            return Task.FromResult(AuthenticateResult.Success(authenticationTicket));
-        }
+        return Task.FromResult(AuthenticateResult.Success(authenticationTicket));
     }
+}
 
-    public static class AuthenticationBuilderExtensions
+public static class AuthenticationBuilderExtensions
+{
+    public static AuthenticationBuilder AddTestAuthentication(
+        this AuthenticationBuilder builder,
+        Action<TestAuthenticationOptions> configureOptions
+    )
     {
-        public static AuthenticationBuilder AddTestAuthentication(
-            this AuthenticationBuilder builder,
-            Action<TestAuthenticationOptions> configureOptions
-        )
-        {
-            return builder.AddScheme<TestAuthenticationOptions, TestAuthenticationHandler>(
-                TestAuthenticationOptions.Scheme,
-                configureOptions
-            );
-        }
+        return builder.AddScheme<TestAuthenticationOptions, TestAuthenticationHandler>(
+            TestAuthenticationOptions.Scheme,
+            configureOptions
+        );
     }
 }

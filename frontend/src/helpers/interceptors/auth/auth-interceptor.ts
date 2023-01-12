@@ -19,6 +19,7 @@ import {
 import SuperTokensLock from 'browser-tabs-lock';
 import { useEffect, useState } from 'react';
 import { signOutRedirect } from 'pages/unauthorized/openid/openid-manager';
+import Logger from 'js-logger';
 
 /*
  * this is a local storage key that will store the AuthData structure (containing access_token and refresh_token)
@@ -53,7 +54,7 @@ export async function logOut() {
  */
 export function postServerLogOut() {
   setAuthDataVariable(null);
-  _logoutHandler();
+  _logoutHandler()?.catch((e) => Logger.error(e));
 }
 
 export function setAuthData(data: Omit<AuthData, 'claims'>) {

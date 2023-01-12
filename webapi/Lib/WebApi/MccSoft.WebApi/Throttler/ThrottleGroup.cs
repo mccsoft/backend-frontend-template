@@ -1,18 +1,17 @@
-﻿namespace MccSoft.WebApi.Throttler
+﻿namespace MccSoft.WebApi.Throttler;
+
+/// <summary>
+/// Request will be defined by such unique entity, called ThrottleGroup.
+/// </summary>
+public static class ThrottleGroup
 {
     /// <summary>
-    /// Request will be defined by such unique entity, called ThrottleGroup.
+    /// Identity field of authorized user.
     /// </summary>
-    public static class ThrottleGroup
-    {
-        /// <summary>
-        /// Identity field of authorized user.
-        /// </summary>
-        public const string Identity = nameof(Identity);
+    public const string Identity = nameof(Identity);
 
-        /// <summary>
-        /// IP address of client.
-        /// </summary>
-        public const string IpAddress = nameof(IpAddress);
-    }
+    /// <summary>
+    /// IP address of client.
+    /// </summary>
+    public const string IpAddress = nameof(IpAddress);
 }
