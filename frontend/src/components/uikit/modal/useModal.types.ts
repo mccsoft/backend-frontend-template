@@ -1,8 +1,10 @@
+import React from 'react';
 import { ButtonColor } from '../buttons/Button';
 
 export type UseModalOptions = {
+  id: string;
   title: string;
-  text: string;
+  text: string | React.ReactNode;
   okButtonText?: string;
 } & (
   | {
@@ -43,7 +45,7 @@ export type PromptOptions = {
 };
 export type MultiButtonOptions = {
   title: string;
-  text: string;
+  text: string | React.ReactNode;
   buttons: { id: string; text: string; color?: ButtonColor }[];
 };
 export type ModalContextType = {
