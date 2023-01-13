@@ -110,7 +110,10 @@ export const TimePicker: FC<TimePickerProps> = (props) => {
         isOptionEqualToValue={(item1, item2) =>
           item1?.timeInMills === item2?.timeInMills
         }
-        value={timeEntries.find((x) => x.timeInMills === timeInMills)}
+        value={
+          timeEntries.find((x) => x.timeInMills === timeInMills) ??
+          (timeInMills ? millsToTimeString(timeInMills) : undefined)
+        }
         errorText={errorText}
         onValueChanged={onChange}
         enableSearch={true}

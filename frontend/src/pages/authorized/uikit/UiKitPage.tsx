@@ -18,6 +18,7 @@ import { useModal } from '../../../components/uikit/modal/useModal';
 import { PopperExample } from './components/PopperExample';
 import { MultiSelectDropDownInput } from 'components/uikit/inputs/dropdown/MultiSelectDropDownInput';
 import { HookFormComboBoxInput } from '../../../components/uikit/inputs/dropdown/HookFormComboBoxInput';
+import { TimePicker } from 'components/uikit/inputs/date-time/TimePicker';
 
 type UiKitForm = {
   dropDown: ProductType;
@@ -142,6 +143,9 @@ export const UiKitPage: React.FC = () => {
             name={'timeInMilliseconds'}
             control={form.control}
           />
+        </Field>
+        <Field title={i18n.t('time')}>
+          <TimePicker timeInMills={120000} />
         </Field>
         <Button type={'submit'} title={i18n.t('submit_button_title')} />
       </form>
