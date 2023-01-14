@@ -26,10 +26,12 @@ import { useNavigate } from 'react-router';
 import { AppPagination } from 'components/uikit/pagination/AppPagination';
 import { MenuDirection } from '../../../components/uikit/menu/MenuDirection';
 import { emptyArray } from 'helpers/empty-array';
+import { useModal } from 'components/uikit/modal/useModal';
 
 export const ProductListPage: React.FC = () => {
   const i18n = useScopedTranslation('Page.Products.list');
   const navigate = useNavigate();
+  const modal = useModal();
   const [queryParams, setQueryParams] = useQueryParams({
     search: StringParam,
     ...pagingSortingQueryParams(2),
@@ -85,6 +87,16 @@ export const ProductListPage: React.FC = () => {
                           id: row.original.id,
                         }),
                       ),
+                  },
+                  {
+                    key: 'delete',
+                    text: 'Delete',
+                    isDanger: true,
+                    onClick: () =>
+                      modal.showConfirm({
+                        text: 'Are you sure you want to delete this product?',
+                        title: 'Delete confirmation',
+                      }),
                   },
                 ]}
                 direction={MenuDirection.bottomLeftEdge}

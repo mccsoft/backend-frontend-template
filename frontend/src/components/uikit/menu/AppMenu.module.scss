@@ -1,12 +1,12 @@
 @import '../../../styles/variables';
-.menu-item {
+.menuItem {
   padding: 8px 12px !important;
   line-height: 16px !important;
   font-size: 14px !important;
   background: white !important;
 }
 
-.menu-item:hover {
+.menuItem:hover {
   background: $primary-background !important;
 }
 
@@ -19,4 +19,15 @@
 
 .paper {
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.08) !important;
+}
+
+.deleteItem {
+  @extend .menuItem;
+  color: $danger !important;
+  span:hover {
+    background-color: $danger-background !important;
+  }
+}
+.deleteItem:hover {
+  background-color: $danger-background !important;
 }

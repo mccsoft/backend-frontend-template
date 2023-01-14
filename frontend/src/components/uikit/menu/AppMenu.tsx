@@ -12,6 +12,10 @@ export type AppMenuItem = {
   key?: Key | null | undefined;
   icon?: React.ReactNode;
   className?: string;
+  /*
+   * Some special styles are applied to 'danger' items (e.g. Delete)
+   */
+  isDanger?: boolean;
 };
 
 /*
@@ -61,7 +65,11 @@ export const AppMenu: React.FC<AppMenuProps> = (props) => {
         <MenuItem
           key={menuItem.key}
           onClick={menuItem.onClick}
-          className={clsx(menuItem.className, styles.menuItem)}
+          className={clsx(
+            menuItem.className,
+            styles.menuItem,
+            menuItem.isDanger && styles.deleteItem,
+          )}
         >
           {menuItem.icon}
           {menuItem.text}
