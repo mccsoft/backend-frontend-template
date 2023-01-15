@@ -45,11 +45,15 @@ stages:
             displayName: 'build frontend'
 
           - script: |
+              yarn frontend build-storybook
+            displayName: 'build storybook'
+
+          - script: |
               yarn build-dotnet
             displayName: 'build backend'
 
           - script: |
-              yarn copy-frontend
+              yarn copy-frontend && yarn copy-storybook
             displayName: 'copy frontend to backend'
 
           - template: ./build-import-meta-env.yml

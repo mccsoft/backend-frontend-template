@@ -34,6 +34,7 @@
     "build-dotnet": "rimraf publish && cross-env VERSION=\\\"/p:Version\\\"=\\\"$npm_package_version\\\" yarn build-dotnet-version",
     "build-frontend": "yarn frontend build",
     "copy-frontend": "yarn copyfiles -u 2 \"frontend/build/**/*\" \"publish/wwwroot\" && yarn copyfiles -u 1 frontend/.env publish/wwwroot",
+    "copy-storybook": "yarn copyfiles -u 2 \"frontend/storybook-static/**/*\" \"publish/wwwroot/storybook\"",
     "docker-build": "cross-env-shell docker build -t templateapp:latest templateapp:$npm_package_version -f publish/Dockerfile publish",
     "build-with-docker": "yarn build && yarn docker-build",
     "build": "yarn prestart && yarn build-dotnet && yarn build-frontend && yarn copy-frontend",

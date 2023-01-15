@@ -36,6 +36,8 @@ const frontendPortNumber = Math.round(Math.random() * 1000) + 3100;
 console.log(`FrontendPortNumber: ${frontendPortNumber}`);
 const backendPortNumber = Math.round(Math.random() * 1000) + 49000;
 console.log(`BackendPortNumber: ${backendPortNumber}`);
+const storybookPortNumber = Math.round(Math.random() * 1000) + 6006;
+console.log(`StorybookPortNumber: ${storybookPortNumber}`);
 
 const replacements = [
   { find: /MccSoft\./g, replace: `${companyName}.` },
@@ -77,6 +79,7 @@ const replacements = [
 
 await changeFrontendPortNumber(frontendPortNumber);
 await changeBackendPortNumber(backendPortNumber);
+await changeStorybookPortNumber(backendPortNumber);
 await changePasswordsInAppsettings();
 
 await fs.rename(
@@ -198,6 +201,16 @@ function changeBackendPortNumber(httpsPort) {
     replacement: `/input:https://localhost:${httpsPort}`,
     paths: ['./frontend/package.json'],
     silent: true,
+  });
+}
+
+function changeStorybookPortNumber(port) {
+  replace({
+    regex: /start-storybook -p \d+/g,
+    replacement: `start-storybook -p ${port}`,
+    paths: ['./frontend/package.json'],
+    silent: true,
+    recursive: true,
   });
 }
 
