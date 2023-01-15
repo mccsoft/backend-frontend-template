@@ -92,8 +92,8 @@ export const ProductListPage: React.FC = () => {
                     key: 'delete',
                     text: 'Delete',
                     isDanger: true,
-                    onClick: () =>
-                      modal.showConfirm({
+                    onClick: async () =>
+                      await modal.showConfirm({
                         text: 'Are you sure you want to delete this product?',
                         title: 'Delete confirmation',
                       }),

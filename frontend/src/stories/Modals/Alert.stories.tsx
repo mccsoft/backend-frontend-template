@@ -46,13 +46,15 @@ export const TwoModals = (props: AlertOptions) => {
     <Button
       title="Click me"
       onClick={async () => {
-        modal.showAlert({
-          ...props,
-          text:
-            props.text +
-            'asdasdshdagfjashgdfjkagsdjkfaghdkjfaghsdjfads asdkg fajsdgfjadg fjkagd fjha',
-        });
-        modal.showAlert(props);
+        await Promise.all([
+          modal.showAlert({
+            ...props,
+            text:
+              props.text +
+              'asdasdshdagfjashgdfjkagsdjkfaghdkjfaghsdjfads asdkg fajsdgfjadg fjkagd fjha',
+          }),
+          modal.showAlert(props),
+        ]);
       }}
     />
   );
