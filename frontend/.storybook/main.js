@@ -19,7 +19,11 @@ module.exports = {
   features: {
     storyStoreV7: true,
   },
-  async viteFinal(config) {
+  async viteFinal(config, { configType }) {
+    if (configType === 'PRODUCTION') {
+      config.base = './';
+    }
+
     return mergeConfig(config, {
       plugins: [tsconfigPaths(), svgrPlugin()],
       css: {
