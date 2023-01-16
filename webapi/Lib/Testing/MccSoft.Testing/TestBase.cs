@@ -310,11 +310,14 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
          * Register your app-specific services in RegisterServices method
          */
 
-        serviceCollection
-            .AddScoped(x => CreateDbContext())
-            .AddSingleton<Func<TDbContext>>(CreateDbContext)
-            .AddSingleton(_builder.Options)
-            .RegisterRetryHelper();
+        if (_builder != null)
+        {
+            serviceCollection
+                .AddScoped(x => CreateDbContext())
+                .AddSingleton<Func<TDbContext>>(CreateDbContext)
+                .AddSingleton(_builder.Options)
+                .RegisterRetryHelper();
+        }
 
         serviceCollection
             .AddSingleton<IStringLocalizer>(new DummyStringLocalizer())
