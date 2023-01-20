@@ -46,7 +46,8 @@
     },
     "dialog": {
       "ok_button": "Ok",
-      "cancel_button": "Cancel"
+      "cancel_button": "Cancel",
+      "error_title": "Error"
     }
   },
   "suspense": {

@@ -4,8 +4,9 @@ import { ButtonColor } from '../buttons/Button';
 export type UseModalOptions = {
   id: string;
   title: string;
-  text: string | React.ReactNode;
+  text: React.ReactNode;
   okButtonText?: string;
+  okButtonColor?: ButtonColor;
 } & (
   | {
       type: 'alert';
@@ -24,31 +25,44 @@ export type UseModalOptions = {
       resolve: (result: string | null) => void;
     })
 );
+export type ErrorOptions = {
+  title?: string;
+  text: React.ReactNode;
+  okButtonText?: string;
+  okButtonColor?: ButtonColor;
+};
+
 export type AlertOptions = {
   title: string;
-  text: string;
+  text: React.ReactNode;
   okButtonText?: string;
+  okButtonColor?: ButtonColor;
 };
 export type ConfirmOptions = {
   title: string;
-  text: string;
+  text: React.ReactNode;
   okButtonText?: string;
+  okButtonColor?: ButtonColor;
   cancelButtonText?: string;
+  cancelButtonColor?: ButtonColor;
 };
 export type PromptOptions = {
   title: string;
-  text: string;
+  text: React.ReactNode;
   defaultValue: string;
   fieldName: string;
   okButtonText?: string;
+  okButtonColor?: ButtonColor;
   cancelButtonText?: string;
+  cancelButtonColor?: ButtonColor;
 };
 export type MultiButtonOptions = {
   title: string;
-  text: string | React.ReactNode;
+  text: React.ReactNode;
   buttons: { id: string; text: string; color?: ButtonColor }[];
 };
 export type ModalContextType = {
+  showError: (options: ErrorOptions) => Promise<void>;
   showAlert: (options: AlertOptions) => Promise<void>;
   showConfirm: (options: ConfirmOptions) => Promise<boolean>;
   showPrompt: (options: PromptOptions) => Promise<string | null>;

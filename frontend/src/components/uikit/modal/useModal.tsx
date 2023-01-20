@@ -18,6 +18,7 @@ export const useModal = () => {
 
 export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
   const [modals, setModals] = useState<UseModalOptions[]>([]);
+  const i18n = useScopedTranslation('uikit.dialog');
   const addModal = useCallback(
     (modal: Omit<UseModalOptions, 'id'>, promise: Promise<unknown>) => {
       const id = createId();
@@ -36,6 +37,24 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
   );
   const contextValue: ModalContextType = useMemo(() => {
     return {
+      showError: async (options) => {
+        const promise = new Promise<void>((resolve, reject) => {
+          // we use setTimout to be able to access the promise
+          setTimeout(() =>
+            addModal(
+              {
+                type: 'alert',
+                title: i18n.t('error_title'),
+                ...options,
+                resolve: resolve,
+              },
+              promise,
+            ),
+          );
+        });
+        return promise;
+      },
+
       showAlert: async (options) => {
         const promise = new Promise<void>((resolve, reject) => {
           // we use setTimout to be able to access the promise
@@ -101,7 +120,8 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
         return promise;
       },
     };
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [addModal, i18n.i18n.language]);
 
   return (
     <ModalContext.Provider value={contextValue}>
@@ -188,14 +208,18 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
                 {options.type === 'confirm' || options.type === 'prompt' ? (
                   <Button
                     className={styles.button}
-                    color={ButtonColor.Secondary}
+                    color={
+                      options.cancelButtonColor ?? options.okButtonColor
+                        ? ButtonColor.Primary
+                        : ButtonColor.Secondary
+                    }
                     title={options.cancelButtonText ?? i18n.t('cancel_button')}
                     onClick={onClose}
                   />
                 ) : null}
                 <Button
                   className={styles.button}
-                  color={ButtonColor.Default}
+                  color={options.okButtonColor ?? ButtonColor.Default}
                   type={'submit'}
                   title={options.okButtonText ?? i18n.t('ok_button')}
                   onClick={async () => {
