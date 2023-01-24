@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using MccSoft.IntegreSql.EF.DatabaseInitialization;
@@ -16,7 +17,7 @@ namespace MccSoft.TemplateApp.App.Tests;
 /// <summary>
 /// The base class for application service test classes.
 /// </summary>
-public class AppServiceTestBase : TestBase<TemplateAppDbContext>
+public class AppServiceTestBase : TestBase<TemplateAppDbContext>, IDisposable
 {
     protected User _defaultUser;
 

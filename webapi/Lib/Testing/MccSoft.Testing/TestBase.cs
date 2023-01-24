@@ -37,7 +37,7 @@ namespace MccSoft.Testing;
 /// (the state of objects loaded in a separate DbContext will be incorrect, if SaveChanges is
 /// forgotten).
 /// </remarks>
-public abstract class TestBase<TDbContext> where TDbContext : DbContext
+public abstract class TestBase<TDbContext> where TDbContext : DbContext, IDisposable
 {
     protected string ConnectionString { get; private set; }
     public ITestOutputHelper OutputHelper { get; set; }
@@ -258,17 +258,19 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
         out IServiceProvider serviceProvider
     ) where TService : class
     {
-        serviceProvider = CreateServiceProvider(configureRegistrations);
+        serviceProvider = CreateServiceProvider<TService>(configureRegistrations);
         var scope = serviceProvider.CreateScope();
         return scope.ServiceProvider.GetRequiredService<TService>();
     }
 
-    protected virtual IServiceProvider CreateServiceProvider(
+    protected virtual IServiceProvider CreateServiceProvider<TService>(
         Action<IServiceCollection> configureRegistrations
     )
     {
         var serviceCollection = CreateServiceCollection();
         configureRegistrations?.Invoke(serviceCollection);
+        // Register service itself in case of service not being registered directly without interface.
+        serviceCollection.AddSingleton(typeof(TService));
 
         _serviceProvider = serviceCollection.BuildServiceProvider();
         return _serviceProvider;
