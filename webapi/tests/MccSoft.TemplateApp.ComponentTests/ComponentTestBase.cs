@@ -100,7 +100,7 @@ public class ComponentTestBase : TestBase<TemplateAppDbContext>, IDisposable
         CreateService<IOptionsMonitor<TestAuthenticationOptions>>()
             .Get(TestAuthenticationOptions.Scheme);
 
-    protected override IServiceProvider CreateServiceProvider(
+    protected override IServiceProvider CreateServiceProvider<TService>(
         Action<IServiceCollection> configureRegistrations
     )
     {
@@ -148,7 +148,9 @@ public class ComponentTestBase : TestBase<TemplateAppDbContext>, IDisposable
         // services.RemoveRegistration<TService>();
 
         services.AddSingleton(
-            (_backgroundJobClient = HangfireMock.CreateHangfireMock(() => _serviceProvider)).Object
+            (
+                _backgroundJobClient = HangfireMock.CreateHangfireMock(() => TestServer.Services)
+            ).Object
         );
     }
 
