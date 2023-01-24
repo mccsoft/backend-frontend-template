@@ -5671,7 +5671,8 @@ __metadata:
     redux-devtools-extension: 2.13.9
     redux-persist: 6.0.0
     replace: 1.2.2
-    rollup-plugin-visualizer: 5.8.3
+    rollup: 3.10.1
+    rollup-plugin-visualizer: 5.9.0
     sass: 1.57.1
     superjson: 1.12.1
     throttle-debounce: 3.0.1
@@ -18423,11 +18424,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup-plugin-visualizer@npm:5.8.3":
-  version: 5.8.3
-  resolution: "rollup-plugin-visualizer@npm:5.8.3"
+"rollup-plugin-visualizer@npm:5.9.0":
+  version: 5.9.0
+  resolution: "rollup-plugin-visualizer@npm:5.9.0"
   dependencies:
     open: ^8.4.0
+    picomatch: ^2.3.1
     source-map: ^0.7.4
     yargs: ^17.5.1
   peerDependencies:
@@ -18437,7 +18439,21 @@ __metadata:
       optional: true
   bin:
     rollup-plugin-visualizer: dist/bin/cli.js
-  checksum: 0ed4b4b49be8c38fa4820190286daf6f94446a05190a6f1932f2718cb8d7e2a1afacc9f94bf75934087ec856a634a5c9355c078d77482a5796465d15deb988c9
+  checksum: 362d4fac0295c14bd205dbc85c20c31f4b6c47604868da21d9565ed47e0333759f08b9fe0acb82f78221f5173ea01e4eb70d47351eb6012216afe71b5492ed5f
+  languageName: node
+  linkType: hard
+
+"rollup@npm:3.10.1":
+  version: 3.10.1
+  resolution: "rollup@npm:3.10.1"
+  dependencies:
+    fsevents: ~2.3.2
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  bin:
+    rollup: dist/bin/rollup
+  checksum: 69c2bba82833f2977db08a5c10da651e0668f1335652499543c297633eb44eaf1473575973025a07cffd78903be8d10626e5abac063e49fb47d3f7dd8c18bf00
   languageName: node
   linkType: hard
 
