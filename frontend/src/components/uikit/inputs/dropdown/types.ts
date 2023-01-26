@@ -152,7 +152,7 @@ export type DropDownInputProps<
    *
    * If you do not want this feature, you could set this flag to true.
    */
-  disableAutomaticResetAfterOnValueChanged: boolean;
+  disableAutomaticResetAfterOnValueChanged?: boolean;
 };
 
 export type PropertyAccessor<T> = ((option: T) => string | number) | keyof T;

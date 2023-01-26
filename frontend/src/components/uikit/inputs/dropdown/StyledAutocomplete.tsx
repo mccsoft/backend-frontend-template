@@ -148,6 +148,9 @@ export function StyledAutocomplete<
         const newSelectedValue = props.options.find((x) =>
           isOptionEqualToValue(x, props.value as any),
         );
+        // we need deep equality check here, because `options` might be updated when query is refreshed
+        // but selected value was not yet fully updated
+        // (sometimes fails in scenario of using DropDown custom action `Add`)
         if (newSelectedValue && !equal(newSelectedValue, props.value)) {
           props.onChange?.(
             {} as any,

@@ -69,7 +69,7 @@ export function DropDownInput<
       multiple={false}
       value={props.value as any}
       onChange={onChange}
-      control={mergeRefs([controlRef, props.control!])}
+      control={controlRef}
     />
   );
 }
