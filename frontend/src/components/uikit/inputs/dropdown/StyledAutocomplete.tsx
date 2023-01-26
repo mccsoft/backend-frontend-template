@@ -70,7 +70,7 @@ export function StyledAutocomplete<
     itemSize: props.itemSize ?? (props.variant === 'formInput' ? 40 : 32),
     InputComponent: props.renderInput ?? (props.isSearch ? SearchInput : Input),
   };
-  useImperativeHandle(props.control, () => {
+  useImperativeHandle(props.actions, () => {
     return {
       blur() {
         onBlurRef.current?.(null!);
