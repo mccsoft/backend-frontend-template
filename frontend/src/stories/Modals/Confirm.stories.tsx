@@ -19,7 +19,7 @@ const StoryComponent = (props: ConfirmOptions) => {
 export default {
   title: 'Example/Modal/Confirm',
   component: StoryComponent,
-  args: {},
+  args: {} as Partial<React.ComponentProps<typeof StoryComponent>>,
   parameters: {
     controls: {
       exclude: [...defaultExclude] as (keyof React.ComponentProps<
@@ -29,9 +29,9 @@ export default {
   },
 } as ComponentMeta<typeof StoryComponent>;
 
-const Template: ComponentStory<typeof StoryComponent> = (args) => (
-  <StoryComponent {...args} />
-);
+const Template: ComponentStory<typeof StoryComponent> = (
+  args: React.ComponentProps<typeof StoryComponent>,
+) => <StoryComponent {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {

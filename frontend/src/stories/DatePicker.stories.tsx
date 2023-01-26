@@ -7,7 +7,7 @@ const StoryComponent = DatePicker;
 export default {
   title: 'Example/DatePicker',
   component: StoryComponent,
-  args: {},
+  args: {} as Partial<React.ComponentProps<typeof StoryComponent>>,
   parameters: {
     controls: {
       exclude: [
@@ -21,9 +21,9 @@ export default {
   },
 } as ComponentMeta<typeof StoryComponent>;
 
-const Template: ComponentStory<typeof StoryComponent> = (args) => (
-  <StoryComponent {...args} />
-);
+const Template: ComponentStory<typeof StoryComponent> = (
+  args: React.ComponentProps<typeof StoryComponent>,
+) => <StoryComponent {...args} />;
 
 export const Default = Template.bind({});
 

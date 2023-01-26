@@ -1,7 +1,12 @@
 import * as React from 'react';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { mergeRefs } from 'react-merge-refs';
 import { StyledAutocomplete } from './StyledAutocomplete';
-import { DropDownInputProps, StyledAutocompleteProps } from './types';
+import type {
+  DropDownInputProps,
+  StyledAutocompleteControl,
+  StyledAutocompleteProps,
+} from './types';
 
 export function DropDownInput<
   T,
@@ -9,6 +14,8 @@ export function DropDownInput<
   UseIdAsValue extends boolean | undefined = undefined,
 >(props: DropDownInputProps<T, Required, UseIdAsValue>) {
   const { onValueChanged, ...rest } = props;
+  const onValueChanged_ValueRef = useRef(props.value);
+
   const onChange: StyledAutocompleteProps<
     T,
     false,
@@ -16,16 +23,53 @@ export function DropDownInput<
     false
   >['onChange'] = useMemo(
     () => (e, item) => {
-      onValueChanged(item as any);
+      const result = onValueChanged(item as any, {
+        cancel: () => {
+          controlRef.current?.blur();
+        },
+      });
+      if (!props.disableAutomaticResetAfterOnValueChanged) {
+        Promise.resolve(result)
+          .then(() => {
+            onValueChanged_ValueRef.current = item as any;
+            setResetValueIfUnchangedAfterCallingOnValueChanged(
+              new Date().getTime(),
+            );
+          })
+          .catch((ex: any) => console.error(ex));
+      }
     },
     [onValueChanged],
   );
+
+  const [
+    resetValueIfUnchangedAfterCallingOnValueChanged,
+    setResetValueIfUnchangedAfterCallingOnValueChanged,
+  ] = useState(0);
+  useEffect(
+    function resetValueIfUnchangedAfterCallingOnValueChanged() {
+      /*
+       * Use case: user selected something in DropDown, we've shown a confirmation like 'Are you sure you want to change the value?' and user said No.
+       * In this case we need to revert the value in DropDown.
+       * But technically `value` in the state wasn't yet changed, so there's nothing to revert.
+       *
+       * To overcome this, we verify that if `props.value` wasn't changed after calling `onValueChanged`, we reset the value in DropDown.
+       */
+      if (props.value != onValueChanged_ValueRef.current) {
+        controlRef.current?.blur();
+      }
+    },
+    [resetValueIfUnchangedAfterCallingOnValueChanged],
+  );
+
+  const controlRef = useRef<StyledAutocompleteControl>(null);
   return (
     <StyledAutocomplete<T, false, Required, false>
       {...rest}
       multiple={false}
       value={props.value as any}
       onChange={onChange}
+      control={mergeRefs([controlRef, props.control!])}
     />
   );
 }

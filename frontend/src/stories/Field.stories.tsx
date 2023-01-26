@@ -10,7 +10,7 @@ export default {
   component: StoryComponent,
   args: {
     title: 'Field',
-  },
+  } as Partial<React.ComponentProps<typeof StoryComponent>>,
   argTypes: {
     id: {
       control: false,
@@ -25,7 +25,9 @@ export default {
   },
 } as ComponentMeta<typeof StoryComponent>;
 
-const Template: ComponentStory<typeof StoryComponent> = (args) => (
+const Template: ComponentStory<typeof StoryComponent> = (
+  args: React.ComponentProps<typeof StoryComponent>,
+) => (
   <StoryComponent {...args}>
     <Input />
   </StoryComponent>

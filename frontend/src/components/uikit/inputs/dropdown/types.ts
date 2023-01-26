@@ -8,7 +8,9 @@ export interface CustomOption {
   label: string;
   onClick: () => void;
 }
-
+export type StyledAutocompleteControl = {
+  blur: () => void;
+};
 export type StyledAutocompleteProps<
   T,
   Multiple extends boolean | undefined = undefined,
@@ -18,6 +20,7 @@ export type StyledAutocompleteProps<
   AutocompleteProps<T, Multiple, Required, FreeSolo>,
   'disableClearable' | 'renderInput' | 'getOptionLabel'
 > & {
+  control?: React.RefObject<StyledAutocompleteControl>;
   /*
    * Defines the text for the option.
    * Could be either a function (as in default Autocomplete) or a property name.
@@ -130,8 +133,8 @@ export type DropDownInputProps<
   'onChange' | 'value'
 > & {
   onValueChanged: Required extends true
-    ? (newSelectedOption: T) => void
-    : (newSelectedOption: T | null) => void;
+    ? (newSelectedOption: T, event: { cancel: () => void }) => unknown
+    : (newSelectedOption: T | null, event: { cancel: () => void }) => unknown;
 
   /*
    * If true, we assume that `value` field contains the result of `idFunction` of the option.
@@ -142,6 +145,14 @@ export type DropDownInputProps<
   value: UseIdAsValue extends true
     ? string | number | undefined | null
     : StyledAutocompleteProps<T, false, Required, false>['value'];
+
+  /*
+   * By default after calling `onValueChanged` we check if the value in `props` was set to a changed value or not.
+   * If it's not set, we reset the value in DropDown to the value it had before.
+   *
+   * If you do not want this feature, you could set this flag to true.
+   */
+  disableAutomaticResetAfterOnValueChanged: boolean;
 };
 
 export type PropertyAccessor<T> = ((option: T) => string | number) | keyof T;

@@ -3,7 +3,7 @@ import { SearchInput } from './SearchInput';
 import clsx from 'clsx';
 import equal from 'fast-deep-equal';
 import * as React from 'react';
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useImperativeHandle, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as ArrowDownIcon } from 'assets/icons/arrow-down.svg';
 
@@ -70,6 +70,13 @@ export function StyledAutocomplete<
     itemSize: props.itemSize ?? (props.variant === 'formInput' ? 40 : 32),
     InputComponent: props.renderInput ?? (props.isSearch ? SearchInput : Input),
   };
+  useImperativeHandle(props.control, () => {
+    return {
+      blur() {
+        onBlurRef.current?.(null!);
+      },
+    };
+  });
   const classes: Partial<AutocompleteClasses> = useMemo(
     () => ({
       ...props.classes,
