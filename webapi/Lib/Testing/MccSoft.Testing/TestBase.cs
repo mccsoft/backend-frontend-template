@@ -353,7 +353,7 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
         var configurationBuilder = new ConfigurationBuilder();
         configurationBuilder
             .AddJsonFile("appsettings.json", true)
-            .AddJsonFile("appsettings.test.json", true)
+            .AddJsonFile("appsettings.Test.json", true)
             .AddInMemoryCollection(new Dictionary<string, string>() { });
         var environment = new Mock<IWebHostEnvironment>().SetupAllProperties();
         environment.Object.EnvironmentName = "Test";
