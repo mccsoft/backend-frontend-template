@@ -2,6 +2,7 @@
 using FluentAssertions;
 using MccSoft.WebApi.Patching;
 using MccSoft.WebApi.Patching.Models;
+using MccSoft.WebApi.Serialization;
 using Xunit;
 
 namespace MccSoft.WebApi.Tests.Patching;
@@ -33,7 +34,7 @@ public class PatchingTests
     [Fact]
     public void Simple()
     {
-        var result = JsonSerializer.Deserialize<PatchDto1>(
+        var result = DefaultJsonSerializer.Deserialize<PatchDto1>(
             "{\"Qwe\": \"zxc\"}",
             _deserializationOptions
         )!;

@@ -29,12 +29,6 @@ public static partial class SetupAspNet
             options.Providers.Add<GzipCompressionProvider>();
         });
 
-        builder.Services.Configure<JsonOptions>(options =>
-        {
-            options.JsonSerializerOptions.Converters.Add(new PatchRequestConverterFactory());
-            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-        });
-
         services.AddControllers(
             (options) =>
             {

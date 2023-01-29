@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using MccSoft.LowLevelPrimitives;
 using MccSoft.TemplateApp.Domain;
+using MccSoft.WebApi.Serialization;
 using Microsoft.AspNetCore.Identity;
 
 namespace MccSoft.TemplateApp.App.Middleware;
@@ -30,7 +31,7 @@ public class SignOutLockedUserMiddleware
                 httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 httpContext.Response.ContentType = "application/json";
                 await httpContext.Response.WriteAsync(
-                    JsonSerializer.Serialize(
+                    DefaultJsonSerializer.Serialize(
                         new
                         {
                             Message = user == null

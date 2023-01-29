@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using MccSoft.Mailing;
 using MccSoft.TemplateApp.App.Views.Emails.Example;
+using MccSoft.WebApi.Serialization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -50,6 +51,6 @@ public class TestDataController
     [Route("formdata")]
     public string FormData([FromForm] MyFormData dto)
     {
-        return JsonSerializer.Serialize(dto);
+        return DefaultJsonSerializer.Serialize(dto);
     }
 }
