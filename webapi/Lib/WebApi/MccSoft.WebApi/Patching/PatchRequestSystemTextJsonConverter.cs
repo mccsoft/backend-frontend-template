@@ -29,12 +29,6 @@ public class PatchRequestConverter : JsonConverter<IPatchRequest>
     public override bool CanConvert(Type typeToConvert) =>
         typeof(IPatchRequest).IsAssignableFrom(typeToConvert);
 
-    private static MethodInfo _getTypeInfoMethod = typeof(JsonSerializer).GetMethod(
-        "GetTypeInfo",
-        BindingFlags.Static | BindingFlags.NonPublic,
-        new[] { typeof(JsonSerializerOptions), typeof(Type) }
-    );
-
     internal PatchRequestConverter(Type type)
     {
         _type = type;
@@ -57,7 +51,10 @@ public class PatchRequestConverter : JsonConverter<IPatchRequest>
                     | BindingFlags.SetProperty
                     | BindingFlags.GetProperty
             )
-            .ToDictionary(p => options.PropertyNamingPolicy?.ConvertName(p.Name) ?? p.Name);
+            .ToDictionary(
+                p =>
+                    options.PropertyNamingPolicy?.ConvertName(p.Name)?.ToLower() ?? p.Name.ToLower()
+            );
 
         while (reader.Read())
             switch (reader.TokenType)
@@ -66,26 +63,42 @@ public class PatchRequestConverter : JsonConverter<IPatchRequest>
                     return patchRequest;
 
                 case JsonTokenType.PropertyName:
-                    var property = properties[reader.GetString()!];
+                    var propertyName = reader.GetString()!.ToLower();
+
                     reader.Read();
 
-                    var value = JsonSerializer.Deserialize(
-                        ref reader,
-                        property.PropertyType,
-                        options
-                    );
+                    if (properties.TryGetValue(propertyName, out var property))
+                    {
+                        var value = JsonSerializer.Deserialize(
+                            ref reader,
+                            property.PropertyType,
+                            options
+                        );
 
-                    property.SetValue(patchRequest, value);
-                    patchRequest.SetHasProperty(property.Name);
+                        property.SetValue(patchRequest, value);
+                        patchRequest.SetHasProperty(property.Name);
+                    }
                     continue;
             }
 
         throw new JsonException();
     }
 
+    private static JsonSerializerOptions? _writeOptions = null;
+
     public override void Write(
         Utf8JsonWriter writer,
         IPatchRequest value,
         JsonSerializerOptions options
-    ) => JsonSerializer.Serialize(writer, value, value.GetType(), options);
+    )
+    {
+        if (_writeOptions == null)
+        {
+            _writeOptions = new(options);
+            _writeOptions.Converters.Remove(
+                _writeOptions.Converters.First(x => x is PatchRequestConverterFactory)
+            );
+        }
+        JsonSerializer.Serialize(writer, value, value.GetType(), _writeOptions);
+    }
 }
