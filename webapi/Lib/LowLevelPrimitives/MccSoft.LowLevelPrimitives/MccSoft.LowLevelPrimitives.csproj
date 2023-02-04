@@ -17,8 +17,4 @@
     <ProjectReference Include="..\..\Logging\MccSoft.Logging\MccSoft.Logging.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Serialization" />
-  </ItemGroup>
-
 </Project>

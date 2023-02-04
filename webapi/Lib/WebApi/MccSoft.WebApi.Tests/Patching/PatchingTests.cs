@@ -34,7 +34,7 @@ public class PatchingTests
     [Fact]
     public void Simple()
     {
-        var result = DefaultJsonSerializer.Deserialize<PatchDto1>(
+        var result = JsonSerializer.Deserialize<PatchDto1>(
             "{\"Qwe\": \"zxc\"}",
             _deserializationOptions
         )!;

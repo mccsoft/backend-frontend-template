@@ -109,16 +109,16 @@ public partial class SetupAudit
                                 auditLog.Action = entry.Action;
                                 auditLog.FullKey = JsonSerializer.SerializeToDocument(
                                     entry.PrimaryKey,
-                                    SystemTextJsonSerializerSetup.GlobalSerializationOptions
+                                    DefaultJsonSerializer.SerializationOptions
                                 );
                                 auditLog.Key = entry.PrimaryKey.Values.FirstOrDefault()?.ToString();
                                 auditLog.Change = JsonSerializer.SerializeToDocument(
                                     entry.Changes?.ToDictionary(x => x.ColumnName, x => x.NewValue),
-                                    SystemTextJsonSerializerSetup.GlobalSerializationOptions
+                                    DefaultJsonSerializer.SerializationOptions
                                 );
                                 auditLog.Actual = JsonSerializer.SerializeToDocument(
                                     entry.ColumnValues,
-                                    SystemTextJsonSerializerSetup.GlobalSerializationOptions
+                                    DefaultJsonSerializer.SerializationOptions
                                 );
                                 Dictionary<string, object> old = entry.ColumnValues.ToDictionary(
                                     x => x.Key,
@@ -130,7 +130,7 @@ public partial class SetupAudit
                                         ? null
                                         : JsonSerializer.SerializeToDocument(
                                             old,
-                                            SystemTextJsonSerializerSetup.GlobalSerializationOptions
+                                            DefaultJsonSerializer.SerializationOptions
                                         );
                             }
                         )
