@@ -6,7 +6,7 @@ steps:
       packageType: sdk
       version: 7.x
 
-  - template: ./azure-pipelines-cache-template.yml
+  - template: ./shared/azure-pipelines-cache-template.yml
 
   - script: |
       yarn typecheck

@@ -44,9 +44,15 @@ stages:
               yarn build-frontend
             displayName: 'build frontend'
 
+          - publish: './frontend/build'
+            artifact: 'frontend'
+
           - script: |
               yarn frontend build-storybook
             displayName: 'build storybook'
+
+          - publish: './frontend/storybook-static'
+            artifact: 'storybook'
 
           - script: |
               yarn build-dotnet
@@ -111,6 +117,16 @@ stages:
 
           - publish: './scripts/deploy'
             artifact: 'scripts'
+
+  - stage: UI_Tests
+    jobs:
+      - job: UI_Tests
+        pool:
+          vmImage: 'ubuntu-latest'
+        dependsOn:
+          - Build
+        steps:
+          - template: ./tests/azure-pipelines-storybook-tests.yml
 
   - stage: DeployToDev
     dependsOn: Build

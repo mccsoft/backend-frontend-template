@@ -1,8 +1,7 @@
 steps:
   - task: NodeTool@0
     inputs:
-      versionSpec: '16.x'
-    displayName: 'Install Node.js'
+      versionSpec: '18.x'
 
   - task: UseDotNet@2
     inputs:
@@ -26,9 +25,16 @@ steps:
 
   - task: Cache@2
     inputs:
-      key: 'node_modules|frontend|$(Agent.OS)|./yarn.lock'
+      key: 'node_modules3|frontend|$(Agent.OS)|./yarn.lock'
       path: $(Build.SourcesDirectory)/frontend/node_modules
-    displayName: Cache frontend npm packages
+    displayName: Cache npm packages
+    continueOnError: true
+
+  - task: Cache@2
+    inputs:
+      key: 'node_modules3|e2e|$(Agent.OS)|./yarn.lock'
+      path: $(Build.SourcesDirectory)/e2e/node_modules
+    displayName: Cache npm packages
     continueOnError: true
 
   - script: |

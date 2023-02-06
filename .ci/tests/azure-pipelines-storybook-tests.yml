@@ -1,0 +1,19 @@
+steps:
+  - checkout: self
+    fetchDepth: 1
+    submodules: true
+
+  - template: ../shared/azure-pipelines-cache-template.yml
+
+  - task: DownloadPipelineArtifact@2
+    inputs:
+      artifact: 'storybook'
+      path: './storybook'
+
+  - script: |
+      npx http-server ./storybook/storybook -p 6006
+    displayName: 'run storybook tests'
+
+  - script: |
+      yarn workspace e2e test
+    displayName: 'run storybook tests'
