@@ -1,5 +1,13 @@
 ﻿# Changelog
 
+### 2023-02-06 Playwright with Storybook testing
+
+End-to-end tests using Playwright were introduced to the project (check out [e2e](./e2e) folder). These tests also include screenshot testing for all Storybook stories.
+
+### 2023-01-16 Storybook
+
+Storybook was added to the project, giving the ability to play with ui-kit components in an isolated environment
+
 ### 2022-12-04 [Log] attribute
 
 Implement logging of starting/finishing the method with AOP `[Log]` attribute.

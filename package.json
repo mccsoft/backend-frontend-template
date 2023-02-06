@@ -18,7 +18,8 @@
     "yargs": "17.0.1"
   },
   "workspaces": [
-    "frontend"
+    "frontend",
+    "e2e"
   ],
   "scripts": {
     "typecheck": "yarn frontend typecheck",

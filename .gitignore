@@ -367,3 +367,4 @@ fabric.properties
 webapi/src/MccSoft.TemplateApp.App/wwwroot/css/frontend.css
 webapi/src/MccSoft.TemplateApp.App/wwwroot/css/frontend.css.map
 frontend/storybook-static
+e2e/.env.local

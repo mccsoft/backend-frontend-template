@@ -3693,6 +3693,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@playwright/test@npm:1.30.0":
+  version: 1.30.0
+  resolution: "@playwright/test@npm:1.30.0"
+  dependencies:
+    "@types/node": "*"
+    playwright-core: 1.30.0
+  bin:
+    playwright: cli.js
+  checksum: 777432ac9cf3d0341fcd8dd265cb4c0775619d0ef48252b32a7c4d632d8038449756ec34bec873828cadbc08ba634e81176cb193304d34e699472771b7fb4d1e
+  languageName: node
+  linkType: hard
+
 "@pmmmwh/react-refresh-webpack-plugin@npm:^0.5.3":
   version: 0.5.10
   resolution: "@pmmmwh/react-refresh-webpack-plugin@npm:0.5.10"
@@ -5488,38 +5500,38 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:4.20.4":
-  version: 4.20.4
-  resolution: "@tanstack/query-core@npm:4.20.4"
-  checksum: bdb652296e4093d8cb042a67b9c035bc0a756e09a3b12aeb070068b07adc1c71174c2e6108f2a8c3322a26cb73ba57f431326aa0b813c81621674b9cc208cd93
+"@tanstack/query-core@npm:4.24.4":
+  version: 4.24.4
+  resolution: "@tanstack/query-core@npm:4.24.4"
+  checksum: b357e950a41e5769878a3bfe9dd56a66828ccebb2f9396e568e8835bed71eb37926770a461e3aa5bafb7e1121c5141cee86aedf3ced88a2eacf754d545b107cd
   languageName: node
   linkType: hard
 
-"@tanstack/query-persist-client-core@npm:4.14.3":
-  version: 4.14.3
-  resolution: "@tanstack/query-persist-client-core@npm:4.14.3"
-  peerDependencies:
-    "@tanstack/query-core": 4.14.3
-  checksum: 9e9703044ac909e1594f9fedb8e46793b60f20b24fdcd12a46df9d4c32004a1d5e638cce17595f0e059e95c9a5bb7aaba5cc6109931d433245ae44b30926a30d
-  languageName: node
-  linkType: hard
-
-"@tanstack/react-query-persist-client@npm:^4.2.0":
-  version: 4.14.3
-  resolution: "@tanstack/react-query-persist-client@npm:4.14.3"
+"@tanstack/query-persist-client-core@npm:4.24.4":
+  version: 4.24.4
+  resolution: "@tanstack/query-persist-client-core@npm:4.24.4"
   dependencies:
-    "@tanstack/query-persist-client-core": 4.14.3
-  peerDependencies:
-    "@tanstack/react-query": 4.14.3
-  checksum: e4a9a9de58917ee5131eed694fcbd7edcf9e9586e2f432e6a47d8a7a2874d5c30914c5e4a18787a96e5c921dd0112dcc38ed65a4ff73f30b1b45c5885629533b
+    "@tanstack/query-core": 4.24.4
+  checksum: c406f0966f8ed366f8633185bb01a3eaf65088ec6ca668216482aba2581e6ec8294824e826ac2a1de3f4a7be08942b1dfb00a73b3fcd588a0bff65e4fbff9162
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:4.20.4":
-  version: 4.20.4
-  resolution: "@tanstack/react-query@npm:4.20.4"
+"@tanstack/react-query-persist-client@npm:4.24.4":
+  version: 4.24.4
+  resolution: "@tanstack/react-query-persist-client@npm:4.24.4"
   dependencies:
-    "@tanstack/query-core": 4.20.4
+    "@tanstack/query-persist-client-core": 4.24.4
+  peerDependencies:
+    "@tanstack/react-query": 4.24.4
+  checksum: 46f10ef8bbbbfc0096c3e18f3434875e9319850ae5a7b5bdf8fedce29b9d7663adcb665fc7a4131ed73e2944e5c367897c6e8fc90b523b4c9293f6c5bc08b87a
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query@npm:4.24.4":
+  version: 4.24.4
+  resolution: "@tanstack/react-query@npm:4.24.4"
+  dependencies:
+    "@tanstack/query-core": 4.24.4
     use-sync-external-store: ^1.2.0
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -5530,7 +5542,7 @@ __metadata:
       optional: true
     react-native:
       optional: true
-  checksum: ba9e2f175c58bde592c0ad14285f289585474763f8d68072d651fa75263a3a7f75eead5b62aa3140db133b95468498bc58817d07513f6f857be2bd8031b491da
+  checksum: 8cf008d690fc5d336f6471ea2bc0751189f03874dcc7930cf8944fb57fa34e3b5347823775dbd36629d53a7aacb9ce87482b1adb3ad80d277a3a6c73b797f6a2
   languageName: node
   linkType: hard
 
@@ -5598,7 +5610,8 @@ __metadata:
     "@storybook/builder-vite": 0.2.7
     "@storybook/react": 6.5.15
     "@storybook/testing-library": 0.0.13
-    "@tanstack/react-query": 4.20.4
+    "@tanstack/react-query": 4.24.4
+    "@tanstack/react-query-persist-client": 4.24.4
     "@tanstack/react-table": 8.7.4
     "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 13.4.0
@@ -5658,7 +5671,7 @@ __metadata:
     react-i18next: 12.1.1
     react-merge-refs: 2.0.1
     react-paginate: 8.1.4
-    react-query-swagger: 15.2.1
+    react-query-swagger: 15.4.2
     react-redux: 8.0.2
     react-router: 6.3.0
     react-router-dom: 6.3.0
@@ -6106,6 +6119,13 @@ __metadata:
   version: 6.9.7
   resolution: "@types/qs@npm:6.9.7"
   checksum: 7fd6f9c25053e9b5bb6bc9f9f76c1d89e6c04f7707a7ba0e44cc01f17ef5284adb82f230f542c2d5557d69407c9a40f0f3515e8319afd14e1e16b5543ac6cdba
+  languageName: node
+  linkType: hard
+
+"@types/randomstring@npm:1.1.8":
+  version: 1.1.8
+  resolution: "@types/randomstring@npm:1.1.8"
+  checksum: 22a9e4b09583ad8e7fa7ca214133abc014636d7d6eb49ca9ee671c09b241311107b0a6ea48205bf795ac61fbe5b185ac415aed2dd27c7f5806235bfea0e5532f
   languageName: node
   linkType: hard
 
@@ -7540,6 +7560,13 @@ __metadata:
   version: 2.1.0
   resolution: "array-union@npm:2.1.0"
   checksum: 5bee12395cba82da674931df6d0fea23c4aa4660cb3b338ced9f828782a65caa232573e6bf3968f23e0c5eb301764a382cef2f128b170a9dc59de0e36c39f98d
+  languageName: node
+  linkType: hard
+
+"array-uniq@npm:1.0.2":
+  version: 1.0.2
+  resolution: "array-uniq@npm:1.0.2"
+  checksum: 8c4beb94aa183791da1e155935aba4df3fe2eeb6f491c69e666ca7351f897b9b260fa04d016e0ce766ae8280129c16f11071e17359c81c01741289009bb5ac6d
   languageName: node
   linkType: hard
 
@@ -10332,6 +10359,18 @@ __metadata:
   checksum: 3c2ed2223d956a5da713dae12ba8295acb61d9acd966ccbba938090d04f4574ca4dca75cca089b5077c2d7e66101f32e6ea9b36a78ca213eff574e7a8b8accf2
   languageName: node
   linkType: hard
+
+"e2e@workspace:e2e":
+  version: 0.0.0-use.local
+  resolution: "e2e@workspace:e2e"
+  dependencies:
+    "@playwright/test": 1.30.0
+    "@types/randomstring": 1.1.8
+    dotenv: 16.0.3
+    randomstring: 1.2.3
+    typescript: 4.9.5
+  languageName: unknown
+  linkType: soft
 
 "ee-first@npm:1.1.1":
   version: 1.1.1
@@ -15889,21 +15928,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nswag@npm:13.18.2":
+"nswag@npm:13.18.2, nswag@npm:^13.18.2":
   version: 13.18.2
   resolution: "nswag@npm:13.18.2"
   bin:
     nswag: bin/nswag.js
   checksum: 0d61a657b56279f3d697f72da45aeabeaa84075248a30cd169e4f7a5f490d0756d17d86a3241cd4aa1d65471858e5711279fc46637a8b908f7e00affd9602610
-  languageName: node
-  linkType: hard
-
-"nswag@npm:^13.17.0":
-  version: 13.17.0
-  resolution: "nswag@npm:13.17.0"
-  bin:
-    nswag: bin/nswag.js
-  checksum: 5a130d40c26f40c4eac8e61434f2ba26d9a48c304090266dd7a5c91d3ce2481833f23ad29e76826d1e04e7bb5152f39e2ac2919a1c6a48dfcb72434cde183b19
   languageName: node
   linkType: hard
 
@@ -16757,6 +16787,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"playwright-core@npm:1.30.0":
+  version: 1.30.0
+  resolution: "playwright-core@npm:1.30.0"
+  bin:
+    playwright: cli.js
+  checksum: 4c5693f27245a1168f94708ecd8e1eb0d200de435b25cc07cfa25b97a094633818954dc00baf24e0ff551825f672050b83d1309362c1f97213fe8ebd2a147ed9
+  languageName: node
+  linkType: hard
+
 "pnp-webpack-plugin@npm:1.6.4":
   version: 1.6.4
   resolution: "pnp-webpack-plugin@npm:1.6.4"
@@ -17277,6 +17316,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"randombytes@npm:2.0.3":
+  version: 2.0.3
+  resolution: "randombytes@npm:2.0.3"
+  checksum: 13e1abd143404dd87024bf345fb1a446b2e2ee46d8e1a5a073e8370c9b1e58000d81a97d4327ba7089087213eb6d8c77fa67ab4e91aa00605126d634fcccb9d4
+  languageName: node
+  linkType: hard
+
 "randombytes@npm:^2.0.0, randombytes@npm:^2.0.1, randombytes@npm:^2.0.5, randombytes@npm:^2.1.0":
   version: 2.1.0
   resolution: "randombytes@npm:2.1.0"
@@ -17293,6 +17339,18 @@ __metadata:
     randombytes: ^2.0.5
     safe-buffer: ^5.1.0
   checksum: 33734bb578a868d29ee1b8555e21a36711db084065d94e019a6d03caa67debef8d6a1bfd06a2b597e32901ddc761ab483a85393f0d9a75838f1912461d4dbfc7
+  languageName: node
+  linkType: hard
+
+"randomstring@npm:1.2.3":
+  version: 1.2.3
+  resolution: "randomstring@npm:1.2.3"
+  dependencies:
+    array-uniq: 1.0.2
+    randombytes: 2.0.3
+  bin:
+    randomstring: bin/randomstring
+  checksum: 9f201638d1a51091b0262fae062bec53a94636dd1f193c703245eaa7676ee8de22f6e7d35075cfe49ba446999f0d6f1032fb7a50a99a2a80d8c28145748a4d67
   languageName: node
   linkType: hard
 
@@ -17541,20 +17599,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-query-swagger@npm:15.2.1":
-  version: 15.2.1
-  resolution: "react-query-swagger@npm:15.2.1"
+"react-query-swagger@npm:15.4.2":
+  version: 15.4.2
+  resolution: "react-query-swagger@npm:15.4.2"
   dependencies:
-    "@tanstack/react-query-persist-client": ^4.2.0
-    nswag: ^13.17.0
+    nswag: ^13.18.2
   peerDependencies:
     "@tanstack/react-query": "> 4.0"
+    "@tanstack/react-query-persist-client": ">4.2.0"
     react: 17.x || 18.x
     react-query: ">= 3.33 < 4.0"
     typescript: 3.x || 4.x
   bin:
     react-query-swagger: cli.js
-  checksum: 0489b62bcd4172e9e2ea3cc55e1451f6b205453db3f09d7b5142ef4122e9f6b71e9763c6f07bf8f6bc9644e5fcc226402ecf4cb877da716377156324b1568f64
+  checksum: 06b4a8768b04d7800e4b477377900669822278bfbe4132bdb65508df2524a08516a9aba557af775f549112d4f2b34ca6325129401c8422044d634187f64d0b0f
   languageName: node
   linkType: hard
 
@@ -20376,6 +20434,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typescript@npm:4.9.5":
+  version: 4.9.5
+  resolution: "typescript@npm:4.9.5"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: ee000bc26848147ad423b581bd250075662a354d84f0e06eb76d3b892328d8d4440b7487b5a83e851b12b255f55d71835b008a66cbf8f255a11e4400159237db
+  languageName: node
+  linkType: hard
+
 "typescript@patch:typescript@4.9.3#~builtin<compat/typescript>":
   version: 4.9.3
   resolution: "typescript@patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=d73830"
@@ -20383,6 +20451,16 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 67ca21a387c0572f1c04936e638dde7782c5aa520c3754aadc7cc9b7c915da9ebc3e27c601bfff4ccb7d7264e82dce6d277ada82ec09dc75024349e0ef64926d
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@4.9.5#~builtin<compat/typescript>":
+  version: 4.9.5
+  resolution: "typescript@patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=d73830"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 2eee5c37cad4390385db5db5a8e81470e42e8f1401b0358d7390095d6f681b410f2c4a0c496c6ff9ebd775423c7785cdace7bcdad76c7bee283df3d9718c0f20
   languageName: node
   linkType: hard
 
