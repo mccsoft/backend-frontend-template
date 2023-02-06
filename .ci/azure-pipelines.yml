@@ -119,12 +119,13 @@ stages:
             artifact: 'scripts'
 
   - stage: UI_Tests
+    dependsOn:
+      - Build
     jobs:
       - job: UI_Tests
         pool:
           vmImage: 'ubuntu-latest'
-        dependsOn:
-          - Build
+
         steps:
           - template: ./tests/azure-pipelines-storybook-tests.yml
 
