@@ -18,6 +18,7 @@ module.exports = {
   },
   features: {
     storyStoreV7: true,
+    previewCsfV3: true,
   },
   async viteFinal(config, { configType }) {
     if (configType === 'PRODUCTION') {

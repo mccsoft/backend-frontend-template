@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/react';
 import { defaultExclude } from '../../.storybook/preview';
 import { DatePicker } from 'components/uikit/inputs/date-time/DatePicker';
 const StoryComponent = DatePicker;
@@ -19,30 +19,12 @@ export default {
       ] as (keyof React.ComponentProps<typeof StoryComponent>)[],
     },
   },
-} as ComponentMeta<typeof StoryComponent>;
+} as Meta<typeof StoryComponent>;
 
-const Template: ComponentStory<typeof StoryComponent> = (
-  args: React.ComponentProps<typeof StoryComponent>,
-) => <StoryComponent {...args} />;
+export const Default = {};
 
-export const Default = Template.bind({});
-
-export const WithTime = Template.bind({});
-WithTime.args = {
-  withTime: true,
+export const WithTime = {
+  args: {
+    withTime: true,
+  },
 };
-
-// export const TimeSetToNonPresentValue = Template.bind({});
-// TimeSetToNonPresentValue.args = {
-//   timeInMills: 1000 * 60 * 2, // 00:02
-// };
-
-// export const MinTime = Template.bind({});
-// MinTime.args = {
-//   minTimeInMills: 1000 * 60 * 60 * 2.1,
-// };
-
-// export const Interval10Minutes = Template.bind({});
-// Interval10Minutes.args = {
-//   timeEntriesIntervalInMinutes: 10,
-// };

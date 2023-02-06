@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/react';
 import { defaultExclude } from '../../.storybook/preview';
 import { Field } from 'components/uikit/Field';
 import { Input } from 'components/uikit/inputs/Input';
@@ -23,29 +23,41 @@ export default {
       >)[],
     },
   },
-} as ComponentMeta<typeof StoryComponent>;
+} as Meta<typeof StoryComponent>;
 
-const Template: ComponentStory<typeof StoryComponent> = (
-  args: React.ComponentProps<typeof StoryComponent>,
-) => (
-  <StoryComponent {...args}>
-    <Input />
-  </StoryComponent>
-);
+export const Default = {
+  render: (args: React.ComponentProps<typeof StoryComponent>) => (
+    <StoryComponent {...args}>
+      <Input />
+    </StoryComponent>
+  ),
+};
 
-export const Default = Template.bind({});
+export const WithLinkProps = {
+  render: (args: React.ComponentProps<typeof StoryComponent>) => (
+    <StoryComponent {...args}>
+      <Input />
+    </StoryComponent>
+  ),
 
-export const WithLinkProps = Template.bind({});
-WithLinkProps.args = {
-  linkProps: {
-    title: 'Add',
-    onClick() {
-      alert('qwe');
+  args: {
+    linkProps: {
+      title: 'Add',
+      onClick() {
+        alert('qwe');
+      },
     },
   },
 };
 
-export const WithHint = Template.bind({});
-WithHint.args = {
-  hint: 'hint',
+export const WithHint = {
+  render: (args: React.ComponentProps<typeof StoryComponent>) => (
+    <StoryComponent {...args}>
+      <Input />
+    </StoryComponent>
+  ),
+
+  args: {
+    hint: 'hint',
+  },
 };

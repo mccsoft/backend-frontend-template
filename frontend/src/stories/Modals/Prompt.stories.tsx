@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/react';
 import { defaultExclude } from '../../../.storybook/preview';
 import { useModal } from 'components/uikit/modal/useModal';
 import { Button } from 'components/uikit/buttons/Button';
@@ -27,23 +27,21 @@ export default {
       >)[],
     },
   },
-} as ComponentMeta<typeof StoryComponent>;
+} as Meta<typeof StoryComponent>;
 
-const Template: ComponentStory<typeof StoryComponent> = (
-  args: React.ComponentProps<typeof StoryComponent>,
-) => <StoryComponent {...args} />;
-
-export const Default = Template.bind({});
-Default.args = {
-  text: 'Custom_Text',
-  title: 'Custom_Title',
+export const Default = {
+  args: {
+    text: 'Custom_Text',
+    title: 'Custom_Title',
+  },
 };
 
-export const WithAllParams = Template.bind({});
-WithAllParams.args = {
-  fieldName: 'Field name',
-  cancelButtonText: 'Cancel_Custom',
-  okButtonText: 'Custom_Ok',
-  text: 'Custom_Text',
-  title: 'Custom_Title',
+export const WithAllParams = {
+  args: {
+    fieldName: 'Field name',
+    cancelButtonText: 'Cancel_Custom',
+    okButtonText: 'Custom_Ok',
+    text: 'Custom_Text',
+    title: 'Custom_Title',
+  },
 };

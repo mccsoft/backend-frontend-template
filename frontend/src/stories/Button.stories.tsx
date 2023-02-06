@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { Meta } from '@storybook/react';
 import { Button, ButtonColor } from '../components/uikit/buttons/Button';
 import { defaultExclude } from '../../.storybook/preview';
 
@@ -22,25 +22,24 @@ export default {
       ] as (keyof React.ComponentProps<typeof StoryComponent>)[],
     },
   },
-} as ComponentMeta<typeof StoryComponent>;
+} as Meta<typeof StoryComponent>;
 
-const Template: ComponentStory<typeof StoryComponent> = (
-  args: React.ComponentProps<typeof StoryComponent>,
-) => <StoryComponent {...args} />;
+export const Default = {};
 
-export const Default = Template.bind({});
-
-export const Primary = Template.bind({});
-Primary.args = {
-  color: ButtonColor.Primary,
+export const Primary = {
+  args: {
+    color: ButtonColor.Primary,
+  },
 };
 
-export const Secondary = Template.bind({});
-Secondary.args = {
-  color: ButtonColor.Secondary,
+export const Secondary = {
+  args: {
+    color: ButtonColor.Secondary,
+  },
 };
 
-export const Danger = Template.bind({});
-Danger.args = {
-  color: ButtonColor.Danger,
+export const Danger = {
+  args: {
+    color: ButtonColor.Danger,
+  },
 };
