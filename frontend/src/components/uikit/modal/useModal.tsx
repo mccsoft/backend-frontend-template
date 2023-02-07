@@ -1,4 +1,11 @@
-import React, { useCallback, useContext, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { CustomModal } from './CustomModal';
 import { Field } from '../Field';
 import { Input } from '../inputs/Input';
@@ -12,23 +19,61 @@ import { createId } from '../type-utils';
 
 const ModalContext = React.createContext<ModalContextType>({} as any);
 
-export const useModal = () => {
-  return useContext(ModalContext);
+export const useModal = (): ModalContextType => {
+  const context = useContext(ModalContext);
+  const idsRef = useRef(new Set());
+  useEffect(() => {
+    return () => {
+      idsRef.current.forEach((x) => context.hide(x));
+    };
+  }, []);
+  return useMemo(() => {
+    return {
+      hide: context.hide,
+      showAlert(options) {
+        const result = context.showAlert(options);
+        idsRef.current.add(options.id!);
+        result.then(() => idsRef.current.delete(options.id!));
+        return result;
+      },
+      showConfirm(options) {
+        const result = context.showConfirm(options);
+        idsRef.current.add(options.id!);
+        result.then(() => idsRef.current.delete(options.id!));
+        return result;
+      },
+      showError(options) {
+        const result = context.showError(options);
+        idsRef.current.add(options.id!);
+        result.then(() => idsRef.current.delete(options.id!));
+        return result;
+      },
+      showPrompt(options) {
+        const result = context.showPrompt(options);
+        idsRef.current.add(options.id!);
+        result.then(() => idsRef.current.delete(options.id!));
+        return result;
+      },
+      showMultiButton(options) {
+        const result = context.showMultiButton(options);
+        idsRef.current.add(options.id!);
+        result.then(() => idsRef.current.delete(options.id!));
+        return result;
+      },
+    };
+  }, [context]);
 };
 
 export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
   const [modals, setModals] = useState<UseModalOptions[]>([]);
   const i18n = useScopedTranslation('uikit.dialog');
   const addModal = useCallback(
-    (modal: Omit<UseModalOptions, 'id'>, promise: Promise<unknown>) => {
-      const id = createId();
-      const options: UseModalOptions = { id: id, ...modal } as any;
-
-      setModals((o) => [...o, options]);
+    (modal: UseModalOptions, promise: Promise<unknown>) => {
+      setModals((o) => [...o, modal]);
       promise.finally(() => {
         // we use setTimeout to allow hiding form animations to finish
         setTimeout(
-          () => setModals((o) => [...o.filter((x) => x.id !== id)]),
+          () => setModals((o) => [...o.filter((x) => x.id !== modal.id)]),
           1000,
         );
       });
@@ -37,7 +82,14 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
   );
   const contextValue: ModalContextType = useMemo(() => {
     return {
+      hide: (id: string) => {
+        setModals((modals) => {
+          return modals.filter((x) => x.id === id);
+        });
+      },
       showError: async (options) => {
+        const id = createId();
+        options.id = id;
         const promise = new Promise<void>((resolve, reject) => {
           // we use setTimout to be able to access the promise
           setTimeout(() =>
@@ -46,6 +98,7 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
                 type: 'alert',
                 title: i18n.t('error_title'),
                 ...options,
+                id,
                 resolve: resolve,
               },
               promise,
@@ -56,6 +109,8 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
       },
 
       showAlert: async (options) => {
+        const id = createId();
+        options.id = id;
         const promise = new Promise<void>((resolve, reject) => {
           // we use setTimout to be able to access the promise
           setTimeout(() =>
@@ -63,6 +118,7 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
               {
                 type: 'alert',
                 ...options,
+                id,
                 resolve: resolve,
               },
               promise,
@@ -72,6 +128,8 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
         return promise;
       },
       showConfirm: async (options) => {
+        const id = createId();
+        options.id = id;
         const promise = new Promise<boolean>((resolve, reject) => {
           // we use setTimout to be able to access the promise
           setTimeout(() =>
@@ -79,6 +137,7 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
               {
                 type: 'confirm',
                 ...options,
+                id,
                 resolve: resolve,
               },
               promise,
@@ -88,6 +147,8 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
         return promise;
       },
       showPrompt: async (options) => {
+        const id = createId();
+        options.id = id;
         const promise = new Promise<string | null>((resolve, reject) => {
           // we use setTimout to be able to access the promise
           setTimeout(() =>
@@ -95,6 +156,7 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
               {
                 type: 'prompt',
                 ...options,
+                id,
                 resolve: resolve,
               },
               promise,
@@ -104,6 +166,8 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
         return promise;
       },
       showMultiButton: async (options) => {
+        const id = createId();
+        options.id = id;
         const promise = new Promise<string | null>((resolve, reject) => {
           // we use setTimout to be able to access the promise
           setTimeout(() =>
@@ -111,6 +175,7 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
               {
                 type: 'multibutton',
                 ...options,
+                id,
                 resolve: resolve,
               },
               promise,
