@@ -101,7 +101,7 @@ const config: PlaywrightTestConfig = {
   /* Run your local dev server before starting the tests */
   webServer: process.env.RUN_STORYBOOK_SERVER
     ? {
-        command: 'yarn storybook',
+        command: 'npx http-server ../frontend/storybook-static -p 6006',
         port: 6006,
       }
     : undefined,

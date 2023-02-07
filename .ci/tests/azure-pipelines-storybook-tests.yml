@@ -8,12 +8,8 @@ steps:
   - task: DownloadPipelineArtifact@2
     inputs:
       artifact: 'storybook'
-      path: './storybook'
+      path: './frontend/storybook-static'
 
   - script: |
-      npx http-server ./storybook/storybook -p 6006
-    displayName: 'run storybook tests'
-
-  - script: |
-      yarn workspace e2e test
+      RUN_STORYBOOK_SERVER=1 yarn workspace e2e test
     displayName: 'run storybook tests'
