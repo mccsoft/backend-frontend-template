@@ -30,29 +30,6 @@ stages:
           # - template: ./shared/azure-pipelines-tests.yml
           - template: ./shared/azure-pipelines-build.yml
 
-          - script: |
-              docker login $(DOCKER_REGISTRY) -u $(DOCKER_USER) -p $(DOCKER_TOKEN)
-            displayName: 'Authenticate at Container Registry'
-
-          - task: Docker@2
-            condition: succeeded()
-            inputs:
-              repository: $(DOCKER_REGISTRY)
-              command: 'buildAndPush'
-              Dockerfile: 'publish/Dockerfile'
-              buildContext: '$(Build.SourcesDirectory)/publish'
-              ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
-                tags: |
-                  $(BUILD_NUMBER)
-                  latest
-              ${{ else }}:
-                tags: |
-                  $(BUILD_NUMBER)
-            displayName: 'build and push docker image'
-
-          - publish: './publish'
-            artifact: 'publish'
-
           - publish: './docker-compose.yaml'
             artifact: 'docker-compose'
 
@@ -61,6 +38,8 @@ stages:
 
           - publish: './scripts/deploy'
             artifact: 'scripts'
+
+          #- template: ./shared/azure-pipelines-docker.yml
 
   - stage: UI_Tests
     dependsOn:
