@@ -3,7 +3,7 @@ steps:
     fetchDepth: 1
     submodules: true
 
-  - template: ../shared/azure-pipelines-cache-template.yml
+  - template: ../shared/cache-node-modules.yml
 
   - task: DownloadPipelineArtifact@2
     inputs:

@@ -25,66 +25,9 @@ stages:
             fetchDepth: 1
             submodules: true
 
-          # - template: ./azure-pipelines-tests-shared.yml
-
-          # - script: |
-          #     yarn json -f package.json -I -e 'this.version="$(BUILD_NUMBER)"'
-          #     yarn json -f frontend/package.json -I -e 'this.version="$(BUILD_NUMBER)"'
-          #     yarn --version
-
-          #     # `set version` step should go after `yarn install`, since it uses `json` package which should be installed
-          #     # we do not use `yarn version` plugin, because it doesn't play well with shallow clone (https://yarnpkg.com/features/release-workflow#commit-history)
-          #   displayName: 'set version'
-
-          # - script: |
-          #     yarn copy-translations-to-backend
-          #   displayName: 'copy translations to backend'
-
-          # - script: |
-          #     yarn build-frontend
-          #   displayName: 'build frontend'
-
-          # - publish: './frontend/build'
-          #   artifact: 'frontend'
-
-          - script: |
-              yarn frontend build-storybook
-            displayName: 'build storybook'
-
-          - publish: './frontend/storybook-static'
-            artifact: 'storybook'
-
-          - script: |
-              yarn build-dotnet
-            displayName: 'build backend'
-
-          - script: |
-              yarn copy-frontend && yarn copy-storybook
-            displayName: 'copy frontend to backend'
-
-          - template: ./build-import-meta-env.yml
-
-          #          - script: |
-          #              mkdir ./cobertura
-          #              find '$(Agent.TempDirectory)' -name 'coverage.cobertura.xml' -exec cp --backup=numbered -t ./cobertura {} +
-          #              cd ./cobertura
-          #              for f in *~*~; do mv "$f" "$(echo "$f" | sed -r 's/(.*)\.~([0-9]+)~/\2\1/')"; done;
-          #            displayName: 'copy coverage files'
-
-          #          - script: |
-          #              cd ./webapi
-          #              dotnet tool restore
-          #              dotnet reportgenerator -reports:../cobertura/* -targetdir:../cobertura/report -sourcedirs:./ -assemblyfilters:+Lmt.Unicorn.App\;+Lmt.Unicorn.Common\;+Lmt.Unicorn.Domain
-          #            displayName: 'generate coverage report'
-
-          #          - publish: './cobertura'
-          #            artifact: 'backend-coverage'
-
-          #          - task: PublishTestResults@2
-          #            inputs:
-          #              testResultsFormat: 'JUnit'
-          #              testResultsFiles: '**/junit.xml'
-          #              mergeTestResults: true
+          - template: ./shared/cache-node-modules.yml
+          # - template: ./shared/azure-pipelines-tests.yml
+          - template: ./shared/azure-pipelines-build.yml
 
           - script: |
               docker login $(DOCKER_REGISTRY) -u $(DOCKER_USER) -p $(DOCKER_TOKEN)
@@ -125,7 +68,6 @@ stages:
       - job: UI_Tests
         pool:
           vmImage: 'ubuntu-latest'
-
         steps:
           - template: ./tests/azure-pipelines-storybook-tests.yml
 
