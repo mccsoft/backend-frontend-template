@@ -11,7 +11,7 @@ import { Field } from '../Field';
 import { Input } from '../inputs/Input';
 import { Button, ButtonColor } from '../buttons/Button';
 import { useScopedTranslation } from '../../../application/localization/useScopedTranslation';
-import { ModalContextType, UseModalOptions } from './useModal.types';
+import type { ModalContextType, UseModalOptions } from './useModal.types';
 import styles from './Modal.module.scss';
 import { assertNever } from 'helpers/assert-never';
 import clsx from 'clsx';
@@ -21,7 +21,7 @@ const ModalContext = React.createContext<ModalContextType>({} as any);
 
 export const useModal = (): ModalContextType => {
   const context = useContext(ModalContext);
-  const idsRef = useRef(new Set());
+  const idsRef = useRef(new Set<string>());
   useEffect(() => {
     return () => {
       idsRef.current.forEach((x) => context.hide(x));
@@ -31,33 +31,33 @@ export const useModal = (): ModalContextType => {
     return {
       hide: context.hide,
       showAlert(options) {
-        const result = context.showAlert(options);
-        idsRef.current.add(options.id!);
-        result.then(() => idsRef.current.delete(options.id!));
+        const result = context.showAlert({ ...options });
+        idsRef.current.add(result.id);
+        void result.then(() => idsRef.current.delete(result.id));
         return result;
       },
       showConfirm(options) {
-        const result = context.showConfirm(options);
-        idsRef.current.add(options.id!);
-        result.then(() => idsRef.current.delete(options.id!));
+        const result = context.showConfirm({ ...options });
+        idsRef.current.add(result.id);
+        void result.then(() => idsRef.current.delete(result.id));
         return result;
       },
       showError(options) {
-        const result = context.showError(options);
-        idsRef.current.add(options.id!);
-        result.then(() => idsRef.current.delete(options.id!));
+        const result = context.showError({ ...options });
+        idsRef.current.add(result.id);
+        void result.then(() => idsRef.current.delete(result.id));
         return result;
       },
       showPrompt(options) {
-        const result = context.showPrompt(options);
-        idsRef.current.add(options.id!);
-        result.then(() => idsRef.current.delete(options.id!));
+        const result = context.showPrompt({ ...options });
+        idsRef.current.add(result.id);
+        void result.then(() => idsRef.current.delete(result.id));
         return result;
       },
       showMultiButton(options) {
-        const result = context.showMultiButton(options);
-        idsRef.current.add(options.id!);
-        result.then(() => idsRef.current.delete(options.id!));
+        const result = context.showMultiButton({ ...options });
+        idsRef.current.add(result.id);
+        void result.then(() => idsRef.current.delete(result.id));
         return result;
       },
     };
@@ -89,7 +89,6 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
       },
       showError: async (options) => {
         const id = createId();
-        options.id = id;
         const promise = new Promise<void>((resolve, reject) => {
           // we use setTimout to be able to access the promise
           setTimeout(() =>
@@ -105,12 +104,12 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
             ),
           );
         });
+        (promise as any).id = id;
         return promise;
       },
 
       showAlert: async (options) => {
         const id = createId();
-        options.id = id;
         const promise = new Promise<void>((resolve, reject) => {
           // we use setTimout to be able to access the promise
           setTimeout(() =>
@@ -125,11 +124,11 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
             ),
           );
         });
+        (promise as any).id = id;
         return promise;
       },
       showConfirm: async (options) => {
         const id = createId();
-        options.id = id;
         const promise = new Promise<boolean>((resolve, reject) => {
           // we use setTimout to be able to access the promise
           setTimeout(() =>
@@ -144,11 +143,11 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
             ),
           );
         });
+        (promise as any).id = id;
         return promise;
       },
       showPrompt: async (options) => {
         const id = createId();
-        options.id = id;
         const promise = new Promise<string | null>((resolve, reject) => {
           // we use setTimout to be able to access the promise
           setTimeout(() =>
@@ -163,11 +162,11 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
             ),
           );
         });
+        (promise as any).id = id;
         return promise;
       },
       showMultiButton: async (options) => {
         const id = createId();
-        options.id = id;
         const promise = new Promise<string | null>((resolve, reject) => {
           // we use setTimout to be able to access the promise
           setTimeout(() =>
@@ -182,9 +181,10 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
             ),
           );
         });
+        (promise as any).id = id;
         return promise;
       },
-    };
+    } as ModalContextType;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addModal, i18n.i18n.language]);
 

@@ -26,11 +26,6 @@ export type UseModalOptions = {
     })
 );
 export type ErrorOptions = {
-  /*
-   * `id` is kinda 'out' parameter: it will be set by `showError` function.
-   * You could use it to control the modal (e.g. `hide` it later)
-   */
-  id?: string;
   title?: string;
   text: React.ReactNode;
   okButtonText?: string;
@@ -38,22 +33,12 @@ export type ErrorOptions = {
 };
 
 export type AlertOptions = {
-  /*
-   * `id` is kinda 'out' parameter: it will be set by `showAlert` function.
-   * You could use it to control the modal (e.g. `hide` it later)
-   */
-  id?: string;
   title: string;
   text: React.ReactNode;
   okButtonText?: string;
   okButtonColor?: ButtonColor;
 };
 export type ConfirmOptions = {
-  /*
-   * `id` is kinda 'out' parameter: it will be set by `showConfirm` function.
-   * You could use it to control the modal (e.g. `hide` it later)
-   */
-  id?: string;
   title: string;
   text: React.ReactNode;
   okButtonText?: string;
@@ -62,11 +47,6 @@ export type ConfirmOptions = {
   cancelButtonColor?: ButtonColor;
 };
 export type PromptOptions = {
-  /*
-   * `id` is kinda 'out' parameter: it will be set by `showPrompt` function.
-   * You could use it to control the modal (e.g. `hide` it later)
-   */
-  id?: string;
   title: string;
   text: React.ReactNode;
   defaultValue: string;
@@ -77,20 +57,19 @@ export type PromptOptions = {
   cancelButtonColor?: ButtonColor;
 };
 export type MultiButtonOptions = {
-  /*
-   * `id` is kinda 'out' parameter: it will be set by `showMultiButton` function.
-   * You could use it to control the modal (e.g. `hide` it later)
-   */
-  id?: string;
   title: string;
   text: React.ReactNode;
   buttons: { id: string; text: string; color?: ButtonColor }[];
 };
 export type ModalContextType = {
   hide: (id: string) => void;
-  showError: (options: ErrorOptions) => Promise<void>;
-  showAlert: (options: AlertOptions) => Promise<void>;
-  showConfirm: (options: ConfirmOptions) => Promise<boolean>;
-  showPrompt: (options: PromptOptions) => Promise<string | null>;
-  showMultiButton: (options: MultiButtonOptions) => Promise<string | null>;
+  showError: (options: ErrorOptions) => Promise<void> & { id: string };
+  showAlert: (options: AlertOptions) => Promise<void> & { id: string };
+  showConfirm: (options: ConfirmOptions) => Promise<boolean> & { id: string };
+  showPrompt: (
+    options: PromptOptions,
+  ) => Promise<string | null> & { id: string };
+  showMultiButton: (
+    options: MultiButtonOptions,
+  ) => Promise<string | null> & { id: string };
 };
