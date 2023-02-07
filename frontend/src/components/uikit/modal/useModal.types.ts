@@ -62,9 +62,14 @@ export type MultiButtonOptions = {
   buttons: { id: string; text: string; color?: ButtonColor }[];
 };
 export type ModalContextType = {
-  showError: (options: ErrorOptions) => Promise<void>;
-  showAlert: (options: AlertOptions) => Promise<void>;
-  showConfirm: (options: ConfirmOptions) => Promise<boolean>;
-  showPrompt: (options: PromptOptions) => Promise<string | null>;
-  showMultiButton: (options: MultiButtonOptions) => Promise<string | null>;
+  hide: (id: string) => void;
+  showError: (options: ErrorOptions) => Promise<void> & { id: string };
+  showAlert: (options: AlertOptions) => Promise<void> & { id: string };
+  showConfirm: (options: ConfirmOptions) => Promise<boolean> & { id: string };
+  showPrompt: (
+    options: PromptOptions,
+  ) => Promise<string | null> & { id: string };
+  showMultiButton: (
+    options: MultiButtonOptions,
+  ) => Promise<string | null> & { id: string };
 };
