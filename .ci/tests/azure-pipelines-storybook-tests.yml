@@ -15,6 +15,9 @@ steps:
       path: './frontend/storybook-static'
 
   - script: |
+      ls
+      ls ../frontend
+      ls ../frontend/storybook-static
       RUN_STORYBOOK_SERVER=1 yarn test
     workingDirectory: e2e
     displayName: 'run storybook tests'
