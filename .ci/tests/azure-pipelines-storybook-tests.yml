@@ -17,3 +17,20 @@ steps:
   - script: |
       RUN_STORYBOOK_SERVER=1 yarn workspace e2e test
     displayName: 'run storybook tests'
+
+  - script: |
+      mkdir -p test-results
+    workingDirectory: e2e
+    displayName: 'mkdir -p test-results'
+
+  - task: PublishTestResults@2
+    condition: always()
+    displayName: 'publish test results'
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/junit.xml'
+      mergeTestResults: false
+
+  - publish: $(Build.SourcesDirectory)/e2e/test-results
+    condition: always()
+    artifact: 'test-results$(System.JobAttempt)'
