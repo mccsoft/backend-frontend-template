@@ -16,6 +16,7 @@ variables:
 
 stages:
   - stage: Build
+  dependsOn: []
     jobs:
       - job: Build_Backend_Frontend
         pool:
@@ -26,12 +27,36 @@ stages:
             submodules: true
 
           - template: ./shared/cache-node-modules.yml
-          - template: ./shared/azure-pipelines-tests.yml
           - template: ./shared/azure-pipelines-build.yml
           - template: ./shared/azure-pipelines-docker.yml
 
+  - stage: Test
+    dependsOn: []
+    jobs:
+      - job: Test
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - checkout: self
+            fetchDepth: 1
+            submodules: true
+          - template: ./shared/cache-node-modules.yml
+          - template: ./shared/azure-pipelines-tests.yml
+
+  - stage: DockerTagLatest
+    dependsOn: 
+      - Build
+      - Test
+    condition: succeeded()
+    jobs:
+      - job: DockerTagLatest
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - template: ./shared/docker-add-tag-latest.yml
+
   - stage: DeployToDev
-    dependsOn: Build
+    dependsOn: DockerTagLatest
     condition: succeeded()
     jobs:
       - deployment:
