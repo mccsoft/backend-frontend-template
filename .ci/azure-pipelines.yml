@@ -51,7 +51,7 @@ stages:
           vmImage: 'ubuntu-latest'
         container: mcr.microsoft.com/playwright:v1.30.0-focal
         steps:
-          - template: ./tests/azure-pipelines-storybook-tests.yml
+          - template: ./tests/playwright-tests.yml
 
   - stage: DockerTagLatest
     dependsOn:
