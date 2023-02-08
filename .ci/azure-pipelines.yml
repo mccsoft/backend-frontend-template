@@ -16,7 +16,7 @@ variables:
 
 stages:
   - stage: Build
-  dependsOn: []
+    dependsOn: []
     jobs:
       - job: Build_Backend_Frontend
         pool:
@@ -44,7 +44,7 @@ stages:
           - template: ./shared/azure-pipelines-tests.yml
 
   - stage: DockerTagLatest
-    dependsOn: 
+    dependsOn:
       - Build
       - Test
     condition: succeeded()
