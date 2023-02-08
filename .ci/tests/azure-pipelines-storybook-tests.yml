@@ -5,6 +5,10 @@ steps:
 
   - template: ../shared/cache-node-modules.yml
 
+  - script: npx playwright install
+    workingDirectory: e2e
+    displayName: 'npx playwright install'
+
   - task: DownloadPipelineArtifact@2
     inputs:
       artifact: 'storybook'
