@@ -57,7 +57,9 @@ stages:
           - template: ./shared/docker-add-tag-latest.yml
 
   - stage: DeployToDev
-    dependsOn: DockerTagLatest
+    dependsOn:
+      - Build
+      - DockerTagLatest
     condition: succeeded()
     jobs:
       - deployment:
