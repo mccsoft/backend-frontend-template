@@ -43,11 +43,21 @@ stages:
           - template: ./shared/cache-node-modules.yml
           - template: ./shared/azure-pipelines-tests.yml
 
+  - stage: StorybookTest
+    dependsOn: []
+    jobs:
+      - job: StorybookTest
+        pool:
+          vmImage: 'ubuntu-latest'
+        container: mcr.microsoft.com/playwright:v1.30.0-focal
+        steps:
+          - template: ./tests/azure-pipelines-storybook-tests.yml
+
   - stage: DockerTagLatest
     dependsOn:
       - Build
       - Test
-      - UI_Test
+      - StorybookTest
     condition: succeeded()
     jobs:
       - job: DockerTagLatest
@@ -117,14 +127,3 @@ stages:
           - script: |
               git tag 'prod' -f
               git push origin 'prod' -f --tags
-
-  - stage: UI_Test
-    dependsOn:
-      - Build
-    jobs:
-      - job: UI_Test
-        pool:
-          vmImage: 'ubuntu-latest'
-        container: mcr.microsoft.com/playwright:v1.30.0-focal
-        steps:
-          - template: ./tests/azure-pipelines-storybook-tests.yml

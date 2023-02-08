@@ -5,19 +5,24 @@ steps:
 
   - template: ../shared/cache-node-modules.yml
 
+  # - task: DownloadPipelineArtifact@2
+  #   inputs:
+  #     artifact: 'storybook'
+  #     path: './frontend/storybook-static'
+
+  - script: |
+      yarn build-storybook
+    workingDirectory: frontend
+    displayName: 'build storybook'
+
   - script: npx playwright install
     workingDirectory: e2e
     displayName: 'npx playwright install'
 
-  - task: DownloadPipelineArtifact@2
-    inputs:
-      artifact: 'storybook'
-      path: './frontend/storybook-static'
-
   - script: |
       RUN_STORYBOOK_SERVER=1 yarn test
     workingDirectory: e2e
-    displayName: 'run storybook tests'
+    displayName: 'run tests'
 
   - script: |
       mkdir -p test-results
