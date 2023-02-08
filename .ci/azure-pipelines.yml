@@ -20,37 +20,15 @@ stages:
       - job: Build_Backend_Frontend
         pool:
           vmImage: 'ubuntu-latest'
-
         steps:
           - checkout: self
             fetchDepth: 1
             submodules: true
 
           - template: ./shared/cache-node-modules.yml
-          # - template: ./shared/azure-pipelines-tests.yml
+          - template: ./shared/azure-pipelines-tests.yml
           - template: ./shared/azure-pipelines-build.yml
-
-          - publish: './docker-compose.yaml'
-            artifact: 'docker-compose'
-
-          - publish: './nginx'
-            artifact: 'nginx'
-
-          - publish: './scripts/deploy'
-            artifact: 'scripts'
-
-          #- template: ./shared/azure-pipelines-docker.yml
-
-  - stage: UI_Tests
-    dependsOn:
-      - Build
-    jobs:
-      - job: UI_Tests
-        pool:
-          vmImage: 'ubuntu-latest'
-        container: mcr.microsoft.com/playwright:v1.30.0-focal
-        steps:
-          - template: ./tests/azure-pipelines-storybook-tests.yml
+          - template: ./shared/azure-pipelines-docker.yml
 
   - stage: DeployToDev
     dependsOn: Build
@@ -109,3 +87,14 @@ stages:
           - script: |
               git tag 'prod' -f
               git push origin 'prod' -f --tags
+
+  - stage: UI_Tests
+    dependsOn:
+      - Build
+    jobs:
+      - job: UI_Tests
+        pool:
+          vmImage: 'ubuntu-latest'
+        container: mcr.microsoft.com/playwright:v1.30.0-focal
+        steps:
+          - template: ./tests/azure-pipelines-storybook-tests.yml

@@ -2,6 +2,15 @@ steps:
   - publish: './publish'
     artifact: 'publish'
 
+  - publish: './docker-compose.yaml'
+    artifact: 'docker-compose'
+
+  - publish: './nginx'
+    artifact: 'nginx'
+
+  - publish: './scripts/deploy'
+    artifact: 'scripts'
+
   - script: |
       docker login $(DOCKER_REGISTRY) -u $(DOCKER_USER) -p $(DOCKER_TOKEN)
     displayName: 'Authenticate at Container Registry'
