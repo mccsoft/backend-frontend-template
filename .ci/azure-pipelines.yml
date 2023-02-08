@@ -47,6 +47,7 @@ stages:
     dependsOn:
       - Build
       - Test
+      - UI_Test
     condition: succeeded()
     jobs:
       - job: DockerTagLatest
@@ -85,7 +86,9 @@ stages:
               git push origin 'dev' -f --tags
 
   - stage: DeployToProd
-    dependsOn: Build
+    dependsOn:
+      - Build
+      - DockerTagLatest
     condition: succeeded()
     jobs:
       - deployment:
@@ -113,11 +116,11 @@ stages:
               git tag 'prod' -f
               git push origin 'prod' -f --tags
 
-  - stage: UI_Tests
+  - stage: UI_Test
     dependsOn:
       - Build
     jobs:
-      - job: UI_Tests
+      - job: UI_Test
         pool:
           vmImage: 'ubuntu-latest'
         container: mcr.microsoft.com/playwright:v1.30.0-focal
