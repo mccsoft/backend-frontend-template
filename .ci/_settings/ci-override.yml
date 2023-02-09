@@ -1,0 +1,2 @@
+variables:
+  ENABLE_DEPLOY: true

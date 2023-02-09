@@ -1,0 +1,13 @@
+# ------------------------------------
+# This is the default file that will be overwritten during update.
+# Please, DO NOT CHANGE it
+# Change 'ci-variables.yml' instead
+# ------------------------------------
+variables:
+  ENABLE_STORYBOOK: true
+  RUN_STORYBOOK_TESTS_AFTER_BUILD: false
+  RUN_STORYBOOK_TESTS_PARALLEL_BUILD: true
+  ENABLE_DEPLOY: false
+  ENABLE_TAG_LATEST: false
+  ENABLE_TAG_SOURCES: false
+  DEPLOY_IF_STORYBOOK_FAILS: false
