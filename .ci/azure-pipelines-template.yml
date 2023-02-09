@@ -40,8 +40,7 @@ stages:
   - ${{ if and(eq(variables.ENABLE_STORYBOOK, true), eq(variables.ENABLE_STORYBOOK_TESTS, true), or(eq(variables.RUN_STORYBOOK_TESTS_PARALLEL_BUILD, true), eq(variables.RUN_STORYBOOK_TESTS_AFTER_BUILD, true))) }}:
       - stage: StorybookTest
         dependsOn:
-          - ${{ if eq(variables.RUN_STORYBOOK_TESTS_PARALLEL_BUILD, true) }}:
-              - []
+          - ${{ if eq(variables.RUN_STORYBOOK_TESTS_PARALLEL_BUILD, true) }}: []
           - ${{ if eq(variables.RUN_STORYBOOK_TESTS_AFTER_BUILD, true) }}:
               - Build
         jobs:
