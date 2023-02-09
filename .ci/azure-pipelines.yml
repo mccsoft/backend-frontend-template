@@ -1,3 +1,9 @@
+# This is a CI build that is meant to be run on every commit in your main branch.
+# Parameters for this build are defined in
+# - ./_settings/base.yml
+# - ./_settings/base.partial.yml -- change here
+# - ./_settings/ci.yml
+# - ./_settings/ci.partial.yml --or change here
 trigger:
   branches:
     include:
