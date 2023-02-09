@@ -7,6 +7,10 @@
 # Change 'pr.partial.yml' instead
 # ------------------------------------
 variables:
+  # General
+  DISABLE_BUILD: true
+  # -----------
+
   # Deployment
   ENABLE_DEPLOY: false
   # -----------
