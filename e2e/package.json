@@ -10,12 +10,14 @@
     "eslint": "8.33.0",
     "eslint-config-prettier": "8.6.0",
     "eslint-plugin-prettier": "4.2.1",
+    "http-server": "14.1.1",
     "randomstring": "1.2.3",
     "typescript": "4.9.5"
   },
   "scripts": {
     "typecheck": "yarn tsc && yarn eslint",
     "eslint": "eslint --config \\.eslintrc.js --no-eslintrc \\*\\*/\\*.ts --quiet ",
+    "test": "npx playwright test storybook",
     "update-storybook-snapshots-linux": "cd .. && docker run --env STORYBOOK_URL=http://host.docker.internal:6006 --rm --network host -v $(pwd):/work/ -w /work/e2e -it mcr.microsoft.com/playwright:v1.30.0-focal npx playwright test storybook -j 1 --update-snapshots"
   }
 }

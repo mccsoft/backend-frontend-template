@@ -1,0 +1,12 @@
+# ------------------------------------
+# This file configures parameters for Pull Request checks.
+# It overrides parameters defined in ./base.yml
+#
+# This is the default file that will be overwritten during update.
+# Please, DO NOT CHANGE it
+# Change 'pr.partial.yml' instead
+# ------------------------------------
+variables:
+  # Deployment
+  ENABLE_DEPLOY: false
+  # -----------

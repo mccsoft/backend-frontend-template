@@ -1,0 +1,38 @@
+steps:
+  - script: |
+      yarn json -f package.json -I -e 'this.version="$(BUILD_NUMBER)"'
+      yarn json -f frontend/package.json -I -e 'this.version="$(BUILD_NUMBER)"'
+      yarn --version
+
+      # `set version` step should go after `yarn install`, since it uses `json` package which should be installed
+      # we do not use `yarn version` plugin, because it doesn't play well with shallow clone (https://yarnpkg.com/features/release-workflow#commit-history)
+    displayName: 'set version'
+
+  - script: |
+      yarn copy-translations-to-backend
+    displayName: 'copy translations to backend'
+
+  - script: |
+      yarn build-frontend
+    displayName: 'build frontend'
+
+  - publish: './frontend/build'
+    artifact: 'frontend'
+
+  - ${{ if eq(variables.ENABLE_STORYBOOK, true) }}:
+      - script: |
+          yarn frontend build-storybook
+        displayName: 'build storybook'
+
+      - publish: './frontend/storybook-static'
+        artifact: 'storybook'
+
+  - script: |
+      yarn build-dotnet
+    displayName: 'build backend'
+
+  - script: |
+      yarn copy-frontend && yarn copy-storybook
+    displayName: 'copy frontend to backend'
+
+  - template: ./build-import-meta-env.yml

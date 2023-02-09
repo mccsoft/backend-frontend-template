@@ -1,0 +1,44 @@
+# Shared steps to test everything within repository.
+steps:
+  - script: |
+      yarn typecheck
+    displayName: 'yarn typecheck'
+
+  - script: |
+      cd scripts/integresql
+      docker-compose up -d
+    displayName: 'run integresql'
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'test'
+      arguments:
+      projects: |
+        webapi/tests/**/*.csproj
+        webapi/Lib/**/*Tests.csproj
+      publishTestResults: true
+    env:
+      DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE: false
+    displayName: 'dotnet test'
+
+  # - script: |
+  #     mkdir ./cobertura
+  #     find '$(Agent.TempDirectory)' -name 'coverage.cobertura.xml' -exec cp --backup=numbered -t ./cobertura {} +
+  #     cd ./cobertura
+  #     for f in *~*~; do mv "$f" "$(echo "$f" | sed -r 's/(.*)\.~([0-9]+)~/\2\1/')"; done;
+  #   displayName: 'copy coverage files'
+
+  # - script: |
+  #     cd ./webapi
+  #     dotnet tool restore
+  #     dotnet reportgenerator -reports:../cobertura/* -targetdir:../cobertura/report -sourcedirs:./ -assemblyfilters:+Lmt.Unicorn.App\;+Lmt.Unicorn.Common\;+Lmt.Unicorn.Domain
+  #   displayName: 'generate coverage report'
+
+  # - publish: './cobertura'
+  #   artifact: 'backend-coverage'
+
+  # - task: PublishTestResults@2
+  #   inputs:
+  #     testResultsFormat: 'JUnit'
+  #     testResultsFiles: '**/junit.xml'
+  #     mergeTestResults: true

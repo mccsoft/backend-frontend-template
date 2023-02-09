@@ -9,5 +9,7 @@ export async function openStory(page: Page, storyName: string) {
   const iFrameUrl = '/iframe.html?id=';
   await page.goto(baseURL + iFrameUrl + storyName);
 
-  await expect.poll(() => page.locator('#root').innerHTML()).not.toBe('');
+  await expect
+    .poll(() => page.locator('#storybook-root').innerHTML())
+    .not.toBe('');
 }

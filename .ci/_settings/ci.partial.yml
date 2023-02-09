@@ -1,0 +1,6 @@
+# ------------------------------------
+# This file configures parameters for CI builds on the main branch.
+# Here you can override values defined in 'ci.yml' or 'base.yml'.
+# ------------------------------------
+variables:
+  DUMMY: 1

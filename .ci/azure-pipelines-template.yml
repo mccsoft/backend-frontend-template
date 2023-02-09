@@ -1,0 +1,133 @@
+parameters:
+  - name: name
+    type: string
+
+variables:
+  - template: ./_settings/base.yml
+  - template: ./_settings/base.partial.yml
+  - template: ./_settings/${{ parameters.name }}.yml
+  - template: ./_settings/${{ parameters.name }}.partial.yml
+
+stages:
+  - stage: Build
+    dependsOn: []
+    jobs:
+      - job:
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - checkout: self
+            fetchDepth: 1
+            submodules: true
+
+          - template: ./shared/cache-node-modules.yml
+          - template: ./shared/azure-pipelines-build.yml
+          - template: ./shared/azure-pipelines-docker.yml
+
+  - stage: Test
+    dependsOn: []
+    jobs:
+      - job:
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - checkout: self
+            fetchDepth: 1
+            submodules: true
+          - template: ./shared/cache-node-modules.yml
+          - template: ./shared/azure-pipelines-tests.yml
+
+  - ${{ if and(eq(variables.ENABLE_STORYBOOK, true), or(eq(variables.RUN_STORYBOOK_TESTS_PARALLEL_BUILD, true), eq(variables.RUN_STORYBOOK_TESTS_AFTER_BUILD, true))) }}:
+      - stage: StorybookTest
+        dependsOn:
+          - ${{ if eq(variables.RUN_STORYBOOK_TESTS_PARALLEL_BUILD, true) }}: []
+          - ${{ if eq(variables.RUN_STORYBOOK_TESTS_AFTER_BUILD, true) }}:
+              - Build
+        jobs:
+          - job:
+            pool:
+              vmImage: 'ubuntu-latest'
+            container: mcr.microsoft.com/playwright:v1.30.0-focal
+            steps:
+              - template: ./tests/playwright-tests.yml
+
+  - ${{ if eq(variables.ENABLE_DEPLOY, true) }}:
+      - stage: DockerTag
+        dependsOn:
+          - Build
+          - Test
+          - ${{ if and(eq(variables.ENABLE_STORYBOOK, true), not(eq(variables.DEPLOY_IF_STORYBOOK_FAILS, true)), or(eq(variables.RUN_STORYBOOK_TESTS_PARALLEL_BUILD, true), eq(variables.RUN_STORYBOOK_TESTS_AFTER_BUILD, true))) }}:
+              - StorybookTest
+        condition: succeeded()
+        jobs:
+          - job:
+            pool:
+              vmImage: 'ubuntu-latest'
+            steps:
+              - template: ./shared/docker-add-tag.yml
+                parameters:
+                  name: ${{ variables.DEPLOY_TAG }}
+
+      - stage: DeployToDev
+        dependsOn:
+          - Build
+          - DockerTag
+        condition: succeeded()
+        jobs:
+          - deployment:
+            environment:
+              name: 'DEV'
+              resourceType: VirtualMachine
+            strategy:
+              runOnce:
+                deploy:
+                  steps:
+                    - template: ./azure-deploy-template.yml
+
+      - ${{ if eq(variables.ENABLE_TAG_SOURCES, true) }}:
+          - stage: TagDevSources
+            dependsOn: DeployToDev
+            condition: succeeded()
+            jobs:
+              - job:
+                condition: succeeded()
+                pool:
+                  vmImage: ubuntu-latest
+                steps:
+                  - checkout: self
+                    persistCredentials: true
+                  - script: |
+                      git tag 'dev' -f
+                      git push origin 'dev' -f --tags
+
+      - stage: DeployToProd
+        dependsOn:
+          - Build
+          - DockerTag
+        condition: succeeded()
+        jobs:
+          - deployment:
+            environment:
+              name: 'PROD'
+              resourceType: VirtualMachine
+            strategy:
+              runOnce:
+                deploy:
+                  steps:
+                    - template: ./azure-deploy-template.yml
+
+      - ${{ if eq(variables.ENABLE_TAG_SOURCES, true) }}:
+          - stage: TagProdSources
+            dependsOn: DeployToProd
+            condition: succeeded()
+            jobs:
+              - job:
+                condition: succeeded()
+                pool:
+                  vmImage: ubuntu-latest
+                steps:
+                  - checkout: self
+                    persistCredentials: true
+                  - script: |
+                      git tag 'prod' -f
+                      git push origin 'prod' -f --tags
