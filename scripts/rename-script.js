@@ -79,7 +79,7 @@ const replacements = [
 
 await changeFrontendPortNumber(frontendPortNumber);
 await changeBackendPortNumber(backendPortNumber);
-await changeStorybookPortNumber(backendPortNumber);
+await changeStorybookPortNumber(storybookPortNumber);
 await changePasswordsInAppsettings();
 
 await fs.rename(
@@ -208,6 +208,48 @@ function changeStorybookPortNumber(port) {
   replace({
     regex: /start-storybook -p \d+/g,
     replacement: `start-storybook -p ${port}`,
+    paths: ['./frontend/package.json'],
+    silent: true,
+    recursive: true,
+  });
+  replace({
+    regex: /STORYBOOK_URL=http:\/\/localhost:\d+/g,
+    replacement: `STORYBOOK_URL=http://localhost:${port}`,
+    paths: ['./e2e/.env'],
+    silent: true,
+    recursive: true,
+  });
+  replace({
+    regex: /STORYBOOK_URL=http:\/\/localhost:\d+/g,
+    replacement: `STORYBOOK_URL=http://localhost:${port}`,
+    paths: ['./e2e/.env.local_sample'],
+    silent: true,
+    recursive: true,
+  });
+  replace({
+    regex: /STORYBOOK_URL=http:\/\/host.docker.internal:\d+/g,
+    replacement: `STORYBOOK_URL=http://host.docker.internal:${port}`,
+    paths: ['./e2e/package.json'],
+    silent: true,
+    recursive: true,
+  });
+  replace({
+    regex: /storybook-static -p \d+/g,
+    replacement: `storybook-static -p ${port}`,
+    paths: ['./e2e/playwright.config.ts'],
+    silent: true,
+    recursive: true,
+  });
+  replace({
+    regex: /port:\d+/g,
+    replacement: `port:${port}`,
+    paths: ['./e2e/playwright.config.ts'],
+    silent: true,
+    recursive: true,
+  });
+  replace({
+    regex: /storybook dev -p \d+/g,
+    replacement: `storybook dev -p ${port}`,
     paths: ['./frontend/package.json'],
     silent: true,
     recursive: true,
