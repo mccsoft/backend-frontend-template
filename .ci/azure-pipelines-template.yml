@@ -56,7 +56,7 @@ stages:
         dependsOn:
           - Build
           - Test
-          - ${{ if and(not(eq(variables.DEPLOY_IF_STORYBOOK_FAILS, true)), or(eq(variables.RUN_STORYBOOK_TESTS_PARALLEL_BUILD, true), eq(variables.RUN_STORYBOOK_TESTS_AFTER_BUILD, true))) }}:
+          - ${{ if and(eq(variables.ENABLE_STORYBOOK, true), not(eq(variables.DEPLOY_IF_STORYBOOK_FAILS, true)), or(eq(variables.RUN_STORYBOOK_TESTS_PARALLEL_BUILD, true), eq(variables.RUN_STORYBOOK_TESTS_AFTER_BUILD, true))) }}:
               - StorybookTest
         condition: succeeded()
         jobs:
