@@ -1,17 +1,12 @@
 # ------------------------------------
-# This file configures parameters for Pull Request checks
+# This file configures parameters for Pull Request checks.
+# It overrides parameters defined in ./base.yml
+#
 # This is the default file that will be overwritten during update.
 # Please, DO NOT CHANGE it
 # Change 'pr.partial.yml' instead
 # ------------------------------------
 variables:
-  # Storybook
-  ENABLE_STORYBOOK: true
-  ENABLE_STORYBOOK_TESTS: true
-  RUN_STORYBOOK_TESTS_AFTER_BUILD: false
-  RUN_STORYBOOK_TESTS_PARALLEL_BUILD: true
-  # -----------
-
   # Deployment
   ENABLE_DEPLOY: false
   # -----------

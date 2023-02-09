@@ -1,19 +1,10 @@
 # ------------------------------------
 # This file configures parameters for CI builds on the main branch.
+# It overrides parameters defined in ./base.yml
+#
 # This is the default file that will be overwritten during update.
 # Please, DO NOT CHANGE it
 # Change 'ci.partial.yml' instead
 # ------------------------------------
 variables:
-  # Storybook
-  ENABLE_STORYBOOK: true
-  RUN_STORYBOOK_TESTS_AFTER_BUILD: false
-  RUN_STORYBOOK_TESTS_PARALLEL_BUILD: true
-  # -----------
-
-  # Deployment
-  ENABLE_DEPLOY: true
-  DEPLOY_TAG: latest
-  ENABLE_TAG_SOURCES: true
-  DEPLOY_IF_STORYBOOK_FAILS: false
-  # -----------
+  DUMMY: 1

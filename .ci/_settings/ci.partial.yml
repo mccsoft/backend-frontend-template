@@ -1,7 +1,6 @@
 # ------------------------------------
 # This file configures parameters for CI builds on the main branch.
-# Here you can override values defined in 'ci.yml'.
+# Here you can override values defined in 'ci.yml' or 'base.yml'.
 # ------------------------------------
 variables:
-  ENABLE_TAG_SOURCES: false
-  ENABLE_STORYBOOK: false
+  DUMMY: 1

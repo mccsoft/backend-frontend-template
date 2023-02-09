@@ -8,3 +8,16 @@ variables:
   REACT_APP_BUILD_NUMBER: 0.1.$(Build.BuildId)
   solution: 'webapi/MccSoft.TemplateApp.sln'
   project: 'webapi/src/MccSoft.TemplateApp.App/MccSoft.TemplateApp.App.csproj'
+
+  # Storybook
+  ENABLE_STORYBOOK: true
+  RUN_STORYBOOK_TESTS_AFTER_BUILD: false
+  RUN_STORYBOOK_TESTS_PARALLEL_BUILD: true
+  # -----------
+
+  # Deployment
+  ENABLE_DEPLOY: true
+  DEPLOY_TAG: latest
+  ENABLE_TAG_SOURCES: true
+  DEPLOY_IF_STORYBOOK_FAILS: false
+  # -----------
