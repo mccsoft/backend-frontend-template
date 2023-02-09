@@ -45,19 +45,19 @@ stages:
               ENABLE_STORYBOOK: ${{ variables.ENABLE_STORYBOOK }}
           - template: ./steps/azure-pipelines-tests.yml
 
-  - stage: StorybookTest
-    condition: and(eq(variables.ENABLE_STORYBOOK, true), or(eq(variables.RUN_STORYBOOK_TESTS_PARALLEL_BUILD, true), eq(variables.RUN_STORYBOOK_TESTS_AFTER_BUILD, true)))
-    dependsOn:
-      - ${{ if eq(variables.RUN_STORYBOOK_TESTS_PARALLEL_BUILD, true) }}: []
-      - ${{ if eq(variables.RUN_STORYBOOK_TESTS_AFTER_BUILD, true) }}:
-          - Build
-    jobs:
-      - job:
-        pool:
-          vmImage: 'ubuntu-latest'
-        container: mcr.microsoft.com/playwright:v1.30.0-focal
-        steps:
-          - template: ./tests/playwright-tests.yml
+  - ${{ if and(eq(variables.ENABLE_STORYBOOK, true), or(eq(variables.RUN_STORYBOOK_TESTS_PARALLEL_BUILD, true), eq(variables.RUN_STORYBOOK_TESTS_AFTER_BUILD, true))) }}:
+      - stage: StorybookTest
+        dependsOn:
+          - ${{ if eq(variables.RUN_STORYBOOK_TESTS_PARALLEL_BUILD, true) }}: []
+          - ${{ if eq(variables.RUN_STORYBOOK_TESTS_AFTER_BUILD, true) }}:
+              - Build
+        jobs:
+          - job:
+            pool:
+              vmImage: 'ubuntu-latest'
+            container: mcr.microsoft.com/playwright:v1.30.0-focal
+            steps:
+              - template: ./tests/playwright-tests.yml
 
   - ${{ if eq(variables.ENABLE_DEPLOY, true) }}:
       - stage: DockerTag
