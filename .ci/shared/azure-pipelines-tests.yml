@@ -1,11 +1,5 @@
 # Shared steps to test everything within repository.
 steps:
-  - task: UseDotNet@2
-    displayName: 'Use .NET Core sdk 7'
-    inputs:
-      packageType: sdk
-      version: 7.x
-
   - script: |
       yarn typecheck
     displayName: 'yarn typecheck'

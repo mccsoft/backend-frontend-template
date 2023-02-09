@@ -27,87 +27,97 @@ stages:
           - template: ./shared/cache-node-modules.yml
           - template: ./shared/azure-pipelines-tests.yml
 
-  - stage: StorybookTest
-    dependsOn: []
-    jobs:
-      - job:
-        pool:
-          vmImage: 'ubuntu-latest'
-        container: mcr.microsoft.com/playwright:v1.30.0-focal
-        steps:
-          - template: ./tests/playwright-tests.yml
+  - ${{ if and(eq(variables.ENABLE_STORYBOOK, true), eq(variables.ENABLE_STORYBOOK_TESTS, true), or(eq(variables.RUN_STORYBOOK_TESTS_PARALLEL_BUILD, true), eq(variables.RUN_STORYBOOK_TESTS_AFTER_BUILD, true))) }}:
+      - stage: StorybookTest
+        dependsOn:
+          - ${{ if eq(variables.RUN_STORYBOOK_TESTS_PARALLEL_BUILD, true) }}:
+              - []
+          - ${{ if eq(variables.RUN_STORYBOOK_TESTS_AFTER_BUILD, true) }}:
+              - Build
+        jobs:
+          - job:
+            pool:
+              vmImage: 'ubuntu-latest'
+            container: mcr.microsoft.com/playwright:v1.30.0-focal
+            steps:
+              - template: ./tests/playwright-tests.yml
 
-  - stage: DockerTagLatest
-    dependsOn:
-      - Build
-      - Test
-      - StorybookTest
-    condition: succeeded()
-    jobs:
-      - job:
-        pool:
-          vmImage: 'ubuntu-latest'
-        steps:
-          - template: ./shared/docker-add-tag-latest.yml
+  - ${{ if eq(variables.ENABLE_DEPLOY, true) }}:
+      - ${{ if eq(variables.ENABLE_TAG_LATEST, true) }}:
+          - stage: DockerTagLatest
+            dependsOn:
+              - Build
+              - Test
+              - ${{ if eq(variables.DEPLOY_IF_STORYBOOK_FAILS, true) }}:
+                  - StorybookTest
+            condition: succeeded()
+            jobs:
+              - job:
+                pool:
+                  vmImage: 'ubuntu-latest'
+                steps:
+                  - template: ./shared/docker-add-tag-latest.yml
 
-  - stage: DeployToDev
-    dependsOn:
-      - Build
-      - DockerTagLatest
-    condition: succeeded()
-    jobs:
-      - deployment:
-        environment:
-          name: 'DEV'
-          resourceType: VirtualMachine
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - template: ./azure-deploy-template.yml
-
-  - stage: TagDevSources
-    dependsOn: DeployToDev
-    condition: succeeded()
-    jobs:
-      - job:
+      - stage: DeployToDev
+        dependsOn:
+          - Build
+          - DockerTagLatest
         condition: succeeded()
-        pool:
-          vmImage: ubuntu-latest
-        steps:
-          - checkout: self
-            persistCredentials: true
-          - script: |
-              git tag 'dev' -f
-              git push origin 'dev' -f --tags
+        jobs:
+          - deployment:
+            environment:
+              name: 'DEV'
+              resourceType: VirtualMachine
+            strategy:
+              runOnce:
+                deploy:
+                  steps:
+                    - template: ./azure-deploy-template.yml
 
-  - stage: DeployToProd
-    dependsOn:
-      - Build
-      - DockerTagLatest
-    condition: succeeded()
-    jobs:
-      - deployment:
-        environment:
-          name: 'PROD'
-          resourceType: VirtualMachine
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - template: ./azure-deploy-template.yml
+      - ${{ if eq(variables.ENABLE_TAG_SOURCES, true) }}:
+          - stage: TagDevSources
+            dependsOn: DeployToDev
+            condition: succeeded()
+            jobs:
+              - job:
+                condition: succeeded()
+                pool:
+                  vmImage: ubuntu-latest
+                steps:
+                  - checkout: self
+                    persistCredentials: true
+                  - script: |
+                      git tag 'dev' -f
+                      git push origin 'dev' -f --tags
 
-  - stage: TagProdSources
-    dependsOn: DeployToProd
-    condition: succeeded()
-    jobs:
-      - job:
+      - stage: DeployToProd
+        dependsOn:
+          - Build
+          - DockerTagLatest
         condition: succeeded()
-        pool:
-          vmImage: ubuntu-latest
-        steps:
-          - checkout: self
-            persistCredentials: true
-          - script: |
-              git tag 'prod' -f
-              git push origin 'prod' -f --tags
+        jobs:
+          - deployment:
+            environment:
+              name: 'PROD'
+              resourceType: VirtualMachine
+            strategy:
+              runOnce:
+                deploy:
+                  steps:
+                    - template: ./azure-deploy-template.yml
+
+      - ${{ if eq(variables.ENABLE_TAG_SOURCES, true) }}:
+          - stage: TagProdSources
+            dependsOn: DeployToProd
+            condition: succeeded()
+            jobs:
+              - job:
+                condition: succeeded()
+                pool:
+                  vmImage: ubuntu-latest
+                steps:
+                  - checkout: self
+                    persistCredentials: true
+                  - script: |
+                      git tag 'prod' -f
+                      git push origin 'prod' -f --tags

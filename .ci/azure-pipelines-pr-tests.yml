@@ -6,12 +6,10 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  solution: 'webapi/MccSoft.TemplateApp.sln'
-  project: 'webapi/src/MccSoft.TemplateApp.App/MccSoft.TemplateApp.App.csproj'
+  - template: ./_settings/base.yml
+  - template: ./_settings/base.partial.yml
+  - template: ./_settings/pr.yml
+  - template: ./_settings/pr.partial.yml
 
-steps:
-  - checkout: self
-    fetchDepth: 1
-    submodules: true
-
-  - template: ./azure-pipelines-tests-shared.yml
+extends:
+  template: azure-pipelines-template.yml

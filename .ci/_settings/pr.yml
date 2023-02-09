@@ -4,10 +4,16 @@
 # Change 'ci-variables.yml' instead
 # ------------------------------------
 variables:
+  # Storybook
   ENABLE_STORYBOOK: true
+  ENABLE_STORYBOOK_TESTS: true
   RUN_STORYBOOK_TESTS_AFTER_BUILD: false
   RUN_STORYBOOK_TESTS_PARALLEL_BUILD: true
+  # -----------
+
+  # Deployment
   ENABLE_DEPLOY: false
-  ENABLE_TAG_LATEST: false
-  ENABLE_TAG_SOURCES: false
+  ENABLE_TAG_LATEST: true
+  ENABLE_TAG_SOURCES: true
   DEPLOY_IF_STORYBOOK_FAILS: false
+  # -----------

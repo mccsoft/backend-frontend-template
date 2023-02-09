@@ -6,6 +6,7 @@
 variables:
   # Storybook
   ENABLE_STORYBOOK: true
+  ENABLE_STORYBOOK_TESTS: true
   RUN_STORYBOOK_TESTS_AFTER_BUILD: false
   RUN_STORYBOOK_TESTS_PARALLEL_BUILD: true
   # -----------
