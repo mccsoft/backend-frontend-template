@@ -2,12 +2,11 @@
 # This file configures parameters for CI builds on the main branch.
 # This is the default file that will be overwritten during update.
 # Please, DO NOT CHANGE it
-# Change 'ci-variables.yml' instead
+# Change 'ci.partial.yml' instead
 # ------------------------------------
 variables:
   # Storybook
   ENABLE_STORYBOOK: true
-  ENABLE_STORYBOOK_TESTS: true
   RUN_STORYBOOK_TESTS_AFTER_BUILD: false
   RUN_STORYBOOK_TESTS_PARALLEL_BUILD: true
   # -----------

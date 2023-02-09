@@ -19,12 +19,13 @@ steps:
   - publish: './frontend/build'
     artifact: 'frontend'
 
-  - script: |
-      yarn frontend build-storybook
-    displayName: 'build storybook'
+  - ${{ if eq(variables.ENABLE_STORYBOOK, true) }}:
+      - script: |
+          yarn frontend build-storybook
+        displayName: 'build storybook'
 
-  - publish: './frontend/storybook-static'
-    artifact: 'storybook'
+      - publish: './frontend/storybook-static'
+        artifact: 'storybook'
 
   - script: |
       yarn build-dotnet

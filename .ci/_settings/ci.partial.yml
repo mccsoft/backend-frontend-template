@@ -4,3 +4,4 @@
 # ------------------------------------
 variables:
   ENABLE_TAG_SOURCES: false
+  ENABLE_STORYBOOK: false
