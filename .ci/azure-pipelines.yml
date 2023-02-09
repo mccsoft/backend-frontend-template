@@ -9,8 +9,10 @@ trigger:
       - docs/*
 
 variables:
-  - template: ./_settings/ci-default.yml
-  - template: ./_settings/ci-override.yml
+  - template: ./_settings/base.yml
+  - template: ./_settings/base.partial.yml
+  - template: ./_settings/ci.yml
+  - template: ./_settings/ci.partial.yml
 
 extends:
   template: azure-pipelines-template.yml

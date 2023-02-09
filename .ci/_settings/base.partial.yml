@@ -1,0 +1,7 @@
+# ------------------------------------
+# This is the base file that is used in all pipelines
+# Please, DO NOT CHANGE it
+# Change 'ci-variables.yml' instead
+# ------------------------------------
+variables:
+  DUMMY: 1
