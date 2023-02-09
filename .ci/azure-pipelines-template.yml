@@ -22,7 +22,8 @@ stages:
                 submodules: true
 
               - template: ./steps/cache-node-modules.yml
-                parameters
+                parameters:
+                  ENABLE_STORYBOOK: ${{ variables.ENABLE_STORYBOOK }}
               - template: ./steps/azure-pipelines-build.yml
                 parameters:
                   ENABLE_STORYBOOK: ${{ variables.ENABLE_STORYBOOK }}

@@ -4,6 +4,8 @@ steps:
     submodules: true
 
   - template: ../steps/cache-node-modules.yml
+    parameters:
+      ENABLE_STORYBOOK: true
 
   # - task: DownloadPipelineArtifact@2
   #   inputs:
