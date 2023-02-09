@@ -3,4 +3,4 @@
 # Here you can override values defined in 'ci.yml'.
 # ------------------------------------
 variables:
-  DUMMY: 1
+  ENABLE_TAG_SOURCES: false
