@@ -9,35 +9,37 @@ variables:
   - template: ./_settings/${{ parameters.name }}.partial.yml
 
 stages:
-  - stage: Build
-    dependsOn: []
-    jobs:
-      - job:
-        pool:
-          vmImage: 'ubuntu-latest'
-        steps:
-          - checkout: self
-            fetchDepth: 1
-            submodules: true
+  - ${{ if ne(variables.DISABLE_BUILD, true) }}:
+      - stage: Build
+        dependsOn: []
+        jobs:
+          - job:
+            pool:
+              vmImage: 'ubuntu-latest'
+            steps:
+              - checkout: self
+                fetchDepth: 1
+                submodules: true
 
-          - template: ./steps/cache-node-modules.yml
-          - template: ./steps/azure-pipelines-build.yml
-            parameters:
-              ENABLE_STORYBOOK: ${{ variables.ENABLE_STORYBOOK }}
-          - template: ./steps/azure-pipelines-docker.yml
+              - template: ./steps/cache-node-modules.yml
+              - template: ./steps/azure-pipelines-build.yml
+                parameters:
+                  ENABLE_STORYBOOK: ${{ variables.ENABLE_STORYBOOK }}
+              - template: ./steps/azure-pipelines-docker.yml
 
-  - stage: Test
-    dependsOn: []
-    jobs:
-      - job:
-        pool:
-          vmImage: 'ubuntu-latest'
-        steps:
-          - checkout: self
-            fetchDepth: 1
-            submodules: true
-          - template: ./steps/cache-node-modules.yml
-          - template: ./steps/azure-pipelines-tests.yml
+  - ${{ if ne(variables.DISABLE_TESTS, true) }}:
+      - stage: Test
+        dependsOn: []
+        jobs:
+          - job:
+            pool:
+              vmImage: 'ubuntu-latest'
+            steps:
+              - checkout: self
+                fetchDepth: 1
+                submodules: true
+              - template: ./steps/cache-node-modules.yml
+              - template: ./steps/azure-pipelines-tests.yml
 
   - ${{ if and(eq(variables.ENABLE_STORYBOOK, true), or(eq(variables.RUN_STORYBOOK_TESTS_PARALLEL_BUILD, true), eq(variables.RUN_STORYBOOK_TESTS_AFTER_BUILD, true))) }}:
       - stage: StorybookTest
@@ -57,7 +59,8 @@ stages:
       - stage: DockerTag
         dependsOn:
           - Build
-          - Test
+          - ${{ if ne(variables.DISABLE_TESTS, true) }}:
+              - Test
           - ${{ if and(eq(variables.ENABLE_STORYBOOK, true), not(eq(variables.DEPLOY_IF_STORYBOOK_FAILS, true)), or(eq(variables.RUN_STORYBOOK_TESTS_PARALLEL_BUILD, true), eq(variables.RUN_STORYBOOK_TESTS_AFTER_BUILD, true))) }}:
               - StorybookTest
         condition: succeeded()

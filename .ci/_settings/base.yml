@@ -9,6 +9,11 @@ variables:
   solution: 'webapi/MccSoft.TemplateApp.sln'
   project: 'webapi/src/MccSoft.TemplateApp.App/MccSoft.TemplateApp.App.csproj'
 
+  # General
+  DISABLE_BUILD: false
+  DISABLE_TESTS: false
+  # -----------
+
   # Storybook
   ENABLE_STORYBOOK: true
   RUN_STORYBOOK_TESTS_AFTER_BUILD: false
