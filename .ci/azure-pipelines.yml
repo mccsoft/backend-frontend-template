@@ -11,4 +11,4 @@ trigger:
 extends:
   template: azure-pipelines-template.yml
   parameters:
-    - name: ci
+    name: ci
