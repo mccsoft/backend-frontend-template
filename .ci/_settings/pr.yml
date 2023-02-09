@@ -1,7 +1,8 @@
 # ------------------------------------
+# This file configures parameters for Pull Request checks
 # This is the default file that will be overwritten during update.
 # Please, DO NOT CHANGE it
-# Change 'ci-variables.yml' instead
+# Change 'pr.partial.yml' instead
 # ------------------------------------
 variables:
   # Storybook
@@ -13,7 +14,4 @@ variables:
 
   # Deployment
   ENABLE_DEPLOY: false
-  ENABLE_TAG_LATEST: true
-  ENABLE_TAG_SOURCES: true
-  DEPLOY_IF_STORYBOOK_FAILS: false
   # -----------

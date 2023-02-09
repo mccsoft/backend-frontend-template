@@ -1,2 +1,6 @@
+# ------------------------------------
+# This file configures parameters for Pull Request checks
+# Here you can override values defined in 'pr.yml'
+# ------------------------------------
 variables:
   DUMMY: 1

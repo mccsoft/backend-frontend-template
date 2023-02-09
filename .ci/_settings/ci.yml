@@ -1,4 +1,5 @@
 # ------------------------------------
+# This file configures parameters for CI builds on the main branch.
 # This is the default file that will be overwritten during update.
 # Please, DO NOT CHANGE it
 # Change 'ci-variables.yml' instead
@@ -13,7 +14,7 @@ variables:
 
   # Deployment
   ENABLE_DEPLOY: true
-  ENABLE_TAG_LATEST: true
+  DEPLOY_TAG: latest
   ENABLE_TAG_SOURCES: true
   DEPLOY_IF_STORYBOOK_FAILS: false
   # -----------

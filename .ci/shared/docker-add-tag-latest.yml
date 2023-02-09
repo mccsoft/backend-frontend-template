@@ -1,3 +1,8 @@
+parameters:
+  - name: name
+    type: string
+    default: latest
+
 steps:
   - checkout: none
   - script: |
@@ -5,5 +10,5 @@ steps:
     displayName: 'Authenticate at Container Registry'
 
   - script: |
-      docker buildx imagetools create $(DOCKER_REGISTRY):$(BUILD_NUMBER) --tag $(DOCKER_REGISTRY):latest
-    displayName: 'Add "latest" tag'
+      docker buildx imagetools create $(DOCKER_REGISTRY):$(BUILD_NUMBER) --tag $(DOCKER_REGISTRY):${{ parameters.name }}
+    displayName: 'Add "${{ parameters.name }}" tag'

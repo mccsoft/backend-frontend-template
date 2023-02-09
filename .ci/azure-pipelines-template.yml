@@ -52,25 +52,26 @@ stages:
               - template: ./tests/playwright-tests.yml
 
   - ${{ if eq(variables.ENABLE_DEPLOY, true) }}:
-      - ${{ if eq(variables.ENABLE_TAG_LATEST, true) }}:
-          - stage: DockerTagLatest
-            dependsOn:
-              - Build
-              - Test
-              - ${{ if eq(variables.DEPLOY_IF_STORYBOOK_FAILS, true) }}:
-                  - StorybookTest
-            condition: succeeded()
-            jobs:
-              - job:
-                pool:
-                  vmImage: 'ubuntu-latest'
-                steps:
-                  - template: ./shared/docker-add-tag-latest.yml
+      - stage: DockerTag
+        dependsOn:
+          - Build
+          - Test
+          - ${{ if not(eq(variables.DEPLOY_IF_STORYBOOK_FAILS, true)) }}:
+              - StorybookTest
+        condition: succeeded()
+        jobs:
+          - job:
+            pool:
+              vmImage: 'ubuntu-latest'
+            steps:
+              - template: ./shared/docker-add-tag.yml
+                parameters:
+                  name: ${{ variables.DEPLOY_TAG }}
 
       - stage: DeployToDev
         dependsOn:
           - Build
-          - DockerTagLatest
+          - DockerTag
         condition: succeeded()
         jobs:
           - deployment:
@@ -102,7 +103,7 @@ stages:
       - stage: DeployToProd
         dependsOn:
           - Build
-          - DockerTagLatest
+          - DockerTag
         condition: succeeded()
         jobs:
           - deployment:

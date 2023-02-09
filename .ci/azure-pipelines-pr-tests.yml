@@ -2,14 +2,7 @@
 # It should be triggered by Azure DevOps automatically when Pull Request is created
 # (you need to configure triggering in Azure DevOps by yourself).
 trigger: none
-pool:
-  vmImage: 'ubuntu-latest'
-
-variables:
-  - template: ./_settings/base.yml
-  - template: ./_settings/base.partial.yml
-  - template: ./_settings/pr.yml
-  - template: ./_settings/pr.partial.yml
-
 extends:
   template: azure-pipelines-template.yml
+  parameters:
+    name: pr
