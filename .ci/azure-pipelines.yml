@@ -8,11 +8,7 @@ trigger:
     exclude:
       - docs/*
 
-variables:
-  - template: ./_settings/base.yml
-  - template: ./_settings/base.partial.yml
-  - template: ./_settings/ci.yml
-  - template: ./_settings/ci.partial.yml
-
 extends:
   template: azure-pipelines-template.yml
+  parameters:
+    - name: ci

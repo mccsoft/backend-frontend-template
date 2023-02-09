@@ -1,3 +1,13 @@
+parameters:
+  - name: name
+    type: string
+
+variables:
+  - template: ./_settings/base.yml
+  - template: ./_settings/base.partial.yml
+  - template: ./_settings/${{ parameters.name }}.yml
+  - template: ./_settings/${{ parameters.name }}.partial.yml
+
 stages:
   - stage: Build
     dependsOn: []
