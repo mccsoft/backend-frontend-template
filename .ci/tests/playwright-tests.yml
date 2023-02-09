@@ -20,7 +20,7 @@ steps:
     displayName: 'npx playwright install'
 
   - script: |
-      RUN_STORYBOOK_SERVER=1 yarn test
+      RUN_STORYBOOK_SERVER=1 yarn test storybook
     workingDirectory: e2e
     displayName: 'run tests'
 
