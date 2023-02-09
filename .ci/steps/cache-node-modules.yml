@@ -1,3 +1,7 @@
+parameters:
+  - name: ENABLE_STORYBOOK
+    type: boolean
+
 steps:
   - task: NodeTool@0
     inputs:
@@ -35,6 +39,7 @@ steps:
       key: 'node_modules3|e2e|$(Agent.OS)|./yarn.lock'
       path: $(Build.SourcesDirectory)/e2e/node_modules
     displayName: Cache npm packages
+    condition: eq(variables.ENABLE_STORYBOOK, 'true')
     continueOnError: true
 
   - script: |

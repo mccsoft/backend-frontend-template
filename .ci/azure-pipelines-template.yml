@@ -22,38 +22,41 @@ stages:
                 submodules: true
 
               - template: ./steps/cache-node-modules.yml
+                parameters
               - template: ./steps/azure-pipelines-build.yml
                 parameters:
                   ENABLE_STORYBOOK: ${{ variables.ENABLE_STORYBOOK }}
               - template: ./steps/azure-pipelines-docker.yml
 
-  - ${{ if ne(variables.DISABLE_TESTS, true) }}:
-      - stage: Test
-        dependsOn: []
-        jobs:
-          - job:
-            pool:
-              vmImage: 'ubuntu-latest'
-            steps:
-              - checkout: self
-                fetchDepth: 1
-                submodules: true
-              - template: ./steps/cache-node-modules.yml
-              - template: ./steps/azure-pipelines-tests.yml
+  - stage: Test
+    dependsOn: []
+    condition: ne(variables.DISABLE_TESTS, true)
+    jobs:
+      - job: Test
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - checkout: self
+            fetchDepth: 1
+            submodules: true
+          - template: ./steps/cache-node-modules.yml
+            parameters:
+              ENABLE_STORYBOOK: ${{ variables.ENABLE_STORYBOOK }}
+          - template: ./steps/azure-pipelines-tests.yml
 
-  - ${{ if and(eq(variables.ENABLE_STORYBOOK, true), or(eq(variables.RUN_STORYBOOK_TESTS_PARALLEL_BUILD, true), eq(variables.RUN_STORYBOOK_TESTS_AFTER_BUILD, true))) }}:
-      - stage: StorybookTest
-        dependsOn:
-          - ${{ if eq(variables.RUN_STORYBOOK_TESTS_PARALLEL_BUILD, true) }}: []
-          - ${{ if eq(variables.RUN_STORYBOOK_TESTS_AFTER_BUILD, true) }}:
-              - Build
-        jobs:
-          - job:
-            pool:
-              vmImage: 'ubuntu-latest'
-            container: mcr.microsoft.com/playwright:v1.30.0-focal
-            steps:
-              - template: ./tests/playwright-tests.yml
+  - stage: StorybookTest
+    condition: and(eq(variables.ENABLE_STORYBOOK, true), or(eq(variables.RUN_STORYBOOK_TESTS_PARALLEL_BUILD, true), eq(variables.RUN_STORYBOOK_TESTS_AFTER_BUILD, true)))
+    dependsOn:
+      - ${{ if eq(variables.RUN_STORYBOOK_TESTS_PARALLEL_BUILD, true) }}: []
+      - ${{ if eq(variables.RUN_STORYBOOK_TESTS_AFTER_BUILD, true) }}:
+          - Build
+    jobs:
+      - job:
+        pool:
+          vmImage: 'ubuntu-latest'
+        container: mcr.microsoft.com/playwright:v1.30.0-focal
+        steps:
+          - template: ./tests/playwright-tests.yml
 
   - ${{ if eq(variables.ENABLE_DEPLOY, true) }}:
       - stage: DockerTag
@@ -89,21 +92,19 @@ stages:
                   steps:
                     - template: ./azure-deploy-template.yml
 
-      - ${{ if eq(variables.ENABLE_TAG_SOURCES, true) }}:
-          - stage: TagDevSources
-            dependsOn: DeployToDev
-            condition: succeeded()
-            jobs:
-              - job:
-                condition: succeeded()
-                pool:
-                  vmImage: ubuntu-latest
-                steps:
-                  - checkout: self
-                    persistCredentials: true
-                  - script: |
-                      git tag 'dev' -f
-                      git push origin 'dev' -f --tags
+      - stage: TagDevSources
+        dependsOn: DeployToDev
+        condition: and(succeeded(), eq(variables.ENABLE_TAG_SOURCES, true))
+        jobs:
+          - job:
+            pool:
+              vmImage: ubuntu-latest
+            steps:
+              - checkout: self
+                persistCredentials: true
+              - script: |
+                  git tag 'dev' -f
+                  git push origin 'dev' -f --tags
 
       - stage: DeployToProd
         dependsOn:
@@ -121,18 +122,16 @@ stages:
                   steps:
                     - template: ./azure-deploy-template.yml
 
-      - ${{ if eq(variables.ENABLE_TAG_SOURCES, true) }}:
-          - stage: TagProdSources
-            dependsOn: DeployToProd
-            condition: succeeded()
-            jobs:
-              - job:
-                condition: succeeded()
-                pool:
-                  vmImage: ubuntu-latest
-                steps:
-                  - checkout: self
-                    persistCredentials: true
-                  - script: |
-                      git tag 'prod' -f
-                      git push origin 'prod' -f --tags
+      - stage: TagProdSources
+        dependsOn: DeployToProd
+        condition: and(succeeded(), eq(variables.ENABLE_TAG_SOURCES, true))
+        jobs:
+          - job:
+            pool:
+              vmImage: ubuntu-latest
+            steps:
+              - checkout: self
+                persistCredentials: true
+              - script: |
+                  git tag 'prod' -f
+                  git push origin 'prod' -f --tags
