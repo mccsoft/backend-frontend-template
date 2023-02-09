@@ -1,5 +1,9 @@
 ﻿# Changelog
 
+### 2023-02-10 Configurable CI
+
+Added an ability to configure CI via Variables. Now you could enable/disable certain stages of the build via [\_settings/base.partial.yml](../.ci/_settings/base.partial.yml). Technically main CI build and PullRequest builds are the same except for variable values.
+
 ### 2023-02-06 Playwright with Storybook testing
 
 End-to-end tests using Playwright were introduced to the project (check out [e2e](./e2e) folder). These tests also include screenshot testing for all Storybook stories.
