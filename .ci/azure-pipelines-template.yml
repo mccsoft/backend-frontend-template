@@ -20,9 +20,11 @@ stages:
             fetchDepth: 1
             submodules: true
 
-          - template: ./shared/cache-node-modules.yml
-          - template: ./shared/azure-pipelines-build.yml
-          - template: ./shared/azure-pipelines-docker.yml
+          - template: ./steps/cache-node-modules.yml
+          - template: ./steps/azure-pipelines-build.yml
+            parameters:
+              ENABLE_STORYBOOK: ${{ variables.ENABLE_STORYBOOK }}
+          - template: ./steps/azure-pipelines-docker.yml
 
   - stage: Test
     dependsOn: []
@@ -34,8 +36,8 @@ stages:
           - checkout: self
             fetchDepth: 1
             submodules: true
-          - template: ./shared/cache-node-modules.yml
-          - template: ./shared/azure-pipelines-tests.yml
+          - template: ./steps/cache-node-modules.yml
+          - template: ./steps/azure-pipelines-tests.yml
 
   - ${{ if and(eq(variables.ENABLE_STORYBOOK, true), or(eq(variables.RUN_STORYBOOK_TESTS_PARALLEL_BUILD, true), eq(variables.RUN_STORYBOOK_TESTS_AFTER_BUILD, true))) }}:
       - stage: StorybookTest
@@ -64,7 +66,7 @@ stages:
             pool:
               vmImage: 'ubuntu-latest'
             steps:
-              - template: ./shared/docker-add-tag.yml
+              - template: ./steps/docker-add-tag.yml
                 parameters:
                   name: ${{ variables.DEPLOY_TAG }}
 

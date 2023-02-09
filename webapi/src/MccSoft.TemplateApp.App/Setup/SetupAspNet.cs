@@ -169,7 +169,9 @@ public static partial class SetupAspNet
                 new AuthorizeAttribute() { AuthenticationSchemes = "Identity.Application" }
             );
         app.MapHealthChecks("/health");
+
         app.MapFallbackToFile("index.html", SetupStaticFiles.DoNotCache);
+        app.MapFallbackToFile("storybook", "storybook/index.html", SetupStaticFiles.DoNotCache);
 
         app.Use404ForMissingStaticFiles();
 

@@ -1,3 +1,7 @@
+parameters:
+  - name: ENABLE_STORYBOOK
+    type: boolean
+
 steps:
   - script: |
       yarn json -f package.json -I -e 'this.version="$(BUILD_NUMBER)"'
@@ -19,7 +23,7 @@ steps:
   - publish: './frontend/build'
     artifact: 'frontend'
 
-  - ${{ if eq(variables.ENABLE_STORYBOOK, true) }}:
+  - ${{ if eq(parameters.ENABLE_STORYBOOK, true) }}:
       - script: |
           yarn frontend build-storybook
         displayName: 'build storybook'
