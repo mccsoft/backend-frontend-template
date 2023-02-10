@@ -78,7 +78,7 @@ export default defineConfig(({ command, mode }) => {
     },
     build: {
       outDir: 'build',
-      sourcemap: true,
+      sourcemap: process.env.SOURCEMAP === 'false' ? false : true,
       rollupOptions: {
         output: {
           // This is to make stable hashes of chunks.
