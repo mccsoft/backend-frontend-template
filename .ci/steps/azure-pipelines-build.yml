@@ -23,6 +23,14 @@ steps:
   - publish: './frontend/build'
     artifact: 'frontend'
 
+  - script: |
+      yarn build-dotnet
+    displayName: 'build backend'
+
+  - script: |
+      yarn copy-frontend
+    displayName: 'copy frontend to backend'
+
   - ${{ if eq(parameters.ENABLE_STORYBOOK, true) }}:
       - script: |
           yarn frontend build-storybook
@@ -31,12 +39,8 @@ steps:
       - publish: './frontend/storybook-static'
         artifact: 'storybook'
 
-  - script: |
-      yarn build-dotnet
-    displayName: 'build backend'
-
-  - script: |
-      yarn copy-frontend && yarn copy-storybook
-    displayName: 'copy frontend to backend'
+      - script: |
+          yarn copy-storybook
+        displayName: 'copy storybook to backend'
 
   - template: ./build-import-meta-env.yml
