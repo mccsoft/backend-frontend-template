@@ -8,7 +8,7 @@
   <ItemGroup>
     <PackageReference Include="Destructurama.JsonNet" Version="2.0.0" />
     <PackageReference Include="IdentityModel" Version="6.0.0" />
-    <PackageReference Include="Metalama.Framework" Version="0.5.71-preview" />
+    <PackageReference Include="Metalama.Framework" Version="2023.0.102-rc" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
     <PackageReference Include="Sentry.Serilog" Version="3.24.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
