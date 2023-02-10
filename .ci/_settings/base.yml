@@ -21,8 +21,8 @@ variables:
   # -----------
 
   # Deployment
+  DOCKER_TAG: latest
   ENABLE_DEPLOY: true
-  DEPLOY_TAG: latest
   ENABLE_TAG_SOURCES: false
   DEPLOY_IF_STORYBOOK_FAILS: false
   # -----------

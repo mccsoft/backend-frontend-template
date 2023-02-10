@@ -59,7 +59,7 @@ stages:
             steps:
               - template: ./tests/playwright-tests.yml
 
-  - ${{ if eq(variables.ENABLE_DEPLOY, true) }}:
+  - ${{ if and(ne(variables.DOCKER_TAG, ''), ne(variables.DOCKER_TAG, false)) }}:
       - stage: DockerTag
         dependsOn:
           - Build
@@ -75,8 +75,9 @@ stages:
             steps:
               - template: ./steps/docker-add-tag.yml
                 parameters:
-                  name: ${{ variables.DEPLOY_TAG }}
+                  name: ${{ variables.DOCKER_TAG }}
 
+  - ${{ if eq(variables.ENABLE_DEPLOY, true) }}:
       - stage: DeployToDev
         dependsOn:
           - Build
