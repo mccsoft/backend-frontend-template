@@ -6,6 +6,7 @@ using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Persistence;
 using MccSoft.Testing;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -75,6 +76,11 @@ public class AppServiceTestBase : TestBase<TemplateAppDbContext>
     {
         SetupServices.AddServices(services, configuration, environment);
 
+        services
+            .AddDefaultIdentity<User>()
+            .AddRoles<IdentityRole>()
+            .AddRoleManager<RoleManager<IdentityRole>>()
+            .AddEntityFrameworkStores<TemplateAppDbContext>();
         // Here you could override type registration (e.g. mock http clients that call other microservices).
         // Most probably you'd need to remove existing registration before registering new one.
         // You could remove the registration by calling:

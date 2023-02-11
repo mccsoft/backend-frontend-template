@@ -1,5 +1,6 @@
 ﻿using MccSoft.LowLevelPrimitives;
 using MccSoft.TemplateApp.App.Features.Products;
+using MccSoft.TemplateApp.App.Features.TestApi;
 using MccSoft.TemplateApp.App.Services.Authentication;
 using MccSoft.TemplateApp.App.Services.Authentication.Seed;
 using MccSoft.TemplateApp.App.Utils;
@@ -18,6 +19,7 @@ public static class SetupServices
             .AddScoped<IDateTimeProvider, DateTimeProvider>()
             .AddTransient<IUserAccessor, UserAccessor>()
             .AddScoped<DefaultUserSeeder>()
+            .AddScoped<TestApiService>()
             .AddScoped<ProductService>();
     }
 }
