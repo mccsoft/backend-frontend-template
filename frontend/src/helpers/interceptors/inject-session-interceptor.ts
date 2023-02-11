@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from 'axios';
+import { InternalAxiosRequestConfig } from 'axios';
 import { createId } from 'components/uikit/type-utils';
 import { appVersion } from 'application/constants/env-variables';
 
@@ -8,8 +8,7 @@ export const sessionId = `${createId()}-${createId()}-${createId()}`;
 /**
  * Intercepts all HTTP calls via axios and adds a session-id header.
  */
-export const sessionAxiosInterceptor = (config: AxiosRequestConfig) => {
-  config.headers = config.headers ?? {};
+export const sessionAxiosInterceptor = (config: InternalAxiosRequestConfig) => {
   config.headers['ClientSession'] = sessionId;
   config.headers['ClientVersion'] = appVersion();
   config.headers['ClientPlatform'] = 'web';

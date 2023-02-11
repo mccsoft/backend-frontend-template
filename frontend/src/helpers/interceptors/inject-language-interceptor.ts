@@ -1,9 +1,10 @@
 import i18n from 'i18next';
-import { AxiosRequestConfig } from 'axios';
+import { InternalAxiosRequestConfig } from 'axios';
 
-export async function injectLanguageInterceptor(config: AxiosRequestConfig) {
+export async function injectLanguageInterceptor(
+  config: InternalAxiosRequestConfig,
+) {
   const language = i18n.language;
-  config.headers = config.headers ?? {};
   config.headers['Accept-Language'] = language;
   return config;
 }

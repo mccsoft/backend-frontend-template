@@ -9,7 +9,7 @@
  * - when user is logged-in/logged-out call setAuthData(authData or null)
  * - use useIsAuthorized or useAuth hooks to get auth data.
  */
-import Axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import Axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
 import {
   AuthData,
@@ -126,7 +126,9 @@ export function setupAuthInterceptor(
   axios.interceptors.request.use(injectAccessTokenInterceptor);
 }
 
-export async function injectAccessTokenInterceptor(config: AxiosRequestConfig) {
+export async function injectAccessTokenInterceptor(
+  config: InternalAxiosRequestConfig<any>,
+) {
   if (
     _authData != null &&
     // we should not overwrite Authorization headers for requests to IdentityServer,

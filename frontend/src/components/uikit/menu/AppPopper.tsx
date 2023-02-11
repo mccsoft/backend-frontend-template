@@ -4,7 +4,7 @@ import { useTriggerOnClickOutsideElement } from 'helpers/useTriggerOnClickOutsid
 import React, { MouseEventHandler, useEffect, useRef, useState } from 'react';
 import styles from './AppPopper.module.scss';
 import { useTransitionClass } from './useTransitionClass';
-import type { PopperUnstyledOwnProps } from '@mui/base/PopperUnstyled/PopperUnstyled';
+// import type { PopperUnstyledOwnProps } from '@mui/base/PopperUnstyled/PopperUnstyled';
 
 /*
  * Poppers could be used as a Tooltips, where you can't wrap an `anchor` into a Tooltip
@@ -149,6 +149,8 @@ const PopperContent: React.FC<
 const stopPropagation: MouseEventHandler<any> = (e) => {
   e.stopPropagation();
 };
-function resolveAnchorEl(anchorEl: PopperUnstyledOwnProps['anchorEl']) {
+function resolveAnchorEl(
+  anchorEl: React.ComponentProps<typeof PopperUnstyled>['anchorEl'],
+) {
   return typeof anchorEl === 'function' ? anchorEl() : anchorEl;
 }
