@@ -6,12 +6,15 @@
     "@types/randomstring": "1.1.8",
     "@typescript-eslint/eslint-plugin": "5.50.0",
     "@typescript-eslint/parser": "5.50.0",
+    "axios": "1.3.2",
     "dotenv": "16.0.3",
     "eslint": "8.33.0",
     "eslint-config-prettier": "8.6.0",
     "eslint-plugin-prettier": "4.2.1",
     "http-server": "14.1.1",
+    "nswag": "13.18.2",
     "randomstring": "1.2.3",
+    "react-query-swagger": "15.4.2",
     "sinon": "15.0.1",
     "typescript": "4.9.5"
   },
@@ -20,6 +23,8 @@
     "eslint": "eslint --config \\.eslintrc.js --no-eslintrc \\*\\*/\\*.ts --quiet ",
     "test-storybook": "npx playwright test storybook",
     "test": "npx playwright test tests",
+    "generate-api-client": "react-query-swagger /input:https://localhost:5001/swagger/v1/swagger.json /output:src/api/query-client.ts /template:Axios /serviceHost:. /no-hooks /use-recommended-configuration",
+    "generate-api-client-remote": "react-query-swagger /input:https://template.mcc-soft.de/swagger/v1/swagger.json /output:src/api/query-client.ts /template:Axios /serviceHost:. /no-hooks /use-recommended-configuration",
     "update-storybook-snapshots-linux": "cd .. && docker run --env STORYBOOK_URL=http://host.docker.internal:6006 --rm --network host -v $(pwd):/work/ -w /work/e2e -it mcr.microsoft.com/playwright:v1.30.0-focal npx playwright test storybook -j 1 --update-snapshots",
     "update-e2e-snapshots-linux": "cd .. && docker run --env STORYBOOK_URL=http://host.docker.internal:6006 --rm --network host -v $(pwd):/work/ -w /work/e2e -it mcr.microsoft.com/playwright:v1.30.0-focal npx playwright test tests -j 1 --update-snapshots"
   }
