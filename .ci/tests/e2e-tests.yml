@@ -7,12 +7,45 @@ steps:
     parameters:
       ENABLE_STORYBOOK: false
 
+  - task: DockerInstaller@0
+    inputs:
+      dockerVersion: '17.09.0-ce'
+
+  - script: |
+      docker login $(DOCKER_REGISTRY) -u $(DOCKER_USER) -p $(DOCKER_TOKEN)
+    displayName: 'Authenticate at Container Registry'
+
+  - script: |
+      openssl req \
+        -newkey rsa:2048 \
+        -nodes \
+        -sha256 \
+        -subj "/CN=localhost" \
+        -keyout ssl.key \
+        -x509 \
+        -days 365 \
+        -out ssl.crt
+    workingDirectory: .ci/e2e-branch
+    displayName: 'Generate self signed SSL certificate'
+
+  - script: |
+      mkdir files
+      chmod -R a+rw files
+    workingDirectory: .ci/branch-tests
+    displayName: 'Add files directory'
+
+  - script: |
+      export IMAGE="$(DOCKER_REGISTRY):$(BUILD_NUMBER)"
+      docker compose up -d
+    workingDirectory: .ci/e2e-branch
+    displayName: 'Start App in docker'
+
   - script: npx playwright install
     workingDirectory: e2e
     displayName: 'npx playwright install'
 
   - script: |
-      yarn test tests
+      yarn test
     workingDirectory: e2e
     displayName: 'run tests'
 
