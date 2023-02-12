@@ -13,71 +13,21 @@ import type { AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
 import { throwException, isAxiosError } from '../api-client';
 import { getAxios, getBaseUrl } from './helpers';
 
-export function getSignature(config?: AxiosRequestConfig | undefined): Promise<string> {
-    let url_ = getBaseUrl() + "/api/sign-url/signature";
+/**
+ * Resets tenant to a default state.
+Resetting in practice is usually faster then creating new tenant
+(in cases when creating  a tenant involves seeding the data).
+            
+Also resetting allows to reuse the browser session in UI Tests without re-login in every test.
+ */
+export function resetTenant(config?: AxiosRequestConfig | undefined): Promise<void> {
+    let url_ = getBaseUrl() + "/api/test/tenant/reset";
       url_ = url_.replace(/[?&]$/, "");
 
     let options_: AxiosRequestConfig = {
-        ..._requestConfigGetSignature,
+        ..._requestConfigResetTenant,
         ...config,
-        method: "GET",
-        url: url_,
-        headers: {
-            "Accept": "application/json"
-        }
-    };
-
-    return getAxios().request(options_).catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-            return _error.response;
-        } else {
-            throw _error;
-        }
-    }).then((_response: AxiosResponse) => {
-        return processGetSignature(_response);
-    });
-}
-
-function processGetSignature(response: AxiosResponse): Promise<string> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === "object") {
-        for (let k in response.headers) {
-            if (response.headers.hasOwnProperty(k)) {
-                _headers[k] = response.headers[k];
-            }
-        }
-    }
-    if (status === 400) {
-        const _responseText = response.data;
-        let result400: any = null;
-        let resultData400  = _responseText;
-        result400 = Types.ValidationProblemDetails.fromJS(resultData400);
-        return throwException("A server side error occurred.", status, _responseText, _headers, result400);
-
-    } else if (status === 200) {
-        const _responseText = response.data;
-        let result200: any = null;
-        let resultData200  = _responseText;
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
-        return Promise.resolve<string>(result200);
-
-    } else if (status !== 200 && status !== 204) {
-        const _responseText = response.data;
-        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-    }
-    return Promise.resolve<string>(null as any);
-}
-
-export function setSignatureCookie(config?: AxiosRequestConfig | undefined): Promise<void> {
-    let url_ = getBaseUrl() + "/api/sign-url/signature/cookie";
-      url_ = url_.replace(/[?&]$/, "");
-
-    let options_: AxiosRequestConfig = {
-        ..._requestConfigSetSignatureCookie,
-        ...config,
-        method: "GET",
+        method: "POST",
         url: url_,
         headers: {
         }
@@ -90,11 +40,11 @@ export function setSignatureCookie(config?: AxiosRequestConfig | undefined): Pro
             throw _error;
         }
     }).then((_response: AxiosResponse) => {
-        return processSetSignatureCookie(_response);
+        return processResetTenant(_response);
     });
 }
 
-function processSetSignatureCookie(response: AxiosResponse): Promise<void> {
+function processResetTenant(response: AxiosResponse): Promise<void> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === "object") {
@@ -121,24 +71,83 @@ function processSetSignatureCookie(response: AxiosResponse): Promise<void> {
     }
     return Promise.resolve<void>(null as any);
 }
-let _requestConfigGetSignature: Partial<AxiosRequestConfig> | null;
-export function getGetSignatureRequestConfig() {
-  return _requestConfigGetSignature;
-}
-export function setGetSignatureRequestConfig(value: Partial<AxiosRequestConfig>) {
-  _requestConfigGetSignature = value;
-}
-export function patchGetSignatureRequestConfig(patch: (value: Partial<AxiosRequestConfig>) => Partial<AxiosRequestConfig>) {
-  _requestConfigGetSignature = patch(_requestConfigGetSignature ?? {});
+
+/**
+ * Creates a test tenant to be used in UI Tests
+ */
+export function createTestTenant(dto: Types.CreateTestTenantDto, config?: AxiosRequestConfig | undefined): Promise<void> {
+    let url_ = getBaseUrl() + "/api/test/tenant";
+      url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(dto);
+
+    let options_: AxiosRequestConfig = {
+        ..._requestConfigCreateTestTenant,
+        ...config,
+        data: content_,
+        method: "POST",
+        url: url_,
+        headers: {
+            "Content-Type": "application/json",
+        }
+    };
+
+    return getAxios().request(options_).catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+            return _error.response;
+        } else {
+            throw _error;
+        }
+    }).then((_response: AxiosResponse) => {
+        return processCreateTestTenant(_response);
+    });
 }
 
-let _requestConfigSetSignatureCookie: Partial<AxiosRequestConfig> | null;
-export function getSetSignatureCookieRequestConfig() {
-  return _requestConfigSetSignatureCookie;
+function processCreateTestTenant(response: AxiosResponse): Promise<void> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === "object") {
+        for (let k in response.headers) {
+            if (response.headers.hasOwnProperty(k)) {
+                _headers[k] = response.headers[k];
+            }
+        }
+    }
+    if (status === 400) {
+        const _responseText = response.data;
+        let result400: any = null;
+        let resultData400  = _responseText;
+        result400 = Types.ValidationProblemDetails.fromJS(resultData400);
+        return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+
+    } else if (status === 200) {
+        const _responseText = response.data;
+        return Promise.resolve<void>(null as any);
+
+    } else if (status !== 200 && status !== 204) {
+        const _responseText = response.data;
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+    }
+    return Promise.resolve<void>(null as any);
 }
-export function setSetSignatureCookieRequestConfig(value: Partial<AxiosRequestConfig>) {
-  _requestConfigSetSignatureCookie = value;
+let _requestConfigResetTenant: Partial<AxiosRequestConfig> | null;
+export function getResetTenantRequestConfig() {
+  return _requestConfigResetTenant;
 }
-export function patchSetSignatureCookieRequestConfig(patch: (value: Partial<AxiosRequestConfig>) => Partial<AxiosRequestConfig>) {
-  _requestConfigSetSignatureCookie = patch(_requestConfigSetSignatureCookie ?? {});
+export function setResetTenantRequestConfig(value: Partial<AxiosRequestConfig>) {
+  _requestConfigResetTenant = value;
+}
+export function patchResetTenantRequestConfig(patch: (value: Partial<AxiosRequestConfig>) => Partial<AxiosRequestConfig>) {
+  _requestConfigResetTenant = patch(_requestConfigResetTenant ?? {});
+}
+
+let _requestConfigCreateTestTenant: Partial<AxiosRequestConfig> | null;
+export function getCreateTestTenantRequestConfig() {
+  return _requestConfigCreateTestTenant;
+}
+export function setCreateTestTenantRequestConfig(value: Partial<AxiosRequestConfig>) {
+  _requestConfigCreateTestTenant = value;
+}
+export function patchCreateTestTenantRequestConfig(patch: (value: Partial<AxiosRequestConfig>) => Partial<AxiosRequestConfig>) {
+  _requestConfigCreateTestTenant = patch(_requestConfigCreateTestTenant ?? {});
 }
