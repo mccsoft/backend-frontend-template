@@ -16,12 +16,12 @@ steps:
       yarn copy-translations-to-backend
     displayName: 'copy translations to backend'
 
-  - task: Cache@2
-    inputs:
-      key: 'vite-cache'
-      path: $(Build.SourcesDirectory)/frontend/node_modules/.vite
-    displayName: Cache vite deps_build-build
-    continueOnError: true
+  # - task: Cache@2
+  #   inputs:
+  #     key: 'vite-cache'
+  #     path: $(Build.SourcesDirectory)/frontend/node_modules/.vite
+  #   displayName: Cache vite deps_build-build
+  #   continueOnError: true
 
   - script: |
       yarn frontend build-scss-for-razor

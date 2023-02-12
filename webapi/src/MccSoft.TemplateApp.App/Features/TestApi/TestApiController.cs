@@ -9,6 +9,7 @@ namespace MccSoft.TemplateApp.App.Features.TestApi;
 /// Test API Controller that is only enabled on test and development stages.
 /// Could be enabled/disabled by setting `TestApiEnabled` env. variable
 /// </summary>
+[Route("/api/test")]
 public class TestApiController : Controller
 {
     private readonly TestApiService _testApiService;
@@ -39,6 +40,7 @@ public class TestApiController : Controller
     ///
     /// Also resetting allows to reuse the browser session in UI Tests without re-login in every test.
     /// </summary>
+    [HttpPost("tenant/reset")]
     public async Task ResetTenant()
     {
         await _testApiService.ResetTenant();
@@ -48,6 +50,7 @@ public class TestApiController : Controller
     /// Creates a test tenant to be used in UI Tests
     /// </summary>
     [AllowAnonymous]
+    [HttpPost("tenant")]
     public async Task CreateTestTenant(CreateTestTenantDto dto)
     {
         await _testApiService.CreateTestTenant(dto);
