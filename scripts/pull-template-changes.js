@@ -93,6 +93,7 @@ copyProjectFolder(`frontend/src/helpers`, defaultOptions);
 
 syncPacketsInPackageJson('package.json');
 syncPacketsInPackageJson('frontend/package.json');
+syncPacketsInPackageJson('e2e/package.json');
 syncReferencesInProjects(`webapi/src/${prefix}.App/${prefix}.App.csproj`);
 syncReferencesInProjects(`webapi/src/${prefix}.Common/${prefix}.Common.csproj`);
 syncReferencesInProjects(`webapi/src/${prefix}.Domain/${prefix}.Domain.csproj`);

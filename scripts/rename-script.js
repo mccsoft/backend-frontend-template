@@ -116,6 +116,13 @@ async function renameFiles(replacements) {
 
 function changeFrontendPortNumber(port) {
   replace({
+    regex: /react-query-swagger \/input:https:\/\/localhost\d+;/g,
+    replacement: `react-query-swagger /input:https://localhost${port};`,
+    paths: ['./e2e/package.json'],
+    silent: true,
+    recursive: true,
+  });
+  replace({
     regex: /var frontendPort = process.env.PORT \?\? \d+;/g,
     replacement: `var frontendPort = process.env.PORT ?? ${port};`,
     paths: ['./frontend/vite.config.ts'],
@@ -144,6 +151,13 @@ function changeFrontendPortNumber(port) {
     paths: [
       './webapi/src/MccSoft.TemplateApp.App/appsettings.Development.json',
     ],
+    silent: true,
+    recursive: true,
+  });
+  replace({
+    regex: /BASE_URL=https:\/\/localhost:\d+/g,
+    replacement: `BASE_URL=https://localhost:5003${port}`,
+    paths: ['./e2e/.env.local_sample'],
     silent: true,
     recursive: true,
   });

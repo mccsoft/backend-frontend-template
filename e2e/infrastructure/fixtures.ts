@@ -38,7 +38,7 @@ export const authenticatedTest = base
           uniqueId: uniqueId,
           user: 'admin_' + uniqueId + '@mcc-soft.de',
           password: 'passworD1!',
-          baseUrl: process.env.UNICORN_URL || 'https://localhost:58627',
+          baseUrl: process.env.BASE_URL!,
           preconfiguredTenant: false,
           auth: { accessToken: '' },
           isFirstTest: true,

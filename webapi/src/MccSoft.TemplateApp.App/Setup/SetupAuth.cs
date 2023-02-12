@@ -86,6 +86,8 @@ public static partial class SetupAuth
                     .DisableAccessTokenEncryption()
                     .AddSigningCertificateFromConfiguration(configuration)
                     .AddEncryptionCertificateFromConfiguration(configuration);
+                if (configuration.GetValue<bool>("TestApiEnabled"))
+                    options.AllowPasswordFlow();
             })
             // Register the OpenIddict validation components.
             .AddValidation(options =>

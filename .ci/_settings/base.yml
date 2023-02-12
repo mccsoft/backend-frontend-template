@@ -20,6 +20,11 @@ variables:
   RUN_STORYBOOK_TESTS_PARALLEL_BUILD: true
   # -----------
 
+  # e2e
+  ENABLE_E2E: true
+  DEPLOY_IF_E2E_FAILS: true
+  # -----------
+
   # Deployment
   DOCKER_TAG: latest
   ENABLE_DEPLOY: true

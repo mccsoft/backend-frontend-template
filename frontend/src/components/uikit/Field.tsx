@@ -24,12 +24,18 @@ export type FieldProps = {
   titleClassName?: string;
   linkProps?: FieldLinkProps;
   hint?: string;
+  testId?: string;
 };
 
 export const Field: FC<FieldProps> = (props) => {
-  const { children, className, linkProps, title, titleClassName } = props;
+  const { children, className, linkProps, title, titleClassName, testId } =
+    props;
   return (
-    <div className={clsx(className, styles.container)}>
+    <div
+      className={clsx(className, styles.container)}
+      data-test-id={testId}
+      data-app-field={title}
+    >
       <div className={styles.titleContainer}>
         <div className={styles.titleWithHint}>
           <div className={clsx(styles.title, titleClassName)}>{title}</div>

@@ -112,7 +112,7 @@ export const ProductListPage: React.FC = () => {
   });
 
   return (
-    <div>
+    <div data-test-id="list-product-page">
       <div className={styles.navigation}>
         <AppLink
           color={ButtonColor.Primary}

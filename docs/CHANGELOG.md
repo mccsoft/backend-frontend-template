@@ -1,5 +1,9 @@
 ﻿# Changelog
 
+### 2023-02-13 End-to-end (e2e) UI tests
+
+Added e2e tests that run against the real stage (dev stage or local docker). Each test resets the DB to initial state before start, so each test works against the clean state.
+
 ### 2023-02-10 Configurable CI
 
 Added an ability to configure CI via Variables. Now you could enable/disable certain stages of the build via [\_settings/base.partial.yml](../.ci/_settings/base.partial.yml). Technically main CI build and PullRequest builds are the same except for variable values.

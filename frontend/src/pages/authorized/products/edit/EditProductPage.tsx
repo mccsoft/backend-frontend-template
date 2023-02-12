@@ -56,7 +56,11 @@ export const EditProductPage: React.FC = () => {
       >
         Back
       </AppLink>
-      <Grid container justifyContent={'center'}>
+      <Grid
+        container
+        justifyContent={'center'}
+        data-test-id="create-product-page"
+      >
         <Grid item xs={12} md={6} lg={4}>
           <form onSubmit={form.handleSubmitDefault}>
             <Field title={i18n.t('title')}>

@@ -24,7 +24,7 @@ export const RootPage: React.FC = () => {
   const i18n = useTranslation();
   return (
     <>
-      <div className={styles.container}>
+      <div className={styles.container} data-test-id="main-page-container">
         <div className={styles.content}>
           <Routes>
             <Route

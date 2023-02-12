@@ -28,7 +28,7 @@
     <div class="login-container">
       <form method="post">
 
-        <div class="input-container">
+        <div class="input-container" data-app-field="Login">
           <div class="title-container">
             <div class="title">
               <label asp-for="Input.Email">@Localizer["Frontend:Page.Login.login_field"]</label>
@@ -44,7 +44,7 @@
           </div>
         </div>
 
-        <div class="input-container">
+        <div class="input-container" data-app-field="Password">
           <div class="title-container">
             <div class="title">
               <label asp-for="Input.Password">@Localizer["Frontend:Page.Login.password_field"]</label>

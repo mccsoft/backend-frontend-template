@@ -35,9 +35,9 @@ public class TestApiService
     /// </summary>
     public async Task<CreateTestTenantResponseDto> CreateTestTenant(CreateTestTenantDto dto)
     {
-        var existingUser = await _dbContext.Users.FirstOrDefaultAsync(
-            x => x.Email == dto.UserEmail
-        );
+        var existingUser = await _dbContext.Users
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(x => x.Email == dto.UserEmail);
         if (existingUser != null)
             throw new ValidationException(nameof(dto.UserEmail), "User exists");
 

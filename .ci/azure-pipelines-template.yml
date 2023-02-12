@@ -57,7 +57,7 @@ stages:
               vmImage: 'ubuntu-latest'
             container: mcr.microsoft.com/playwright:v1.30.0-focal
             steps:
-              - template: ./tests/playwright-tests.yml
+              - template: ./tests/storybook-tests.yml
 
   - ${{ if and(ne(variables.DOCKER_TAG, ''), ne(variables.DOCKER_TAG, false)) }}:
       - stage: DockerTag
