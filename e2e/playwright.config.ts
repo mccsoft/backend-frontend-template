@@ -14,7 +14,7 @@ if (process.env.TF_BUILD) {
  * See https://playwright.dev/docs/test-configuration.
  */
 const config: PlaywrightTestConfig = {
-  testDir: './',
+  testDir: process.env.STORYBOOK ? './storybook' : './tests',
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
   expect: {

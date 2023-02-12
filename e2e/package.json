@@ -21,8 +21,8 @@
   "scripts": {
     "typecheck": "yarn tsc && yarn eslint",
     "eslint": "eslint --config \\.eslintrc.js --no-eslintrc \\*\\*/\\*.ts --quiet ",
-    "test-storybook": "npx playwright test storybook",
-    "test": "npx playwright test tests",
+    "test-storybook": "STORYBOOK=1 npx playwright test",
+    "test": "npx playwright test",
     "generate-api-client": "react-query-swagger /input:https://localhost:5001/swagger/v1/swagger.json /output:src/api/query-client.ts /template:Axios /serviceHost:. /no-hooks /use-recommended-configuration",
     "generate-api-client-remote": "react-query-swagger /input:https://template.mcc-soft.de/swagger/v1/swagger.json /output:src/api/query-client.ts /template:Axios /serviceHost:. /no-hooks /use-recommended-configuration",
     "update-storybook-snapshots-linux": "cd .. && docker run --env STORYBOOK_URL=http://host.docker.internal:6006 --rm --network host -v $(pwd):/work/ -w /work/e2e -it mcr.microsoft.com/playwright:v1.30.0-focal npx playwright test storybook -j 1 --update-snapshots",
