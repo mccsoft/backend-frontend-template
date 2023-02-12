@@ -1,4 +1,5 @@
-﻿using MccSoft.TemplateApp.Domain;
+﻿using MccSoft.LowLevelPrimitives.Exceptions;
+using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,12 @@ public class TestApiService
     /// </summary>
     public async Task<CreateTestTenantResponseDto> CreateTestTenant(CreateTestTenantDto dto)
     {
+        var existingUser = await _dbContext.Users.FirstOrDefaultAsync(
+            x => x.Email == dto.UserEmail
+        );
+        if (existingUser != null)
+            throw new ValidationException(nameof(dto.UserEmail), "User exists");
+
         var tenant = new Tenant();
         _dbContext.Tenants.Add(tenant);
         await _dbContext.SaveChangesAsync();
