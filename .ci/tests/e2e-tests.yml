@@ -36,7 +36,7 @@ steps:
 
   - script: |
       export IMAGE="$(DOCKER_REGISTRY):$(BUILD_NUMBER)"
-      docker compose up -d
+      docker-compose up -d
     workingDirectory: .ci/tests/e2e-branch
     displayName: 'Start App in docker'
 
