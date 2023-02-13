@@ -44,14 +44,20 @@ steps:
     displayName: 'Add files directory'
 
   - script: |
+      ls -la
       export IMAGE="$(DOCKER_REGISTRY):$(BUILD_NUMBER)"
-      docker compose up --detach
+      docker compose up
     workingDirectory: .ci/tests/e2e-branch
     displayName: 'Start App in docker'
 
   - script: npx playwright install
     workingDirectory: e2e
     displayName: 'npx playwright install'
+
+  - script: |
+      chmod +x .ci/wait-for-http.sh
+      .ci/tests/wait-for-http.sh https://localhost/api/ -t 300 -r $(BUILD_NUMBER)
+    displayName: 'Waiting for web server to be up and running'
 
   - script: |
       yarn test
