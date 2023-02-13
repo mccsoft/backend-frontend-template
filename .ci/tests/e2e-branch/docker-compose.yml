@@ -3,9 +3,9 @@ services:
   nginx:
     image: nginx:latest
     volumes:
-      - ./ssl.crt:/etc/nginx/ssl.crt
-      - ./ssl.key:/etc/nginx/ssl.key
-      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl.crt:/etc/nginx/ssl.crt:ro
+      - ./ssl.key:/etc/nginx/ssl.key:ro
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
       - 443:443
 
