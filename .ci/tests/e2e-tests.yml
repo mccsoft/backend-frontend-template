@@ -9,10 +9,11 @@ steps:
 
   - task: DockerInstaller@0
     inputs:
-      dockerVersion: '17.09.0-ce'
+      dockerVersion: '20.10.23'
 
   - script: |
       docker login $(DOCKER_REGISTRY) -u $(DOCKER_USER) -p $(DOCKER_TOKEN)
+
     displayName: 'Authenticate at Container Registry'
 
   - script: |
@@ -36,7 +37,7 @@ steps:
 
   - script: |
       export IMAGE="$(DOCKER_REGISTRY):$(BUILD_NUMBER)"
-      docker-compose up -d
+      docker compose up --detach
     workingDirectory: .ci/tests/e2e-branch
     displayName: 'Start App in docker'
 
