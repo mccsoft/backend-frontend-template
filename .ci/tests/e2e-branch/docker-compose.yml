@@ -18,7 +18,7 @@ services:
     expose:
       - 5432
 
-  unicorn:
+  backend:
     image: ${IMAGE}
     env_file:
       - branch.env
