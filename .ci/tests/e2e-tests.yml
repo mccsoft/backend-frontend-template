@@ -55,10 +55,10 @@ steps:
     displayName: 'npx playwright install'
 
   - script: |
-      chmod 777 .wait-for-http.sh
-      .ci/wait-for-http.sh https://localhost/api/ -t 300 -r $(BUILD_NUMBER)
+      chmod 777 ./wait-for-http.sh
+      ./wait-for-http.sh https://localhost/api/ -t 300 -r $(BUILD_NUMBER)
     displayName: 'Waiting for web server to be up and running'
-    workingDirectory: .ci/tests
+    workingDirectory: .ci/tests/e2e-branch
 
   - script: |
       yarn test
