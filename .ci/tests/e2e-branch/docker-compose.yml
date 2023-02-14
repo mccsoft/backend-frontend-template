@@ -23,6 +23,6 @@ services:
     env_file:
       - branch.env
     volumes:
-      - ./files:/files
+      - ./files:/files:rw
     expose:
       - 5000
