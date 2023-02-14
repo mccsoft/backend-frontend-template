@@ -67,7 +67,6 @@ stages:
           - job:
             pool:
               vmImage: 'ubuntu-latest'
-            container: mcr.microsoft.com/playwright:v1.30.0-focal
             steps:
               - template: ./tests/e2e-tests.yml
 
