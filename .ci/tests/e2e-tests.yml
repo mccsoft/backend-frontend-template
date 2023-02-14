@@ -58,7 +58,7 @@ steps:
       chmod 777 ./wait-for-http.sh
       ./wait-for-http.sh https://localhost/api/ -t 300 -r $(BUILD_NUMBER)
     displayName: 'Waiting for web server to be up and running'
-    workingDirectory: .ci/tests/e2e-branch
+    workingDirectory: .ci/tests
 
   - script: |
       yarn test
