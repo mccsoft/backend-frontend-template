@@ -61,7 +61,7 @@ steps:
     workingDirectory: .ci/tests
 
   - script: |
-      yarn test
+      BASE_URL=https://localhost yarn test
     workingDirectory: e2e
     displayName: 'run tests'
 
@@ -80,4 +80,4 @@ steps:
 
   - publish: $(Build.SourcesDirectory)/e2e/test-results
     condition: always()
-    artifact: 'test-results$(System.JobAttempt)'
+    artifact: 'e2e-results$(System.JobAttempt)'

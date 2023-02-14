@@ -59,7 +59,7 @@ stages:
             steps:
               - template: ./tests/storybook-tests.yml
 
-  - ${{ if eq(variables.ENABLE_E2E, true) }}:
+  - ${{ if eq(variables.ENABLE_E2E_DOCKER, true) }}:
       - stage: e2e
         dependsOn:
           - Build
@@ -68,7 +68,7 @@ stages:
             pool:
               vmImage: 'ubuntu-latest'
             steps:
-              - template: ./tests/e2e-tests.yml
+              - template: ./tests/e2e-docker.yml
 
   - ${{ if and(ne(variables.DOCKER_TAG, ''), ne(variables.DOCKER_TAG, false)) }}:
       - stage: DockerTag
@@ -78,7 +78,7 @@ stages:
               - Test
           - ${{ if and(eq(variables.ENABLE_STORYBOOK, true), not(eq(variables.DEPLOY_IF_STORYBOOK_FAILS, true)), or(eq(variables.RUN_STORYBOOK_TESTS_PARALLEL_BUILD, true), eq(variables.RUN_STORYBOOK_TESTS_AFTER_BUILD, true))) }}:
               - StorybookTest
-          - ${{ if and(eq(variables.ENABLE_E2E, true), not(eq(variables.DEPLOY_IF_E2E_FAILS, true))) }}:
+          - ${{ if and(eq(variables.ENABLE_E2E_DOCKER, true), not(eq(variables.DEPLOY_IF_E2E_FAILS, true))) }}:
               - e2e
         condition: succeeded()
         jobs:

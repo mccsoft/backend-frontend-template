@@ -21,7 +21,7 @@ variables:
   # -----------
 
   # e2e
-  ENABLE_E2E: true
+  ENABLE_E2E_DOCKER: true
   DEPLOY_IF_E2E_FAILS: true
   # -----------
 
