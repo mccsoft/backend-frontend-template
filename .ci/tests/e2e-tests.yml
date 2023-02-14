@@ -46,7 +46,7 @@ steps:
       chmod 777 nginx.conf
       ls -la
       export IMAGE="$(DOCKER_REGISTRY):$(BUILD_NUMBER)"
-      docker compose up -d
+      docker compose up
     workingDirectory: .ci/tests/e2e-branch
     displayName: 'Start App in docker'
 
