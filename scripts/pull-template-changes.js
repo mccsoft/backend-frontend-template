@@ -298,7 +298,7 @@ function doSyncPacketsInPackageJson(src, dest) {
         const value = sourceJson.devDependencies[key];
         const sourceVersion = semver.coerce(value)?.version;
         const destVersion = semver.coerce(
-          destJson.dependencies[key] ?? '',
+          destJson.dependencies?.[key] ?? '',
         )?.version;
         if (!destVersion || semver.gt(sourceVersion, destVersion)) {
           destJson.devDependencies[key] = value;
