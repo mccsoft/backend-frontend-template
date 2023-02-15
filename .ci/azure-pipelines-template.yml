@@ -121,6 +121,17 @@ stages:
                   git tag 'dev' -f
                   git push origin 'dev' -f --tags
 
+  - ${{ if eq(variables.ENABLE_E2E_STAGE, true) }}:
+      - stage: e2e
+        dependsOn:
+          - Build
+        jobs:
+          - job:
+            pool:
+              vmImage: 'ubuntu-latest'
+            steps:
+              - template: ./tests/e2e-stage.yml
+
       - stage: DeployToProd
         dependsOn:
           - Build
