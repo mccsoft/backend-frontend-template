@@ -12,7 +12,7 @@ steps:
     displayName: 'npx playwright install'
 
   - script: |
-      yarn test tests
+      yarn test
     workingDirectory: e2e
     displayName: 'run tests'
 
@@ -31,4 +31,4 @@ steps:
 
   - publish: $(Build.SourcesDirectory)/e2e/test-results
     condition: always()
-    artifact: 'test-results$(System.JobAttempt)'
+    artifact: 'e2e-stage-results$(System.JobAttempt)'

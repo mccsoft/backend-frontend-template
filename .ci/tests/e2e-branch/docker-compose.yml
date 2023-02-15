@@ -1,0 +1,28 @@
+version: '2.0'
+services:
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl.crt:/etc/nginx/ssl.crt:ro
+      - ./ssl.key:/etc/nginx/ssl.key:ro
+    ports:
+      - 443:443
+
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: q7feYuiaaT2C
+      POSTGRES_DB: postgres
+    expose:
+      - 5432
+
+  backend:
+    image: ${IMAGE}
+    env_file:
+      - branch.env
+    volumes:
+      - ./files:/files:rw
+    expose:
+      - 5000
