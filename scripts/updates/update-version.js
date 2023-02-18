@@ -5,7 +5,7 @@ import { copyProjectFolder } from './update-helper.js';
 
 const templateJsonFileName = '.template.json';
 
-const updateList = [{ from: '1.3', update: updateFrom_1p3_to_1p4 }];
+const updateList = [{ from: '1.3.0', update: updateFrom_1p3_to_1p4 }];
 
 export function updateVersion(prefix) {
   const currentFolder = process.cwd();
