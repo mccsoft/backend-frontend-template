@@ -51,3 +51,10 @@ function copyRecursively(src, dest, options = { ignorePattern: undefined }) {
     }
   }
 }
+
+function getPartialFileName(fileName) {
+  return fileName.replace(
+    path.extname(fileName),
+    '.partial' + path.extname(fileName),
+  );
+}

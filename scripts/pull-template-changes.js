@@ -267,10 +267,3 @@ function doSyncPacketsInPackageJson(src, dest) {
 
   fs.writeFileSync(dest, JSON.stringify(destJson, undefined, 2));
 }
-
-function getPartialFileName(fileName) {
-  return fileName.replace(
-    path.extname(fileName),
-    '.partial' + path.extname(fileName),
-  );
-}
