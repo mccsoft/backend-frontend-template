@@ -5,8 +5,8 @@ import path from 'path';
 import { hideBin } from 'yargs/helpers';
 import { execSync } from 'child_process';
 import semver from 'semver';
-import { copyProjectFolder } from './updates/update-helper';
-import { updateVersion } from './updates/update-version';
+import { copyProjectFolder } from './updates/update-helper.js';
+import { updateVersion } from './updates/update-version.js';
 
 const args = yargs(hideBin(process.argv))
   .version('0.1')
