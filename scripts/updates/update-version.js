@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import semver from 'semver';
-import { copyProjectFolder } from './update-helper';
+import { copyProjectFolder } from './update-helper.js';
 
 const templateJsonFileName = '.template.json';
 
