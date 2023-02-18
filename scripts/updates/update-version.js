@@ -38,4 +38,5 @@ export function updateVersion(prefix) {
 
 function updateFrom_1p3_to_1p4(currentFolder, templateFolder, prefix) {
   copyProjectFolder(`webapi/src/${prefix}.App/Features/TestApi`);
+  copyProjectFolder(`webapi/tests/${prefix}.App.Tests/TestApiServiceTests.cs`);
 }
