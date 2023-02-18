@@ -29,7 +29,7 @@
     "generate-api-clients": "yarn frontend generate-api-clients",
     "generate-api-client-remote": "yarn frontend generate-api-client-remote",
     "rename": "node scripts/rename-script.js",
-    "pull-template-changes": "node scripts/pull-template-changes.js && yarn install && yarn typecheck",
+    "pull-template-changes": "node scripts/updates/pull-template-changes.js && yarn install && yarn typecheck",
     "frontend": "yarn workspace @templateApp/frontend",
     "e2e": "yarn workspace e2e",
     "build-dotnet": "rimraf publish && cross-env-shell dotnet publish webapi/src/MccSoft.TemplateApp.App/MccSoft.TemplateApp.App.csproj -c Release -o publish -p:Version=$npm_package_version",

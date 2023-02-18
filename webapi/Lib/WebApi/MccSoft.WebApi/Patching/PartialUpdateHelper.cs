@@ -89,8 +89,8 @@ public static class PartialUpdateHelper
                     try
                     {
                         typeof(PartialUpdateHelper)
-                            .GetMethod("Update")
-                            .MakeGenericMethod(
+                            .GetMethod(nameof(Update))
+                            ?.MakeGenericMethod(
                                 propertyInObjectToUpdate.PropertyType,
                                 propertyInNewValuesObject.PropertyType
                             )

@@ -280,6 +280,7 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
                     }
                     title={options.cancelButtonText ?? i18n.t('cancel_button')}
                     onClick={onClose}
+                    data-test-id="dialog-cancelButton"
                   />
                 ) : null}
                 <Button

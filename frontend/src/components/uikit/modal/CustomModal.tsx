@@ -18,6 +18,7 @@ export const CustomModal: React.FC<CustomModalProps> = (props) => {
         <CloseIcon
           className={styles.closeButton}
           onClick={props.onClose}
+          data-test-id={'dialog-close-button'}
         ></CloseIcon>
       </DialogTitle>
       <DialogContent className={styles.content}>{props.children}</DialogContent>

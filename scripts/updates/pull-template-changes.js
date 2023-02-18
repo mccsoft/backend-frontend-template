@@ -5,6 +5,8 @@ import path from 'path';
 import { hideBin } from 'yargs/helpers';
 import { execSync } from 'child_process';
 import semver from 'semver';
+import { copyProjectFolder } from './update-helper';
+import { updateVersion } from './update-version';
 
 const args = yargs(hideBin(process.argv))
   .version('0.1')
@@ -113,17 +115,10 @@ syncReferencesInProjects(
 syncReferencesInProjects(
   `webapi/tests/${prefix}.TestUtils/${prefix}.TestUtils.csproj`,
 );
-console.log(`finished successfully`);
+console.log(`folder syncing is finished`);
 
-function copyProjectFolder(
-  relativePathInsideProject,
-  options = { ignorePattern: undefined },
-) {
-  const copyFrom = path.join(templateFolder, relativePathInsideProject);
-  const copyTo = path.join(process.cwd(), relativePathInsideProject);
-  console.log(`Copying from '${copyFrom}' to '${copyTo}'`);
-  copyRecursively(copyFrom, copyTo, options);
-}
+updateVersion(prefix);
+console.log(`finished successfully`);
 
 function renameFilesInTemplate(templateFolder, projectName, companyName) {
   console.log('Calling `yarn install` in template...');
@@ -170,46 +165,6 @@ function findFileMatching(dir, regex) {
   }
 
   return null;
-}
-
-function copyRecursively(src, dest, options = { ignorePattern: undefined }) {
-  const exists = fs.existsSync(src);
-  if (!exists) return;
-  const stats = exists && fs.statSync(src);
-  const isDirectory = exists && stats.isDirectory();
-  if (isDirectory) {
-    if (!fs.existsSync(dest)) {
-      fs.mkdirSync(dest);
-    }
-
-    fs.readdirSync(src).forEach(function (childItemName) {
-      copyRecursively(
-        path.join(src, childItemName),
-        path.join(dest, childItemName),
-        options,
-      );
-    });
-  } else {
-    const srcPartialFile = getPartialFileName(src);
-    const destPartialFile = getPartialFileName(dest);
-    if (fs.existsSync(srcPartialFile) && !fs.existsSync(destPartialFile)) {
-      fs.copyFileSync(srcPartialFile, destPartialFile);
-    }
-    if (fs.existsSync(dest)) {
-      if (options?.ignorePattern) {
-        if (src.match(options.ignorePattern)) {
-          return;
-        }
-      }
-      const sourceFileContent = fs.readFileSync(src);
-      const destinationFileContent = fs.readFileSync(dest);
-      if (sourceFileContent !== destinationFileContent) {
-        fs.cpSync(src, dest, { force: true, preserveTimestamps: true });
-      }
-    } else {
-      fs.cpSync(src, dest, { force: true, preserveTimestamps: true });
-    }
-  }
 }
 
 function syncReferencesInProjects(relativePathInsideProject) {

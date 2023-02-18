@@ -6,17 +6,17 @@ import styles from './Loading.module.scss';
 import animationData from 'assets/animations/9629-loading.json';
 import { Lottie } from '../../animations/Lottie';
 
-interface Props {
+type Props = {
   loading: boolean;
   title?: string;
-  containerId?: string;
+  testId?: string;
   children?: React.ReactNode;
   className?: string;
   flex?: boolean;
   error?: any;
   wrapperClassName?: string;
   centerContent?: boolean;
-}
+};
 
 export const Loading: React.FC<Props> = (props) => {
   const loadingStyles = [props.className];
@@ -29,6 +29,7 @@ export const Loading: React.FC<Props> = (props) => {
         props.centerContent !== false ? styles.centerContent : null,
         props.wrapperClassName,
       )}
+      data-test-id={props.testId}
     >
       <div
         data-loaded={props.loading}
