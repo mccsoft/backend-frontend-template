@@ -17,14 +17,14 @@ export function updateVersion(prefix) {
   );
   var currentTemplateSettings = fs.existsSync(currentFolderJsonFileName)
     ? JSON.parse(fs.readFileSync(currentFolderJsonFileName))
-    : { version: '1' };
+    : { version: '1.0.0' };
   var newTemplateSettings = JSON.parse(
     fs.readFileSync(path.join(templateFolder, templateJsonFileName)),
   );
 
   const currentVersion = currentTemplateSettings.version;
   for (const update of updateList) {
-    if (semver.gt(update.from, currentVersion)) {
+    if (semver.gte(update.from, currentVersion)) {
       update.update(currentFolder, templateFolder, prefix);
     }
   }
