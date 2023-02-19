@@ -20,6 +20,7 @@
   },
   "scripts": {
     "typecheck": "yarn tsc && yarn eslint",
+    "show-trace-local-run": "yarn playwright show-trace test-results/**/trace.zip",
     "eslint": "eslint --config \\.eslintrc.js --no-eslintrc \\*\\*/\\*.ts --quiet ",
     "test-storybook": "STORYBOOK=1 npx playwright test",
     "test": "npx playwright test",

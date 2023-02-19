@@ -113,12 +113,9 @@ export class FieldPageObject {
     return this.region.locator('label');
   }
 
-  errorLocator = () => this.region.locator('div[data-error=true]').last();
-  public expectError() {
-    return expect(this.errorLocator());
-  }
+  error = () => this.region.locator('div[data-error=true]').last();
   public expectNoError() {
-    return expect(this.region.locator('div[data-error=true]')).toBeHidden();
+    return expect(this.error()).toBeHidden();
   }
 
   async blur() {
