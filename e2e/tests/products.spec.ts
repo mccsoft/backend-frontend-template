@@ -5,7 +5,7 @@ authenticatedTest.describe('products', () => {
   authenticatedTest('create product - validation', async ({ mainPage }) => {
     const createProduct = await mainPage.productList().gotoCreateProduct();
     await createProduct.submit();
-    await createProduct.title().expectError().toHaveText('Required');
+    await expect(createProduct.title().error()).toHaveText('Required');
   });
 
   authenticatedTest(
