@@ -7,6 +7,11 @@ Added e2e tests that run against the real stage (dev stage or local docker). Eac
 #### Manual steps:
 
 1. Add `"TestApiEnabled": false` to [appsettings.json](/webapi/src/MccSoft.TemplateApp.App/appsettings.json), `"TestApiEnabled": true` to [appsettings.Development.json](/webapi/src/MccSoft.TemplateApp.App/appsettings.Development.json) and to Development stage (if you plan to run e2e tests over the stage)
+1. Add OAuth redirect URLs to `https://localhost`:
+
+   > "RedirectUris": [ ... "https://localhost/auth/signout-callback"]
+
+   > "PostLogoutRedirectUris": [ ... "https://localhost/auth/signout-callback",]
 
 ### 2023-02-10 Configurable CI
 
