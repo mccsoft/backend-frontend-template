@@ -13,5 +13,6 @@ steps:
     displayName: 'package import-meta-env/cli'
 
   - script: |
+      ./import-meta/import-meta-env --version
       cp  ./import-meta/import-meta-env ./publish/
-    displayName: 'package import-meta-env/cli'
+    displayName: 'copy import-meta-env'
