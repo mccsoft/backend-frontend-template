@@ -51,7 +51,9 @@ export const RootPage: React.FC = () => {
           </Routes>
         </div>
         <div className={styles.bottomNavigation}>
-          <div>Version: {appVersion()}</div>
+          <div>
+            Version: {appVersion()}, {import.meta.env.TST}
+          </div>
           <div>
             <DropDownInput
               className={styles.languageSwitcher}

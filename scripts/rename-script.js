@@ -123,6 +123,13 @@ function changeFrontendPortNumber(port) {
     recursive: true,
   });
   replace({
+    regex: /vite preview --port \d+/g,
+    replacement: `vite preview --port ${port};`,
+    paths: ['./package.json'],
+    silent: true,
+    recursive: true,
+  });
+  replace({
     regex: /var frontendPort = process.env.PORT \?\? \d+;/g,
     replacement: `var frontendPort = process.env.PORT ?? ${port};`,
     paths: ['./frontend/vite.config.ts'],
