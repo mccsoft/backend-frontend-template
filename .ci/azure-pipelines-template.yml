@@ -3,7 +3,7 @@ parameters:
     type: string
   - name: ui_test_shards
     type: number
-    default: 2
+    default: 1
 
 variables:
   - template: ./_settings/base.yml
@@ -56,11 +56,15 @@ stages:
               - Build
         jobs:
           - job:
+            strategy:
+              parallel: ${{ parameters.ui_test_shards }}
             pool:
               vmImage: 'ubuntu-latest'
             container: mcr.microsoft.com/playwright:v1.30.0-focal
             steps:
               - template: ./tests/storybook-tests.yml
+                parameters:
+                  ui_test_shards: ${{ parameters.ui_test_shards }}
 
   - ${{ if eq(variables.ENABLE_E2E_DOCKER, true) }}:
       - stage: e2e
