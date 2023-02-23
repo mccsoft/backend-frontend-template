@@ -1,8 +1,3 @@
-parameters:
-  - name: ui_test_shards
-    type: number
-    default: 1
-
 steps:
   - checkout: self
     fetchDepth: 1
@@ -28,7 +23,7 @@ steps:
 
   - script: |
       env
-      RUN_STORYBOOK_SERVER=1 yarn test-storybook --shard 1/${ui_test_shards}
+      RUN_STORYBOOK_SERVER=1 yarn test-storybook --shard ${SYSTEM_JOBPOSITIONINPHASE}/${SYSTEM_TOTALJOBSINPHASE}
     workingDirectory: e2e
     displayName: 'run tests'
 

@@ -63,8 +63,6 @@ stages:
             container: mcr.microsoft.com/playwright:v1.30.0-focal
             steps:
               - template: ./tests/storybook-tests.yml
-                parameters:
-                  ui_test_shards: ${{ parameters.ui_test_shards }}
 
   - ${{ if eq(variables.ENABLE_E2E_DOCKER, true) }}:
       - stage: e2e
