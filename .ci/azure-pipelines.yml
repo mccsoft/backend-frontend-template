@@ -4,6 +4,11 @@
 # - ./_settings/base.partial.yml -- change here
 # - ./_settings/ci.yml
 # - ./_settings/ci.partial.yml --or change here
+parameters:
+  - name: ui_test_shards
+    type: number
+    default: 1
+
 trigger:
   branches:
     include:
@@ -18,3 +23,4 @@ extends:
   template: azure-pipelines-template.yml
   parameters:
     name: ci
+    ui_test_shards: ${{ parameters.ui_test_shards }}
