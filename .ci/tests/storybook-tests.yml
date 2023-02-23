@@ -1,3 +1,8 @@
+parameters:
+  - name: ui_test_shards
+    type: number
+    default: 1
+
 steps:
   - checkout: self
     fetchDepth: 1
@@ -22,7 +27,8 @@ steps:
     displayName: 'npx playwright install'
 
   - script: |
-      RUN_STORYBOOK_SERVER=1 yarn test-storybook
+      env
+      RUN_STORYBOOK_SERVER=1 yarn test-storybook --shard 1/${ui_test_shards}
     workingDirectory: e2e
     displayName: 'run tests'
 

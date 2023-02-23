@@ -7,7 +7,12 @@
 # - ./_settings/pr.yml
 # - ./_settings/pr.partial.yml --or change here
 trigger: none
+parameters:
+  - name: ui_test_shards
+    type: number
+    default: 2
 extends:
   template: azure-pipelines-template.yml
   parameters:
     name: pr
+    ui_test_shards: ${{ parameters.name }}

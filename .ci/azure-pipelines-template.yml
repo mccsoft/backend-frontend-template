@@ -1,6 +1,9 @@
 parameters:
   - name: name
     type: string
+  - name: ui_test_shards
+    type: number
+    default: 2
 
 variables:
   - template: ./_settings/base.yml
