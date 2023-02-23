@@ -1,5 +1,7 @@
 <Project>
  <PropertyGroup>
+   <WarningsAsErrors>VpRoslynDateTimeNowAnalayzer;ENUM0001</WarningsAsErrors>
+   <noWarn>1591;8618;CLASS0001;ASYNC0001;ASYNC0004;VpRoslynConfigureAwaitAnalayzer;RETURN0001;EF1001</noWarn>
    <MetalamaLicense>NN7SCLUR85N6WKBL8JYK774XWZ-ZQQQQQQQ6QZWTCCZL5AR27W3VJRL5</MetalamaLicense>
  </PropertyGroup>
 </Project>

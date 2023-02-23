@@ -23,7 +23,6 @@
 
   <PropertyGroup>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-    <noWarn>1591</noWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -40,6 +39,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Roslyn.Analyzers" Version="1.0.3.4" />
+    <PackageReference Include="Vp.Roslyn.Analyzers.All" Version="1.0.0" />
     <PackageReference Include="Metalama.Framework" Version="2023.0.102-rc" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="7.0.0" />
     <PackageReference Include="Audit.NET.Serilog" Version="20.1.3" />
@@ -132,8 +133,8 @@
     <EmbeddedResource Remove="logs\**" />
   </ItemGroup>
 
-  <!-- Adding the husky code to a multiple targeted project will cause husky to run multiple times. 
-    e.g <TargetFrameworks>netcoreapp3.1;net5.0;net6.0;net7.0</TargetFrameworks> 
+  <!-- Adding the husky code to a multiple targeted project will cause husky to run multiple times.
+    e.g <TargetFrameworks>netcoreapp3.1;net5.0;net6.0;net7.0</TargetFrameworks>
   to avoid this, you can add the $(IsCrossTargetingBuild)' == 'true' condition to the target. e.g-->
   <Target Name="Husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(HUSKY)' != 0">
     <Exec Command="dotnet tool restore" StandardOutputImportance="Low" StandardErrorImportance="High" />

@@ -79,6 +79,18 @@ public class PatchRequestConverter : JsonConverter<IPatchRequest>
                         patchRequest.SetHasProperty(property.Name);
                     }
                     continue;
+                case JsonTokenType.None:
+                case JsonTokenType.StartObject:
+                case JsonTokenType.StartArray:
+                case JsonTokenType.EndArray:
+                case JsonTokenType.Comment:
+                case JsonTokenType.String:
+                case JsonTokenType.Number:
+                case JsonTokenType.True:
+                case JsonTokenType.False:
+                case JsonTokenType.Null:
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
         throw new JsonException();

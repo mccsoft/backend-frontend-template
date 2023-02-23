@@ -61,6 +61,6 @@ Web Hooks functionality. See further [documentation](./details/Webhooks.md).
 
 StyledAutocomplete updates to better handle FreeSolo and Search scenarios
 
-### 2022-24-10 TestBase simplified
+### 2022-10-24 TestBase simplified
 
 Simplify inheritance hierarchy for tests (i.e. there's a single common [TestBase](../webapi/Lib/Testing/MccSoft.Testing/TestBase.cs) in `MccSoft.Lib.Testing`, and project-specific base classes [AppServiceTestBase](../webapi/tests/MccSoft.TemplateApp.App.Tests/AppServiceTestBase.cs) and [ComponentTestBase](../webapi/tests/MccSoft.TemplateApp.ComponentTests/ComponentTestBase.cs))
