@@ -61,7 +61,7 @@ steps:
     workingDirectory: .ci/tests
 
   - script: |
-      BASE_URL=https://localhost yarn test
+      BASE_URL=https://localhost yarn test --shard ${SYSTEM_JOBPOSITIONINPHASE}/${SYSTEM_TOTALJOBSINPHASE}
     workingDirectory: e2e
     displayName: 'run tests'
 
@@ -80,4 +80,4 @@ steps:
 
   - publish: $(Build.SourcesDirectory)/e2e/test-results
     condition: always()
-    artifact: 'e2e-results$(System.JobAttempt)'
+    artifact: 'e2e-results$(System.JobPositionInPhase)_$(System.JobAttempt)'

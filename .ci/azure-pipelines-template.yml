@@ -4,6 +4,9 @@ parameters:
   - name: ui_test_shards
     type: number
     default: 1
+  - name: e2e_test_shards
+    type: number
+    default: 1
 
 variables:
   - template: ./_settings/base.yml
@@ -70,6 +73,8 @@ stages:
           - Build
         jobs:
           - job:
+            strategy:
+              parallel: ${{ parameters.e2e_test_shards }}
             pool:
               vmImage: 'ubuntu-latest'
             steps:
@@ -132,6 +137,8 @@ stages:
           - Build
         jobs:
           - job:
+            strategy:
+              parallel: ${{ parameters.e2e_test_shards }}
             pool:
               vmImage: 'ubuntu-latest'
             steps:

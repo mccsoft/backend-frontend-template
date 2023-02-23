@@ -12,7 +12,7 @@ steps:
     displayName: 'npx playwright install'
 
   - script: |
-      yarn test
+      yarn test --shard ${SYSTEM_JOBPOSITIONINPHASE}/${SYSTEM_TOTALJOBSINPHASE}
     workingDirectory: e2e
     displayName: 'run tests'
 
