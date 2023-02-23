@@ -14,9 +14,11 @@ variables:
   - template: ./_settings/${{ parameters.name }}.yml
   - template: ./_settings/${{ parameters.name }}.partial.yml
   ${{ if ne(parameters.e2e_test_shards, 0) }}:
-    e2e_test_shards: ${{ parameters.e2e_test_shards }}:
+    - name: e2e_test_shards
+      value: ${{ parameters.e2e_test_shards }}:
   ${{ if ne(parameters.ui_test_shards, 0) }}:
-    ui_test_shards: ${{ parameters.ui_test_shards }}:
+    - name: ui_test_shards
+      value: : ${{ parameters.ui_test_shards }}:
 
 stages:
   - ${{ if ne(variables.DISABLE_BUILD, true) }}:
