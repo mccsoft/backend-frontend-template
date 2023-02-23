@@ -42,4 +42,4 @@ steps:
 
   - publish: $(Build.SourcesDirectory)/e2e/test-results
     condition: always()
-    artifact: 'test-results$(System.JobAttempt)'
+    artifact: 'test-results$(System.JobPositionInPhase)_$(System.JobAttempt)'
