@@ -7,7 +7,7 @@
 parameters:
   - name: ui_test_shards
     type: number
-    default: 1
+    default: 0
 
 trigger:
   branches:
