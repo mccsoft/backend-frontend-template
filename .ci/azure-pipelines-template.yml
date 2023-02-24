@@ -13,8 +13,11 @@ variables:
   - template: ./_settings/base.partial.yml
   - template: ./_settings/${{ parameters.name }}.yml
   - template: ./_settings/${{ parameters.name }}.partial.yml
-  ${{ if ne(parameters.e2e_test_shards, 0) }}:
-    e2e_test_shards: ${{parameters.e2e_test_shards}}
+  - name: e2e_test_shards
+    ${{ if ne(parameters.e2e_test_shards, 0) }}:
+      value: ${{ parameters.e2e_test_shards }}
+    ${{ else }}:
+      value: ${{ variables.e2e_test_shards }}
   ${{ if ne(parameters.ui_test_shards, 0) }}:
     ui_test_shards: ${{parameters.ui_test_shards}}
 
