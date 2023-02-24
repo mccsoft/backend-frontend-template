@@ -25,7 +25,7 @@ variables:
   ENABLE_E2E_STAGE: false
   DEPLOY_IF_E2E_FAILS: true
   e2e_test_shards: 1
-  ui_test_shards: 1
+  sb_test_shards: 1
   # -----------
 
   # Deployment

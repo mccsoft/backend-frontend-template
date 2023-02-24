@@ -8,11 +8,11 @@
 # - ./_settings/pr.partial.yml --or change here
 trigger: none
 parameters:
-  - name: ui_test_shards
+  - name: sb_test_shards
     type: number
     default: 1
 extends:
   template: azure-pipelines-template.yml
   parameters:
     name: pr
-    ui_test_shards: ${{ parameters.ui_test_shards }}
+    sb_test_shards: ${{ parameters.sb_test_shards }}

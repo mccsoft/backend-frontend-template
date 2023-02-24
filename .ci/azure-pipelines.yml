@@ -5,7 +5,7 @@
 # - ./_settings/ci.yml
 # - ./_settings/ci.partial.yml --or change here
 parameters:
-  - name: ui_test_shards
+  - name: sb_test_shards
     type: number
     default: 0
 
@@ -23,4 +23,4 @@ extends:
   template: azure-pipelines-template.yml
   parameters:
     name: ci
-    ui_test_shards: ${{ parameters.ui_test_shards }}
+    sb_test_shards: ${{ parameters.sb_test_shards }}

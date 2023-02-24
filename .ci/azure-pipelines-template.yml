@@ -1,7 +1,7 @@
 parameters:
   - name: name
     type: string
-  - name: ui_test_shards
+  - name: sb_test_shards
     type: number
     default: 0
   - name: e2e_test_shards
@@ -18,11 +18,11 @@ variables:
       value: ${{ parameters.e2e_test_shards }}
     ${{ else }}:
       value: ${{ variables.e2e_test_shards }}
-  - name: ui_test_shards
-    ${{ if ne(parameters.ui_test_shards, 0) }}:
-      value: ${{ parameters.ui_test_shards }}
+  - name: sb_test_shards
+    ${{ if ne(parameters.sb_test_shards, 0) }}:
+      value: ${{ parameters.sb_test_shards }}
     ${{ else }}:
-      value: ${{ variables.ui_test_shards }}
+      value: ${{ variables.sb_test_shards }}
 stages:
   - ${{ if ne(variables.DISABLE_BUILD, true) }}:
       - stage: Build
@@ -69,7 +69,7 @@ stages:
         jobs:
           - job:
             strategy:
-              parallel: ${{ variables.ui_test_shards }}
+              parallel: ${{ variables.sb_test_shards }}
             pool:
               vmImage: 'ubuntu-latest'
             container: mcr.microsoft.com/playwright:v1.30.0-focal
