@@ -22,7 +22,8 @@ steps:
     displayName: 'npx playwright install'
 
   - script: |
-      RUN_STORYBOOK_SERVER=1 yarn test-storybook
+      env
+      RUN_STORYBOOK_SERVER=1 yarn test-storybook --shard ${SYSTEM_JOBPOSITIONINPHASE}/${SYSTEM_TOTALJOBSINPHASE}
     workingDirectory: e2e
     displayName: 'run tests'
 
@@ -41,4 +42,4 @@ steps:
 
   - publish: $(Build.SourcesDirectory)/e2e/test-results
     condition: always()
-    artifact: 'test-results$(System.JobAttempt)'
+    artifact: 'test-results$(System.JobPositionInPhase)_$(System.JobAttempt)'

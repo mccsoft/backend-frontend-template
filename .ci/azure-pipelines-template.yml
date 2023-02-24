@@ -1,13 +1,28 @@
 parameters:
   - name: name
     type: string
+  - name: sb_test_shards
+    type: number
+    default: 0
+  - name: e2e_test_shards
+    type: number
+    default: 0
 
 variables:
   - template: ./_settings/base.yml
   - template: ./_settings/base.partial.yml
   - template: ./_settings/${{ parameters.name }}.yml
   - template: ./_settings/${{ parameters.name }}.partial.yml
-
+  - name: e2e_test_shards
+    ${{ if ne(parameters.e2e_test_shards, 0) }}:
+      value: ${{ parameters.e2e_test_shards }}
+    ${{ else }}:
+      value: ${{ variables.e2e_test_shards }}
+  - name: sb_test_shards
+    ${{ if ne(parameters.sb_test_shards, 0) }}:
+      value: ${{ parameters.sb_test_shards }}
+    ${{ else }}:
+      value: ${{ variables.sb_test_shards }}
 stages:
   - ${{ if ne(variables.DISABLE_BUILD, true) }}:
       - stage: Build
@@ -53,6 +68,8 @@ stages:
               - Build
         jobs:
           - job:
+            strategy:
+              parallel: ${{ variables.sb_test_shards }}
             pool:
               vmImage: 'ubuntu-latest'
             container: mcr.microsoft.com/playwright:v1.30.0-focal
@@ -65,6 +82,8 @@ stages:
           - Build
         jobs:
           - job:
+            strategy:
+              parallel: ${{ variables.e2e_test_shards }}
             pool:
               vmImage: 'ubuntu-latest'
             steps:
@@ -127,6 +146,8 @@ stages:
           - Build
         jobs:
           - job:
+            strategy:
+              parallel: ${{ variables.e2e_test_shards }}
             pool:
               vmImage: 'ubuntu-latest'
             steps:

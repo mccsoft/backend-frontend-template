@@ -21,6 +21,8 @@ variables:
   # ENABLE_E2E_DOCKER: true
   # ENABLE_E2E_STAGE: false
   # DEPLOY_IF_E2E_FAILS: false
+  # e2e_test_shards: 2
+  # sb_test_shards: 2
   # # -----------
 
   # # Deployment

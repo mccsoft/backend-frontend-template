@@ -7,7 +7,16 @@
 # - ./_settings/pr.yml
 # - ./_settings/pr.partial.yml --or change here
 trigger: none
+parameters:
+  - name: sb_test_shards
+    type: number
+    default: 0
+  - name: e2e_test_shards
+    type: number
+    default: 0
 extends:
   template: azure-pipelines-template.yml
   parameters:
     name: pr
+    sb_test_shards: ${{ parameters.sb_test_shards }}
+    e2e_test_shards: ${{ parameters.e2e_test_shards }}
