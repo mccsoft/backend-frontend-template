@@ -8,6 +8,9 @@ parameters:
   - name: sb_test_shards
     type: number
     default: 0
+  - name: e2e_test_shards
+    type: number
+    default: 0
 
 trigger:
   branches:
@@ -24,3 +27,4 @@ extends:
   parameters:
     name: ci
     sb_test_shards: ${{ parameters.sb_test_shards }}
+    e2e_test_shards: ${{ parameters.e2e_test_shards }}
