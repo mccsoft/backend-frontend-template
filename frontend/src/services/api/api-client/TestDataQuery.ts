@@ -7,14 +7,15 @@
 /* tslint:disable */
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
-import * as Types from '../api-client';
+import * as Types from '../api-client.types';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import type { UseQueryResult, QueryFunctionContext, UseQueryOptions, QueryClient, QueryKey, MutationKey, UseMutationOptions, UseMutationResult, QueryMeta, MutationMeta } from '@tanstack/react-query';
 import { trimArrayEnd, isParameterObject, getBaseUrl, addMetaToOptions  } from './helpers';
 import type { QueryMetaContextValue } from 'react-query-swagger';
 import { QueryMetaContext } from 'react-query-swagger';
 import { useContext } from 'react';
-export const Client = Types.TestDataClient;
+import * as Client from './TestDataClient'
+export { Client };
 import type { AxiosRequestConfig } from 'axios';
 
 export type FormDataTestDataMutationParameters = {
@@ -46,7 +47,7 @@ export function throwErrorQueryKey(...params: any[]): QueryKey {
     ]);
 }
 function __throwError() {
-  return Types.TestDataClient.throwError(
+  return Client.throwError(
     );
 }
 
@@ -115,7 +116,7 @@ export function useSendEmailMutation<TContext>(options?: Omit<UseMutationOptions
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
   
-      return useMutation(() => Types.TestDataClient.sendEmail(), {...options, mutationKey: key});
+      return useMutation(() => Client.sendEmail(), {...options, mutationKey: key});
 }
   
     
@@ -142,5 +143,5 @@ export function useFormDataMutation<TContext>(options?: Omit<UseMutationOptions<
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
   
-      return useMutation((formDataTestDataMutationParameters: FormDataTestDataMutationParameters) => Types.TestDataClient.formData(formDataTestDataMutationParameters.a), {...options, mutationKey: key});
+      return useMutation((formDataTestDataMutationParameters: FormDataTestDataMutationParameters) => Client.formData(formDataTestDataMutationParameters.a), {...options, mutationKey: key});
 }

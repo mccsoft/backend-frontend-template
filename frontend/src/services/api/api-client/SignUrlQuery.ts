@@ -7,14 +7,15 @@
 /* tslint:disable */
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
-import * as Types from '../api-client';
+import * as Types from '../api-client.types';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import type { UseQueryResult, QueryFunctionContext, UseQueryOptions, QueryClient, QueryKey, MutationKey, UseMutationOptions, UseMutationResult, QueryMeta, MutationMeta } from '@tanstack/react-query';
 import { trimArrayEnd, isParameterObject, getBaseUrl, addMetaToOptions  } from './helpers';
 import type { QueryMetaContextValue } from 'react-query-swagger';
 import { QueryMetaContext } from 'react-query-swagger';
 import { useContext } from 'react';
-export const Client = Types.SignUrlClient;
+import * as Client from './SignUrlClient'
+export { Client };
 import type { AxiosRequestConfig } from 'axios';
 
     
@@ -42,7 +43,7 @@ export function getSignatureQueryKey(...params: any[]): QueryKey {
     ]);
 }
 function __getSignature() {
-  return Types.SignUrlClient.getSignature(
+  return Client.getSignature(
     );
 }
 
@@ -105,7 +106,7 @@ export function setSignatureCookieQueryKey(...params: any[]): QueryKey {
     ]);
 }
 function __setSignatureCookie() {
-  return Types.SignUrlClient.setSignatureCookie(
+  return Client.setSignatureCookie(
     );
 }
 

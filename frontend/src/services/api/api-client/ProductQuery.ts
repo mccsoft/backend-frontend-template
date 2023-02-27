@@ -7,14 +7,15 @@
 /* tslint:disable */
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
-import * as Types from '../api-client';
+import * as Types from '../api-client.types';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import type { UseQueryResult, QueryFunctionContext, UseQueryOptions, QueryClient, QueryKey, MutationKey, UseMutationOptions, UseMutationResult, QueryMeta, MutationMeta } from '@tanstack/react-query';
 import { trimArrayEnd, isParameterObject, getBaseUrl, addMetaToOptions  } from './helpers';
 import type { QueryMetaContextValue } from 'react-query-swagger';
 import { QueryMetaContext } from 'react-query-swagger';
 import { useContext } from 'react';
-export const Client = Types.ProductClient;
+import * as Client from './ProductClient'
+export { Client };
 import type { AxiosRequestConfig } from 'axios';
 
 export type SearchProductQueryParameters = {
@@ -51,7 +52,7 @@ export function useCreateMutation<TContext>(options?: Omit<UseMutationOptions<Ty
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
   
-      return useMutation((dto: Types.CreateProductDto) => Types.ProductClient.create(dto), {...options, mutationKey: key});
+      return useMutation((dto: Types.CreateProductDto) => Client.create(dto), {...options, mutationKey: key});
 }
   
     
@@ -79,7 +80,7 @@ export function useDeleteMutation<TContext>(id?: number | undefined, options?: O
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
   
-      return useMutation(() => Types.ProductClient.delete_(id), {...options, mutationKey: key});
+      return useMutation(() => Client.delete_(id), {...options, mutationKey: key});
 }
   
     
@@ -141,7 +142,7 @@ export function searchQueryKey(...params: any[]): QueryKey {
   }
 }
 function __search(context: QueryFunctionContext) {
-  return Types.ProductClient.search(
+  return Client.search(
       context.queryKey[2] as string | null | undefined,       context.queryKey[3] as Types.ProductType | null | undefined,       context.queryKey[4] as Date | null | undefined,       context.queryKey[5] as number | null | undefined,       context.queryKey[6] as number | null | undefined,       context.queryKey[7] as string | null | undefined,       context.queryKey[8] as Types.SortOrder | undefined    );
 }
 
@@ -244,7 +245,7 @@ export function usePatchMutation<TContext>(id: number, options?: Omit<UseMutatio
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
   
-      return useMutation((dto: Types.PatchProductDto) => Types.ProductClient.patch(id, dto), {...options, mutationKey: key});
+      return useMutation((dto: Types.PatchProductDto) => Client.patch(id, dto), {...options, mutationKey: key});
 }
   
     
@@ -287,7 +288,7 @@ export function getQueryKey(...params: any[]): QueryKey {
   }
 }
 function __get(context: QueryFunctionContext) {
-  return Types.ProductClient.get(
+  return Client.get(
       context.queryKey[2] as number    );
 }
 

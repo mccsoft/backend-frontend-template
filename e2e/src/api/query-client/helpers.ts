@@ -1,13 +1,36 @@
 //-----ReactQueryFile-----
+import { useQuery, useMutation } from '@tanstack/react-query';
+import type { UseQueryResult, QueryFunctionContext, UseQueryOptions, QueryClient, QueryKey, MutationKey, UseMutationOptions, UseMutationResult, QueryMeta, MutationMeta } from '@tanstack/react-query';
+
 import axios from 'axios';
 import type { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
+
+const _resultTypesByQueryKey: Record<string, (data: any) => any> = {};
+export function addResultTypeFactory(typeName: string, factory: (data: any) => any) {
+  _resultTypesByQueryKey[typeName] = factory;
+}
+export function getResultTypeFactory(typeName: string) {
+  return _resultTypesByQueryKey[typeName];
+}
+
+export function trimArrayEnd<T>(arr: T[]): T[] {
+    let lastDefinedValueIndex = arr.length - 1;
+    while (lastDefinedValueIndex >= 0) {
+        if (arr[lastDefinedValueIndex] === undefined) {
+            lastDefinedValueIndex--;
+        } else {
+            break;
+        }
+    }
+    return lastDefinedValueIndex === arr.length - 1 ? arr : arr.slice(0, lastDefinedValueIndex + 1);
+}
 
 /*
   Determines if first parameter of useSomethingQuery is an object with query parameters, or it's a regular parameter
   Returns true if parameter is Object
   Returns false if parameter is number/string/boolean/Date or Array
 */
-function isParameterObject(param: unknown) {
+export function isParameterObject(param: unknown) {
     if (param === null || param === undefined) return false;
     if (param instanceof Array) return false;
     const isObject = typeof param === 'object';
@@ -33,7 +56,7 @@ export function setBaseUrl(baseUrl: string) {
 
 let _axiosFactory: () => AxiosInstance | undefined = () => undefined;
 /*
-  Returns currently used factory for Axios instances
+  Returns an instance of Axios either created by a configured factory or a default one
 */
 export function getAxios() {
   return _axiosFactory?.() ?? axios;
@@ -44,4 +67,5 @@ export function getAxios() {
 export function setAxiosFactory(factory: () => AxiosInstance) {
   _axiosFactory = factory;
 }
+
 //-----/ReactQueryFile----

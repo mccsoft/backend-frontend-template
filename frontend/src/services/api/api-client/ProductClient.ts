@@ -7,17 +7,17 @@
 /* tslint:disable */
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
-import * as Types from '../api-client';
+import * as Types from '../api-client.types';
 import type { AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
 
-import { throwException, isAxiosError } from '../api-client';
+import { throwException, isAxiosError } from '../api-client.types';
 import { getAxios, getBaseUrl } from './helpers';
 
 export function create(dto: Types.CreateProductDto, config?: AxiosRequestConfig | undefined): Promise<Types.ProductDto> {
     let url_ = getBaseUrl() + "/api/products";
       url_ = url_.replace(/[?&]$/, "");
 
-    const content_ = JSON.stringify(dto);
+    const content_ = Types.serializeCreateProductDto(dto);
 
     let options_: AxiosRequestConfig = {
         ..._requestConfigCreate,
@@ -56,14 +56,14 @@ function processCreate(response: AxiosResponse): Promise<Types.ProductDto> {
         const _responseText = response.data;
         let result400: any = null;
         let resultData400  = _responseText;
-        result400 = Types.ValidationProblemDetails.fromJS(resultData400);
+        result400 = Types.initValidationProblemDetails(resultData400);
         return throwException("A server side error occurred.", status, _responseText, _headers, result400);
 
     } else if (status === 200) {
         const _responseText = response.data;
         let result200: any = null;
         let resultData200  = _responseText;
-        result200 = Types.ProductDto.fromJS(resultData200);
+        result200 = Types.initProductDto(resultData200);
         return Promise.resolve<Types.ProductDto>(result200);
 
     } else if (status !== 200 && status !== 204) {
@@ -115,7 +115,7 @@ function processDelete(response: AxiosResponse): Promise<void> {
         const _responseText = response.data;
         let result400: any = null;
         let resultData400  = _responseText;
-        result400 = Types.ValidationProblemDetails.fromJS(resultData400);
+        result400 = Types.initValidationProblemDetails(resultData400);
         return throwException("A server side error occurred.", status, _responseText, _headers, result400);
 
     } else if (status === 200) {
@@ -193,14 +193,14 @@ function processSearch(response: AxiosResponse): Promise<Types.PagedResultOfProd
         const _responseText = response.data;
         let result400: any = null;
         let resultData400  = _responseText;
-        result400 = Types.ValidationProblemDetails.fromJS(resultData400);
+        result400 = Types.initValidationProblemDetails(resultData400);
         return throwException("A server side error occurred.", status, _responseText, _headers, result400);
 
     } else if (status === 200) {
         const _responseText = response.data;
         let result200: any = null;
         let resultData200  = _responseText;
-        result200 = Types.PagedResultOfProductListItemDto.fromJS(resultData200);
+        result200 = Types.initPagedResultOfProductListItemDto(resultData200);
         return Promise.resolve<Types.PagedResultOfProductListItemDto>(result200);
 
     } else if (status !== 200 && status !== 204) {
@@ -218,7 +218,7 @@ export function patch(id: number, dto: Types.PatchProductDto, config?: AxiosRequ
     url_ = url_.replace("{id}", encodeURIComponent("" + id));
       url_ = url_.replace(/[?&]$/, "");
 
-    const content_ = JSON.stringify(dto);
+    const content_ = Types.serializePatchProductDto(dto);
 
     let options_: AxiosRequestConfig = {
         ..._requestConfigPatch,
@@ -257,14 +257,14 @@ function processPatch(response: AxiosResponse): Promise<Types.ProductDto> {
         const _responseText = response.data;
         let result400: any = null;
         let resultData400  = _responseText;
-        result400 = Types.ValidationProblemDetails.fromJS(resultData400);
+        result400 = Types.initValidationProblemDetails(resultData400);
         return throwException("A server side error occurred.", status, _responseText, _headers, result400);
 
     } else if (status === 200) {
         const _responseText = response.data;
         let result200: any = null;
         let resultData200  = _responseText;
-        result200 = Types.ProductDto.fromJS(resultData200);
+        result200 = Types.initProductDto(resultData200);
         return Promise.resolve<Types.ProductDto>(result200);
 
     } else if (status !== 200 && status !== 204) {
@@ -317,14 +317,14 @@ function processGet(response: AxiosResponse): Promise<Types.ProductDto> {
         const _responseText = response.data;
         let result400: any = null;
         let resultData400  = _responseText;
-        result400 = Types.ValidationProblemDetails.fromJS(resultData400);
+        result400 = Types.initValidationProblemDetails(resultData400);
         return throwException("A server side error occurred.", status, _responseText, _headers, result400);
 
     } else if (status === 200) {
         const _responseText = response.data;
         let result200: any = null;
         let resultData200  = _responseText;
-        result200 = Types.ProductDto.fromJS(resultData200);
+        result200 = Types.initProductDto(resultData200);
         return Promise.resolve<Types.ProductDto>(result200);
 
     } else if (status !== 200 && status !== 204) {

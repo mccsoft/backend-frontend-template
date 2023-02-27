@@ -7,10 +7,10 @@
 /* tslint:disable */
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
-import * as Types from '../api-client';
+import * as Types from '../api-client.types';
 import type { AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
 
-import { throwException, isAxiosError } from '../api-client';
+import { throwException, isAxiosError } from '../api-client.types';
 import { getAxios, getBaseUrl } from './helpers';
 
 /**
@@ -58,7 +58,7 @@ function processResetTenant(response: AxiosResponse): Promise<void> {
         const _responseText = response.data;
         let result400: any = null;
         let resultData400  = _responseText;
-        result400 = Types.ValidationProblemDetails.fromJS(resultData400);
+        result400 = Types.initValidationProblemDetails(resultData400);
         return throwException("A server side error occurred.", status, _responseText, _headers, result400);
 
     } else if (status === 200) {
@@ -79,7 +79,7 @@ export function createTestTenant(dto: Types.CreateTestTenantDto, config?: AxiosR
     let url_ = getBaseUrl() + "/api/test/tenant";
       url_ = url_.replace(/[?&]$/, "");
 
-    const content_ = JSON.stringify(dto);
+    const content_ = Types.serializeCreateTestTenantDto(dto);
 
     let options_: AxiosRequestConfig = {
         ..._requestConfigCreateTestTenant,
@@ -117,7 +117,7 @@ function processCreateTestTenant(response: AxiosResponse): Promise<void> {
         const _responseText = response.data;
         let result400: any = null;
         let resultData400  = _responseText;
-        result400 = Types.ValidationProblemDetails.fromJS(resultData400);
+        result400 = Types.initValidationProblemDetails(resultData400);
         return throwException("A server side error occurred.", status, _responseText, _headers, result400);
 
     } else if (status === 200) {

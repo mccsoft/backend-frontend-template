@@ -11,11 +11,7 @@ import { requiredRule } from 'helpers/form/react-hook-form-helper';
 import React, { useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { QueryFactory } from 'services/api';
-import {
-  CreateProductDto,
-  ICreateProductDto,
-  ProductType,
-} from 'services/api/api-client';
+import { CreateProductDto, ProductType } from 'services/api/api-client';
 import { HookFormDropDownInput } from 'components/uikit/inputs/dropdown/HookFormDropDownInput';
 import { useNavigate } from 'react-router';
 import { HookFormDatePicker } from 'components/uikit/inputs/date-time/HookFormDatePicker';
@@ -25,9 +21,9 @@ export const CreateProductPage: React.FC = () => {
   const i18n = useScopedTranslation('Page.Products.Create');
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const form = useAdvancedForm<ICreateProductDto>(
+  const form = useAdvancedForm<CreateProductDto>(
     useCallback(async (data) => {
-      await QueryFactory.ProductQuery.Client.create(new CreateProductDto(data));
+      await QueryFactory.ProductQuery.Client.create(data);
       await queryClient.invalidateQueries(
         QueryFactory.ProductQuery.searchQueryKey(),
       );

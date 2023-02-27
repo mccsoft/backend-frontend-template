@@ -1466,12 +1466,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.12.1, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.14.5, @babel/runtime@npm:^7.16.3, @babel/runtime@npm:^7.17.8, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.18.9, @babel/runtime@npm:^7.19.4, @babel/runtime@npm:^7.20.6, @babel/runtime@npm:^7.20.7, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.6, @babel/runtime@npm:^7.8.3, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.12.1, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.14.5, @babel/runtime@npm:^7.16.3, @babel/runtime@npm:^7.17.8, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.18.9, @babel/runtime@npm:^7.19.4, @babel/runtime@npm:^7.20.6, @babel/runtime@npm:^7.20.7, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.3, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
   version: 7.20.13
   resolution: "@babel/runtime@npm:7.20.13"
   dependencies:
     regenerator-runtime: ^0.13.11
   checksum: 09b7a97a05c80540db6c9e4ddf8c5d2ebb06cae5caf3a87e33c33f27f8c4d49d9c67a2d72f1570e796045288fad569f98a26ceba0c4f5fad2af84b6ad855c4fb
+  languageName: node
+  linkType: hard
+
+"@babel/runtime@npm:^7.7.6":
+  version: 7.21.0
+  resolution: "@babel/runtime@npm:7.21.0"
+  dependencies:
+    regenerator-runtime: ^0.13.11
+  checksum: 7b33e25bfa9e0e1b9e8828bb61b2d32bdd46b41b07ba7cb43319ad08efc6fda8eb89445193e67d6541814627df0ca59122c0ea795e412b99c5183a0540d338ab
   languageName: node
   linkType: hard
 
@@ -4425,10 +4434,10 @@ __metadata:
     jwt-decode: 3.1.2
     lottie-web: 5.10.0
     material-ui-popup-state: 5.0.4
-    nock: 13.2.9
+    nock: 13.3.0
     nswag: 13.18.2
     oidc-client-ts: 2.2.0
-    prettier: 2.8.1
+    prettier: 2.8.4
     prop-types: 15.8.1
     query-string: 7.1.1
     react: 18.2.0
@@ -4439,7 +4448,7 @@ __metadata:
     react-i18next: 12.1.1
     react-merge-refs: 2.0.1
     react-paginate: 8.1.4
-    react-query-swagger: 15.4.2
+    react-query-swagger: 15.5.1-rc8
     react-redux: 8.0.2
     react-router: 6.3.0
     react-router-dom: 6.3.0
@@ -4455,11 +4464,11 @@ __metadata:
     rollup-plugin-visualizer: 5.8.3
     sass: 1.57.1
     storybook: 7.0.0-beta.45
-    superjson: 1.12.1
+    superjson: 1.12.2
     throttle-debounce: 3.0.1
     tsconfig-paths-webpack-plugin: 4.0.0
     typescript: 4.9.3
-    vite: 4.1.1
+    vite: 4.1.4
     vite-plugin-mkcert: 1.13.0
     vite-plugin-react-svg: 0.2.0
     vite-plugin-svgr: 2.4.0
@@ -7902,7 +7911,7 @@ __metadata:
     http-server: 14.1.1
     nswag: 13.18.2
     randomstring: 1.2.3
-    react-query-swagger: 15.4.2
+    react-query-swagger: 15.5.1-rc8
     sinon: 15.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -12129,15 +12138,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nock@npm:13.2.9":
-  version: 13.2.9
-  resolution: "nock@npm:13.2.9"
+"nock@npm:13.3.0":
+  version: 13.3.0
+  resolution: "nock@npm:13.3.0"
   dependencies:
     debug: ^4.1.0
     json-stringify-safe: ^5.0.1
     lodash: ^4.17.21
     propagate: ^2.0.0
-  checksum: 04a2dc60b4b55fd1240f28fe34865bbc744088a4570db3781fcf66021644cc3cc9178fd86a0cb0c1f28ea77b83e8f1c9288535f6b39a6d07100059f156ccc23b
+  checksum: 118d04e95a17f493898a82b5dfecc03762776e1980d9c3b2077479747e60b77109c5f7c0df969d1a8f6039260abe5961733553a5841f0f627bb35238576a0009
   languageName: node
   linkType: hard
 
@@ -13031,16 +13040,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:2.8.1":
-  version: 2.8.1
-  resolution: "prettier@npm:2.8.1"
-  bin:
-    prettier: bin-prettier.js
-  checksum: 4f21a0f1269f76fb36f54e9a8a1ea4c11e27478958bf860661fb4b6d7ac69aac1581f8724fa98ea3585e56d42a2ea317a17ff6e3324f40cb11ff9e20b73785cc
-  languageName: node
-  linkType: hard
-
-"prettier@npm:^2.8.0":
+"prettier@npm:2.8.4, prettier@npm:^2.8.0":
   version: 2.8.4
   resolution: "prettier@npm:2.8.4"
   bin:
@@ -13527,9 +13527,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-query-swagger@npm:15.4.2":
-  version: 15.4.2
-  resolution: "react-query-swagger@npm:15.4.2"
+"react-query-swagger@npm:15.5.1-rc8":
+  version: 15.5.1-rc8
+  resolution: "react-query-swagger@npm:15.5.1-rc8"
   dependencies:
     nswag: ^13.18.2
   peerDependencies:
@@ -13540,7 +13540,7 @@ __metadata:
     typescript: 3.x || 4.x
   bin:
     react-query-swagger: cli.js
-  checksum: 06b4a8768b04d7800e4b477377900669822278bfbe4132bdb65508df2524a08516a9aba557af775f549112d4f2b34ca6325129401c8422044d634187f64d0b0f
+  checksum: 6099e81d8c1bc72c5fe279c6c0feac1e75a4f932782a4c14630f8932c192b839ed1955aa1a85c3642255ad916f99d08179777ad651976f5f8c803e1ba5dc3d76
   languageName: node
   linkType: hard
 
@@ -15256,12 +15256,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"superjson@npm:1.12.1":
-  version: 1.12.1
-  resolution: "superjson@npm:1.12.1"
+"superjson@npm:1.12.2":
+  version: 1.12.2
+  resolution: "superjson@npm:1.12.2"
   dependencies:
     copy-anything: ^3.0.2
-  checksum: d69badde9892bd2acfb6a2c37f233b7018b64fe88357568a7ab480547d6755ac1ed33a8d438d7ca856178312f5367574de180774d558bc0b75d1439efdfc53ba
+  checksum: cf7735e172811ed87476a7c2f1bb0e83725a0e3c2d7a50a71303a973060b3c710288767fb767a7a7eee8e5625d3ccaee1176a93e27f43841627512c15c4cdf84
   languageName: node
   linkType: hard
 
@@ -16328,7 +16328,45 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:4.1.1, vite@npm:^3.0.0 || ^4.0.0":
+"vite@npm:4.1.4":
+  version: 4.1.4
+  resolution: "vite@npm:4.1.4"
+  dependencies:
+    esbuild: ^0.16.14
+    fsevents: ~2.3.2
+    postcss: ^8.4.21
+    resolve: ^1.22.1
+    rollup: ^3.10.0
+  peerDependencies:
+    "@types/node": ">= 14"
+    less: "*"
+    sass: "*"
+    stylus: "*"
+    sugarss: "*"
+    terser: ^5.4.0
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  peerDependenciesMeta:
+    "@types/node":
+      optional: true
+    less:
+      optional: true
+    sass:
+      optional: true
+    stylus:
+      optional: true
+    sugarss:
+      optional: true
+    terser:
+      optional: true
+  bin:
+    vite: bin/vite.js
+  checksum: 50a9a1f2e29e0ee8fefdec60314d38fb9b746df0bb6ae5a8114014b5bfd95e0fc9b29c0d5e73939361ba53af7eb66c7d20c5656bbe53a783e96540bd3b907c47
+  languageName: node
+  linkType: hard
+
+"vite@npm:^3.0.0 || ^4.0.0":
   version: 4.1.1
   resolution: "vite@npm:4.1.1"
   dependencies:

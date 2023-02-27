@@ -35,21 +35,16 @@ export function initializeClients(backendInfo: BackendInfo) {
 export async function initializeBackendForFirstTest(backendInfo: BackendInfo) {
   initializeClients(backendInfo);
   try {
-    await QueryFactory.TestApiClient.createTestTenant(
-      new CreateTestTenantDto({
-        userEmail: backendInfo.user,
-        userPassword: backendInfo.password,
-      }),
-    );
-  } catch (e) {
+    await QueryFactory.TestApiClient.createTestTenant({
+      userEmail: backendInfo.user,
+      userPassword: backendInfo.password,
+    });
+  } catch (e: any) {
     if (e instanceof ApiException) {
       if (e.status === 504) {
         //504 Gateway Time-out
       }
-    } else if (
-      e instanceof ValidationProblemDetails &&
-      e.errors?.['UserEmail']?.[0]
-    ) {
+    } else if ((e as ValidationProblemDetails).errors?.['UserEmail']?.[0]) {
       console.log(`User ${backendInfo.user} already exists.`);
     } else {
       console.error('Unknown error during tenant creation', e);

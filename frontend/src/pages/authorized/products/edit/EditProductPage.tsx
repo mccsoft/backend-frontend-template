@@ -11,11 +11,7 @@ import { requiredRule } from 'helpers/form/react-hook-form-helper';
 import React, { useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { QueryFactory } from 'services/api';
-import {
-  IPatchProductDto,
-  PatchProductDto,
-  ProductType,
-} from 'services/api/api-client';
+import { PatchProductDto, ProductType } from 'services/api/api-client';
 import { HookFormDropDownInput } from 'components/uikit/inputs/dropdown/HookFormDropDownInput';
 import { useNavigate } from 'react-router';
 import { HookFormDatePicker } from '../../../../components/uikit/inputs/date-time/HookFormDatePicker';
@@ -27,12 +23,9 @@ export const EditProductPage: React.FC = () => {
   const productQuery = QueryFactory.ProductQuery.useGetQuery(productId);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const form = useAdvancedForm<IPatchProductDto>(
+  const form = useAdvancedForm<PatchProductDto>(
     useCallback(async (data) => {
-      await QueryFactory.ProductQuery.Client.patch(
-        productId,
-        new PatchProductDto(data),
-      );
+      await QueryFactory.ProductQuery.Client.patch(productId, data);
       await queryClient.invalidateQueries(
         QueryFactory.ProductQuery.searchQueryKey(),
       );
