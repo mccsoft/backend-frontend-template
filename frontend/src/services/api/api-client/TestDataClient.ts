@@ -63,6 +63,8 @@ function processThrowError(response: AxiosResponse): Promise<string> {
         let result200: any = null;
         let resultData200  = _responseText;
     
+        result200 = resultData200;
+    
         return Promise.resolve<string>(result200);
 
     } else if (status !== 200 && status !== 204) {
@@ -121,6 +123,8 @@ function processSendEmail(response: AxiosResponse): Promise<string> {
         const _responseText = response.data;
         let result200: any = null;
         let resultData200  = _responseText;
+    
+        result200 = resultData200;
     
         return Promise.resolve<string>(result200);
 
@@ -188,6 +192,8 @@ function processFormData(response: AxiosResponse): Promise<string> {
         const _responseText = response.data;
         let result200: any = null;
         let resultData200  = _responseText;
+    
+        result200 = resultData200;
     
         return Promise.resolve<string>(result200);
 

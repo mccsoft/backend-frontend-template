@@ -4448,7 +4448,7 @@ __metadata:
     react-i18next: 12.1.1
     react-merge-refs: 2.0.1
     react-paginate: 8.1.4
-    react-query-swagger: 15.5.1-rc8
+    react-query-swagger: 15.5.2
     react-redux: 8.0.2
     react-router: 6.3.0
     react-router-dom: 6.3.0
@@ -13541,6 +13541,23 @@ __metadata:
   bin:
     react-query-swagger: cli.js
   checksum: 6099e81d8c1bc72c5fe279c6c0feac1e75a4f932782a4c14630f8932c192b839ed1955aa1a85c3642255ad916f99d08179777ad651976f5f8c803e1ba5dc3d76
+  languageName: node
+  linkType: hard
+
+"react-query-swagger@npm:15.5.2":
+  version: 15.5.2
+  resolution: "react-query-swagger@npm:15.5.2"
+  dependencies:
+    nswag: ^13.18.2
+  peerDependencies:
+    "@tanstack/react-query": "> 4.0"
+    "@tanstack/react-query-persist-client": ">4.2.0"
+    react: 17.x || 18.x
+    react-query: ">= 3.33 < 4.0"
+    typescript: 3.x || 4.x
+  bin:
+    react-query-swagger: cli.js
+  checksum: fe33700d4deecf968a5b77f9e73d010b1ccd039e43fdf0217e7e865e87ce7f006ebc01805ca325ba68a22cd2bf847c0b3fec2beb6ce9f2ccedd353e1c897d702
   languageName: node
   linkType: hard
 

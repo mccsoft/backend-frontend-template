@@ -64,6 +64,8 @@ function processVersion(response: AxiosResponse): Promise<string> {
         let result200: any = null;
         let resultData200  = _responseText;
     
+        result200 = resultData200;
+    
         return Promise.resolve<string>(result200);
 
     } else if (status !== 200 && status !== 204) {

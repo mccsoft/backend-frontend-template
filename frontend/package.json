@@ -42,7 +42,7 @@
     "react-i18next": "12.1.1",
     "react-merge-refs": "2.0.1",
     "react-paginate": "8.1.4",
-    "react-query-swagger": "15.5.1-rc8",
+    "react-query-swagger": "15.5.2",
     "react-redux": "8.0.2",
     "react-router": "6.3.0",
     "react-router-dom": "6.3.0",

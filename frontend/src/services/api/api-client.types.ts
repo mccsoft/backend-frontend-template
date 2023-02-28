@@ -34,7 +34,10 @@ export function deserializeHttpValidationProblemDetails(json: string): HttpValid
 }
 export function initHttpValidationProblemDetails(_data: HttpValidationProblemDetails) {
   initProblemDetails(_data);
-    return _data;
+  if (_data) {
+    _data.errors = _data["errors"];
+  }
+  return _data;
 }
 export function serializeHttpValidationProblemDetails(_data: HttpValidationProblemDetails) {
   const data = prepareSerializeHttpValidationProblemDetails(_data as HttpValidationProblemDetails);
@@ -55,7 +58,10 @@ export function deserializeValidationProblemDetails(json: string): ValidationPro
 }
 export function initValidationProblemDetails(_data: ValidationProblemDetails) {
   initHttpValidationProblemDetails(_data);
-    return _data;
+  if (_data) {
+    _data.errors = _data["errors"];
+  }
+  return _data;
 }
 export function serializeValidationProblemDetails(_data: ValidationProblemDetails) {
   const data = prepareSerializeValidationProblemDetails(_data as ValidationProblemDetails);
@@ -98,6 +104,7 @@ export function deserializeProductDto(json: string): ProductDto {
 }
 export function initProductDto(_data: ProductDto) {
   if (_data) {
+    _data.productType = _data["productType"];
     _data.lastStockUpdatedAt = _data["lastStockUpdatedAt"] ? parseDateOnly(_data["lastStockUpdatedAt"].toString()) : <any>null;
   }
   return _data;
@@ -129,6 +136,7 @@ export function deserializeCreateProductDto(json: string): CreateProductDto {
 }
 export function initCreateProductDto(_data: CreateProductDto) {
   if (_data) {
+    _data.productType = _data["productType"];
     _data.lastStockUpdatedAt = _data["lastStockUpdatedAt"] ? parseDateOnly(_data["lastStockUpdatedAt"].toString()) : <any>null;
   }
   return _data;
@@ -154,6 +162,7 @@ export function deserializePatchProductDto(json: string): PatchProductDto {
 }
 export function initPatchProductDto(_data: PatchProductDto) {
   if (_data) {
+    _data.productType = _data["productType"];
     _data.lastStockUpdatedAt = _data["lastStockUpdatedAt"] ? parseDateOnly(_data["lastStockUpdatedAt"].toString()) : <any>null;
   }
   return _data;
@@ -212,6 +221,7 @@ export function deserializeProductListItemDto(json: string): ProductListItemDto 
 }
 export function initProductListItemDto(_data: ProductListItemDto) {
   if (_data) {
+    _data.productType = _data["productType"];
     _data.lastStockUpdatedAt = _data["lastStockUpdatedAt"] ? parseDateOnly(_data["lastStockUpdatedAt"].toString()) : <any>null;
   }
   return _data;
