@@ -248,6 +248,12 @@ public static class ElasticLoggerExtensions
                 { "SourceContext", _keyword },
                 { "level", _keyword },
                 { "message", _text },
+                { "ClientSession", _text },
+                { "ClientVersion", _text },
+                { "ConnectionId", _text },
+                { "RemoteIpAddress", _text },
+                { "RequestHost", _text },
+                { "UserId", _text },
                 // We don't want to search in MessageTemplate, so don't index it.
                 { "messageTemplate", new { type = "text", index = false } },
                 { "SessionId", _keyword },
