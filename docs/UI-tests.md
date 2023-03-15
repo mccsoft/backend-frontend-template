@@ -73,3 +73,27 @@ PageObject is a class representing a piece of UI. Normally, PageObject should co
   It helps to unite the common code in a single place (e.g. after pressing `login` button you'd probably need to wait for loadings to finish)
 
   Also, if doing an action redirects user to another Page/Modal, please return the `PageObject` of that Page/Modal from the action method (in the example above the `MainPageObject` is returned from `logIn` method). This makes it easier for the user of that code to work with the newly opened Page/Modal.
+
+## Assertions / expectations
+
+### Always use async assertions
+
+Always use async assertions. That is, every `expect(/*something*/)` should have `await` before. For example:
+
+1. **WRONG**: `expect(await page.locator('.mybutton').innerText()).toBe('zxc')`
+1. **RIGHT**: `await expect.poll(() => page.locator('.mybutton').innerText()).toBe('zxc')`
+1. **EVEN BETTER**: `await expect(page.locator('.mybutton')).toHaveText('zxc')`
+
+Note, that you _technically can_ prepend `await` even to the **WRONG** example above (because JS allows you to await void values), but that would still be Wrong and eslint will complain (we have `'@typescript-eslint/await-thenable': 'error'`).
+
+The idea behind using async assertions is that sometimes your web page needs a bit of time to come to the expected/asserted state. That's the reason why all Playwright actions (e.g. `click`/`fill`/`blur`, etc) are asynchronous - because Playwright waits for Locators to become stable (i.e. visible and not disabled). This 'waitings' makes Playwright tests much less flaky than e.g. Selenium.
+
+So we want our assertions to be 'less flaky' as well, so we need to give the page some time to come to the asserted state.
+
+#### Technical details and `expect.poll`
+
+Playwright has quite a number of inherently async assertions, e.g. `toHaveText()`, `toBeVisible()`, `toBeDisabled()`, etc. Please use them!
+
+However if you want to assert on some more complex values (e.g. you want to check all Cells of your Table), the assertions above might not suit you. In this case use the `await expect.poll` (which will actually retry your assertions for some time unless it's passed). E.g.:
+
+`await expect.poll(async () => table.getCells()).toMatchObject([['cell1', 'cell2']])`.
