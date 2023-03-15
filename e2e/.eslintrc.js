@@ -27,7 +27,8 @@ module.exports = {
     'no-unused-vars': 'off',
     'prefer-const': 'off',
     'no-empty-pattern': 'off',
-    '@typescript-eslint/no-floating-promises': ['error'],
+    '@typescript-eslint/no-floating-promises': 'error',
     'no-inner-declarations': 'off',
+    '@typescript-eslint/await-thenable': 'error',
   },
 };

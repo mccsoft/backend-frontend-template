@@ -52,6 +52,7 @@ module.exports = {
     ],
     '@typescript-eslint/no-inferrable-types': 'off',
     '@typescript-eslint/no-floating-promises': 'error',
+    '@typescript-eslint/await-thenable': 'error',
     // '@typescript-eslint/no-misused-promises': ['error', {
     //   checksVoidReturn: {
     //     arguments: false,
