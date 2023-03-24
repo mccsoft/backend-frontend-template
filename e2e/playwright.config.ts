@@ -30,8 +30,13 @@ const config: PlaywrightTestConfig = {
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
   retries: process.env.CI ? 1 : 0,
-  /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 2 : undefined,
+  /* Using 2 workers on CI (Azure Pipelines) is proved to be faster than 1 worker */
+  workers: process.env.CI
+    ? 2
+    : // PW_TEST_REUSE_CONTEXT is set when running via VsCode with Show Browser
+    process.env.PW_TEST_REUSE_CONTEXT
+    ? 1
+    : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: process.env.CI
     ? [['junit', { outputFile: 'junit.xml' }], ['html'], ['dot']]
