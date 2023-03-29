@@ -1,5 +1,3 @@
-﻿using System;
-using System.Threading.Tasks;
 using MccSoft.LowLevelPrimitives;
 using MccSoft.LowLevelPrimitives.Exceptions;
 using MccSoft.WebApi.Helpers;
@@ -10,8 +8,10 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog.Context;
+using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using BadHttpRequestException = Microsoft.AspNetCore.Http.BadHttpRequestException;
 
 namespace MccSoft.WebApi.Middleware;
@@ -83,7 +83,7 @@ public class ErrorHandlerMiddleware
     private async Task ProcessException(HttpContext httpContext, Exception ex)
     {
         string body = await httpContext.Request.ReadAll();
-        LogContext.PushProperty("RequestBody", body);
+        using (LogContext.PushProperty("RequestBody", body)) { }
 
         // TODO: Replace `{ex}` in the message with just the type and message when we upgrade Elasticsearch to v7.
         // Until then we put the call stack into the message to make it searchable in Kibana.
@@ -121,7 +121,7 @@ public class ErrorHandlerMiddleware
     )
     {
         string body = await httpContext.Request.ReadAll();
-        LogContext.PushProperty("RequestBody", body);
+        using (LogContext.PushProperty("RequestBody", body)) { }
 
         _logger.LogWarning("{ErrorType}: {ErrorMessage}", ex.GetType().Name, ex.Message);
         if (result is ObjectResult { Value: ProblemDetails details })
