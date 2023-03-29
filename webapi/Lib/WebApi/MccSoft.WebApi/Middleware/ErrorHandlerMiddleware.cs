@@ -84,12 +84,11 @@ public class ErrorHandlerMiddleware
     {
         string body = await httpContext.Request.ReadAll();
         using (LogContext.PushProperty("RequestBody", body))
-            ;
 
-        // TODO: Replace `{ex}` in the message with just the type and message when we upgrade Elasticsearch to v7.
-        // Until then we put the call stack into the message to make it searchable in Kibana.
-        // See https://github.com/elastic/kibana/issues/1084#issuecomment-585178079
-        _logger.LogError(ex, $"An unhandled exception has occurred: {ex}");
+            // TODO: Replace `{ex}` in the message with just the type and message when we upgrade Elasticsearch to v7.
+            // Until then we put the call stack into the message to make it searchable in Kibana.
+            // See https://github.com/elastic/kibana/issues/1084#issuecomment-585178079
+            _logger.LogError(ex, $"An unhandled exception has occurred: {ex}");
         string detail = _env.IsProduction() ? null : ex.ToString();
         var details = new ProblemDetails
         {
@@ -123,9 +122,8 @@ public class ErrorHandlerMiddleware
     {
         string body = await httpContext.Request.ReadAll();
         using (LogContext.PushProperty("RequestBody", body))
-            ;
 
-        _logger.LogWarning("{ErrorType}: {ErrorMessage}", ex.GetType().Name, ex.Message);
+            _logger.LogWarning("{ErrorType}: {ErrorMessage}", ex.GetType().Name, ex.Message);
         if (result is ObjectResult { Value: ProblemDetails details })
         {
             AddTraceId(httpContext, details);
