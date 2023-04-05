@@ -47,6 +47,36 @@ public class PatchingTests
     }
 
     [Fact]
+    public void NonPresentField_Simple()
+    {
+        var result = JsonSerializer.Deserialize<PatchDto1>(
+            "{\"uyt\": \"zxc\", \"Qwe\": \"zxc\"}",
+            _deserializationOptions
+        )!;
+
+        result.Qwe.Should().Be("zxc");
+        result.Asd.Should().BeNull();
+
+        result.IsFieldPresent(nameof(result.Qwe)).Should().BeTrue();
+        result.IsFieldPresent(nameof(result.Asd)).Should().BeFalse();
+    }
+
+    [Fact]
+    public void NonPresentField_Object()
+    {
+        var result = JsonSerializer.Deserialize<PatchDto1>(
+            "{\"uyt\": {\"asd\": \"zxc\"}, \"Qwe\": \"zxc\"}",
+            _deserializationOptions
+        )!;
+
+        result.Qwe.Should().Be("zxc");
+        result.Asd.Should().BeNull();
+
+        result.IsFieldPresent(nameof(result.Qwe)).Should().BeTrue();
+        result.IsFieldPresent(nameof(result.Asd)).Should().BeFalse();
+    }
+
+    [Fact]
     public void Nested()
     {
         var result = JsonSerializer.Deserialize<PatchDto1>(

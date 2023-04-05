@@ -78,6 +78,10 @@ public class PatchRequestConverter : JsonConverter<IPatchRequest>
                         property.SetValue(patchRequest, value);
                         patchRequest.SetHasProperty(property.Name);
                     }
+                    else
+                    {
+                        JsonSerializer.Deserialize(ref reader, typeof(object), options);
+                    }
                     continue;
                 case JsonTokenType.None:
                 case JsonTokenType.StartObject:
