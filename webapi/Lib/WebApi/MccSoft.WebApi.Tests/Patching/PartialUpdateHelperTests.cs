@@ -1,9 +1,7 @@
-﻿using FluentAssertions;
-using MccSoft.LowLevelPrimitives.Exceptions;
-using MccSoft.Testing;
+﻿using MccSoft.LowLevelPrimitives.Exceptions;
 using MccSoft.WebApi.Patching;
 using MccSoft.WebApi.Patching.Models;
-using Xunit;
+using System.Collections.Generic;
 
 namespace MccSoft.WebApi.Tests;
 
@@ -22,6 +20,11 @@ public class PartialUpdateHelperTests
         B = 2,
     }
 
+    public class ObjectWithEnum
+    {
+        public TestEnum EnumInObject { get; set; }
+    }
+
     public class DomainClass1
     {
         public string Asd { get; set; }
@@ -29,6 +32,7 @@ public class PartialUpdateHelperTests
         public TestEnum? Enum { get; set; }
         public TestEnumWithout0Value? EnumWithout0 { get; set; }
         public TestEnumWithout0Value NonNullableEnumWithout0 { get; set; }
+        public List<ObjectWithEnum> ObjectsWithEnum { get; set; }
     }
 
     public class Patch1 : PatchRequest<DomainClass1>
@@ -39,6 +43,7 @@ public class PartialUpdateHelperTests
         public TestEnum? Enum { get; set; }
         public TestEnumWithout0Value? EnumWithout0 { get; set; }
         public TestEnumWithout0Value? NonNullableEnumWithout0 { get; set; }
+        public List<ObjectWithEnum> ObjectsWithEnum { get; set; }
     }
 
     [Fact]
@@ -130,5 +135,30 @@ public class PartialUpdateHelperTests
             .WithMessage("NonNullableEnumWithout0: Cannot assign null to non-nullable enum");
 
         domainClass.NonNullableEnumWithout0.Should().Be(TestEnumWithout0Value.B);
+    }
+
+    [Fact]
+    public void Enum_InList()
+    {
+        var domainClass = new DomainClass1()
+        {
+            ObjectsWithEnum = new List<ObjectWithEnum>()
+            {
+                new ObjectWithEnum() { EnumInObject = TestEnum.A },
+                new ObjectWithEnum() { EnumInObject = TestEnum.A }
+            }
+        };
+
+        var objectsWithEnum = new List<ObjectWithEnum>()
+        {
+            new ObjectWithEnum() { EnumInObject = TestEnum.A },
+            new ObjectWithEnum() { EnumInObject = TestEnum.B }
+        };
+        var patch = new Patch1() { ObjectsWithEnum = objectsWithEnum };
+        patch.SetHasProperty(nameof(patch.ObjectsWithEnum));
+
+        domainClass.Update(patch);
+
+        domainClass.ObjectsWithEnum.Should().BeEquivalentTo(objectsWithEnum);
     }
 }

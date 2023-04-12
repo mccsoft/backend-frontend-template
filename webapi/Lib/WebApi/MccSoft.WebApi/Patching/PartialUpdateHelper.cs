@@ -211,20 +211,18 @@ public static class PartialUpdateHelper
                 Type propertyType =
                     Nullable.GetUnderlyingType(propertyInObjectToUpdate.PropertyType)
                     ?? propertyInObjectToUpdate.PropertyType;
-                if (propertyType.IsEnum)
+                if (
+                    propertyType.IsEnum
+                    && !Enum.IsDefined(propertyType, Convert.ToInt32(propertyValue))
+                )
                 {
-                    if (!Enum.IsDefined(propertyType, Convert.ToInt32(propertyValue)))
-                    {
-                        throw new ValidationException(
-                            propertyName,
-                            $"Value '{propertyValue}' is out of range"
-                        );
-                    }
+                    throw new ValidationException(
+                        propertyName,
+                        $"Value '{propertyValue}' is out of range"
+                    );
                 }
-                else
-                {
-                    propertyInObjectToUpdate.SetValue(objectToUpdate, propertyValue);
-                }
+
+                propertyInObjectToUpdate.SetValue(objectToUpdate, propertyValue);
             }
         }
     }
