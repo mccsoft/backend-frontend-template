@@ -26,6 +26,13 @@ public static class DomainEventsExtensions
     {
         services.AddTransient<DomainEventsSaveChangesInterceptor>();
         services.AddTransient<DomainEventsTransactionInterceptor>();
-        services.AddMediatR(handlerAssemblyMarkerTypes);
+        //handlerAssemblyMarkerTypes
+        services.AddMediatR(config =>
+        {
+            foreach (var typeToRegister in handlerAssemblyMarkerTypes)
+            {
+                config.RegisterServicesFromAssemblyContaining(typeToRegister);
+            }
+        });
     }
 }
