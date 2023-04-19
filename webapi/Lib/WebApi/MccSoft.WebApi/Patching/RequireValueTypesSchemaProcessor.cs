@@ -12,6 +12,19 @@ namespace MccSoft.WebApi.Patching;
 
 /// <summary>
 /// Schema processor that makes all value types (int, string, bool, etc.) required in OpenApi
+/// (for example, in `components/schema` node of swagger.json :
+/// "ProductDto": {
+///   "type": "object",
+///   "required": [  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+///     "title"      // This block is missing without this Processor
+///   ],             // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+///   "properties": {
+///     "title": {
+///       "type": "string"
+///     }
+///   }
+/// }
+///
 /// Classes that inherits from PatchRequest are omitted (since all properties in these classes are optional)
 /// </summary>
 public class RequireValueTypesSchemaProcessor : ISchemaProcessor
