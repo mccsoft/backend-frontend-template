@@ -1,0 +1,55 @@
+# Basic dependabot.yml file with
+# minimum configuration for two package managers
+
+version: 2
+updates:
+  # Javascript/Typescript projects configuration
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+  
+  # Dockerfile configuration
+  - package-ecosystem: "docker"
+    directory: "/webapi/src/MccSoft.TemplateApp.App"
+    schedule:
+      interval: "weekly"
+
+  # .Net projects, unfortunately there is no way to specify it recursively, so need to specify it for each project.
+  - package-ecosystem: "nuget"
+    directory: "/webapi/src/MccSoft.TemplateApp.App"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+    open-pull-requests-limit: 5
+  - package-ecosystem: "nuget"
+    directory: "/webapi/src/MccSoft.TemplateApp.Common"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+    open-pull-requests-limit: 5
+  - package-ecosystem: "nuget"
+    directory: "/webapi/src/MccSoft.TemplateApp.Domain"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+    open-pull-requests-limit: 5
+  - package-ecosystem: "nuget"
+    directory: "/webapi/src/MccSoft.TemplateApp.Http"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+    open-pull-requests-limit: 5
+  - package-ecosystem: "nuget"
+    directory: "/webapi/src/MccSoft.TemplateApp.Persistence"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+    open-pull-requests-limit: 5
