@@ -71,7 +71,7 @@
     <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="7.0.0" />
     <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.2.22" />
     <PackageReference Include="MiniProfiler.EntityFrameworkCore" Version="4.2.22" />
-    <PackageReference Include="NeinLinq.EntityFrameworkCore" Version="6.1.0" />
+    <PackageReference Include="NeinLinq.EntityFrameworkCore" Version="6.1.1" />
     <PackageReference Include="Npgsql.Json.NET" Version="7.0.0" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.18.0" />
 
