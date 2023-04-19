@@ -13,9 +13,10 @@ namespace MccSoft.TemplateApp.App.Tests;
 
 public class ProductServiceTests : AppServiceTestBase
 {
-    public ProductServiceTests(ITestOutputHelper outputHelper) : base(outputHelper, null)
+    public ProductServiceTests(ITestOutputHelper outputHelper)
+        : base(outputHelper, DatabaseType.Postgres)
     {
-        // Sut = CreateService<ProductService>();
+        Sut = CreateService<ProductService>();
     }
 
     public ProductService Sut { get; set; }
