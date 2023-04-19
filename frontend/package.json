@@ -39,7 +39,7 @@
     "react-dom": "18.2.0",
     "react-dropzone": "14.2.3",
     "react-hook-form": "7.41.1",
-    "react-i18next": "12.1.1",
+    "react-i18next": "12.2.0",
     "react-merge-refs": "2.0.1",
     "react-paginate": "8.1.4",
     "react-query-swagger": "15.5.2",
