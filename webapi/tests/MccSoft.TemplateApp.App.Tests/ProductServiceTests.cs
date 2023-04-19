@@ -1,24 +1,21 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
 using MccSoft.IntegreSql.EF.DatabaseInitialization;
 using MccSoft.TemplateApp.App.Features.Products;
 using MccSoft.TemplateApp.App.Features.Products.Dto;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.TestUtils.Factories;
-using MccSoft.Testing;
 using MccSoft.WebApi.Patching;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace MccSoft.TemplateApp.App.Tests;
 
 public class ProductServiceTests : AppServiceTestBase
 {
-    public ProductServiceTests(ITestOutputHelper outputHelper)
-        : base(outputHelper, DatabaseType.Postgres)
+    public ProductServiceTests(ITestOutputHelper outputHelper) : base(outputHelper, null)
     {
-        Sut = CreateService<ProductService>();
+        // Sut = CreateService<ProductService>();
     }
 
     public ProductService Sut { get; set; }
@@ -62,5 +59,13 @@ public class ProductServiceTests : AppServiceTestBase
         var createResult = await Sut.Create(a.CreateProductDto("asd"));
         var getResult = await Sut.Get(createResult.Id);
         getResult.Title.Should().Be("asd");
+    }
+
+    [Fact]
+    public void Validation()
+    {
+        ValidateModel(new CreateProductDto { Title = "1" })
+            .Should()
+            .Contain(x => x.ErrorMessage.Contains("minimum length") && x.MemberNames == "Title");
     }
 }

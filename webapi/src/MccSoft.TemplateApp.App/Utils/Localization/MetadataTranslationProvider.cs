@@ -23,28 +23,25 @@ public class MetadataTranslationProvider : IValidationMetadataProvider
 
     public void CreateValidationMetadata(ValidationMetadataProviderContext context)
     {
-        foreach (var attribute in context.ValidationMetadata.ValidatorMetadata)
+        CreateValidationMetadata(context.ValidationMetadata.ValidatorMetadata);
+    }
+
+    public void CreateValidationMetadata(IList<object> attributes)
+    {
+        foreach (var attribute in attributes)
         {
             if (attribute is ValidationAttribute tAttr)
             {
-                if (tAttr.ErrorMessage == null && tAttr.ErrorMessageResourceName == null)
+                if (tAttr.ErrorMessageResourceName != null && tAttr.ErrorMessage == null)
                 {
-                    var attributeType = tAttr.GetType();
-                    var name = attributeType.Name;
-                    if (attributeType.Name == nameof(RequiredOrMissingAttribute))
-                    {
-                        name = nameof(RequiredAttribute);
-                    }
-
-                    name = name.Replace("Attribute", "");
-
                     var functionField = typeof(ValidationAttribute).GetField(
                         "_errorMessageResourceAccessor",
                         BindingFlags.NonPublic | BindingFlags.Instance
                     );
-                    Func<string> localizer = () => _localizer["ValidationErrors:" + name];
-                    functionField.SetValue(tAttr, localizer);
-                    // tAttr.ErrorMessage = "ValidationErrors:" + name;
+
+                    Func<string> localizer = () =>
+                        _localizer["Frontend:Server_Errors." + tAttr.ErrorMessageResourceName];
+                    functionField.SetValue(attribute, localizer);
                 }
             }
         }

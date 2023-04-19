@@ -1,7 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using MccSoft.IntegreSql.EF.DatabaseInitialization;
 using MccSoft.LowLevelPrimitives;
+using MccSoft.TemplateApp.App.Utils.Localization;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Persistence;
 using MccSoft.Testing;
@@ -10,6 +15,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using Xunit.Abstractions;
 
 namespace MccSoft.TemplateApp.App.Tests;
@@ -97,4 +103,45 @@ public class AppServiceTestBase : TestBase<TemplateAppDbContext>
     {
         return new TemplateAppDbContext(options, _userAccessorMock.Object);
     }
+
+    #region Validation
+
+    public record ValidationResult(string MemberNames, string ErrorMessage);
+
+    /// <summary>
+    /// Returns list of validation result for DataAnnotation errors assertion.
+    /// </summary>
+    protected IList<ValidationResult> ValidateModel(object model)
+    {
+        var provider = new MetadataTranslationProvider(
+            CreateService<IStringLocalizer<MetadataTranslationProvider.DataAnnotationLocalizer>>()
+        );
+        var attributes = GetValidationAttributes(model.GetType());
+        provider.CreateValidationMetadata(attributes);
+
+        var validationResults = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+        var context = new ValidationContext(model);
+        Validator.TryValidateObject(model, context, validationResults, true);
+        return validationResults
+            .Select(x => new ValidationResult(string.Join(",", x.MemberNames), x.ErrorMessage))
+            .ToList();
+    }
+
+    private List<object> GetValidationAttributes(Type type)
+    {
+        var properties = TypeDescriptor.GetProperties(type);
+        var attributes = new List<object>();
+
+        for (var i = 0; i < properties.Count; i++)
+        {
+            var property = properties[i];
+            for (var j = 0; j < property.Attributes.Count; j++)
+            {
+                attributes.Add(property.Attributes[j]);
+            }
+        }
+
+        return attributes;
+    }
+    #endregion
 }
