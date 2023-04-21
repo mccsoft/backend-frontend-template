@@ -1,13 +1,11 @@
+import { DatePath } from '../hook-form';
 import { DatePicker, DatePickerProps } from './DatePicker';
 import {
   Control,
   Controller,
   FieldValues,
-  Path,
   RegisterOptions,
 } from 'react-hook-form';
-import React from 'react';
-import { DatePath } from '../hook-form';
 
 type HookFormDatePickerProps<
   TFieldValues extends FieldValues = FieldValues,
@@ -32,7 +30,9 @@ export function HookFormDatePicker<
   return (
     <Controller
       control={control}
-      name={name}
+      // Without `any` here TS complains about `Type instantiation is excessively deep and possibly infinite`
+      // Type types are correct though.
+      name={name as any}
       rules={rules}
       render={({ field }) => (
         <DatePicker
