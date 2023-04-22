@@ -185,15 +185,18 @@ function doSyncReferencesInProjects(src, dest) {
   let addition = '';
 
   for (const match of matches) {
+    const sourceVersion = match[2];
+    if (!semver.valid(sourceVersion)) continue;
     const found = destinationFileContent.match(
       `<PackageReference.*?Include="${match[1]}".*?Version="(.*?)".*?\/>`,
     );
 
     if (found) {
-      if (semver.gt(match[2], found[1])) {
+      const destinationVersion = found[1];
+      if (semver.valid() && semver.gt(sourceVersion, destinationVersion)) {
         destinationFileContent = destinationFileContent.replace(
-          `<PackageReference Include="${match[1]}" Version="${found[1]}" />`,
-          `<PackageReference Include="${match[1]}" Version="${match[2]}" />`,
+          `<PackageReference Include="${match[1]}" Version="${destinationVersion}" />`,
+          `<PackageReference Include="${match[1]}" Version="${sourceVersion}" />`,
         );
       }
     } else {
