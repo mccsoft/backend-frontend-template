@@ -16,7 +16,7 @@
     <PackageReference Include="Moq" Version="4.18.3" />
     <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
     <PackageReference Include="xunit" Version="2.4.2" />
-    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="3.1.1" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="4.2.0" />
     <PackageReference Include="MccSoft.IntegreSql.EF" Version="0.8.15" />
     <PackageReference Include="NeinLinq.EntityFrameworkCore" Version="6.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
