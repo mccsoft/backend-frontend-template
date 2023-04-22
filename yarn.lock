@@ -4958,7 +4958,6 @@ __metadata:
     lottie-web: 5.10.0
     material-ui-popup-state: 5.0.4
     nock: 13.3.0
-    nswag: 13.18.2
     oidc-client-ts: 2.2.0
     prettier: 2.8.7
     prop-types: 15.8.1
@@ -4986,8 +4985,8 @@ __metadata:
     rollup-plugin-visualizer: 5.9.0
     sass: 1.62.0
     storybook: 7.0.6
-    superjson: 1.12.2
-    throttle-debounce: 3.0.1
+    superjson: 1.12.3
+    throttle-debounce: 5.0.0
     tsconfig-paths-webpack-plugin: 4.0.1
     typescript: 5.0.4
     vite: 4.3.1
@@ -15859,12 +15858,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"superjson@npm:1.12.2":
-  version: 1.12.2
-  resolution: "superjson@npm:1.12.2"
+"superjson@npm:1.12.3":
+  version: 1.12.3
+  resolution: "superjson@npm:1.12.3"
   dependencies:
     copy-anything: ^3.0.2
-  checksum: cf7735e172811ed87476a7c2f1bb0e83725a0e3c2d7a50a71303a973060b3c710288767fb767a7a7eee8e5625d3ccaee1176a93e27f43841627512c15c4cdf84
+  checksum: 3549cc1d03e93745632d8114f91ed1668d81a0cf4c618f8f89a1b06f426a9cd1a2879f0e79469a6a193fd19dcea9a8fecff6215d12527b98c40c67cd98f185d3
   languageName: node
   linkType: hard
 
@@ -16069,7 +16068,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"throttle-debounce@npm:3.0.1, throttle-debounce@npm:^3.0.1":
+"throttle-debounce@npm:5.0.0":
+  version: 5.0.0
+  resolution: "throttle-debounce@npm:5.0.0"
+  checksum: aa8bf25828b4f8645ce863589de05d6807ea3debc147ce7d89624638ff8a16792d6d0baa0f8a32a260f0b163444d74020c6087b713ae561fde594b97b6e51f28
+  languageName: node
+  linkType: hard
+
+"throttle-debounce@npm:^3.0.1":
   version: 3.0.1
   resolution: "throttle-debounce@npm:3.0.1"
   checksum: e34ef638e8df3a9154249101b68afcbf2652a139c803415ef8a2f6a8bc577bcd4d79e4bb914ad3cd206523ac78b9fb7e80885bfa049f64fbb1927f99d98b5736
