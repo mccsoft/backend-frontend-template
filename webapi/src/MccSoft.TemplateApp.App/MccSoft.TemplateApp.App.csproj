@@ -73,7 +73,6 @@
     <PackageReference Include="MiniProfiler.EntityFrameworkCore" Version="4.2.22" />
     <PackageReference Include="NeinLinq.EntityFrameworkCore" Version="6.1.0" />
     <PackageReference Include="Npgsql.Json.NET" Version="7.0.0" />
-    <PackageReference Include="NSwag.AspNetCore" Version="13.18.0" />
 
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.0">
       <PrivateAssets>all</PrivateAssets>
