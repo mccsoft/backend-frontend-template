@@ -1,7 +1,4 @@
-import {
-  convertToErrorString,
-  NetworkError,
-} from 'helpers/form/useErrorHandler';
+import { convertToErrorString, NetworkError } from 'helpers/error-helpers';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';

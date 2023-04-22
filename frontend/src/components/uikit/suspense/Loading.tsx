@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { convertToErrorString } from 'helpers/form/useErrorHandler';
+import { convertToErrorString } from 'helpers/error-helpers';
 import React from 'react';
 import styles from './Loading.module.scss';
 
