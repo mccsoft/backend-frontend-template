@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { convertToErrorString } from 'helpers/error-helpers';
+import { errorToString } from 'helpers/error-helpers';
 import React from 'react';
 import styles from './Loading.module.scss';
 
@@ -37,7 +37,7 @@ export const Loading: React.FC<Props> = (props) => {
       >
         {props.error ? (
           <h1 className={styles.loading} data-test-id="loading-error">
-            {convertToErrorString(props.error)}
+            {errorToString(props.error)}
           </h1>
         ) : (
           props.children

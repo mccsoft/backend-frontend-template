@@ -1,4 +1,4 @@
-import { convertToErrorString, NetworkError } from 'helpers/error-helpers';
+import { errorToString, NetworkError } from 'helpers/error-helpers';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
@@ -27,7 +27,7 @@ export const ErrorBoundaryFallback = (props: ErrorBoundaryFallbackProps) => {
     }
   }, [initialLocation, location]);
 
-  const errorString = convertToErrorString(props.error);
+  const errorString = errorToString(props.error);
   const versionQuery = QueryFactory.VersionQuery.useVersionQuery();
   const isServerAvailable = !!versionQuery.data;
 
@@ -40,7 +40,7 @@ export const ErrorBoundaryFallback = (props: ErrorBoundaryFallbackProps) => {
     <div className={styles.flexContainer}>
       <div className={styles.flexLoadingData} data-test-id="loading-error">
         <div className={styles.loading}>
-          <h1>{convertToErrorString(props.error)}</h1>
+          <h1>{errorToString(props.error)}</h1>
           <h1>{errorString}</h1>
           {isServerUpdated ? (
             <>

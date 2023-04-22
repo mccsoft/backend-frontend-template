@@ -8,7 +8,7 @@ Returns 'Unauthorized' in case of 401
 Returns 'Access Denied' in case of 403.
 (errors are mentioned here for localization purposes)
  */
-export function convertToErrorString(error: any): string {
+export function errorToString(error: any): string {
   // error could be:
   // - strongly-typed error (if server-side action is decorated with
   // [ProducesResponseType(400, Type = typeof(ValidationProblemDetails))]
