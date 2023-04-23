@@ -10,7 +10,7 @@ Returns 'Access Denied' in case of 403.
  */
 export function errorToString(
   error: any,
-  options: { removePropertyNames?: boolean },
+  options?: { removePropertyNames?: boolean },
 ): string {
   // error could be:
   // - strongly-typed error (if server-side action is decorated with
@@ -33,7 +33,7 @@ export function errorToString(
       if (key.includes('.')) {
         key = key.substring(key.lastIndexOf('.') + 1);
       }
-      if (options.removePropertyNames) {
+      if (options?.removePropertyNames) {
         formErrorsCombined = formErrorsCombined + `${errorString}\n`;
       } else {
         formErrorsCombined =
