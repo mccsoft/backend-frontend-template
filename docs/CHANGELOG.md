@@ -8,6 +8,7 @@ Added `[FromJsonQuery]` attribute, so that request Query parameters could contai
 
 1. `convertToErrorString` is renamed to `errorToString` and moved to `error-helper.ts` (so you'd need to update that)
 1. Remove `<PackageReference Include="NSwag.AspNetCore" Version="13.18.0" />` from App project
+1. Replace `<script id="import-meta-env"></script>` with `globalThis.import_meta_env = JSON.parse('"import_meta_env_placeholder"');` in `index.html`
 
 ### 2023-02-13 End-to-end (e2e) UI tests
 
