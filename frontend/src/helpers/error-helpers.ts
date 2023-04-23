@@ -52,7 +52,7 @@ export function errorToString(
       overallError = formErrorsCombined;
     }
   }
-  return overallError;
+  return overallError.trim();
 }
 
 export function convertToErrorStringInternal(error: any): string {
