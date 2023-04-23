@@ -250,6 +250,7 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
                 <Input
                   value={fieldValue}
                   onChange={(e) => setFieldValue(e.target.value)}
+                  errorText={options.fieldError}
                 />
               </Field>
             ) : null}

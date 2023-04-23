@@ -51,6 +51,7 @@ export type PromptOptions = {
   text: React.ReactNode;
   defaultValue: string;
   fieldName: string;
+  fieldError?: string;
   okButtonText?: string;
   okButtonColor?: ButtonColor;
   cancelButtonText?: string;
