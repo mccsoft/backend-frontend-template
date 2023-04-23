@@ -8,7 +8,10 @@ Returns 'Unauthorized' in case of 401
 Returns 'Access Denied' in case of 403.
 (errors are mentioned here for localization purposes)
  */
-export function errorToString(error: any): string {
+export function errorToString(
+  error: any,
+  options: { removePropertyNames?: boolean },
+): string {
   // error could be:
   // - strongly-typed error (if server-side action is decorated with
   // [ProducesResponseType(400, Type = typeof(ValidationProblemDetails))]
@@ -30,8 +33,12 @@ export function errorToString(error: any): string {
       if (key.includes('.')) {
         key = key.substring(key.lastIndexOf('.') + 1);
       }
-      formErrorsCombined =
-        formErrorsCombined + `${camelCaseName}: ${errorString}\n`;
+      if (options.removePropertyNames) {
+        formErrorsCombined = formErrorsCombined + `${errorString}\n`;
+      } else {
+        formErrorsCombined =
+          formErrorsCombined + `${camelCaseName}: ${errorString}\n`;
+      }
     });
 
     if (overallError === 'One or more validation errors occurred.') {
