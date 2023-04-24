@@ -58,6 +58,7 @@ export async function redirectToLoginPage() {
 
 export function handleAuthenticationSignInCallback(
   successCallback: (user: User) => void,
+  errorCallback?: (e: unknown) => void,
 ) {
   if (window.location.search.includes('popup')) {
     completeAuthorizationPopup().catch((e) => Logger.error(e));
@@ -69,6 +70,7 @@ export function handleAuthenticationSignInCallback(
       })
       .catch((e) => {
         Logger.error('Error in completeAuthorizationRedirect', e);
+        errorCallback?.(e);
       });
   }
   return true;

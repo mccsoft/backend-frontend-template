@@ -28,8 +28,13 @@ export const OpenIdCallback: React.FC<
 > = (props) => {
   const url = window.location.pathname;
   const searchParams = new URLSearchParams(window.location.search);
-  const error = searchParams.get('error');
-  const error_description = searchParams.get('error_description');
+  const [errorState, setErrorState] = useState<{
+    error?: string;
+    error_description?: string;
+  } | null>(null);
+  const error = errorState?.error ?? searchParams.get('error');
+  const error_description =
+    errorState?.error_description ?? searchParams.get('error_description');
 
   const isAuthCallback = url.startsWith(signInCallbackPath);
   const isSignOutCallback = url.startsWith(signOutCallbackPath);
@@ -44,10 +49,22 @@ export const OpenIdCallback: React.FC<
     if (isAuthCallback) {
       isOpenIdHandled.current = true;
 
-      handleAuthenticationSignInCallback((user) => {
-        props.signInRedirectHandler(user);
-        rerenderWhenRedirectCompletes();
-      });
+      handleAuthenticationSignInCallback(
+        (user) => {
+          props.signInRedirectHandler(user);
+          rerenderWhenRedirectCompletes();
+        },
+        (e: any) => {
+          let error_description = e?.error_description;
+          if (!error_description && !e.error) {
+            error_description = JSON.stringify(e);
+          }
+          setErrorState({
+            error: e?.error ?? 'Authentication error',
+            error_description: error_description,
+          });
+        },
+      );
     }
     if (isSignOutCallback) {
       isOpenIdHandled.current = true;
