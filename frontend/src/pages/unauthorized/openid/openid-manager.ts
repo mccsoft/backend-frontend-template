@@ -24,7 +24,6 @@ function getClientSettings(): UserManagerSettings {
     filterProtocolClaims: true,
     loadUserInfo: false,
     scope: scopes,
-    extraTokenParams: { scope: scopes },
     automaticSilentRenew: false,
   };
 }
