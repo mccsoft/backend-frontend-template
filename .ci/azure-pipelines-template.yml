@@ -24,7 +24,7 @@ variables:
     ${{ else }}:
       value: ${{ variables.sb_test_shards }}
 stages:
-  - ${{ if ne(variables.DISABLE_BUILD, true) }}:
+  - ${{ if or(ne(variables.DISABLE_BUILD, true), eq(variables.ENABLE_E2E_DOCKER, true)) }}:
       - stage: Build
         dependsOn: []
         jobs:
