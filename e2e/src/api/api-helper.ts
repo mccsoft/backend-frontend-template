@@ -18,7 +18,7 @@ export const sendLoginRequest = async (
   password: string,
 ): Promise<FetchLoginResponse> => {
   const accountAuthBody = {
-    scope: 'offline_access',
+    //scope: 'offline_access',
     grant_type: 'password',
     username: username,
     password: password,

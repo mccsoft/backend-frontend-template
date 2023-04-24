@@ -12,7 +12,6 @@ export const sendLoginRequest = async (
   password: string,
 ): Promise<FetchLoginResponse> => {
   const accountAuthBody = {
-    scope: scopes,
     grant_type: 'password',
     username,
     password,
