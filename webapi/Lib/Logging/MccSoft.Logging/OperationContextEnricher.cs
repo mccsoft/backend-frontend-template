@@ -11,6 +11,11 @@ public class OperationContextEnricher : ILogEventEnricher
 {
     private readonly OperationContext _operationContext;
 
+    public OperationContextEnricher(OperationContext operationContext)
+    {
+        _operationContext = operationContext;
+    }
+
     public OperationContextEnricher(OperationContext operationContext, string operationName)
     {
         _operationContext = operationContext;

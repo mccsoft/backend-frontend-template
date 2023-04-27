@@ -29,7 +29,7 @@ public static class LoggerExtensions
     /// <param name="additionalParams">Additional properties to add to all messages.</param>
     /// <returns>An object to be disposed when the operation ends.</returns>
     public static IDisposable BeginTopLevelActivity(
-        this Microsoft.Extensions.Logging.ILogger logger,
+        this ILogger logger,
         string activityName,
         string sessionId,
         params KeyValuePair<string, object>[] additionalParams
@@ -47,11 +47,13 @@ public static class LoggerExtensions
     /// Begins a global activity to log application startup messages with.
     /// </summary>
     /// <param name="logger">The logger.</param>
-    public static void StartGlobalRootActivity(this Microsoft.Extensions.Logging.ILogger logger)
+    public static void StartGlobalRootActivity(this ILogger logger)
     {
         logger.BeginTopLevelActivity("WebHost", sessionId: null);
     }
 
+    #region LogOperation via Disposable
+
     /// <summary>
     /// Logs operation.
     /// Dispose the result when operation is finished (e.g. by wrapping the result in a `using` statement)
@@ -59,17 +61,17 @@ public static class LoggerExtensions
     /// <param name="logger">
     /// Instance of <see cref="ILogger" />
     /// </param>
-    /// <param name="parameters">
-    /// Parameters that should be logged
+    /// <param name="context">
+    /// Logging context that would be logged as the scope, for each logged message.
     /// </param>
     /// <param name="operationName">Name of the operation that should be logged.</param>
     public static IDisposable LogOperation(
         this ILogger logger,
-        Dictionary<Field, object> parameters,
+        OperationContext context,
         [CallerMemberName] string operationName = ""
     )
     {
-        return LogOperation(logger, parameters, null, operationName);
+        return LogOperation(logger, context, null, operationName);
     }
 
     /// <summary>
@@ -79,8 +81,8 @@ public static class LoggerExtensions
     /// <param name="logger">
     /// Instance of <see cref="ILogger" />
     /// </param>
-    /// <param name="parameters">
-    /// Parameters that should be logged
+    /// <param name="context">
+    /// Logging context that would be logged as the scope, for each logged message.
     /// </param>
     /// <param name="resultFunction">
     /// Function returning the result of executing a function.
@@ -89,7 +91,7 @@ public static class LoggerExtensions
     /// <param name="operationName">Name of the operation that should be logged.</param>
     public static IDisposable LogOperation(
         this ILogger logger,
-        Dictionary<Field, object> parameters,
+        OperationContext context,
         Func<object> resultFunction = null,
         [CallerMemberName] string operationName = ""
     )
@@ -97,9 +99,10 @@ public static class LoggerExtensions
         var stopwatch = new Stopwatch();
         stopwatch.Start();
 
-        var logContext = LogContext.PushProperty(Field.Method.Name, operationName);
+        var loggingScope = logger.BeginScope($"Operation {Field.Method}", operationName);
+        var loggingContext = LogContext.Push(new OperationContextEnricher(context));
 
-        logger.LogWithFields($"Starting operation {operationName}.", parameters);
+        logger.LogDebug($"Starting operation {Field.Method}.", operationName);
 
         return new Disposable(() =>
         {
@@ -108,17 +111,23 @@ public static class LoggerExtensions
                 stopwatch.Stop();
                 if (resultFunction != null)
                 {
-                    object result = resultFunction?.Invoke();
-                    logger.LogInformation(
-                        $"Finished operation {operationName}. Result: {Field.Result}. Elapsed: {Field.Elapsed} ms.",
+                    var result = resultFunction.Invoke();
+                    logger.LogWithFields(
+                        LogLevel.Information,
+                        context,
+                        $"Finished operation {Field.Method}. Result: {Field.Result}. Elapsed: {Field.Elapsed} ms.",
+                        operationName,
                         result,
                         stopwatch.ElapsedMilliseconds
                     );
                 }
                 else
                 {
-                    logger.LogInformation(
-                        $"Finished operation {operationName}. Elapsed: {Field.Elapsed} ms.",
+                    logger.LogWithFields(
+                        LogLevel.Information,
+                        context,
+                        $"Finished operation {Field.Method}. Elapsed: {Field.Elapsed} ms.",
+                        operationName,
                         stopwatch.ElapsedMilliseconds
                     );
                 }
@@ -128,49 +137,59 @@ public static class LoggerExtensions
                 stopwatch.Stop();
                 logger.LogError(
                     e,
-                    $"Operation {operationName} failed after {Field.Elapsed} ms.",
+                    $"Operation {Field.Method} failed after {Field.Elapsed} ms.",
+                    operationName,
                     stopwatch.ElapsedMilliseconds
                 );
                 throw;
             }
 
-            logContext.Dispose();
+            loggingScope.Dispose();
+            loggingContext.Dispose();
         });
     }
+
+    #endregion
 
     /// <summary>
     /// Logs a message with additional parameters appended in the format "name: value".
     /// </summary>
     /// <param name="logger">The logger.</param>
-    /// <param name="message">
-    /// The message to log. Cannot contain placeholders for structured logging.
-    /// </param>
-    /// <param name="params">
-    /// The parameters to append to the message in a structured way.
-    /// </param>
     /// <param name="level">The log level.</param>
+    /// <param name="fields">
+    /// The fields to append to the message in a structured way.
+    /// </param>
+    /// <param name="message">
+    /// The message to log. Can contain placeholders for structured logging.
+    /// </param>
+    /// <param name="args">
+    /// Array of objects that correspond to placeholders in <paramref name="message"/>
+    /// </param>
     public static void LogWithFields(
-        this Microsoft.Extensions.Logging.ILogger logger,
+        this ILogger logger,
+        LogLevel level,
+        Dictionary<Field, object> fields,
         string message,
-        Dictionary<Field, object> @params,
-        LogLevel level = LogLevel.Information
+        params object[] args
     )
     {
-        if (@params == null)
-        {
-            throw new ArgumentNullException(nameof(@params));
-        }
+        ArgumentNullException.ThrowIfNull(fields);
 
         var msg = new StringBuilder(message);
-        var paramList = new List<object>(@params.Count);
-        foreach ((Field fieldName, object value) in @params)
+
+        var argsIndex = args.Length;
+        Array.Resize(ref args, args.Length + fields.Count);
+
+        foreach (var (field, value) in fields)
         {
-            msg.Append($" {fieldName.Name}: {{{fieldName.PrefixedName}}}");
-            paramList.Add(value);
+            msg.Append($" {field.Name}: {field}");
+            args[argsIndex++] = value;
         }
 
-        logger.Log(level, msg.ToString(), paramList.ToArray());
+        logger.Log(level, msg.ToString(), args);
     }
+
+    #region Async LogOperation
 
     /// <summary>
     /// Logs operation.
@@ -184,7 +203,7 @@ public static class LoggerExtensions
     /// <param name="action">Action that would be dispatched in scope of logged context.</param>
     /// <param name="operationName">Name of the operation that should be logged.</param>
     public static async Task LogOperation(
-        this Microsoft.Extensions.Logging.ILogger logger,
+        this ILogger logger,
         OperationContext context,
         Func<Task> action,
         [CallerMemberName] string operationName = ""
@@ -214,9 +233,9 @@ public static class LoggerExtensions
     /// <param name="action">Action that would be dispatched in scope of logged context.</param>
     /// <param name="operationName">Name of the operation that should be logged.</param>
     public static async Task LogOperation(
-        this Microsoft.Extensions.Logging.ILogger logger,
+        this ILogger logger,
         OperationContext context,
-        Dictionary<string, object> startParams,
+        Dictionary<Field, object> startParams,
         Func<Task> action,
         [CallerMemberName] string operationName = ""
     )
@@ -242,7 +261,7 @@ public static class LoggerExtensions
     /// <param name="action">Action that would be dispatched in scope of logged context.</param>
     /// <param name="operationName">Name of the operation that should be logged.</param>
     public static async Task<T> LogOperation<T>(
-        this Microsoft.Extensions.Logging.ILogger logger,
+        this ILogger logger,
         OperationContext context,
         Func<Task<T>> action,
         [CallerMemberName] string operationName = ""
@@ -250,15 +269,19 @@ public static class LoggerExtensions
     {
         var stopwatch = new Stopwatch();
         stopwatch.Start();
-        using (LogContext.Push(new OperationContextEnricher(context, operationName)))
+        using (logger.BeginScope($"Operation {Field.Method}", operationName))
+        using (LogContext.Push(new OperationContextEnricher(context)))
         {
             T result;
             {
-                logger.LogWithFields($"Starting operation {operationName}.", context);
+                logger.LogDebug($"Starting operation {Field.Method}.", operationName);
                 result = await action();
                 stopwatch.Stop();
-                logger.LogInformation(
-                    $"Finished operation {operationName}. Elapsed: {Field.Elapsed} ms.",
+                logger.LogWithFields(
+                    LogLevel.Information,
+                    context,
+                    $"Finished operation {Field.Method}. Elapsed: {Field.Elapsed} ms.",
+                    operationName,
                     stopwatch.ElapsedMilliseconds
                 );
             }
@@ -282,29 +305,30 @@ public static class LoggerExtensions
     /// <param name="action">Action that would be dispatched in scope of logged context.</param>
     /// <param name="operationName">Name of the operation that should be logged.</param>
     public static async Task<T> LogOperation<T>(
-        this Microsoft.Extensions.Logging.ILogger logger,
+        this ILogger logger,
         OperationContext context,
         Dictionary<Field, object> startParams,
         Func<Task<T>> action,
         [CallerMemberName] string operationName = ""
     )
     {
-        if (startParams == null)
-        {
-            throw new ArgumentNullException(nameof(startParams));
-        }
+        ArgumentNullException.ThrowIfNull(startParams);
 
         var stopwatch = new Stopwatch();
         stopwatch.Start();
-        using (LogContext.Push(new OperationContextEnricher(context, operationName)))
+        using (logger.BeginScope($"Operation {Field.Method}", operationName))
+        using (LogContext.Push(new OperationContextEnricher(context)))
         {
             T result;
             {
-                logger.LogWithFields($"Starting operation {operationName}.", startParams);
+                logger.LogDebug($"Starting operation {Field.Method}.", operationName);
                 result = await action();
                 stopwatch.Stop();
-                logger.LogInformation(
-                    $"Finished operation {operationName}. Elapsed: {Field.Elapsed} ms.",
+                logger.LogWithFields(
+                    LogLevel.Information,
+                    startParams,
+                    $"Finished operation {Field.Method}. Elapsed: {Field.Elapsed} ms.",
+                    operationName,
                     stopwatch.ElapsedMilliseconds
                 );
             }
@@ -312,6 +336,13 @@ public static class LoggerExtensions
             return result;
         }
     }
+
+    #endregion
+
+    #region Sync LogOperation
+
+
+
 
     /// <summary>
     /// Logs operation.
@@ -325,34 +356,33 @@ public static class LoggerExtensions
     /// <param name="action">Action that would be dispatched in scope of logged context.</param>
     /// <param name="operationName">Name of the operation that should be logged.</param>
     public static T LogOperation<T>(
-        this Microsoft.Extensions.Logging.ILogger logger,
+        this ILogger logger,
         OperationContext context,
         Func<T> action,
         [CallerMemberName] string operationName = ""
     )
     {
-        T result;
         var stopwatch = new Stopwatch();
         stopwatch.Start();
-        using (LogContext.Push(new OperationContextEnricher(context, operationName)))
+        using (logger.BeginScope($"Operation {Field.Method}", operationName))
+        using (LogContext.Push(new OperationContextEnricher(context)))
         {
-            logger.LogWithFields($"Starting operation {operationName}.", context);
-            result = action();
-            stopwatch.Stop();
-            logger.LogInformation(
-                $"Finished operation {operationName}. Elapsed: {Field.Elapsed} ms.",
-                stopwatch.ElapsedMilliseconds
-            );
+            T result;
+            {
+                logger.LogDebug($"Starting operation {Field.Method}.", operationName);
+                result = action();
+                stopwatch.Stop();
+                logger.LogWithFields(
+                    LogLevel.Information,
+                    context,
+                    $"Finished operation {Field.Method}. Elapsed: {Field.Elapsed} ms.",
+                    operationName,
+                    stopwatch.ElapsedMilliseconds
+                );
+            }
+
+            return result;
         }
-
-        return result;
-    }
-
-    private static Dictionary<string, object> MakeStartMessageParams(
-        Dictionary<Field, object> context
-    )
-    {
-        return context.ToDictionary(x => x.Key.Name, x => x.Value);
     }
 
     /// <summary>
@@ -396,33 +426,36 @@ public static class LoggerExtensions
     /// <param name="action">Action that would be dispatched in scope of logged context.</param>
     /// <param name="operationName">Name of the operation that should be logged.</param>
     public static T LogOperation<T>(
-        this Microsoft.Extensions.Logging.ILogger logger,
+        this ILogger logger,
         OperationContext context,
         Dictionary<Field, object> startParams,
         Func<T> action,
         [CallerMemberName] string operationName = ""
     )
     {
-        if (startParams == null)
-        {
-            throw new ArgumentNullException(nameof(startParams));
-        }
+        ArgumentNullException.ThrowIfNull(startParams);
 
-        T result;
         var stopwatch = new Stopwatch();
         stopwatch.Start();
-        using (LogContext.Push(new OperationContextEnricher(context, operationName)))
+        using (logger.BeginScope($"Operation {Field.Method}", operationName))
+        using (LogContext.Push(new OperationContextEnricher(context)))
         {
-            logger.LogWithFields($"Starting operation {operationName}.", startParams);
-            result = action();
-            stopwatch.Stop();
-            logger.LogInformation(
-                $"Finished operation {operationName}. Elapsed: {Field.Elapsed} ms.",
-                stopwatch.ElapsedMilliseconds
-            );
-        }
+            T result;
+            {
+                logger.LogDebug($"Starting operation {Field.Method}.", operationName);
+                result = action();
+                stopwatch.Stop();
+                logger.LogWithFields(
+                    LogLevel.Information,
+                    startParams,
+                    $"Finished operation {Field.Method}. Elapsed: {Field.Elapsed} ms.",
+                    operationName,
+                    stopwatch.ElapsedMilliseconds
+                );
+            }
 
-        return result;
+            return result;
+        }
     }
 
     /// <summary>
@@ -440,7 +473,7 @@ public static class LoggerExtensions
     /// <param name="action">Action that would be dispatched in scope of logged context.</param>
     /// <param name="operationName">Name of the operation that should be logged.</param>
     public static void LogOperation(
-        this Microsoft.Extensions.Logging.ILogger logger,
+        this ILogger logger,
         OperationContext context,
         Dictionary<Field, object> startParams,
         Action action = default,
@@ -454,4 +487,6 @@ public static class LoggerExtensions
         };
         logger.LogOperation(context, startParams, func, operationName);
     }
+
+    #endregion
 }

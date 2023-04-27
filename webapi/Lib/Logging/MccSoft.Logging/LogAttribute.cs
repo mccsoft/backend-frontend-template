@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using MccSoft.Logging;
 using Metalama.Framework.Aspects;
@@ -68,14 +66,14 @@ public class LogAttribute : OverrideMethodAspect, IAspect<INamedType>
         var logger = (ILogger)meta.This._logger;
         object resultRef = null;
 
-        var parameters = new Dictionary<Field, object>();
+        var operationContext = new OperationContext();
         foreach (var p in meta.Target.Parameters.Where(p => p.RefKind != RefKind.Out))
         {
             // It's important not to call `.ToString()` on IQueryables.
             // It seems to call it on IEnumerable also have no sense.
             if (!(p.Value is IEnumerable))
             {
-                parameters.Add(
+                operationContext.Add(
                     Field.Named(LogAttributePostProcess.PostProcessParameterName(p.Name)),
                     p.Value
                 );
@@ -83,7 +81,7 @@ public class LogAttribute : OverrideMethodAspect, IAspect<INamedType>
         }
 
         using var log = logger.LogOperation(
-            parameters,
+            operationContext,
             _withResult ? () => resultRef : null,
             meta.Target.Method.Name
         );

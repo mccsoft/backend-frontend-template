@@ -1,12 +1,14 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using Destructurama;
 using IdentityModel;
 using MccSoft.HttpClientExtension;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Debugging;
@@ -23,8 +25,24 @@ public static class LoggerConfigurationExtensions
     {
         if (!hostingEnvironment.IsEnvironment("Test"))
         {
+            var excludePaths = app.ApplicationServices
+                .GetRequiredService<IConfiguration>()
+                .GetSection(SerilogRequestLoggingOptions.Position)
+                .Get<SerilogRequestLoggingOptions>()
+                ?.ExcludePaths;
+
             app.UseSerilogRequestLogging(options =>
             {
+                options.GetLevel = (context, elapsed, exception) =>
+                {
+                    var path = context.Request.Path.Value;
+
+                    if (excludePaths?.Any(x => path.StartsWith(x)) is true)
+                        return LogEventLevel.Verbose;
+
+                    return LogEventLevel.Information;
+                };
+
                 options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
                 {
                     diagnosticContext.Set(
