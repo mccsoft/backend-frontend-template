@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using MccSoft.LowLevelPrimitives.Serialization;
 using MccSoft.WebApi.Patching;
-using MccSoft.WebApi.Serialization.ModelBinding;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MccSoft.WebApi.Serialization;
