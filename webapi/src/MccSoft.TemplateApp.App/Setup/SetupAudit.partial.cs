@@ -48,7 +48,7 @@ public partial class SetupAudit
                             ? eventEntry.PrimaryKey.Values.First().ToString()
                             : string.Join(", ", eventEntry.PrimaryKey.Values);
 
-                logger.Information(
+                logger.Debug(
                     $"{Field.Method}, {Field.Named("Action")}, Table: {Field.Named("Table")}, Id: {Field.Named("Id")}, Changes: {Field.Named("Changes")}, CurrentValues: {Field.Named("CurrentValues")}",
                     "EFAudit",
                     eventEntry.Action,
@@ -145,7 +145,7 @@ public partial class SetupAudit
             .UseSerilog(
                 config =>
                     config
-                        .LogLevel(Audit.NET.Serilog.LogLevel.Info)
+                        .LogLevel(Audit.NET.Serilog.LogLevel.Debug)
                         .Message(CreateAuditMessageForSerilog)
             );
     }
