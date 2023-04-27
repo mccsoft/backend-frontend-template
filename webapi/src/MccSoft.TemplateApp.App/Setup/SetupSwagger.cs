@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using MccSoft.TemplateApp.App.Settings;
 using MccSoft.WebApi.Patching;
+using MccSoft.WebApi.Swagger;
 using NJsonSchema;
 using NJsonSchema.Generation.TypeMappers;
 using NSwag;
@@ -29,6 +30,7 @@ public static partial class SetupSwagger
             options.SchemaProcessors.Add(
                 new RequireValueTypesSchemaProcessor(makePatchRequestFieldsNullable: false)
             );
+            options.SchemaProcessors.Add(new ValidationProblemDetailsSchemaProcessor());
         });
         services.AddOpenApiDocument(options =>
         {
@@ -37,6 +39,7 @@ public static partial class SetupSwagger
             options.SchemaProcessors.Add(
                 new RequireValueTypesSchemaProcessor(makePatchRequestFieldsNullable: true)
             );
+            options.SchemaProcessors.Add(new ValidationProblemDetailsSchemaProcessor());
         });
 
         // If you'd like to modify this class, consider adding your custom code in the SetupSwagger.partial.cs
