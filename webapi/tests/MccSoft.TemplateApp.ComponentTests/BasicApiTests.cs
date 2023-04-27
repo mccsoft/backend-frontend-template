@@ -1,4 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,15 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
+using MccSoft.Testing;
 using MccSoft.WebApi.Patching.Models;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
-using Xunit.Abstractions;
-using System.Text;
-using FluentAssertions;
-using Hangfire;
-using MccSoft.Testing;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -92,13 +88,26 @@ public partial class BasicApiTests : ComponentTestBase
     [Fact]
     public async Task GenerateHttpClient_ValidAndExported()
     {
-        string exportPath = Path.GetTempFileName();
-        string url = Configuration["Swagger:Endpoint:Url"];
-        await SaveSwaggerJsonToFile(url, exportPath, null);
-        await GenerateTypescriptHttpClient(exportPath);
+        string openApiFilePath = Path.GetTempFileName();
+        string outputDirPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+        try
+        {
+            string url = Configuration["Swagger:Endpoint:Url"];
+            await SaveSwaggerJsonToFile(url, openApiFilePath, null);
+            await GenerateTypescriptHttpClient(openApiFilePath, outputDirPath);
 
-        await SaveSwaggerJsonToFile(url.Replace("v1", "csharp"), exportPath, "https://localhost");
-        await GenerateCSharpHttpClient(exportPath);
+            await SaveSwaggerJsonToFile(
+                url.Replace("v1", "csharp"),
+                openApiFilePath,
+                "https://localhost"
+            );
+            await GenerateCSharpHttpClient(openApiFilePath, outputDirPath);
+        }
+        finally
+        {
+            File.Delete(openApiFilePath);
+            Directory.Delete(outputDirPath, true);
+        }
     }
 
     private async Task SaveSwaggerJsonToFile(string url, string exportPath, string baseUrl)
@@ -128,20 +137,20 @@ public partial class BasicApiTests : ComponentTestBase
         File.WriteAllText(exportPath, swaggerJsonString);
     }
 
-    private async Task GenerateCSharpHttpClient(string exportPath)
+    private async Task GenerateCSharpHttpClient(string inputPath, string outputDirPath)
     {
         await RunScriptFromFrontendFolder(
-            $"yarn nswag openapi2csclient /input:{exportPath} /output:../webapi/src/MccSoft.TemplateApp.Http/GeneratedClient.cs /templateDirectory:../webapi/src/MccSoft.TemplateApp.Http/template /namespace:MccSoft.TemplateApp.Http.Generated /generateClientInterfaces:true /clientBaseClass:BaseClient /exposeJsonSerializerSettings:true /generateUpdateJsonSerializerSettingsMethod:false /clientBaseInterface:IBaseClient /jsonLibrary:SystemTextJson"
+            $"yarn nswag openapi2csclient /input:{inputPath} /output:{outputDirPath}/GeneratedClient.cs /templateDirectory:../webapi/src/MccSoft.Survey.Http/template /namespace:MccSoft.Survey.Http.Generated /generateClientInterfaces:true /clientBaseClass:BaseClient /exposeJsonSerializerSettings:true /generateUpdateJsonSerializerSettingsMethod:false /clientBaseInterface:IBaseClient /jsonLibrary:SystemTextJson"
         );
         await RunScriptFromFrontendFolder(
-            "yarn replace ', NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore' ' ' ../webapi/src/MccSoft.TemplateApp.Http/GeneratedClient.cs"
+            $"yarn replace ', NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore' ' ' {outputDirPath}/GeneratedClient.cs"
         );
     }
 
-    private async Task GenerateTypescriptHttpClient(string exportPath)
+    private async Task GenerateTypescriptHttpClient(string inputPath, string outputDir)
     {
         await RunScriptFromFrontendFolder(
-            $"yarn react-query-swagger openapi2tsclient /tanstack /input:{exportPath} /output:src/services/api/api-client.ts /template:Axios /serviceHost:. /use-recommended-configuration"
+            $"yarn react-query-swagger openapi2tsclient /tanstack /input:{inputPath} {outputDir}/api-client.ts /template:Axios /serviceHost:. /minimal"
         );
     }
 
