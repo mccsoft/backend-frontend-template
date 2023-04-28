@@ -1,9 +1,10 @@
 # Day-to-day development workflow
+
 1. Take a task/feature, move it to 'In Progress' on the Board
 2. Create a branch for your feature/task
    1. Feature branches are generally named like 'feature/12345-add-sorting-to-products', where '12345' is the Id of your Task/UserStory with short description of what it does
 3. Design a backend API interface
-   1. Try to use [REST](./REST.md), but don't be too dogmatic. If non-REST interface suits better, go for it (but first make sure, that non-REST REALLY suits better and is more understandable)
+   1. Try to use [REST](./details/REST.md), but don't be too dogmatic. If non-REST interface suits better, go for it (but first make sure, that non-REST REALLY suits better and is more understandable)
    2. Discuss API with colleagues if in doubt
 4. Implement backend logic
 5. Autogenerate typescript client
@@ -15,8 +16,8 @@
 11. Wait for your changes to be built on CI & deployed.
     1. Don't merge & go home! :) Wait for your merge to be built by CI. Better postpone merging till tomorrow morning (because if your changes break on CI and you are offline, your colleagues will be angry!)
 
-
 # Development principles
+
 1. Common sense above all. If some principle/rule goes against the common sense, don't do it, ask colleagues why/what-to-do.
 2. We tend to use a lot of [Trunk-based-development](https://trunkbaseddevelopment.com) principles
    1. Create a branch per task/feature/functionality (branch name is like `feature/12345-add-sorting-to-products` where 12345 is the Id of your Task/UserStory), create a Pull Request when finished, merge **using squash** when PR is approved and tests are green.
@@ -36,8 +37,9 @@
    1. XML-comments to public functions/classes (if you are writing a library) are exceptions for this case.
 
 # General
-1. Try to use [REST API](./REST.md)
-2. Read about [DateTime handling](./DateTime-handling.md) in backend
+
+1. Try to use [REST API](./details/REST.md)
+2. Read about [DateTime handling](./details/DateTime-handling.md) in backend
 3. For pages with filters/sorting, store the filters in the URL.
    1. It should be possible to copy the URL, send it to the colleague, and if he opens the page, he should see the same thing.
    2. It should be possible to press F5 and see more-or-less the same result
@@ -45,25 +47,28 @@
 4. Use [feature-flags](./details/Feature-Flags.md) to disable/enable features (especially features that are being developed and not yet finished).
 
 # Backend
+
 1. Do not use `Controllers` and `Services` folders. Rather create a folder in `Features` folder (with a name of your feature), and put your Controllers, Services and Dtos there.
-    - it puts everything related to a feature in one place, which helps in refactoring and understanding
+   - it puts everything related to a feature in one place, which helps in refactoring and understanding
 1. Check [Multi-tenancy](details/MultiTenancy-EFIntegration.md) implementation if your app uses it
 1. Add logs wherever meaningful, also use `[Log]` attribute (more [details here](./Logging.md))
 
 # Frontend
+
 1. Use redux for client state only (and it's ok to not use redux at all :))
    1. Do not store Form state in redux (use `react-hook-form`)
    2. Do not store http-request-cache in redux (use `react-query`)
 2. Routing: we use [react-router v6](https://reactrouter.com/docs/en/v6/).
    1. Define your route. We use a small [createLink](/frontend/src/application/constants/links.ts) wrapper to add typings to URLs.
       1. Add e.g. `WorkItemDetails: createLink('/projects/:id')}`
-      2. Handle this route at [RootPage](/frontend/src/pages/authorized/RootPage.tsx) ```<Route path={Links.WorkItemDetails.route} element={<YOUR_PAGE_COMPONENT />} />```
+      2. Handle this route at [RootPage](/frontend/src/pages/authorized/RootPage.tsx) `<Route path={Links.WorkItemDetails.route} element={<YOUR_PAGE_COMPONENT />} />`
       3. Within the page component you could access URL parameters using `Links.WorkItemDetails.useParams()`
    2. Optional parameters unfortunately are not supported. You have to define separate route for each optional parameter and `Links.WorkItemDetails.useMatch()` to get the values.
 3. We have [UIKit](details/UIKit.md) (based on MUI) with some additional convenience options. Please check [the docs](details/UIKit.md) to know how/when to use it :)
 4. We tend NOT to use default exports. Please export and use components via named exports (i.e. `export const MyPage = () => <div>blablabla</div>`). Only use default exports with lazy-loading (via `React.lazy`, or better using the [lazyRetry helper](../frontend/src/helpers/retry-helper.tsx))
 
 ### FAQ
+
 1. You could pull updates from Template into your project by running `yarn pull-changes-from-template` (it will actually run [scripts/pull-changes-from-template.js](../scripts/pull-template-changes.js)).
    1. It will clone the template repo next to your project folder, rename according to your project and copy Lib folder and other files that are not meant to be changed.
    2. You could examine/compare some other files and copy them to your project manually

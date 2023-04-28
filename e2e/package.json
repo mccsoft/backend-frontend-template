@@ -14,7 +14,7 @@
     "http-server": "14.1.1",
     "nswag": "13.18.2",
     "randomstring": "1.2.3",
-    "react-query-swagger": "15.6.12",
+    "react-query-swagger": "15.7.3",
     "sinon": "15.0.1",
     "typescript": "5.0.4"
   },

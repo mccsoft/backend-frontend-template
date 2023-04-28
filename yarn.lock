@@ -4970,7 +4970,7 @@ __metadata:
     react-i18next: 12.1.1
     react-merge-refs: 2.0.1
     react-paginate: 8.2.0
-    react-query-swagger: 15.6.12
+    react-query-swagger: 15.7.3
     react-redux: 8.0.2
     react-router: 6.3.0
     react-router-dom: 6.3.0
@@ -8365,7 +8365,7 @@ __metadata:
     http-server: 14.1.1
     nswag: 13.18.2
     randomstring: 1.2.3
-    react-query-swagger: 15.6.12
+    react-query-swagger: 15.7.3
     sinon: 15.0.1
     typescript: 5.0.4
   languageName: unknown
@@ -12942,12 +12942,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nswag-portable@npm:13.18.1-v.5":
-  version: 13.18.1-v.5
-  resolution: "nswag-portable@npm:13.18.1-v.5"
+"nswag-portable@npm:13.18.1-v.6":
+  version: 13.18.1-v.6
+  resolution: "nswag-portable@npm:13.18.1-v.6"
   bin:
     nswag-portable: nswag-portable.js
-  checksum: a717700d1dbe52df7df9f32ee7913f41be6b01121c1281901443c88accc4bbb24db48e5099ee18ac163cc59d52f17d5966ec7f699fc9cdee37ffe7afc60a03f7
+  checksum: 0525117883c75bfed54f3984279e10fa68319b2c459ace3f6e7d0629f8f76af6708c830af3bd0c288e207e892253e004d4103b41c7bf1d091582243ac97c3f1b
   languageName: node
   linkType: hard
 
@@ -14144,11 +14144,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-query-swagger@npm:15.6.12":
-  version: 15.6.12
-  resolution: "react-query-swagger@npm:15.6.12"
+"react-query-swagger@npm:15.7.3":
+  version: 15.7.3
+  resolution: "react-query-swagger@npm:15.7.3"
   dependencies:
-    nswag-portable: 13.18.1-v.5
+    nswag-portable: 13.18.1-v.6
   peerDependencies:
     "@tanstack/react-query": "> 4.0"
     "@tanstack/react-query-persist-client": ">4.2.0"
@@ -14157,7 +14157,7 @@ __metadata:
     typescript: 3.x || 4.x
   bin:
     react-query-swagger: cli.js
-  checksum: c3de89ac29c0ada90a717b4a565c44b5fb1db2558c79adae0dc965b02b35192e2ecd802e905c7a5dcc7c12366ed2d0ceca05400dca57fb6a8c2b11f5b86b649c
+  checksum: 093c51636dce6089f7f66f4d3bed68efce3c5df44a9ec7ca620f0d3d63ca4e8b3494b870e2a5c7c2c87f239149483c058ed93af199f721b96f05fab78a28fbc5
   languageName: node
   linkType: hard
 
