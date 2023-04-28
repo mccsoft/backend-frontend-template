@@ -90,6 +90,7 @@ public partial class BasicApiTests : ComponentTestBase
     {
         string openApiFilePath = Path.GetTempFileName();
         string outputDirPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+        Directory.CreateDirectory(outputDirPath);
         try
         {
             string url = Configuration["Swagger:Endpoint:Url"];
@@ -140,7 +141,7 @@ public partial class BasicApiTests : ComponentTestBase
     private async Task GenerateCSharpHttpClient(string inputPath, string outputDirPath)
     {
         await RunScriptFromFrontendFolder(
-            $"yarn nswag openapi2csclient /input:{inputPath} /output:{outputDirPath}/GeneratedClient.cs /templateDirectory:../webapi/src/MccSoft.Survey.Http/template /namespace:MccSoft.Survey.Http.Generated /generateClientInterfaces:true /clientBaseClass:BaseClient /exposeJsonSerializerSettings:true /generateUpdateJsonSerializerSettingsMethod:false /clientBaseInterface:IBaseClient /jsonLibrary:SystemTextJson"
+            $"yarn nswag openapi2csclient /input:{inputPath} /output:{outputDirPath}/GeneratedClient.cs /templateDirectory:../webapi/src/MccSoft.TemplateApp.Http/template /namespace:MccSoft.TemplateApp.Http.Generated /generateClientInterfaces:true /clientBaseClass:BaseClient /exposeJsonSerializerSettings:true /generateUpdateJsonSerializerSettingsMethod:false /clientBaseInterface:IBaseClient /jsonLibrary:SystemTextJson"
         );
         await RunScriptFromFrontendFolder(
             $"yarn replace ', NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore' ' ' {outputDirPath}/GeneratedClient.cs"
@@ -150,7 +151,7 @@ public partial class BasicApiTests : ComponentTestBase
     private async Task GenerateTypescriptHttpClient(string inputPath, string outputDir)
     {
         await RunScriptFromFrontendFolder(
-            $"yarn react-query-swagger openapi2tsclient /tanstack /input:{inputPath} {outputDir}/api-client.ts /template:Axios /serviceHost:. /minimal"
+            $"yarn react-query-swagger openapi2tsclient /tanstack /input:{inputPath} /output:{outputDir}/api-client.ts /template:Axios /serviceHost:. /minimal"
         );
     }
 

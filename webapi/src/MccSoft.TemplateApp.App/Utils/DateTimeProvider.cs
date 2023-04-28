@@ -8,7 +8,7 @@ namespace MccSoft.TemplateApp.App.Utils;
 public sealed class DateTimeProvider : IDateTimeProvider
 {
     /// <inheritdoc />
-    public DateTimeOffset UtcNowOffset { get; } = DateTimeOffset.UtcNow;
+    public DateTime UtcNow { get; } = DateTime.UtcNow;
 }
 
 public interface IDateTimeProvider
@@ -16,12 +16,7 @@ public interface IDateTimeProvider
     /// <summary>
     /// Current date and time by UTC on server.
     /// </summary>
-    public DateTimeOffset UtcNowOffset { get; }
-
-    /// <summary>
-    /// Current date and time by UTC on server.
-    /// </summary>
-    public DateTime UtcNow => UtcNowOffset.UtcDateTime;
+    public DateTime UtcNow { get; }
 
     /// <summary>
     /// Current date by UTC on server
@@ -36,41 +31,37 @@ public interface IDateTimeProvider
 /// </summary>
 public sealed class TestDateTimeProvider : IDateTimeProvider
 {
-    private Func<DateTimeOffset> _dateTimeOffsetFactory;
+    // ReSharper disable NotNullOrRequiredMemberIsNotInitialized
 
-    public Func<DateTimeOffset> DateTimeOffsetFactory
+    public TestDateTimeProvider(DateTime utcNow) => UtcNow = utcNow;
+
+    public TestDateTimeProvider(Func<DateTime> utcNowFactory) => UtcNowFactory = utcNowFactory;
+
+    // ReSharper restore NotNullOrRequiredMemberIsNotInitialized
+
+    private Func<DateTime> _utcNowFactory;
+
+    public Func<DateTime> UtcNowFactory
     {
-        get => _dateTimeOffsetFactory;
+        get => _utcNowFactory;
         set
         {
-            if (value().Offset != TimeSpan.Zero)
+            if (value().Kind != DateTimeKind.Utc)
                 throw new ArgumentException("Factory must return time in UTC.", nameof(value));
-            _dateTimeOffsetFactory = value;
+            _utcNowFactory = value;
         }
     }
 
-    public TestDateTimeProvider(DateTimeOffset dateTimeOffset)
-    {
-        if (dateTimeOffset.Offset != TimeSpan.Zero)
-            throw new ArgumentException(
-                $"{nameof(dateTimeOffset)} must be in UTC.",
-                nameof(dateTimeOffset)
-            );
-
-        _dateTimeOffsetFactory = () => dateTimeOffset;
-    }
-
-    public TestDateTimeProvider(Func<DateTimeOffset> dateTimeOffsetFactory)
-    {
-        if (dateTimeOffsetFactory().Offset != TimeSpan.Zero)
-            throw new ArgumentException(
-                "Factory must return time in UTC.",
-                nameof(dateTimeOffsetFactory)
-            );
-
-        _dateTimeOffsetFactory = dateTimeOffsetFactory;
-    }
-
     /// <inheritdoc />
-    public DateTimeOffset UtcNowOffset => DateTimeOffsetFactory();
+    public DateTime UtcNow
+    {
+        get => _utcNowFactory();
+        set
+        {
+            if (value.Kind != DateTimeKind.Utc)
+                throw new ArgumentException($"UtcNow must be in UTC.", nameof(value));
+
+            _utcNowFactory = () => value;
+        }
+    }
 }

@@ -4958,6 +4958,7 @@ __metadata:
     lottie-web: 5.10.0
     material-ui-popup-state: 5.0.4
     nock: 13.3.0
+    nswag: 13.18.2
     oidc-client-ts: 2.2.0
     prettier: 2.8.7
     prop-types: 15.8.1
