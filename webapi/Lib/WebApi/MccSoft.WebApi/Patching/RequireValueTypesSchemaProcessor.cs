@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using MccSoft.WebApi.Patching.Models;
 using Microsoft.AspNetCore.Mvc;
 using NJsonSchema;
@@ -53,9 +55,12 @@ public class RequireValueTypesSchemaProcessor : ISchemaProcessor
             return;
         }
 
-        if (context.Type.IsAssignableTo(typeof(JsonDocument)))
+        if (
+            context.Type.IsAssignableTo(typeof(JsonDocument))
+            || context.Type.IsAssignableTo(typeof(JsonNode))
+        )
         {
-            // there's no need to do detailed parsing of JToken types
+            // there's no need to do detailed parsing of json types
             return;
         }
 
@@ -77,11 +82,14 @@ public class RequireValueTypesSchemaProcessor : ISchemaProcessor
             JsonSchemaProperty property = propertyKeyValue.Value;
             string propertyName = property.Name;
             if (
-                property.Type == JsonObjectType.String
-                || property.Type == JsonObjectType.Boolean
-                || property.Type == JsonObjectType.Integer
-                || property.Type == JsonObjectType.Number
-                || property.Type == JsonObjectType.None /* enum */
+                property.Type
+                is JsonObjectType.Object
+                    or JsonObjectType.Array
+                    or JsonObjectType.String
+                    or JsonObjectType.Boolean
+                    or JsonObjectType.Integer
+                    or JsonObjectType.Number
+                    or JsonObjectType.None /* enum */
             )
             {
                 if (!clrProperties.ContainsKey(propertyName.ToLower()))
@@ -100,9 +108,20 @@ public class RequireValueTypesSchemaProcessor : ISchemaProcessor
                 if (propIsNullable)
                     property.IsNullableRaw = true;
 
+                var propertyHasOppositeAttributes =
+                    clrProperty.GetCustomAttribute<NotRequiredAttribute>() is { }
+                    && clrProperty.GetCustomAttribute<RequiredAttribute>() is { };
+
+                if (propertyHasOppositeAttributes)
+                    throw new InvalidOperationException(
+                        $"Property {clrProperty.Name} of class {context.Type.FullName} "
+                            + $"has the opposite attributes: {nameof(NotRequiredAttribute)} and {nameof(RequiredAttribute)}"
+                    );
+
                 property.IsRequired =
-                    clrProperty.GetCustomAttribute<NotRequiredAttribute>() == null
-                    && !(isPatchRequest && _makePatchRequestFieldsNullable);
+                    clrProperty.GetCustomAttribute<RequiredAttribute>() is { }
+                    || clrProperty.GetCustomAttribute<NotRequiredAttribute>() == null
+                        && !(isPatchRequest && _makePatchRequestFieldsNullable);
             }
         }
     }

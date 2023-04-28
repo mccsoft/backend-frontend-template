@@ -1,3 +1,4 @@
+using MccSoft.LowLevelPrimitives.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MccSoft.WebApi.Serialization.ModelBinding;

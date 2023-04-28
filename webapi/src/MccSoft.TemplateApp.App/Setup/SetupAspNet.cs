@@ -1,8 +1,5 @@
-﻿using System.Text.Json.Serialization;
-using MccSoft.LowLevelPrimitives.Serialization.DateOnlyConverters;
-using MccSoft.TemplateApp.App.Middleware;
+﻿using MccSoft.TemplateApp.App.Middleware;
 using MccSoft.WebApi;
-using MccSoft.WebApi.Patching;
 using MccSoft.WebApi.Sentry;
 using MccSoft.WebApi.Serialization;
 using MccSoft.WebApi.Serialization.ModelBinding;

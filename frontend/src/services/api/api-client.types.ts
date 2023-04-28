@@ -24,7 +24,7 @@ export function prepareSerializeProblemDetails(_data: ProblemDetails): ProblemDe
   return data as ProblemDetails;
 }
 export interface HttpValidationProblemDetails extends ProblemDetails  {
-  errors?: { [key: string]: string[]; };
+  errors: { [key: string]: string[]; };
   [key: string]: any;
 }
 export function deserializeHttpValidationProblemDetails(json: string): HttpValidationProblemDetails {
@@ -48,7 +48,7 @@ export function prepareSerializeHttpValidationProblemDetails(_data: HttpValidati
   return data as HttpValidationProblemDetails;
 }
 export interface ValidationProblemDetails extends HttpValidationProblemDetails  {
-  errors?: { [key: string]: string[]; };
+  errors: { [key: string]: string[]; };
   [key: string]: any;
 }
 export function deserializeValidationProblemDetails(json: string): ValidationProblemDetails {
@@ -244,7 +244,7 @@ export function formatDate(d: Date) {
         (d.getMonth() < 9 ? ('0' + (d.getMonth()+1)) : (d.getMonth()+1)) + '-' +
         (d.getDate() < 10 ? ('0' + d.getDate()) : d.getDate());
 }
-function parseDateOnly(s: string) {
+export function parseDateOnly(s: string) {
     const date = new Date(s);
     return new Date(date.getTime() + 
         date.getTimezoneOffset() * 60000);

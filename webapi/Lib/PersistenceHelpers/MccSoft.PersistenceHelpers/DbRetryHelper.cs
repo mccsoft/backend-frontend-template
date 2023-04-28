@@ -1,8 +1,10 @@
 using System;
+using System.Data;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace MccSoft.PersistenceHelpers;
 
@@ -13,23 +15,27 @@ namespace MccSoft.PersistenceHelpers;
 /// <typeparam name="TCaller">The type of the service performing transaction.</typeparam>
 public class DbRetryHelper<TDbContext, TCaller> where TDbContext : DbContext, IDisposable
 {
+    #region Constructor and dependencies
+
     private readonly TDbContext _dbContext;
     private readonly Func<TDbContext> _dbContextFactory;
     private readonly TransactionLogger<TCaller> _transactionLogger;
-    private readonly ILogger _logger;
+    private readonly IOptions<DbRetryHelperOptions> _options;
 
     public DbRetryHelper(
         TDbContext dbContext,
         Func<TDbContext> dbContextFactory,
-        ILoggerFactory loggerFactory,
-        TransactionLogger<TCaller> transactionLogger
+        TransactionLogger<TCaller> transactionLogger,
+        IOptions<DbRetryHelperOptions> options
     )
     {
         _dbContext = dbContext;
         _dbContextFactory = dbContextFactory;
         _transactionLogger = transactionLogger;
-        _logger = loggerFactory.CreateLogger<DbRetryHelper<TDbContext, TCaller>>();
+        _options = options;
     }
+
+    #endregion
 
     /// <summary>
     /// Retries the specified action on transient database errors with exponential backoff.
@@ -47,8 +53,10 @@ public class DbRetryHelper<TDbContext, TCaller> where TDbContext : DbContext, ID
         await strategy.ExecuteAsync(async () =>
         {
             await using TDbContext db = _dbContextFactory();
-            await using IDbContextTransaction transaction =
-                await db.Database.BeginTransactionAsync();
+            await using IDbContextTransaction transaction = _options.Value.IsolationLevel
+                is { } isolationLevel
+                ? await db.Database.BeginTransactionAsync(isolationLevel)
+                : await db.Database.BeginTransactionAsync();
             result = await action(db, _transactionLogger);
             await transaction.CommitAsync();
         });
@@ -175,4 +183,15 @@ public class DbRetryHelper<TDbContext, TCaller> where TDbContext : DbContext, ID
             }
         );
     }
+}
+
+public class DbRetryHelperOptions
+{
+    /// <summary>
+    /// Transaction isolation level, that will be used in methods with transactions
+    /// </summary>
+    /// <value>
+    /// <c>null</c> - default isolation level will be used
+    /// </value>
+    public IsolationLevel? IsolationLevel { get; set; }
 }

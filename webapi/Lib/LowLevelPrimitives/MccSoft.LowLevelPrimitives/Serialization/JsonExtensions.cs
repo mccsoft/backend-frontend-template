@@ -53,7 +53,7 @@ public static class JsonExtensions
             return stringResult;
         if (jsonNode is JsonArray jsonArray)
             return jsonArray.Select(x => x.GetValue()).ToList();
-        if (jsonNode is JsonObject jsonObject)
+        if (jsonNode is System.Text.Json.Nodes.JsonObject jsonObject)
             return jsonObject.Deserialize<object>();
         return jsonNode;
     }
