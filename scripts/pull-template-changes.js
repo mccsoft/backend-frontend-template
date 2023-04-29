@@ -178,7 +178,7 @@ export function syncReferencesInProjects(relativePathInsideProject) {
 export function doSyncReferencesInProjects(src, dest) {
   if (!fs.existsSync(src) || !fs.existsSync(dest)) return;
   const sourceFileContent = fs.readFileSync(src).toString('utf8');
-  const destinationFileContent = fs.readFileSync(dest).toString('utf8');
+  let destinationFileContent = fs.readFileSync(dest).toString('utf8');
 
   const parser = new XMLParser({ ignoreAttributes: false });
   const sourceXml = parser.parse(sourceFileContent);
