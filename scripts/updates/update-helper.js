@@ -60,7 +60,7 @@ function getPartialFileName(fileName) {
 }
 
 export function patchFile(path, search, replace) {
-  const filePath = path.join(process.cwd(), relativePathInsideProject);
+  const filePath = path.join(process.cwd(), path);
   let contents = fs.readFileSync(filePath);
 
   contents.replace(search, replace);
