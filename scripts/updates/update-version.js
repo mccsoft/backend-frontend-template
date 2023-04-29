@@ -1,7 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import semver from 'semver';
-import { copyProjectFolder, patchFile } from './update-helper.js';
+import {
+  copyProjectFolder,
+  patchFile,
+  updatePlaywright,
+} from './update-helper.js';
 
 // current version is stored here
 const templateJsonFileName = '.template.json';
@@ -27,7 +31,7 @@ export function updateVersion(prefix) {
     fs.readFileSync(path.join(templateFolder, templateJsonFileName)),
   );
 
-  process.chdir(templateFolder.remove('_template'));
+  process.chdir(templateFolder.replace('_template', ''));
 
   try {
     const currentVersion = currentTemplateSettings.version;
@@ -50,6 +54,7 @@ export function updateVersion(prefix) {
 function patchPackageJson(regExp, replacement) {
   patchFile('package.json', regExp, replacement);
   patchFile('frontend/package.json', regExp, replacement);
+  patchFile('e2e/package.json', regExp, replacement);
 }
 
 function updateFrom_1p3_to_1p4(currentFolder, templateFolder, prefix) {
@@ -63,6 +68,7 @@ function updateFrom_1p4_to_1p5(currentFolder, templateFolder, prefix) {
     'nswag openapi2csclient',
     'react-query-swagger openapi2csclient /nswag',
   );
+  updatePlaywright('1.33.0');
 }
 
 function updateFrom_1p5_to_1p6(currentFolder, templateFolder, prefix) {}

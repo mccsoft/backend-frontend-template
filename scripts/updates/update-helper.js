@@ -67,3 +67,12 @@ export function patchFile(relativePath, search, replace) {
 
   fs.writeFileSync(filePath, contents);
 }
+
+export function updatePlaywright(version) {
+  patchFile('e2e/package.json', /playwright:v.*-/, `playwright:v${version}-`);
+  patchFile(
+    '.ci/azure-pipelines-template.yml',
+    /playwright:v.*-/,
+    `playwright:v${version}-`,
+  );
+}

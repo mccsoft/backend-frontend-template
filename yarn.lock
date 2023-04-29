@@ -3300,15 +3300,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@playwright/test@npm:1.30.0":
-  version: 1.30.0
-  resolution: "@playwright/test@npm:1.30.0"
+"@playwright/test@npm:1.33.0":
+  version: 1.33.0
+  resolution: "@playwright/test@npm:1.33.0"
   dependencies:
     "@types/node": "*"
-    playwright-core: 1.30.0
+    fsevents: 2.3.2
+    playwright-core: 1.33.0
+  dependenciesMeta:
+    fsevents:
+      optional: true
   bin:
     playwright: cli.js
-  checksum: 777432ac9cf3d0341fcd8dd265cb4c0775619d0ef48252b32a7c4d632d8038449756ec34bec873828cadbc08ba634e81176cb193304d34e699472771b7fb4d1e
+  checksum: cec3215fc92c1cb9f5bfba357ea1cbe97b54979ab82f9d34a2287b1687cda5e0966b8ea7290dcd35416e18668e56d5781b6b8c4cec64baf12f3ae8dde0f68f5e
   languageName: node
   linkType: hard
 
@@ -8353,7 +8357,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "e2e@workspace:e2e"
   dependencies:
-    "@playwright/test": 1.30.0
+    "@playwright/test": 1.33.0
     "@types/randomstring": 1.1.8
     "@typescript-eslint/eslint-plugin": 5.59.0
     "@typescript-eslint/parser": 5.59.0
@@ -8363,9 +8367,8 @@ __metadata:
     eslint-config-prettier: 8.6.0
     eslint-plugin-prettier: 4.2.1
     http-server: 14.1.1
-    nswag: 13.18.2
     randomstring: 1.2.3
-    react-query-swagger: 15.7.3
+    react-query-swagger: 15.7.6
     sinon: 15.0.1
     typescript: 5.0.4
   languageName: unknown
@@ -9892,7 +9895,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fsevents@npm:^2.3.2, fsevents@npm:~2.3.2":
+"fsevents@npm:2.3.2, fsevents@npm:^2.3.2, fsevents@npm:~2.3.2":
   version: 2.3.2
   resolution: "fsevents@npm:2.3.2"
   dependencies:
@@ -9902,7 +9905,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fsevents@patch:fsevents@^2.3.2#~builtin<compat/fsevents>, fsevents@patch:fsevents@~2.3.2#~builtin<compat/fsevents>":
+"fsevents@patch:fsevents@2.3.2#~builtin<compat/fsevents>, fsevents@patch:fsevents@^2.3.2#~builtin<compat/fsevents>, fsevents@patch:fsevents@~2.3.2#~builtin<compat/fsevents>":
   version: 2.3.2
   resolution: "fsevents@patch:fsevents@npm%3A2.3.2#~builtin<compat/fsevents>::version=2.3.2&hash=df0bf1"
   dependencies:
@@ -12951,24 +12954,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nswag-portable@npm:13.18.1-v.6":
-  version: 13.18.1-v.6
-  resolution: "nswag-portable@npm:13.18.1-v.6"
-  bin:
-    nswag-portable: nswag-portable.js
-  checksum: 0525117883c75bfed54f3984279e10fa68319b2c459ace3f6e7d0629f8f76af6708c830af3bd0c288e207e892253e004d4103b41c7bf1d091582243ac97c3f1b
-  languageName: node
-  linkType: hard
-
-"nswag@npm:13.18.2":
-  version: 13.18.2
-  resolution: "nswag@npm:13.18.2"
-  bin:
-    nswag: bin/nswag.js
-  checksum: 0d61a657b56279f3d697f72da45aeabeaa84075248a30cd169e4f7a5f490d0756d17d86a3241cd4aa1d65471858e5711279fc46637a8b908f7e00affd9602610
-  languageName: node
-  linkType: hard
-
 "nth-check@npm:^1.0.2":
   version: 1.0.2
   resolution: "nth-check@npm:1.0.2"
@@ -13559,12 +13544,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright-core@npm:1.30.0":
-  version: 1.30.0
-  resolution: "playwright-core@npm:1.30.0"
+"playwright-core@npm:1.33.0":
+  version: 1.33.0
+  resolution: "playwright-core@npm:1.33.0"
   bin:
     playwright: cli.js
-  checksum: 4c5693f27245a1168f94708ecd8e1eb0d200de435b25cc07cfa25b97a094633818954dc00baf24e0ff551825f672050b83d1309362c1f97213fe8ebd2a147ed9
+  checksum: 5fb7bda06a8b73b56b85b5a0b8f711211dde57a375d9379289e22239b2de879c6d93c8fdc9ba44b932bf100914ab1ca1a55697ad88440fdd0a39101fc020b77f
   languageName: node
   linkType: hard
 
@@ -14150,23 +14135,6 @@ __metadata:
   peerDependencies:
     react: ^16 || ^17 || ^18
   checksum: a0969b4ef27be466ef3e052e2c7c61fca60af24e0d10c76770ebd9953ad6131206a276dfc335e61cf35aa494ff3aacc2610682e3192d7f2ee9541928edb46721
-  languageName: node
-  linkType: hard
-
-"react-query-swagger@npm:15.7.3":
-  version: 15.7.3
-  resolution: "react-query-swagger@npm:15.7.3"
-  dependencies:
-    nswag-portable: 13.18.1-v.6
-  peerDependencies:
-    "@tanstack/react-query": "> 4.0"
-    "@tanstack/react-query-persist-client": ">4.2.0"
-    react: 17.x || 18.x
-    react-query: ">= 3.33 < 4.0"
-    typescript: 3.x || 4.x
-  bin:
-    react-query-swagger: cli.js
-  checksum: 093c51636dce6089f7f66f4d3bed68efce3c5df44a9ec7ca620f0d3d63ca4e8b3494b870e2a5c7c2c87f239149483c058ed93af199f721b96f05fab78a28fbc5
   languageName: node
   linkType: hard
 
