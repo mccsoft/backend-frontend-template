@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import semver from 'semver';
-import { copyProjectFolder } from './update-helper.js';
+import { copyProjectFolder, patchFile } from './update-helper.js';
 
 // current version is stored here
 const templateJsonFileName = '.template.json';
@@ -9,6 +9,7 @@ const templateJsonFileName = '.template.json';
 const updateList = [
   { from: '1.3.0', update: updateFrom_1p3_to_1p4 },
   { from: '1.4.0', update: updateFrom_1p4_to_1p5 },
+  { from: '1.5.0', update: updateFrom_1p5_to_1p6 },
 ];
 
 export function updateVersion(prefix) {
@@ -40,9 +41,22 @@ export function updateVersion(prefix) {
   );
 }
 
+function patchPackageJson(regExp, replacement) {
+  patchFile('package.json', regExp, replacement);
+  patchFile('frontend/package.json', regExp, replacement);
+}
+
 function updateFrom_1p3_to_1p4(currentFolder, templateFolder, prefix) {
   copyProjectFolder(`webapi/src/${prefix}.App/Features/TestApi`);
   copyProjectFolder(`webapi/tests/${prefix}.App.Tests/TestApiServiceTests.cs`);
 }
 
-function updateFrom_1p4_to_1p5(currentFolder, templateFolder, prefix) {}
+function updateFrom_1p4_to_1p5(currentFolder, templateFolder, prefix) {
+  patchPackageJson(/\"nswag\": \".*?\",/, '');
+  patchPackageJson(
+    'nswag openapi2csclient',
+    'react-query-swagger openapi2csclient /nswag',
+  );
+}
+
+function updateFrom_1p5_to_1p6(currentFolder, templateFolder, prefix) {}

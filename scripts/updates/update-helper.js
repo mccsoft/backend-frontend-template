@@ -58,3 +58,12 @@ function getPartialFileName(fileName) {
     '.partial' + path.extname(fileName),
   );
 }
+
+function patchFile(path, search, replace) {
+  const filePath = path.join(process.cwd(), relativePathInsideProject);
+  let contents = fs.readFileSync(filePath);
+
+  contents.replace(search, replace);
+
+  fs.writeFileSync(filePath, contents);
+}
