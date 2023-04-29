@@ -8,6 +8,7 @@
     "copyfiles": "2.3.0",
     "cpy-cli": "4.2.0",
     "cross-env": "7.0.3",
+    "fast-xml-parser": "4.2.2",
     "json": "11.0.0",
     "node-replace": "0.3.3",
     "prettier": "2.8.7",

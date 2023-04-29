@@ -2,6 +2,7 @@
 import yargs from 'yargs';
 import fs from 'fs';
 import path from 'path';
+import { XMLParser, XMLBuilder } from 'fast-xml-parser';
 import { hideBin } from 'yargs/helpers';
 import { execSync } from 'child_process';
 import semver from 'semver';
@@ -167,53 +168,59 @@ function findFileMatching(dir, regex) {
   return null;
 }
 
-function syncReferencesInProjects(relativePathInsideProject) {
+export function syncReferencesInProjects(relativePathInsideProject) {
   console.log(`syncReferencesInProjects '${relativePathInsideProject}'`);
   const copyFrom = path.join(templateFolder, relativePathInsideProject);
   const copyTo = path.join(process.cwd(), relativePathInsideProject);
   doSyncReferencesInProjects(copyFrom, copyTo);
 }
 
-function doSyncReferencesInProjects(src, dest) {
+export function doSyncReferencesInProjects(src, dest) {
   if (!fs.existsSync(src) || !fs.existsSync(dest)) return;
   const sourceFileContent = fs.readFileSync(src).toString('utf8');
-  let destinationFileContent = fs.readFileSync(dest).toString('utf8');
+  const destinationFileContent = fs.readFileSync(dest).toString('utf8');
 
-  const matches = sourceFileContent.matchAll(
-    /<PackageReference Include="(.*?)" Version="(.*?)" \/>/gm,
-  );
-  let addition = '';
+  const parser = new XMLParser({ ignoreAttributes: false });
+  const sourceXml = parser.parse(sourceFileContent);
+  const destinationXml = parser.parse(destinationFileContent);
+  const sourcePackageReferences = getPackageReferences(sourceXml);
+  const destinationPackageReferences = getPackageReferences(destinationXml);
 
-  for (const match of matches) {
-    const sourceVersion = match[2];
+  let firstItemGroup = root.Project?.ItemGroup;
+  if (Array.isArray(firstItemGroup)) firstItemGroup = firstItemGroup[0];
+
+  for (const sourcePackageReference of sourcePackageReferences) {
+    const sourceVersion = sourcePackageReferences['@_Version'];
     if (!semver.valid(sourceVersion)) continue;
-    const found = destinationFileContent.match(
-      `<PackageReference.*?Include="${match[1]}".*?Version="(.*?)".*?\/>`,
+    const found = destinationPackageReferences.find(
+      (x) => x['@_Include'] === sourcePackageReference['@_Include'],
     );
 
     if (found) {
-      const destinationVersion = found[1];
-      if (semver.valid() && semver.gt(sourceVersion, destinationVersion)) {
-        destinationFileContent = destinationFileContent.replace(
-          `<PackageReference Include="${match[1]}" Version="${destinationVersion}" />`,
-          `<PackageReference Include="${match[1]}" Version="${sourceVersion}" />`,
-        );
+      const destinationVersion = found['@_Version'];
+      if (
+        semver.valid(destinationVersion) &&
+        semver.gt(sourceVersion, destinationVersion)
+      ) {
+        found['@_Version'] = sourceVersion;
       }
     } else {
       // add package to file
-      addition += `<PackageReference Include="${match[1]}" Version="${match[2]}" \/>`;
+      if (!firstItemGroup.PackageReference)
+        firstItemGroup.PackageReference = [];
+      if (!Array.isArray(firstItemGroup.PackageReference))
+        firstItemGroup.PackageReference = [firstItemGroup.PackageReference];
+
+      firstItemGroup.PackageReference.push(sourcePackageReference);
     }
   }
 
-  if (addition) {
-    destinationFileContent = destinationFileContent.replace(
-      '</Project>',
-      `  <ItemGroup>
-${addition}
-  </ItemGroup>
-</Project>`,
-    );
-  }
+  const builder = new XMLBuilder({
+    ignoreAttributes: false,
+    format: true,
+    suppressEmptyNode: true,
+  });
+  destinationFileContent = builder.build(destinationXml);
 
   fs.writeFileSync(dest, destinationFileContent);
 }
@@ -269,4 +276,19 @@ function doSyncPacketsInPackageJson(src, dest) {
   }
 
   fs.writeFileSync(dest, JSON.stringify(destJson, undefined, 2));
+}
+
+function getPackageReferences(root) {
+  const packageReferences = [];
+  const itemGroups = root.Project?.ItemGroup;
+  if (!itemGroups) return [];
+  if (!Array.isArray(itemGroups)) itemGroups = [itemGroups];
+  itemGroups.forEach((x) => {
+    const groupPackageReferences = x.PackageReference;
+    if (!groupPackageReferences) return;
+    if (!Array.isArray(groupPackageReferences))
+      groupPackageReferences = [groupPackageReferences];
+    packageReferences.push(...groupPackageReferences);
+  });
+  return packageReferences;
 }
