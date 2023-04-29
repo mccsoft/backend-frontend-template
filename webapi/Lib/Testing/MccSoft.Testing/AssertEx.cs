@@ -112,28 +112,6 @@ public static class AssertEx
         return typeList;
     }
 
-    /// <summary>
-    /// Assert if the given message has the given field and value.
-    /// </summary>
-    public static void HasFieldAndValue(LoggedMessage message, Field field, object expectedValue)
-    {
-        object value = HasField(message, field);
-        Assert.Equal(expectedValue, value);
-    }
-
-    /// <summary>
-    /// Assert if the given message has the given field.
-    /// </summary>
-    /// <returns>The value of the given field</returns>
-    public static object HasField(LoggedMessage message, Field field)
-    {
-        KeyValuePair<string, object> keyValue = Assert.Single(
-            message.LogValues,
-            kvp => $"{{{kvp.Key}}}" == field.ToString()
-        );
-        return keyValue.Value;
-    }
-
     private static void ValidateDtos(JObject swagger, StringBuilder errorBuilder)
     {
         dynamic swaggerDynamic = swagger;

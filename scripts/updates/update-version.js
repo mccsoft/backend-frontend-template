@@ -75,6 +75,8 @@ function updateFrom_1p4_to_1p5(currentFolder, templateFolder, prefix) {
     'extraTokenParams: { scope: scopes },',
     '',
   );
+
+  patchFile('webapi/Directory.Build.props', '</noWarn>', ';1570;1998</noWarn>');
   updatePlaywright('1.33.0');
 }
 

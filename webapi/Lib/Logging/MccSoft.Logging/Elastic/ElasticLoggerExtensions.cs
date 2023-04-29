@@ -147,8 +147,8 @@ public static class ElasticLoggerExtensions
         });
 
         // Use extended template for console messages to see properties from the scope.
-        const string outputTemplate =
-            "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}";
+        // const string outputTemplate =
+        //     "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}";
 
         // If the stage is not local development stage - push logs to Elasticsearch.
 

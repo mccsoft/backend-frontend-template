@@ -116,7 +116,7 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
 
     /// <summary>
     /// !!!!!!!!!!!!!
-    /// Consider using <see cref="WithDbContext{T}(System.Func{TDbContext,T})"/> (async) instead!
+    /// Consider using <see cref="WithDbContext{T}"/> (async) instead!
     /// Using synchronous version could make tests hang when running out of threads in a pool.
     /// !!!!!!!!!!!!
     /// Provides access to a short-lived DbContext, independent from the service DbContext,
@@ -132,7 +132,7 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
 
     /// <summary>
     /// !!!!!!!!!!!!!
-    /// Consider using <see cref="WithDbContext{T}(System.Func{TDbContext,T})"/> (async) instead!
+    /// Consider using <see cref="WithDbContext{T}"/> (async) instead!
     /// Using synchronous version could make tests hang when running out of threads in a pool.
     /// !!!!!!!!!!!!
     /// Provides access to a short-lived DbContext, independent from the service DbContext,
@@ -227,7 +227,7 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
 
     /// <summary>
     /// Creates the Service Under Test.
-    /// If you want to override/mock some dependencies, please do it in the <see cref="configureRegistrations"/>
+    /// If you want to override/mock some dependencies, please do it in the <paramref name="configureRegistrations"/>
     /// </summary>
     /// <param name="configureRegistrations">provides ability to register mocks for some services</param>
     protected TService CreateService<TService>(
@@ -239,7 +239,7 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
 
     /// <summary>
     /// Creates the Service Under Test.
-    /// Returns <see cref="serviceProvider"/> as `out` parameter, so you could resolve other services from it (in the same Scope as SUT).
+    /// Returns <paramref name="serviceProvider" /> as `out` parameter, so you could resolve other services from it (in the same Scope as SUT).
     /// </summary>
     protected TService CreateService<TService>(out IServiceProvider serviceProvider)
         where TService : class
@@ -249,10 +249,15 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
 
     /// <summary>
     /// Creates the Service Under Test.
-    /// If you want to override/mock some dependencies, please do it in the <see cref="configureRegistrations"/>
-    /// Returns <see cref="serviceProvider"/> as `out` parameter, so you could resolve other services from it (in the same Scope as SUT).
+    /// If you want to override/mock some dependencies, please do it in the <paramref name="configureRegistrations"/>
+    /// Returns <paramref name="serviceProvider"/> as `out` parameter, so you could resolve other services from it (in the same Scope as SUT).
     /// </summary>
     /// <param name="configureRegistrations">provides ability to register mocks for some services</param>
+    /// <param name="serviceProvider">
+    /// Out parameter.
+    /// Service Provider the service is resolved from.
+    /// You could resolve other services from it.
+    /// </param>
     protected TService CreateService<TService>(
         Action<IServiceCollection> configureRegistrations,
         out IServiceProvider serviceProvider

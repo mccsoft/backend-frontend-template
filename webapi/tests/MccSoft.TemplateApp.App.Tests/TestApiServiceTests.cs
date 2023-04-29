@@ -35,7 +35,7 @@ public class TestApiServiceTests : AppServiceTestBase
 
         await Sut.ResetTenant();
 
-        await WithDbContext(async db =>
+        WithDbContextSync(db =>
         {
             db.Products.Count().Should().Be(0);
         });
