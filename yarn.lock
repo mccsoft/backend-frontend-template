@@ -4958,7 +4958,6 @@ __metadata:
     lottie-web: 5.10.0
     material-ui-popup-state: 5.0.4
     nock: 13.3.0
-    nswag: 13.18.2
     oidc-client-ts: 2.2.0
     prettier: 2.8.7
     prop-types: 15.8.1
@@ -4971,7 +4970,7 @@ __metadata:
     react-i18next: 12.1.1
     react-merge-refs: 2.0.1
     react-paginate: 8.2.0
-    react-query-swagger: 15.7.3
+    react-query-swagger: 15.7.6
     react-redux: 8.0.2
     react-router: 6.3.0
     react-router-dom: 6.3.0
@@ -12943,6 +12942,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nswag-portable@npm:13.18.1-v.11":
+  version: 13.18.1-v.11
+  resolution: "nswag-portable@npm:13.18.1-v.11"
+  bin:
+    nswag-portable: nswag-portable.js
+  checksum: b62fa0732a7d3b7ffcb3451e40a7dba466f220913851e20341056458e1d783c7163c93d87741d14b1aba82f57a26939e4bb0be7966001f6cb77b6cd89908fb58
+  languageName: node
+  linkType: hard
+
 "nswag-portable@npm:13.18.1-v.6":
   version: 13.18.1-v.6
   resolution: "nswag-portable@npm:13.18.1-v.6"
@@ -14159,6 +14167,23 @@ __metadata:
   bin:
     react-query-swagger: cli.js
   checksum: 093c51636dce6089f7f66f4d3bed68efce3c5df44a9ec7ca620f0d3d63ca4e8b3494b870e2a5c7c2c87f239149483c058ed93af199f721b96f05fab78a28fbc5
+  languageName: node
+  linkType: hard
+
+"react-query-swagger@npm:15.7.6":
+  version: 15.7.6
+  resolution: "react-query-swagger@npm:15.7.6"
+  dependencies:
+    nswag-portable: 13.18.1-v.11
+  peerDependencies:
+    "@tanstack/react-query": "> 4.0"
+    "@tanstack/react-query-persist-client": ">4.2.0"
+    react: 17.x || 18.x
+    react-query: ">= 3.33 < 4.0"
+    typescript: 3.x || 4.x
+  bin:
+    react-query-swagger: cli.js
+  checksum: e009ac49a682489b1498edda730d508bb65a9564efd790af77316cb671197a8d63238b4791c559b536ce173563a38b64489cd572344cf8cca8b64b7b9598bdfa
   languageName: node
   linkType: hard
 
