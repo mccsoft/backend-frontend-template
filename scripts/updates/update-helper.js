@@ -30,6 +30,7 @@ function copyRecursively(src, dest, options = { ignorePattern: undefined }) {
       );
     });
   } else {
+    if (src.includes('.partial')) return;
     const srcPartialFile = getPartialFileName(src);
     const destPartialFile = getPartialFileName(dest);
     if (fs.existsSync(srcPartialFile) && !fs.existsSync(destPartialFile)) {
