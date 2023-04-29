@@ -191,7 +191,7 @@ export function doSyncReferencesInProjects(src, dest) {
     firstItemDestinationGroup = firstItemDestinationGroup[0];
 
   for (const sourcePackageReference of sourcePackageReferences) {
-    const sourceVersion = sourcePackageReferences['@_Version'];
+    const sourceVersion = sourcePackageReference['@_Version'];
     if (!semver.valid(sourceVersion)) continue;
     const found = destinationPackageReferences.find(
       (x) => x['@_Include'] === sourcePackageReference['@_Include'],
