@@ -68,6 +68,13 @@ function updateFrom_1p4_to_1p5(currentFolder, templateFolder, prefix) {
     'nswag openapi2csclient',
     'react-query-swagger openapi2csclient /nswag',
   );
+
+  // required for openiddict 4
+  patchFile(
+    'frontend/src/pages/unauthorized/openid/openid-manager.ts',
+    'extraTokenParams: { scope: scopes },',
+    '',
+  );
   updatePlaywright('1.33.0');
 }
 
