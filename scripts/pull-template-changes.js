@@ -283,11 +283,11 @@ function doSyncPacketsInPackageJson(src, dest) {
 
 function getPackageReferences(root) {
   const packageReferences = [];
-  const itemGroups = root.Project?.ItemGroup;
+  let itemGroups = root.Project?.ItemGroup;
   if (!itemGroups) return [];
   if (!Array.isArray(itemGroups)) itemGroups = [itemGroups];
   itemGroups.forEach((x) => {
-    const groupPackageReferences = x.PackageReference;
+    let groupPackageReferences = x.PackageReference;
     if (!groupPackageReferences) return;
     if (!Array.isArray(groupPackageReferences))
       groupPackageReferences = [groupPackageReferences];
