@@ -186,8 +186,9 @@ export function doSyncReferencesInProjects(src, dest) {
   const sourcePackageReferences = getPackageReferences(sourceXml);
   const destinationPackageReferences = getPackageReferences(destinationXml);
 
-  let firstItemGroup = root.Project?.ItemGroup;
-  if (Array.isArray(firstItemGroup)) firstItemGroup = firstItemGroup[0];
+  let firstItemDestinationGroup = destinationXml.Project?.ItemGroup;
+  if (Array.isArray(firstItemDestinationGroup))
+    firstItemDestinationGroup = firstItemDestinationGroup[0];
 
   for (const sourcePackageReference of sourcePackageReferences) {
     const sourceVersion = sourcePackageReferences['@_Version'];
@@ -206,12 +207,14 @@ export function doSyncReferencesInProjects(src, dest) {
       }
     } else {
       // add package to file
-      if (!firstItemGroup.PackageReference)
-        firstItemGroup.PackageReference = [];
-      if (!Array.isArray(firstItemGroup.PackageReference))
-        firstItemGroup.PackageReference = [firstItemGroup.PackageReference];
+      if (!firstItemDestinationGroup.PackageReference)
+        firstItemDestinationGroup.PackageReference = [];
+      if (!Array.isArray(firstItemDestinationGroup.PackageReference))
+        firstItemDestinationGroup.PackageReference = [
+          firstItemDestinationGroup.PackageReference,
+        ];
 
-      firstItemGroup.PackageReference.push(sourcePackageReference);
+      firstItemDestinationGroup.PackageReference.push(sourcePackageReference);
     }
   }
 
