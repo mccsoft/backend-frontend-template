@@ -27,11 +27,17 @@ export function updateVersion(prefix) {
     fs.readFileSync(path.join(templateFolder, templateJsonFileName)),
   );
 
-  const currentVersion = currentTemplateSettings.version;
-  for (const update of updateList) {
-    if (semver.gte(update.from, currentVersion)) {
-      update.update(currentFolder, templateFolder, prefix);
+  process.chdir(templateFolder.remove('_template'));
+
+  try {
+    const currentVersion = currentTemplateSettings.version;
+    for (const update of updateList) {
+      if (semver.gte(update.from, currentVersion)) {
+        update.update(currentFolder, templateFolder, prefix);
+      }
     }
+  } finally {
+    process.chdir(currentFolder);
   }
 
   currentTemplateSettings.version = newTemplateSettings.version;
