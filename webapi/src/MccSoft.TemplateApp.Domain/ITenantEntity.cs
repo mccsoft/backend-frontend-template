@@ -8,5 +8,5 @@ public interface ITenantEntity
     /// Isn't meant to be called from Application code.
     /// Should be called by infrastructure (e.g. SaveChanges interceptor)
     /// </summary>
-    void SetTenantIdUnsafe(int organisationId);
+    void SetTenantIdUnsafe(int tenantId);
 }

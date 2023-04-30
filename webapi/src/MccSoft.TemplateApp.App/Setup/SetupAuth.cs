@@ -88,6 +88,8 @@ public static partial class SetupAuth
                     .AddEncryptionCertificateFromConfiguration(configuration);
                 if (configuration.GetValue<bool>("TestApiEnabled"))
                     options.AllowPasswordFlow();
+
+                ConfigureOpenIdDict(builder, options);
             })
             // Register the OpenIddict validation components.
             .AddValidation(options =>
@@ -120,6 +122,11 @@ public static partial class SetupAuth
         // (actually this file will be overwritten by a file from template, which will make your changes disappear)
         AddProjectSpecifics(builder);
     }
+
+    static partial void ConfigureOpenIdDict(
+        WebApplicationBuilder webApplicationBuilder,
+        OpenIddictServerBuilder options
+    );
 
     static partial void AddProjectSpecifics(WebApplicationBuilder builder);
 
