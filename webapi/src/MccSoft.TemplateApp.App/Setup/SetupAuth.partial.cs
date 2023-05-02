@@ -32,6 +32,8 @@ public static partial class SetupAuth
             });
     }
 
+    static partial void UseProjectSpecificsBefore(WebApplication app) { }
+
     static partial void UseProjectSpecifics(WebApplication app) { }
 
     static partial void ConfigureDefaultAuthorizationController(OpenIddictSettings options) { }

@@ -130,12 +130,19 @@ public static partial class SetupAuth
 
     static partial void AddProjectSpecifics(WebApplicationBuilder builder);
 
+    static partial void UseProjectSpecificsBefore(WebApplication app);
+
     static partial void UseProjectSpecifics(WebApplication app);
 
     static partial void ConfigureDefaultAuthorizationController(OpenIddictSettings options);
 
     public static void UseAuth(WebApplication app)
     {
+        // If you'd like to modify this class, consider adding your custom code in the SetupAuth.partial.cs
+        // This will make it easier to pull changes from Template when Template is updated
+        // (actually this file will be overwritten by a file from template, which will make your changes disappear)
+        UseProjectSpecificsBefore(app);
+
         app.UseAuthentication();
 
         if (!app.Configuration.GetValue<bool>(DisableSignOutLockedUserMiddleware))
