@@ -5,6 +5,7 @@
       <Path>../.ci</Path>
       <Path>../docs</Path>
       <Path>../frontend</Path>
+      <Path>../scripts</Path>
       <Path>../scripts/opensearch</Path>
       <Path>.config</Path>
     </attachedFolders>

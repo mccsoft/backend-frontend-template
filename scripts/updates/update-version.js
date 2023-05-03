@@ -3,7 +3,7 @@ import path from 'path';
 import semver from 'semver';
 import {
   copyProjectFolder,
-  patchFile,
+  patchFile, removePackageReference,
   updatePlaywright,
 } from './update-helper.js';
 
@@ -40,6 +40,7 @@ export function updateVersion(prefix) {
         update.update(currentFolder, templateFolder, prefix);
       }
     }
+    updateAll();
   } finally {
     process.chdir(currentFolder);
   }
@@ -81,3 +82,15 @@ function updateFrom_1p4_to_1p5(currentFolder, templateFolder, prefix) {
 }
 
 function updateFrom_1p5_to_1p6(currentFolder, templateFolder, prefix) {}
+
+/*
+ * This function is run for every `pull-template-changes`.
+ * It makes sense to put all modifications here, and once there's a good number of them,
+ * create a new version and move them to versioned update.
+ */
+function updateAll(currentFolder, templateFolder, prefix) {
+  removePackageReference(`webapi/src/${prefix}.App/${prefix}.App.csproj`, 'OpenIddict.AspNetCore');
+  removePackageReference(`webapi/src/${prefix}.App/${prefix}.App.csproj`, 'OpenIddict.EntityFrameworkCore');
+  removePackageReference(`webapi/src/${prefix}.Domain/${prefix}.Domain.csproj`, 'Newtonsoft.Json');
+  removePackageReference(`webapi/Lib/Testing/MccSoft.Testing/MccSoft.Testing.csproj`, 'Newtonsoft.Json');
+}

@@ -68,6 +68,11 @@ export function patchFile(relativePath, search, replace) {
 
   fs.writeFileSync(filePath, contents);
 }
+export function removePackageReference(relativePath, packageName) {
+  // <PackageReference Include="OpenIddict.AspNetCore" Version="4.2.0" />
+  patchFile(relativePath, new RegExp(`<PackageReference\s+Include="${packageName}".*?/>`,''))
+}
+
 
 export function updatePlaywright(version) {
   patchFile('e2e/package.json', /playwright:v.*-/, `playwright:v${version}-`);
