@@ -75,6 +75,7 @@ public static class LoggerExtensions
     }
 
     /// <summary>
+    /// Should only be used from within LogAttribute!!!
     /// Logs operation.
     /// Dispose the result when operation is finished (e.g. by wrapping the result in a `using` statement)
     /// </summary>
@@ -89,7 +90,7 @@ public static class LoggerExtensions
     /// The function will be executed and the result will be logged when function finishes.
     /// </param>
     /// <param name="operationName">Name of the operation that should be logged.</param>
-    public static IDisposable LogOperation(
+    public static IDisposable LogOperationForAttribute(
         this ILogger logger,
         OperationContext context,
         Func<object> resultFunction = null,
@@ -209,6 +210,8 @@ public static class LoggerExtensions
         [CallerMemberName] string operationName = ""
     )
     {
+        ArgumentNullException.ThrowIfNull(action);
+
         Func<Task<int>> func = async () =>
         {
             await action();
@@ -240,6 +243,8 @@ public static class LoggerExtensions
         [CallerMemberName] string operationName = ""
     )
     {
+        ArgumentNullException.ThrowIfNull(action);
+
         Func<Task<int>> func = async () =>
         {
             await action();
@@ -267,6 +272,8 @@ public static class LoggerExtensions
         [CallerMemberName] string operationName = ""
     )
     {
+        ArgumentNullException.ThrowIfNull(action);
+
         var stopwatch = new Stopwatch();
         stopwatch.Start();
         using (logger.BeginScope($"Operation {Field.Method}", operationName))
@@ -313,6 +320,7 @@ public static class LoggerExtensions
     )
     {
         ArgumentNullException.ThrowIfNull(startParams);
+        ArgumentNullException.ThrowIfNull(action);
 
         var stopwatch = new Stopwatch();
         stopwatch.Start();

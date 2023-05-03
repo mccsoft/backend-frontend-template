@@ -80,7 +80,7 @@ public class LogAttribute : OverrideMethodAspect, IAspect<INamedType>
             }
         }
 
-        using var log = logger.LogOperation(
+        using var log = logger.LogOperationForAttribute(
             operationContext,
             _withResult ? () => resultRef : null,
             meta.Target.Method.Name
