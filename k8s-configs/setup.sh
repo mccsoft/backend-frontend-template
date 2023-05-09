@@ -31,7 +31,7 @@ source ~/.bashrc
 kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.11.1/cert-manager.yaml
 sleep 15000
 curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/letsencrypt.yaml > letsencrypt.yaml
-envsubst < letsencrypt.yaml > letsencrypt.yaml
+envsubst < letsencrypt.yaml > letsencrypt.yaml.tmp && mv letsencrypt.yaml.tmp letsencrypt.yaml
 kubectl apply -f letsencrypt.yaml
 
 
@@ -41,6 +41,18 @@ curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/ma
 
 # 4. Setup Postgres
 curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/postgres.yaml > postgres.yaml
+envsubst < postgres.yaml > postgres.yaml.tmp && mv postgres.yaml.tmp postgres.yaml
 kubectl apply -f postgres.yaml
 
 # 5. Setup App
+# import docker secrets
+kubectl delete secret docker-registry-secret
+test $HOME/.docker/config.json || kubectl create secret generic docker-registry-secret --from-file=.dockerconfigjson=$HOME/.docker/config.json --type=kubernetes.io/dockerconfigjson
+# setup configmap
+kubectl -n templateapp delete configmap templateapp-main-configmap
+kubectl -n templateapp create configmap templateapp-main-configmap --from-env-file=.env
+# setup deployment
+curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/templateapp-app.yaml > templateapp-app.yaml
+envsubst < templateapp-app.yaml > templateapp-app.yaml.tmp && mv templateapp-app.yaml.tmp templateapp-app.yaml
+kubectl apply -f templateapp-app.yaml
+
