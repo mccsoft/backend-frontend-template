@@ -1,0 +1,90 @@
+# Create ConfigMap postgres-secret for the postgres app
+# Define default database name, user, and password
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  namespace: templateapp
+  labels:
+    app: postgres
+data:
+  POSTGRES_USER: postgres
+  POSTGRES_DB: templateapp-db
+  POSTGRES_PASSWORD: strongpasswordapp
+---
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: templateapp-main-postgres-pv
+#   namespace: templateapp
+#   labels:
+#     type: local
+# spec:
+#   storageClassName: manual
+#   capacity:
+#     storage: 3Gi
+#   accessModes:
+#     - ReadWriteOnce
+#   hostPath:
+#     path: /home/k3s-volume
+# ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: templateapp
+  name: postgres-volume-pvc
+spec:
+  # storageClassName: manual
+  storageClassName: local-path
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: templateapp-main-postgres
+  namespace: templateapp
+  labels:
+    app: templateapp-main-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: templateapp-main-postgres
+  template:
+    metadata:
+      labels:
+        app: templateapp-main-postgres
+    spec:
+      volumes:
+        - name: postgres-volume
+          persistentVolumeClaim:
+            claimName: postgres-volume-pvc
+      containers:
+        - name: templateapp-main-postgres
+          image: postgres:latest
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: postgres-config
+          volumeMounts:
+            - mountPath: '/var/lib/postgresql/data'
+              name: postgres-volume
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: templateapp-main-postgres-service
+  namespace: templateapp
+spec:
+  type: LoadBalancer
+  ports:
+    - name: 'templateapp-main-postgres'
+      port: 5432
+  selector:
+    app: templateapp-main-postgres
