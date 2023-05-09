@@ -1,8 +1,9 @@
 # Delete dashboard if exists
-kubectl delete namespace kuberenetes-dashboard
+kubectl delete namespace kubernetes-dashboard
 # Setup Kubernetes Dashboard
 kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/alternative.yaml
-#   add ingress
+#   add ingress and users
+mkdir dashboard
 curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/dashboard/ingress.yaml > dashboard/ingress.yaml
 curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/dashboard/users.yaml > dashboard/users.yaml
 kubectl apply -f dashboard/ingress.yaml
