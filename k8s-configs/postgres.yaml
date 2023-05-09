@@ -8,9 +8,9 @@ metadata:
   labels:
     app: postgres
 data:
-  POSTGRES_USER: postgres
-  POSTGRES_DB: templateapp-db
-  POSTGRES_PASSWORD: strongpasswordapp
+  POSTGRES_USER: ${POSTGRES_USER}
+  POSTGRES_DB: ${POSTGRES_DB}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 ---
 # apiVersion: v1
 # kind: PersistentVolume
@@ -79,12 +79,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: templateapp-main-postgres-service
+  name: postgres
   namespace: templateapp
 spec:
   type: LoadBalancer
   ports:
     - name: 'templateapp-main-postgres'
       port: 5432
+      targetPort: ${POSTGRES_EXTERNAL_PORT}
   selector:
     app: templateapp-main-postgres
