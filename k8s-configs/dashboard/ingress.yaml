@@ -1,0 +1,48 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: stripprefix
+  namespace: kubernetes-dashboard
+spec:
+  stripPrefix:
+    prefixes:
+      - '/kube-dashboard'
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect
+  namespace: kubernetes-dashboard
+spec:
+  redirectRegex:
+    regex: (.*)/kube-dashboard$
+    replacement: ${1}/kube-dashboard/
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dashboard-ingress
+  namespace: kubernetes-dashboard
+  labels:
+    app: kubernetes-dashboard
+  annotations:
+    kubernetes.io/ingress.class: 'traefik'
+    traefik.ingress.kubernetes.io/router.middlewares: 'kubernetes-dashboard-redirect@kubernetescrd,kubernetes-dashboard-stripprefix@kubernetescrd'
+    # Priority is needed because we do not specify the `host` for Dashboard (so it will work on any host).
+    # Otherwise ingress with specified host takes over the priority.
+    traefik.ingress.kubernetes.io/router.priority: '100'
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /kube-dashboard
+            pathType: Prefix
+            backend:
+              service:
+                name: kubernetes-dashboard
+                port:
+                  number: 80
+#  tls:
+#    - secretName: kube-dashboard-tls
+#      hosts:
+#        - kube-dashboard.arturdr.ru
