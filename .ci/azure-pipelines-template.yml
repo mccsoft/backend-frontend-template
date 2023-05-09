@@ -126,9 +126,10 @@ stages:
                   steps:
                     - template: ./azure-deploy.yml
 
+  - ${{ if variables.TAG_SOURCES_DEV }}:
       - stage: TagDevSources
         dependsOn: DeployToDev
-        condition: and(succeeded(), eq(variables.ENABLE_TAG_SOURCES, true))
+        condition: succeeded()
         jobs:
           - job:
             pool:
@@ -137,8 +138,8 @@ stages:
               - checkout: self
                 persistCredentials: true
               - script: |
-                  git tag 'dev' -f
-                  git push origin 'dev' -f --tags
+                  git tag '$(TAG_SOURCES_DEV)' -f
+                  git push origin '$(TAG_SOURCES_DEV)' -f --tags
 
   - ${{ if eq(variables.ENABLE_E2E_STAGE, true) }}:
       - stage: e2e
@@ -168,10 +169,10 @@ stages:
                 deploy:
                   steps:
                     - template: ./azure-deploy.yml
-
+  - ${{ if variables.TAG_SOURCES_PROD }}:
       - stage: TagProdSources
         dependsOn: DeployToProd
-        condition: and(succeeded(), eq(variables.ENABLE_TAG_SOURCES, true))
+        condition: succeeded()
         jobs:
           - job:
             pool:
@@ -180,5 +181,5 @@ stages:
               - checkout: self
                 persistCredentials: true
               - script: |
-                  git tag 'prod' -f
-                  git push origin 'prod' -f --tags
+                  git tag '$(TAG_SOURCES_PROD)' -f
+                  git push origin '$(TAG_SOURCES_PROD)' -f --tags

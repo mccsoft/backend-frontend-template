@@ -60,14 +60,15 @@ Create a new git repository and copy everything (except `.git` folder) to it. Do
 
 1. First of all, you need to create an email for your project. It will be needed for registering in 3rd party systems that the project will use (e.g. Sentry and Loggly)
 2. Go to Azure and create Pipeline. Specify `.ci/azure-pipelines.yml` as the source of pipeline.
-3. Give access for WRITING to Repo for your Pipeline. This is required for Tagging your sources when App is deployed. Instructions: https://elanderson.net/2020/04/azure-devops-pipelines-manual-tagging/
-   1. You could skip this step if git tags are not needed. In this case remove `TagProdSources` and `TagDevSources` from [.ci/azure-pipelines.yml](.ci/azure-pipelines.yml)
-4. Set up Container Registry to push images to.
+3. Set up Container Registry to push images to.
    1. You could use GitLab Container Registry (since it's private and free)
       1. Register a user in GitLab (using project email)
       1. Create a personal access token with read/write access to container registry at https://gitlab.com/-/profile/personal_access_tokens
-      1. Add secret variable `DOCKER_TOKEN` to a pipeline containing created token
+      1. Add secret variable `DOCKER_TOKEN` to a pipeline (with value generated on previous step)
       1. Adjust `DOCKER_REGISTRY` (e.g. `registry.gitlab.com/mcctemplateapp1/main`) and `DOCKER_USER` (e.g. `mcc.template.app@gmail.com`) variables in pipeline.
+4. (optional) If you want to add git Tags to your sourcecode when deploying to DEV/PROD, you need to do the following:
+   1. Give access for WRITING to Repo for your Pipeline. Instructions: https://elanderson.net/2020/04/azure-devops-pipelines-manual-tagging/
+   2. Set TAG_SOURCES_DEV and TAG_SOURCES_PROD variables in [base.partial.yml](.ci/_settings/base.partial.yml).
 5. Run your pipeline. The first Stage (build) should pass.
 6. Disable Pipeline notifications in Azure (i.e. 'Run stage waiting for approval' and 'Manual validation Pending') https://dev.azure.com/mccsoft/TemplateApp/_settings/notifications. Also disable them in your personal profile: https://dev.azure.com/mccsoft/_usersSettings/notifications
 7. Pipeline contains 2 stages for deploying to DEV and PROD. You could add new deployment stages by copying existing once.
