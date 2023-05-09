@@ -34,7 +34,9 @@ spec:
     - port: 80
   selector:
     app: templateapp-main-api
+
 ---
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
