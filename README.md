@@ -83,6 +83,7 @@ Create a new git repository and copy everything (except `.git` folder) to it. Do
       1. Adjust the variable values. At least **VIRTUAL_HOST** and **EMAIL** needs to be changed.
    1. Create DNS entry and point it to your Virtual Machine
 1. Create a folder on VM, e.g. `/home/k3s`. Copy `.env` file to that folder (you could run `nano` and copy&paste the contents).
+1. Authenticate in your docker registry (if it's private). Run `docker login https://YOUR_DOCKER_REGISTRY`. Run `docker pull YOUR_FULL_IMAGE_URL` to make sure everything works.
 1. Run `curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/setup.sh | /bin/bash -s -` from that folder. This will setup k3s, Kubernetes Dashboard (at `https://VIRTUAL_HOST/kube-dashboard`) and letsencrypt.
 
 ## Set up Hosting server (Droplet on Digital Ocean)

@@ -12,7 +12,7 @@ export $(cat ./.env | xargs)
 # 1. Install k3s
 # 2. Setup Let's encrypt
 # 3. Setup Kubernetes Dashboard
-
+# 4. Create Secret to authenticate in Docker Registry
 
 
 # 1. Install k3s 
@@ -29,7 +29,8 @@ source ~/.bashrc
 
 # 2. Setup Let's encrypt
 kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.11.1/cert-manager.yaml
-sleep 15000
+echo "sleep for 15 seconds..."
+sleep 15
 curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/letsencrypt.yaml > letsencrypt.yaml
 envsubst < letsencrypt.yaml > letsencrypt.yaml.tmp && mv letsencrypt.yaml.tmp letsencrypt.yaml
 kubectl apply -f letsencrypt.yaml
@@ -37,6 +38,10 @@ kubectl apply -f letsencrypt.yaml
 
 # 3. Setup Kubernetes Dashboard
 curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/dashboard/setup-dashboard.sh | sh -s -
+
+# 4. Create Secret to authenticate in Docker Registry
+kubectl delete secret docker-registry-secret
+test $HOME/.docker/config.json && kubectl -n template-app create secret generic docker-registry-secret --from-file=.dockerconfigjson=$HOME/.docker/config.json --type=kubernetes.io/dockerconfigjson
 
 
 # kubectl create namespace templateapp
@@ -47,9 +52,6 @@ curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/ma
 # kubectl apply -f postgres.yaml
 
 # # 5. Setup App
-# # authenticate in docker registry
-# kubectl -n template-app delete secret docker-registry-secret
-# test $HOME/.docker/config.json && kubectl -n template-app create secret generic docker-registry-secret --from-file=.dockerconfigjson=$HOME/.docker/config.json --type=kubernetes.io/dockerconfigjson
 # # setup configmap
 # kubectl -n templateapp create configmap templateapp-main-configmap --from-env-file=.env || (kubectl -n templateapp create configmap templateapp-main-configmap --from-env-file=.env -o yaml --dry-run=client | kubectl replace -f -)
 # # setup deployment
