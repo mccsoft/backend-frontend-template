@@ -1,3 +1,7 @@
+# --- Uninstall ---
+# k3s could be uninstalled by running 
+#   /usr/local/bin/k3s-uninstall.sh
+
 [ ! -f ".env" ] && (echo ".env file is not found" && exit 1)
 export $(cat ./.env | xargs)
 [ -z "$EMAIL" ] && (echo 'EMAIL env. variable is not defined' && exit 1)
@@ -8,12 +12,7 @@ export $(cat ./.env | xargs)
 # 1. Install k3s
 # 2. Setup Let's encrypt
 # 3. Setup Kubernetes Dashboard
-# 4. Setup Postgres
-# 5. Setup App
-# 
-# --- Uninstall ---
-# k3s could be uninstalled by running 
-#   /usr/local/bin/k3s-uninstall.sh
+
 
 
 # 1. Install k3s 
