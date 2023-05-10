@@ -81,10 +81,14 @@ Create a new git repository and copy everything (except `.git` folder) to it. Do
 1. Prepare configuration
    1. Run `./GenerateDotEnv.ps1` from `scripts` folder. File `.env` will be generated for you
       1. Adjust the variable values. At least **VIRTUAL_HOST** and **EMAIL** needs to be changed.
+      1. You could also put some non-secret variable values into [dev.env](/.ci/.env/dev.env) and [prod.env](/.ci/.env/prod.env) files. They will be applied on corresponding environments.
    1. Create DNS entry and point it to your Virtual Machine
 1. Create a folder on VM, e.g. `/home/k3s`. Copy `.env` file to that folder (you could run `nano` and copy&paste the contents).
 1. Authenticate in your docker registry (if it's private). Run `docker login https://YOUR_DOCKER_REGISTRY`. Run `docker pull YOUR_FULL_IMAGE_URL` to make sure everything works.
 1. Run `curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/setup.sh | /bin/bash -s -` from that folder. This will setup k3s, Kubernetes Dashboard (at `https://VIRTUAL_HOST/kube-dashboard`) and letsencrypt.
+   1. Grab the contents of `dashboard-token.txt`, it contains the token you could use to login in Kubernetes Dashboard.
+1. Grab the `kubernetes-config`, change `localhost` to ip/DNS name of your VM, add it to Azure secret files with a name `kubernetes.config`.
+1. Run your pipeline. Everything should be deployed.
 
 ## Set up Hosting server (Droplet on Digital Ocean)
 
