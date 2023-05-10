@@ -1,4 +1,4 @@
-[[ ! -f ".env" ]] && (echo ".env file is not found" && exit 1)
+[ ! -f ".env" ] && (echo ".env file is not found" && exit 1)
 export $(cat ./.env | xargs)
 [ -z "$EMAIL" ] && (echo 'EMAIL env. variable is not defined' && exit 1)
 [ -z "$VIRTUAL_HOST" ] && (echo 'VIRTUAL_HOST env. variable is not defined (needed to configure DNS name)' && exit 1)
