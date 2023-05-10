@@ -73,6 +73,18 @@ Create a new git repository and copy everything (except `.git` folder) to it. Do
 6. Disable Pipeline notifications in Azure (i.e. 'Run stage waiting for approval' and 'Manual validation Pending') https://dev.azure.com/mccsoft/TemplateApp/_settings/notifications. Also disable them in your personal profile: https://dev.azure.com/mccsoft/_usersSettings/notifications
 7. Pipeline contains 2 stages for deploying to DEV and PROD. You could add new deployment stages by copying existing once.
 
+## Set up Hosting server (via Kubernetes)
+
+1. Create a virtual machine that will host your project.
+   1. Write down the root credentials somewhere in WIKI
+   1. Install `docker` (`curl -fsSL https://get.docker.com | sh -s`) if it's not installed already
+1. Prepare configuration
+   1. Run `./GenerateDotEnv.ps1` from `scripts` folder. File `.env` will be generated for you
+      1. Adjust the variable values. At least **VIRTUAL_HOST** and **EMAIL** needs to be changed.
+   1. Create DNS entry and point it to your Virtual Machine
+1. Create a folder on VM, e.g. `/home/k3s`. Copy `.env` file to that folder (you could run `nano` and copy&paste the contents).
+1. Run `curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/setup.sh | sh -s -` from that folder. This will setup k3s, Kubernetes Dashboard (at `https://VIRTUAL_HOST/kube-dashboard`) and letsencrypt.
+
 ## Set up Hosting server (Droplet on Digital Ocean)
 
 1. Create a virtual machine that will host your project.

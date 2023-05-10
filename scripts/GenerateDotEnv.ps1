@@ -17,7 +17,7 @@ $template = Get-Content -path './.env_template' -Raw
 
 $newContent	= $template + `
 'POSTGRES_PASSWORD='+$postgresPassword+'
-CONNECTION_STRING=Server=postgres;Database=template_app;Port=5432;Username=postgres;Password='+$postgresPassword+';Pooling=true;Keepalive=5;Command Timeout=60;Trust Server Certificate=true
+ConnectionStrings__DefaultConnection=Server=postgres;Database=template_app;Port=5432;Username=postgres;Password='+$postgresPassword+';Pooling=true;Keepalive=5;Command Timeout=60;Trust Server Certificate=true
 OpenId__SigningCertificate__Base64Certificate='+$SigningCertificate_Base64Certificate+'
 OpenId__SigningCertificate__Password='+$SigningCertificate_Password+'
 OpenId__EncryptionCertificate__Base64Certificate='+$EncryptionCertificate_Base64Certificate+'
@@ -27,4 +27,6 @@ DefaultUser__Password='+[System.Web.Security.Membership]::GeneratePassword(14, 0
 SignUrl__Secret='+[System.Web.Security.Membership]::GeneratePassword(20, 4)+'
 '
 
-$newContent | Set-Content -Path './.env.base'
+$newContent | Set-Content -Path './.env'
+Write-Output ".env file is generated"
+Write-Output $newContent

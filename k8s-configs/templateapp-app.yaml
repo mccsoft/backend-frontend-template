@@ -1,3 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: templateapp
+  name: files-volume-pvc
+spec:
+  # storageClassName: manual
+  storageClassName: local-path
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,6 +29,12 @@ spec:
       labels:
         app: templateapp-main-api
     spec:
+      volumes:
+        - name: files-volume
+          persistentVolumeClaim:
+            claimName: files-volume-pvc
+      imagePullSecrets:
+        - name: docker-registry-secret
       containers:
         - name: templateapp-main-api
           image: ${DOCKER_IMAGE}
@@ -22,7 +42,10 @@ spec:
             - configMapRef:
                 name: templateapp-main-configmap
           ports:
-            - containerPort: 80
+            - containerPort: 5000
+          volumeMounts:
+            - mountPath: '/files'
+              name: files-volume
 ---
 apiVersion: v1
 kind: Service
@@ -32,11 +55,11 @@ metadata:
 spec:
   ports:
     - port: 80
+      targetPort: 5000
   selector:
     app: templateapp-main-api
 
 ---
-
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
