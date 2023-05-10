@@ -41,7 +41,7 @@ curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/ma
 
 # 4. Create Secret to authenticate in Docker Registry
 kubectl delete secret docker-registry-secret
-test $HOME/.docker/config.json && kubectl -n template-app create secret generic docker-registry-secret --from-file=.dockerconfigjson=$HOME/.docker/config.json --type=kubernetes.io/dockerconfigjson
+test $HOME/.docker/config.json && kubectl create secret generic docker-registry-secret --from-file=.dockerconfigjson=$HOME/.docker/config.json --type=kubernetes.io/dockerconfigjson
 
 
 # kubectl create namespace templateapp
