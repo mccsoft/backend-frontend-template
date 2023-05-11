@@ -124,7 +124,10 @@ stages:
               runOnce:
                 deploy:
                   steps:
-                    - template: ./azure-deploy.yml
+                    - ${{ if eq(variables.DEPLOY_KUBERNETES, true) }}:
+                        - template: ./azure-deploy-kubernetes.yml
+                    - ${{ if not(eq(variables.DEPLOY_KUBERNETES, true)) }}:
+                        - template: ./azure-deploy.yml
 
   - ${{ if variables.TAG_SOURCES_DEV }}:
       - stage: TagDevSources
@@ -154,6 +157,7 @@ stages:
             steps:
               - template: ./tests/e2e-stage.yml
 
+  - ${{ if eq(variables.ENABLE_DEPLOY, true) }}:
       - stage: DeployToProd
         dependsOn:
           - Build
@@ -168,7 +172,11 @@ stages:
               runOnce:
                 deploy:
                   steps:
-                    - template: ./azure-deploy.yml
+                    - ${{ if eq(variables.DEPLOY_KUBERNETES, true) }}:
+                        - template: ./azure-deploy-kubernetes.yml
+                    - ${{ if not(eq(variables.DEPLOY_KUBERNETES, true)) }}:
+                        - template: ./azure-deploy.yml
+
   - ${{ if variables.TAG_SOURCES_PROD }}:
       - stage: TagProdSources
         dependsOn: DeployToProd
