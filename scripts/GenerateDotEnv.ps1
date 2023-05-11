@@ -24,7 +24,7 @@ OpenId__EncryptionCertificate__Base64Certificate='+$EncryptionCertificate_Base64
 OpenId__EncryptionCertificate__Password='+$EncryptionCertificate_Password+'
 Hangfire__DashboardPassword='+[System.Web.Security.Membership]::GeneratePassword(14, 0)+'
 DefaultUser__Password='+[System.Web.Security.Membership]::GeneratePassword(14, 0)+'
-SignUrl__Secret='+[System.Web.Security.Membership]::GeneratePassword(20, 4)+'
+SignUrl__Secret='+[System.Web.Security.Membership]::GeneratePassword(32, 4)+'
 '
 
 $newContent | Set-Content -Path './.env'
