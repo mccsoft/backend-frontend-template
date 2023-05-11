@@ -10,7 +10,7 @@ public class SignUrlHelperTests : AppServiceTestBase
     {
         Sut = new SignUrlHelper(
             new OptionsWrapper<SignUrlOptions>(
-                new SignUrlOptions() { Secret = "1234567890123456" }
+                new SignUrlOptions() { Secret = "12345678901234567890123456789012" }
             ),
             _userAccessorMock.Object
         );
