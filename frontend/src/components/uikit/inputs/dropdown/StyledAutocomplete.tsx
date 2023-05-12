@@ -362,7 +362,12 @@ export function StyledAutocomplete<
           // because otherwise it selects the currently highlighted value, not the one that you typed.
           // Testing scenario: find a TimePicker, select '10:00', then type '12:00' and press Enter.
           // Expected: '12:00' is selected. (without this code '10:00' would be selected)
-          if (props.freeSolo && !isSearch && event.key === 'Enter') {
+          if (
+            props.freeSolo &&
+            !isSearch &&
+            !enableSearch &&
+            event.key === 'Enter'
+          ) {
             closeAutocomplete.current?.(event as any);
             // we need to preventDefault, so that containing Form would not be submitted
             (event as any).preventDefault();
