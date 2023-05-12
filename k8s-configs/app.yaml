@@ -40,7 +40,9 @@ spec:
           image: ${DOCKER_IMAGE}
           envFrom:
             - configMapRef:
-                name: templateapp-main-configmap
+                name: templateapp-configmap-secret
+            - configMapRef:
+                name: templateapp-configmap
           ports:
             - containerPort: 5000
           volumeMounts:
@@ -79,7 +81,7 @@ spec:
               service:
                 name: templateapp-main-api-service
                 port:
-                  name: http
+                  number: 80
   tls:
     - secretName: templateapp-main-api-tls
       hosts:

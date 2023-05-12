@@ -1,50 +1,19 @@
 steps:
-- script: |
-    echo $(BUILD_NUMBER) > /tmp/templateapp_build_$(Environment.Name)
+  - task: DownloadPipelineArtifact@2
+    inputs:
+      path: './'
 
-- task: DownloadPipelineArtifact@2
-  inputs:
-    path: './'
+  - script: |
+      export DOCKER_IMAGE="$(DOCKER_REGISTRY):$(BUILD_NUMBER)";
+      export KUBECONFIG=/home/k3s_remote/k3s.conf
 
-- script: |
-    sudo rm $HOME/docker-compose.yaml -rf
-    sudo rm $HOME/nginx -rf
-    cp ./docker-compose/* $HOME -f -r
-    cp ./nginx/ $HOME/nginx/ -f -r
-  displayName: copy artifacts to HOME dir
+      envsubst < app.yaml > app.yaml.tmp && mv app.yaml.tmp app.yaml
+      cat app.yaml
 
-- script: cp $HOME/.env.base $HOME/.env -f
-  displayName: copy .env.base -> .env
+      kubectl apply -f postgres.yaml
+      kubectl apply -f app.yaml
+    displayName: deploy
 
-- script: |
-    echo 'IMAGE_URL=$(DOCKER_REGISTRY):$(BUILD_NUMBER)' >> $HOME/.env;
-  displayName: Put custom variables into into .env
-
-- script: |
-    chmod +x ./scripts/adjust-env-vars.sh
-    export $(grep -v '^#' $HOME/.env.base | xargs) && ./scripts/adjust-env-vars.sh
-  displayName: adjust env vars
-
-- script: |
-    chmod +x ./scripts/set-up-stage.sh
-    ./scripts/set-up-stage.sh
-  displayName: run set-up-stage.sh
-
-- script: |
-    sudo docker login $(DOCKER_REGISTRY) -u $(DOCKER_USER) -p $(DOCKER_TOKEN)
-  displayName: 'Authenticate at Container Registry'
-
-- script: |
-    cd $HOME
-    sudo docker network create load-balancer
-    sudo docker-compose up -d
-  displayName: run docker-compose
-
-- script: |
-    sudo docker image prune -af
-  displayName: cleanup old images
-
-- script: |
-    chmod +x ./scripts/wait-for-http.sh
-    export $(grep -v '^#' $HOME/.env | xargs) && ./scripts/wait-for-http.sh https://$VIRTUAL_HOST/api/ -t 120
-  displayName: waiting for web server to be up and running
+  # - script: |
+  #     sudo docker login $(DOCKER_REGISTRY) -u $(DOCKER_USER) -p $(DOCKER_TOKEN)
+  #   displayName: 'Authenticate at Container Registry'

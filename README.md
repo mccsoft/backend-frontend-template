@@ -87,7 +87,7 @@ Create a new git repository and copy everything (except `.git` folder) to it. Do
 1. Authenticate in your docker registry (if it's private). Run `docker login https://YOUR_DOCKER_REGISTRY`. Run `docker pull YOUR_FULL_IMAGE_URL` to make sure everything works.
 1. Run `curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/setup.sh | /bin/bash -s -` from that folder. This will setup k3s, Kubernetes Dashboard (at `https://VIRTUAL_HOST/kube-dashboard`) and letsencrypt.
    1. Grab the contents of `dashboard-token.txt`, it contains the token you could use to login in Kubernetes Dashboard.
-1. Grab the `cat /etc/rancher/k3s/k3s.yaml` from your VM and save it locally as `k3s.yaml`, change `https://localhost` to ip/DNS name of your VM, add it to Azure secret files with a name `k3s.yaml`.
+1. Grab the `cat /etc/rancher/k3s/k3s.yaml` from your VM and save it locally as `k3s.yaml`, change `server: https://localhost:6443` to `server: https://SERVER_IP_ADDRESS:6443` (it's important to put IP, not the Hostname there), add it to Azure secret files with a name `k3s.yaml`.
 1. Run your pipeline. Everything should be deployed.
 
 ## Set up Hosting server (Droplet on Digital Ocean)

@@ -1,16 +1,3 @@
-# Create ConfigMap postgres-secret for the postgres app
-# Define default database name, user, and password
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: postgres-config
-  namespace: templateapp
-  labels:
-    app: postgres
-data:
-  POSTGRES_USER: '${POSTGRES_USER}'
-  POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
----
 # apiVersion: v1
 # kind: PersistentVolume
 # metadata:
@@ -69,7 +56,7 @@ spec:
             - containerPort: 5432
           envFrom:
             - configMapRef:
-                name: postgres-config
+                name: templateapp-configmap-secret
           volumeMounts:
             - mountPath: '/var/lib/postgresql/data'
               name: postgres-volume
@@ -84,6 +71,6 @@ spec:
   ports:
     - name: 'templateapp-main-postgres'
       port: 5432
-      targetPort: ${POSTGRES_EXTERNAL_PORT}
+      targetPort: 5432
   selector:
     app: templateapp-main-postgres
