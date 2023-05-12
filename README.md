@@ -90,6 +90,15 @@ Create a new git repository and copy everything (except `.git` folder) to it. Do
 1. Grab the `cat /etc/rancher/k3s/k3s.yaml` from your VM and save it locally as `k3s.yaml`, change `server: https://localhost:6443` to `server: https://SERVER_IP_ADDRESS:6443` (it's important to put IP, not the Hostname there), add it to Azure secret files with a name `k3s.yaml`.
 1. Run your pipeline. Everything should be deployed.
 
+---
+
+### Reinitialize kubernetes
+
+1. If you want to change something in `.env` (e.g. **VIRTUAL_HOST**, **EMAIL**, or some other secret), change it in VM and run `curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/reinit-namespace.sh | sh -s -`
+1. If you want to completely reinitialize whole kubernetes cluster, run the following:
+   1. `/usr/local/bin/k3s-uninstall.sh` to uninstall everything
+   1. `curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/setup.sh | /bin/bash -s -` - to install everything (same script as you ran when set)
+
 ## Set up Hosting server (Droplet on Digital Ocean)
 
 1. Create a virtual machine that will host your project.

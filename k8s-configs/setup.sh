@@ -42,27 +42,6 @@ kubectl apply -f letsencrypt.yaml
 # 3. Setup Kubernetes Dashboard
 curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/dashboard/setup-dashboard.sh | sh -s -
 
-# 4. Create namespace
-kubectl create namespace $NAMESPACE
 
-# 5. Create Secret to authenticate in Docker Registry
-kubectl -n $NAMESPACE delete secret docker-registry-secret
-test $HOME/.docker/config.json && kubectl -n $NAMESPACE create secret generic docker-registry-secret --from-file=.dockerconfigjson=$HOME/.docker/config.json --type=kubernetes.io/dockerconfigjson
-
-
-# 6. Create config maps (`$NAMESPACE-configmap-secret`)
-kubectl -n $NAMESPACE create configmap $NAMESPACE-configmap-secret --from-env-file=.env || (kubectl -n $NAMESPACE create configmap $NAMESPACE-configmap-secret --from-env-file=.env -o yaml --dry-run=client | kubectl replace -f -)
-kubectl -n $NAMESPACE create configmap $NAMESPACE-configmap
-
-
-# # 4. Setup Postgres
-# curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/postgres.yaml > postgres.yaml
-# envsubst < postgres.yaml > postgres.yaml.tmp && mv postgres.yaml.tmp postgres.yaml
-# kubectl apply -f postgres.yaml
-
-# # 5. Setup App
-# # setup deployment
-# curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/templateapp-app.yaml > templateapp-app.yaml
-# envsubst < templateapp-app.yaml > templateapp-app.yaml.tmp && mv templateapp-app.yaml.tmp templateapp-app.yaml
-# kubectl apply -f templateapp-app.yaml
-
+# 4/5/6 creates and initializes namespace
+curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/init-namespace.sh | sh -s -
