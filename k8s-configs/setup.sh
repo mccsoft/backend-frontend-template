@@ -32,8 +32,8 @@ source ~/.bashrc
 
 # 2. Setup Let's encrypt
 kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.11.1/cert-manager.yaml
-echo "sleep for 15 seconds..."
-sleep 15
+echo "sleep for 60 seconds..."
+sleep 60
 curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/letsencrypt.yaml > letsencrypt.yaml
 envsubst < letsencrypt.yaml > letsencrypt.yaml.tmp && mv letsencrypt.yaml.tmp letsencrypt.yaml
 kubectl apply -f letsencrypt.yaml

@@ -8,6 +8,8 @@ kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/
 mkdir dashboard
 curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/dashboard/ingress.yaml > dashboard/ingress.yaml
 curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/dashboard/users.yaml > dashboard/users.yaml
+echo "sleep for 60 seconds..."
+sleep 60
 kubectl apply -f dashboard/ingress.yaml
 kubectl apply -f dashboard/users.yaml
 
