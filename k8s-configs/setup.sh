@@ -6,13 +6,16 @@
 export $(cat ./.env | xargs)
 [ -z "$EMAIL" ] && (echo 'EMAIL env. variable is not defined' && exit 1)
 [ -z "$VIRTUAL_HOST" ] && (echo 'VIRTUAL_HOST env. variable is not defined (needed to configure DNS name)' && exit 1)
+[ -z "$NAMESPACE" ] && (echo 'NAMESPACE env. variable is not defined (needed to configure DNS name)' && exit 1)
 [ -z "$General__SiteUrl" ] && (echo "General__SiteUrl=$VIRTUAL_HOST" >> .env)
 
 # This file sets up k3s on fresh VPS:
 # 1. Install k3s
 # 2. Setup Let's encrypt
 # 3. Setup Kubernetes Dashboard
-# 4. Create Secret to authenticate in Docker Registry
+# 4. Create namespace
+# 5. Create Secret to authenticate in Docker Registry
+# 6. Create config maps (`$NAMESPACE-configmap-secret`)
 
 
 # 1. Install k3s 
@@ -39,23 +42,6 @@ kubectl apply -f letsencrypt.yaml
 # 3. Setup Kubernetes Dashboard
 curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/dashboard/setup-dashboard.sh | sh -s -
 
-# 4. Create Secret to authenticate in Docker Registry
-kubectl delete secret docker-registry-secret
-test $HOME/.docker/config.json && kubectl create secret generic docker-registry-secret --from-file=.dockerconfigjson=$HOME/.docker/config.json --type=kubernetes.io/dockerconfigjson
 
-
-# kubectl create namespace templateapp
-
-# # 4. Setup Postgres
-# curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/postgres.yaml > postgres.yaml
-# envsubst < postgres.yaml > postgres.yaml.tmp && mv postgres.yaml.tmp postgres.yaml
-# kubectl apply -f postgres.yaml
-
-# # 5. Setup App
-# # setup configmap
-# kubectl -n templateapp create configmap templateapp-main-configmap --from-env-file=.env || (kubectl -n templateapp create configmap templateapp-main-configmap --from-env-file=.env -o yaml --dry-run=client | kubectl replace -f -)
-# # setup deployment
-# curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/templateapp-app.yaml > templateapp-app.yaml
-# envsubst < templateapp-app.yaml > templateapp-app.yaml.tmp && mv templateapp-app.yaml.tmp templateapp-app.yaml
-# kubectl apply -f templateapp-app.yaml
-
+# 4/5/6 creates and initializes namespace
+curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/init-namespace.sh | sh -s -
