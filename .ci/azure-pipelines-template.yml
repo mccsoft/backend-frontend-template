@@ -163,7 +163,7 @@ stages:
             steps:
               - template: ./tests/e2e-stage.yml
 
-  - ${{ if eq(variables.ENABLE_DEPLOY, true) }}:
+  - ${{ if and(eq(variables.ENABLE_DEPLOY, true), eq(variables.ENABLE_PROD_DEPLOY, true)) }}:
       - stage: DeployToProd
         dependsOn:
           - Build

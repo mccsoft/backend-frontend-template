@@ -31,6 +31,7 @@ variables:
   # Deployment
   DOCKER_TAG: latest
   ENABLE_DEPLOY: true
+  ENABLE_PROD_DEPLOY: false
   DEPLOY_KUBERNETES: true
   TAG_SOURCES_DEV:
   TAG_SOURCES_PROD:
