@@ -73,62 +73,11 @@ Create a new git repository and copy everything (except `.git` folder) to it. Do
 6. Disable Pipeline notifications in Azure (i.e. 'Run stage waiting for approval' and 'Manual validation Pending') https://dev.azure.com/mccsoft/TemplateApp/_settings/notifications. Also disable them in your personal profile: https://dev.azure.com/mccsoft/_usersSettings/notifications
 7. Pipeline contains 2 stages for deploying to DEV and PROD. You could add new deployment stages by copying existing once.
 
-## Set up Hosting server (via Kubernetes)
+## Deploy
 
-1. Create a virtual machine that will host your project.
-   1. Write down the root credentials somewhere in WIKI
-   1. Install `docker` (`curl -fsSL https://get.docker.com | sh -s`) if it's not installed already
-1. Prepare configuration
-   1. Run `./GenerateDotEnv.ps1` from `scripts` folder. File `.env` will be generated for you
-      1. Adjust the variable values. At least **VIRTUAL_HOST** and **EMAIL** needs to be changed.
-      1. You could also put some non-secret variable values into [dev.env](/.ci/.env/dev.env) and [prod.env](/.ci/.env/prod.env) files. They will be applied on corresponding environments.
-   1. Create DNS entry and point it to your Virtual Machine
-1. Create a folder on VM, e.g. `/home/k3s`. Copy `.env` file to that folder (you could run `nano` and copy&paste the contents).
-1. Authenticate in your docker registry (if it's private). Run `docker login https://YOUR_DOCKER_REGISTRY`. Run `docker pull YOUR_FULL_IMAGE_URL` to make sure everything works.
-1. Run `curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/setup.sh | /bin/bash -s -` from that folder. This will setup k3s, Kubernetes Dashboard (at `https://VIRTUAL_HOST/kube-dashboard`) and letsencrypt.
-   1. Grab the contents of `dashboard-token.txt`, it contains the token you could use to login in Kubernetes Dashboard.
-1. Grab the `cat /etc/rancher/k3s/k3s.yaml` from your VM and save it locally as `k3s.yaml`, change `server: https://localhost:6443` to `server: https://SERVER_IP_ADDRESS:6443` (it's important to put IP, not the Hostname there), add it to Azure secret files with a name `k3s.yaml`.
-1. Run your pipeline. Everything should be deployed.
+Here are the possible ways to deploy your app:
 
----
-
-### Reinitialize kubernetes
-
-1. If you want to change something in `.env` (e.g. **VIRTUAL_HOST**, **EMAIL**, or some other secret), change it in VM and run `curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/reinit-namespace.sh | sh -s -`
-1. If you want to completely reinitialize whole kubernetes cluster, run the following:
-   1. `/usr/local/bin/k3s-uninstall.sh` to uninstall everything
-   1. `curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/setup.sh | /bin/bash -s -` - to install everything (same script as you ran when set)
-
-## Set up Hosting server (Droplet on Digital Ocean)
-
-1. Create a virtual machine that will host your project.
-   1. The preferable way is to create a Droplet on Digital Ocean.
-      1. Create an account in DO (or use your existing account, you don't need to use a project email here), then create a new Team for new project (or ask your manager to do so and invite you to the Team)
-      1. Create new droplet on Digital ocean, use 'Docker' as image, generate random secure password.
-   1. Alternatively, set up any linux machine with root access. Install `docker` and `docker-compose`.
-      1. To install `docker` follow [instructions](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository):
-      1. To install `docker-compose` (at least 1.29.0 is required to use profiles): `sudo apt install pip && pip install docker-compose;`
-   1. Write down the passwords somewhere in WIKI
-1. SSH into droplet/VM and run the following (line by line):
-   ```
-   apt install mc
-   adduser azure (generate and remember the password)
-   usermod -aG sudo azure
-   sudo visudo (add the following as the last line: `azure ALL=(ALL) NOPASSWD: ALL`, click Ctrl+X, save the changes). It will disable password prompt for azure user.
-   su -l azure
-   ```
-1. Go to Azure DevOps, Pipelines -> Environment. Add Environment (name it 'DEV'), add virtual machine (Linux). Copy the script and run inside Droplet under `azure` user account (if you'd like to deploy more than one project to the same Droplet you could change $HOSTNAME in the script to something project-specific).
-1. You should see your droplet in Environments in Azure.
-1. (If it's a PROD environment, you could add Approval Checks in Azure Dev Ops (so that only manager could deploy to PROD))
-1. Generate configuration (by running `./GenerateDotEnv.ps1` from `scripts` folder. File `.env.base` will be generated for you
-1. Copy generated `env.base` file to HOME directory of `azure` user.
-1. Adjust the file (change the Email, VirtualHost, Sentry and Loggly URLs).
-1. (You could also grab Postgres password from this file to connect to Postgres later from your PC)
-1. Optional: ONLY if you used Digital Ocean container registry. Make sure that **root** user has access to Container Registry which stores the images.
-   1. To do that (in case of Digital Ocean Container Registry) run the following:
-      ```
-      sudo snap install doctl
-      sudo snap connect doctl:dot-docker
-      doctl auth init -t (INSERT DIGITAL OCEAN API TOKEN HERE)
-      doctl registry login
-      ```
+1. [Kubernetes (k3s)](/k8s-configs/README.md) on VM. It is the preferred and simplest deployment setup. Read the details in the [instructions](/k8s-configs/README.md).
+   - For low workloads you could host App & Postgres together on 1CPU/2GB VPS together (~5$ on Hetzner/MVPS)
+2. [Azure Web App](/docs/Deploy-Azure-WebApp.md). It's simple, use it if you already use Azure and are ok with paying quite a bit more than for a regular VM (5x more :))
+3. [Obsolete] [Docker-compose on VM](/docs/Deploy-docker-compose.MD). This is an obsolete way, instructions are available for backwards compatibility. It's NOT recommended for new projects, and even old ones should better switch to Kubernetes (k3s) :).
