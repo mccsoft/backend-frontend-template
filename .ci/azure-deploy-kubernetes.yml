@@ -20,7 +20,7 @@ steps:
       export KUBECONFIG=$(kubeconfig.secureFilePath)
 
       cat ./.ci/_stages/${{ parameters.kubeconfig }}.env
-      export $(cat ./.ci/_stages/${{ parameters.kubeconfig }}.env | xargs)
+      export $(cat ./.ci/_stages/${{ parameters.stage }}.env | xargs)
 
       kubectl apply -f k8s/postgres.yaml
 
