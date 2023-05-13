@@ -5,6 +5,11 @@ parameters:
     type: string
 
 steps:
+  - checkout: self
+
+  - task: KubectlInstaller@0
+    displayName: Install kubectl
+
   - task: DownloadSecureFile@1
     name: kubeconfig
     inputs:
