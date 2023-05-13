@@ -34,14 +34,14 @@ source ~/.bashrc
 kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.11.1/cert-manager.yaml
 echo "sleep for 60 seconds..."
 sleep 60
-curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/letsencrypt.yaml > letsencrypt.yaml
+curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s/letsencrypt.yaml > letsencrypt.yaml
 envsubst < letsencrypt.yaml > letsencrypt.yaml.tmp && mv letsencrypt.yaml.tmp letsencrypt.yaml
 kubectl apply -f letsencrypt.yaml
 
 
 # 3. Setup Kubernetes Dashboard
-curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/dashboard/setup-dashboard.sh | sh -s -
+curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s/dashboard/setup-dashboard.sh | sh -s -
 
 
 # 4/5/6 creates and initializes namespace
-curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/init-namespace.sh | sh -s -
+curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s/init-namespace.sh | sh -s -

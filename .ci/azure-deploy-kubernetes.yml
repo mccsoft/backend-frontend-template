@@ -1,19 +1,27 @@
+parameters:
+  - name: kubeconfig
+    type: string
+  - name: stage
+    type: string
+
 steps:
-  - task: DownloadPipelineArtifact@2
+  - task: DownloadSecureFile@1
+    name: kubeconfig
     inputs:
-      path: './'
+      secureFile: ${{ parameters.kubeconfig }}
 
   - script: |
       export DOCKER_IMAGE="$(DOCKER_REGISTRY):$(BUILD_NUMBER)";
-      export KUBECONFIG=/home/k3s_remote/k3s.conf
+      export KUBECONFIG=$(kubeconfig.secureFilePath)
 
-      envsubst < app.yaml > app.yaml.tmp && mv app.yaml.tmp app.yaml
-      cat app.yaml
+      cat ./.ci/_stages/${{ parameters.kubeconfig }}.env
+      export $(cat ./.ci/_stages/${{ parameters.kubeconfig }}.env | xargs)
 
-      kubectl apply -f postgres.yaml
-      kubectl apply -f app.yaml
+      kubectl apply -f k8s/postgres.yaml
+
+      envsubst < k8s/app.yaml > k8s/app.yaml.tmp && mv k8s/app.yaml.tmp k8s/app.yaml
+      cat k8s/app.yaml
+
+      kubectl apply -f k8s/app.yaml
+
     displayName: deploy
-
-  # - script: |
-  #     sudo docker login $(DOCKER_REGISTRY) -u $(DOCKER_USER) -p $(DOCKER_TOKEN)
-  #   displayName: 'Authenticate at Container Registry'

@@ -8,4 +8,4 @@ export $(cat ./.env | xargs)
 
 kubectl delete namespace $NAMESPACE
 
-curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s-configs/init-namespace.sh | sh -s -
+curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s/init-namespace.sh | sh -s -

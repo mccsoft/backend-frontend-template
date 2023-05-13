@@ -2,7 +2,7 @@
 
 ### 2023-05-13 Deploy to Kubernetes (k3s)
 
-[Official instructions](/k8s-configs/README.md) & scripts are available to deploy to Kubernetes (and how to setup the Kubernetes cluster). It's now a recommended way to deploy the app.
+[Official instructions](/k8s/README.md) & scripts are available to deploy to Kubernetes (and how to setup the Kubernetes cluster). It's now a recommended way to deploy the app.
 
 ### 2023-05-11 Update SignUrl
 

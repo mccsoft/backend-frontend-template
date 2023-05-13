@@ -1,0 +1,2 @@
+variables:
+  KUBECONFIG: 'k3s-prod.yaml'

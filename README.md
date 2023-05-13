@@ -77,7 +77,7 @@ Create a new git repository and copy everything (except `.git` folder) to it. Do
 
 Here are the possible ways to deploy your app:
 
-1. [Kubernetes (k3s)](/k8s-configs/README.md) on VM. It is the preferred and simplest deployment setup. Read the details in the [instructions](/k8s-configs/README.md).
+1. [Kubernetes (k3s)](/k8s/README.md) on VM. It is the preferred and simplest deployment setup. Read the details in the [instructions](/k8s/README.md).
    - For low workloads you could host App & Postgres together on 1CPU/2GB VPS together (~5$ on Hetzner/MVPS)
 2. [Azure Web App](/docs/Deploy-Azure-WebApp.md). It's simple, use it if you already use Azure and are ok with paying quite a bit more than for a regular VM (5x more :))
 3. [Obsolete] [Docker-compose on VM](/docs/Deploy-docker-compose.MD). This is an obsolete way, instructions are available for backwards compatibility. It's NOT recommended for new projects, and even old ones should better switch to Kubernetes (k3s) :).

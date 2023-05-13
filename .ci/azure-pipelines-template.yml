@@ -114,6 +114,9 @@ stages:
         dependsOn:
           - Build
           - DockerTag
+        variables:
+          - template: ./_stages/_default.yml
+          - template: ./_stages/dev.yml
         condition: succeeded()
         jobs:
           - deployment:
@@ -126,6 +129,9 @@ stages:
                   steps:
                     - ${{ if eq(variables.DEPLOY_KUBERNETES, true) }}:
                         - template: ./azure-deploy-kubernetes.yml
+                          parameters:
+                            kubeconfig: ${{ variables.KUBECONFIG }}
+                            stage: 'dev'
                     - ${{ if not(eq(variables.DEPLOY_KUBERNETES, true)) }}:
                         - template: ./azure-deploy.yml
 
@@ -162,6 +168,9 @@ stages:
         dependsOn:
           - Build
           - DockerTag
+        variables:
+          - template: ./_stages/_default.yml
+          - template: ./_stages/prod.yml
         condition: succeeded()
         jobs:
           - deployment:
@@ -174,6 +183,9 @@ stages:
                   steps:
                     - ${{ if eq(variables.DEPLOY_KUBERNETES, true) }}:
                         - template: ./azure-deploy-kubernetes.yml
+                          parameters:
+                            kubeconfig: ${{ variables.KUBECONFIG }}
+                            stage: 'prod'
                     - ${{ if not(eq(variables.DEPLOY_KUBERNETES, true)) }}:
                         - template: ./azure-deploy.yml
 

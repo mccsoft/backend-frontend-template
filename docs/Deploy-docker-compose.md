@@ -2,7 +2,7 @@
 
 These are instructions regarding deploying your app to VM via docker-compose.This is an obsolete way, instructions are available for backwards compatibility.
 
-It's NOT recommended for new projects, and even old ones should better switch to [Kubernetes (k3s)](/k8s-configs/README.md) :).
+It's NOT recommended for new projects, and even old ones should better switch to [Kubernetes (k3s)](/k8s/README.md) :).
 
 Instructions:
 
