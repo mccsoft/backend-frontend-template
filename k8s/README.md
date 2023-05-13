@@ -14,7 +14,6 @@
 
 ## Setup
 
-1. Authenticate in your docker registry (if it's private). Run `docker login https://YOUR_DOCKER_REGISTRY`. Run `docker pull YOUR_FULL_IMAGE_URL` to make sure everything works (you could skip this step if you run `docker login` before on this VM).
 1. Run `curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s/setup.sh | /bin/bash -s -` from folder containing `.env` file. This will setup k3s, Kubernetes Dashboard (at `https://VIRTUAL_HOST/kube-dashboard`) and letsencrypt.
    1. Grab the contents of `dashboard-token.txt`, it contains the token you could use to login in Kubernetes Dashboard.
 1. Create Secret File in Azure with your Kubernetes Config. To do so:

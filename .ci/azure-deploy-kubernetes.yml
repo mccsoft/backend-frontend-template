@@ -23,7 +23,7 @@ steps:
     displayName: export env. variables and kubeconfig
 
   - script: |
-      kubectl -n templateapp create secret docker-registry-secret regcred --docker-server=$(DOCKER_REGISTRY) --docker-username=$(DOCKER_USER) --docker-password=$(DOCKER_TOKEN) --docker-email=$(EMAIL)
+      kubectl -n templateapp create secret docker-registry docker-registry-secret --docker-server=$(DOCKER_REGISTRY) --docker-username=$(DOCKER_USER) --docker-password=$(DOCKER_TOKEN)
     displayName: create docker secrets
 
   - script: |
