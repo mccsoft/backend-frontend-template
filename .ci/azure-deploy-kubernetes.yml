@@ -29,6 +29,6 @@ steps:
 
       kubectl apply -f k8s/app.yaml
 
-      (kubectl -n templateapp create configmap templateapp-configmap-secret --from-env-file=./.ci/_stages/${{ parameters.stage }}.env -o yaml --dry-run=client | kubectl replace -f -)
+      (kubectl -n templateapp create configmap templateapp-configmap --from-env-file=./.ci/_stages/${{ parameters.stage }}.env -o yaml --dry-run=client | kubectl replace -f -)
 
     displayName: deploy
