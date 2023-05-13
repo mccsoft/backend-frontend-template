@@ -41,8 +41,10 @@ spec:
           envFrom:
             - configMapRef:
                 name: templateapp-configmap-secret
+                optional: true
             - configMapRef:
                 name: templateapp-configmap
+                optional: true
           ports:
             - containerPort: 5000
           volumeMounts:

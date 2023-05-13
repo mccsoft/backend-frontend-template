@@ -16,19 +16,27 @@ steps:
       secureFile: ${{ parameters.kubeconfig }}
 
   - script: |
-      export DOCKER_IMAGE="$(DOCKER_REGISTRY):$(BUILD_NUMBER)";
       export KUBECONFIG=$(kubeconfig.secureFilePath)
 
       cat ./.ci/_stages/${{ parameters.kubeconfig }}.env
       export $(cat ./.ci/_stages/${{ parameters.stage }}.env | xargs)
+    displayName: export env. variables and kubeconfig
 
+  - script: |
+      kubectl -n templateapp create secret docker-registry-secret regcred --docker-server=$(DOCKER_REGISTRY) --docker-username=$(DOCKER_USER) --docker-password=$(DOCKER_TOKEN) --docker-email=$(EMAIL)
+    displayName: create docker secrets
+
+  - script: |
       kubectl apply -f k8s/postgres.yaml
+    displayName: deploy postgres
 
+  - script: |
+      (kubectl -n templateapp create configmap templateapp-configmap --from-env-file=./.ci/_stages/${{ parameters.stage }}.env -o yaml --dry-run=client | kubectl replace -f -)
+    displayName: apply env variables from ${{ parameters.stage }}.env
+
+  - script: |
+      export DOCKER_IMAGE="$(DOCKER_REGISTRY):$(BUILD_NUMBER)";
       envsubst < k8s/app.yaml > k8s/app.yaml.tmp && mv k8s/app.yaml.tmp k8s/app.yaml
       cat k8s/app.yaml
-
       kubectl apply -f k8s/app.yaml
-
-      (kubectl -n templateapp create configmap templateapp-configmap --from-env-file=./.ci/_stages/${{ parameters.stage }}.env -o yaml --dry-run=client | kubectl replace -f -)
-
-    displayName: deploy
+    displayName: deploy app
