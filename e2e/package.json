@@ -25,7 +25,7 @@
     "test": "npx playwright test",
     "generate-api-client": "react-query-swagger /input:https://localhost:5001/swagger/v1/swagger.json /output:src/api/query-client.ts /template:Axios /serviceHost:. /no-hooks /minimal",
     "generate-api-client-remote": "react-query-swagger /input:https://template.mcc-soft.de/swagger/v1/swagger.json /output:src/api/query-client.ts /template:Axios /serviceHost:. /no-hooks /minimal",
-    "update-storybook-snapshots-linux": "cd .. && docker run --env STORYBOOK_URL=http://host.docker.internal:6006 --rm --network host -v $(pwd):/work/ -w /work/e2e -it mcr.microsoft.com/playwright:v1.33.0-focal npx playwright test storybook -j 1 --update-snapshots",
+    "update-storybook-snapshots-linux": "cd .. && docker run --env STORYBOOK_URL=http://host.docker.internal:6006 --env STORYBOOK=1 --rm --network host -v $(pwd):/work/ -w /work/e2e -it mcr.microsoft.com/playwright:v1.33.0-focal npx playwright test storybook -j 1 --update-snapshots",
     "update-e2e-snapshots-linux": "cd .. && docker run --env STORYBOOK_URL=http://host.docker.internal:6006 --rm --network host -v $(pwd):/work/ -w /work/e2e -it mcr.microsoft.com/playwright:v1.33.0-focal npx playwright test tests -j 1 --update-snapshots"
   }
 }
