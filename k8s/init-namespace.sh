@@ -4,7 +4,7 @@ export $(cat ./.env | xargs)
 
 # This file sets up k3s on fresh VPS:
 # 1. Create namespace
-kubectl create namespace $NAMESPACE
+kubectl create namespace $NAMESPACE || echo "$NAMESPACE exists"
 
 # 2. Create secret config maps (`$NAMESPACE-configmap-secret`)
 kubectl -n $NAMESPACE create configmap $NAMESPACE-configmap-secret --from-env-file=.env || (kubectl -n $NAMESPACE create configmap $NAMESPACE-configmap-secret --from-env-file=.env -o yaml --dry-run=client | kubectl replace -f -)
