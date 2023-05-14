@@ -25,7 +25,7 @@
 
 # Reinitialize kubernetes
 
-1. If you want to change something in `.env` (e.g. **VIRTUAL_HOST**, **EMAIL**, or some other secret), change it in VM. Then repeat the [setup](#setup) steps.
+1. If you want to change something in `.env` (e.g. **VIRTUAL_HOST**, **EMAIL**, or some other secret), change it in VM. Then run `curl -sfL https://raw.githubusercontent.com/mccsoft/backend-frontend-template/master/k8s/reinit-namespace.sh | /bin/bash -s -`.
 1. If you want to completely reinitialize whole kubernetes cluster, run the following:
    1. `/usr/local/bin/k3s-uninstall.sh` to uninstall everything
    1. Repeat the [setup](#setup) steps
