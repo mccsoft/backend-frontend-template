@@ -20,7 +20,6 @@ steps:
       echo "##vso[task.setvariable variable=KUBECONFIG]$(kubeconfig.secureFilePath)"
 
       cat ./.ci/_stages/${{ parameters.kubeconfig }}.env
-      export $(cat ./.ci/_stages/${{ parameters.stage }}.env | xargs)
     displayName: export env. variables and kubeconfig
 
   - script: |
@@ -37,6 +36,8 @@ steps:
 
   - script: |
       export DOCKER_IMAGE="$(DOCKER_REGISTRY):$(BUILD_NUMBER)";
+      export $(cat ./.ci/_stages/${{ parameters.stage }}.env | xargs)
+
       envsubst < k8s/app.yaml > k8s/app.yaml.tmp && mv k8s/app.yaml.tmp k8s/app.yaml
       cat k8s/app.yaml
       kubectl apply -f k8s/app.yaml
