@@ -109,8 +109,7 @@ stages:
                 parameters:
                   name: ${{ variables.DOCKER_TAG }}
 
-  - ${{ if eq(variables.ENABLE_DEPLOY, true) }}:
-    - ${{ if eq(variables.DEPLOY_KUBERNETES, true) }}:
+  - ${{ if and(eq(variables.ENABLE_DEPLOY, true),eq(variables.DEPLOY_KUBERNETES, true)) }}:
       - stage: DeployToDev
         dependsOn:
           - Build
@@ -118,15 +117,15 @@ stages:
         variables:
           - template: ./_stages/_default.yml
           - template: ./_stages/dev.yml
-        condition: succeeded()    
-          jobs:
-            job:
-              steps:
-                - template: ./azure-deploy-kubernetes.yml
-                  parameters:
-                    kubeconfig: ${{ variables.KUBECONFIG }}
-                    stage: 'dev'
-    - ${{ if not(eq(variables.DEPLOY_KUBERNETES, true)) }}:
+        condition: succeeded()
+        jobs:
+          job:
+            steps:
+              - template: ./azure-deploy-kubernetes.yml
+                parameters:
+                  kubeconfig: ${{ variables.KUBECONFIG }}
+                  stage: 'dev'
+  - ${{ if and(eq(variables.ENABLE_DEPLOY, true), not(eq(variables.DEPLOY_KUBERNETES, true))) }}:
       - stage: DeployToDev
         dependsOn:
           - Build
@@ -134,17 +133,17 @@ stages:
         variables:
           - template: ./_stages/_default.yml
           - template: ./_stages/dev.yml
-        condition: succeeded()    
-          jobs:
-            - deployment:
-              environment:
-                name: 'DEV'
-                resourceType: VirtualMachine
-              strategy:
-                runOnce:
-                  deploy:
-                    steps:
-                      - template: ./azure-deploy.yml
+        condition: succeeded()
+        jobs:
+          - deployment:
+            environment:
+              name: 'DEV'
+              resourceType: VirtualMachine
+            strategy:
+              runOnce:
+                deploy:
+                  steps:
+                    - template: ./azure-deploy.yml
 
   - ${{ if variables.TAG_SOURCES_DEV }}:
       - stage: TagDevSources
