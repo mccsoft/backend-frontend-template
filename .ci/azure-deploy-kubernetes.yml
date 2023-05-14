@@ -17,9 +17,9 @@ steps:
 
   - script: |
       export KUBECONFIG=$(kubeconfig.secureFilePath)
-      echo "##vso[task.setvariable variable=KUBECONFIG]$(kubeconfig.secureFilePath)"
-
       cat ./.ci/_stages/${{ parameters.kubeconfig }}.env
+
+      echo "##vso[task.setvariable variable=KUBECONFIG]$(kubeconfig.secureFilePath)"
     displayName: export env. variables and kubeconfig
 
   - script: |
