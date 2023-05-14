@@ -119,7 +119,9 @@ stages:
           - template: ./_stages/dev.yml
         condition: succeeded()
         jobs:
-          job:
+          - job:
+            pool:
+              vmImage: 'ubuntu-latest'
             steps:
               - template: ./azure-deploy-kubernetes.yml
                 parameters:
