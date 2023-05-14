@@ -120,22 +120,22 @@ stages:
         condition: succeeded()
         jobs:
           - ${{ if eq(variables.DEPLOY_KUBERNETES, true) }}:
-          job:
-            steps:
-            - template: ./azure-deploy-kubernetes.yml
-              parameters:
-                kubeconfig: ${{ variables.KUBECONFIG }}
-                stage: 'dev'
+            job:
+              steps:
+                - template: ./azure-deploy-kubernetes.yml
+                  parameters:
+                    kubeconfig: ${{ variables.KUBECONFIG }}
+                    stage: 'dev'
           - ${{ if not(eq(variables.DEPLOY_KUBERNETES, true)) }}:
-            - deployment:
-              environment:
-                name: 'DEV'
-                resourceType: VirtualMachine
-              strategy:
-                runOnce:
-                  deploy:
-                    steps:
-                      - template: ./azure-deploy.yml
+              - deployment:
+                environment:
+                  name: 'DEV'
+                  resourceType: VirtualMachine
+                strategy:
+                  runOnce:
+                    deploy:
+                      steps:
+                        - template: ./azure-deploy.yml
 
   - ${{ if variables.TAG_SOURCES_DEV }}:
       - stage: TagDevSources
