@@ -113,7 +113,8 @@ stages:
       - stage: DeployToDev
         dependsOn:
           - Build
-          - DockerTag
+          - ${{ if and(ne(variables.DOCKER_TAG, ''), ne(variables.DOCKER_TAG, false)) }}:
+              - DockerTag
         variables:
           - template: ./_stages/_default.yml
           - template: ./_stages/dev.yml
@@ -179,7 +180,8 @@ stages:
       - stage: DeployToProd
         dependsOn:
           - Build
-          - DockerTag
+          - ${{ if and(ne(variables.DOCKER_TAG, ''), ne(variables.DOCKER_TAG, false)) }}:
+              - DockerTag
         variables:
           - template: ./_stages/_default.yml
           - template: ./_stages/prod.yml

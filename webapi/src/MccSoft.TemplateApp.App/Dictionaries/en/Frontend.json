@@ -46,11 +46,13 @@
     },
     "dialog": {
       "ok_button": "Ok",
-      "cancel_button": "Cancel"
+      "cancel_button": "Cancel",
+      "error_title": "Error"
     }
   },
   "suspense": {
-    "reload": "Reload"
+    "reload": "Reload",
+    "server_updated": "Seems like the server was updated to newer version. Try reloading the page (all your changes will be lost)"
   },
   "Login_Failed": "Login failed",
   "Login_User_Locked": "User locked",
