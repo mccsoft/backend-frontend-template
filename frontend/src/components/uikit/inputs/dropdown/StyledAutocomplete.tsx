@@ -273,7 +273,18 @@ export function StyledAutocomplete<
     },
     [onChange, props.options, getOptionLabel],
   );
-
+  const listboxRef = useRef<HTMLDivElement>(null);
+  const virtualizedListboxComponent = useMemo(() => {
+    if (!props.useVirtualization) return undefined;
+    return React.forwardRef<any>((props: any, ref) => {
+      return (
+        <VirtualizedListboxComponent
+          {...props}
+          ref={mergeRefs([ref, listboxRef])}
+        />
+      );
+    });
+  }, [props.useVirtualization]);
   return (
     <div
       className={clsx(styles.rootContainer, rootClassName)}
@@ -375,6 +386,19 @@ export function StyledAutocomplete<
             return;
           }
           rest.onKeyDown?.(event);
+
+          if (props.useVirtualization) {
+            // handle scrolling to focused element if virtualization is used
+            if (['ArrowUp', 'ArrowDown'].indexOf(event.key) !== -1) {
+              setTimeout(() => {
+                const option =
+                  listboxRef.current!.querySelector(`.Mui-focused`);
+                option?.scrollIntoView({
+                  block: 'nearest',
+                });
+              });
+            }
+          }
         }}
         onClose={onClosed}
         onOpen={onOpened}
@@ -382,9 +406,7 @@ export function StyledAutocomplete<
         clearOnEscape={true}
         componentsProps={componentProps as any}
         ListboxProps={useVirtualization ? listboxProps : undefined}
-        ListboxComponent={
-          useVirtualization ? (VirtualizedListboxComponent as any) : undefined
-        }
+        ListboxComponent={virtualizedListboxComponent as any}
         PaperComponent={PaperComponentWithHeaderFooter}
         PopperComponent={PopperComponentForAutocomplete as any}
         classes={classes}

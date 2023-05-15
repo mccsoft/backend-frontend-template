@@ -2,14 +2,25 @@ import React, { useState } from 'react';
 import { Meta } from '@storybook/react';
 import { ComboBoxInput } from 'components/uikit/inputs/dropdown/ComboBoxInput';
 import { defaultExclude } from '../../.storybook/preview';
-import { sleep } from './utils';
 const StoryComponent = ComboBoxInput;
 
 export default {
   title: 'Example/ComboBox',
   component: StoryComponent,
   args: {
-    options: ['qwe', 'zxc', 'asd', 'asjhgj', 'asbnm'],
+    options: [
+      'qwe',
+      'zxc',
+      'asd',
+      'asjhgj',
+      'asbnm',
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+    ],
     required: true,
   } as Partial<React.ComponentProps<typeof StoryComponent>>,
   parameters: {
