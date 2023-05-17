@@ -1,5 +1,5 @@
 import type { Input } from '../Input';
-import { AutocompleteFreeSoloValueMapping } from '@mui/base/AutocompleteUnstyled/useAutocomplete';
+import { AutocompleteFreeSoloValueMapping } from '@mui/base/useAutocomplete/useAutocomplete';
 import { AutocompleteProps } from '@mui/material/Autocomplete/Autocomplete';
 import * as React from 'react';
 import { CSSProperties } from 'react';

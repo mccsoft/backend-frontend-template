@@ -171,7 +171,7 @@ export function StyledAutocomplete<
       // to prevent hovered element from being selected.
       // (otherwise in search combo box if you hover over one of the found results and pressing Enter, the result gets opened)
       delete liProps['onMouseOver'];
-      liProps.style = { height: itemSize };
+      if (!useVirtualization) liProps.style = { height: itemSize };
       if (
         option &&
         typeof option === 'object' &&
@@ -212,7 +212,7 @@ export function StyledAutocomplete<
     closeAutocomplete.current?.(event as any);
   }, []);
 
-  const listboxProps: VirtualizedListboxComponentProps = useMemo(
+  const listboxProps: Partial<VirtualizedListboxComponentProps> = useMemo(
     () => ({ itemSize: itemSize }),
     [itemSize, variant],
   );
@@ -280,6 +280,7 @@ export function StyledAutocomplete<
       return (
         <VirtualizedListboxComponent
           {...props}
+          renderOption={renderOption}
           ref={mergeRefs([ref, listboxRef])}
         />
       );
@@ -386,19 +387,6 @@ export function StyledAutocomplete<
             return;
           }
           rest.onKeyDown?.(event);
-
-          if (props.useVirtualization) {
-            // handle scrolling to focused element if virtualization is used
-            if (['ArrowUp', 'ArrowDown'].indexOf(event.key) !== -1) {
-              setTimeout(() => {
-                const option =
-                  listboxRef.current!.querySelector(`.Mui-focused`);
-                option?.scrollIntoView({
-                  block: 'nearest',
-                });
-              });
-            }
-          }
         }}
         onClose={onClosed}
         onOpen={onOpened}
@@ -417,7 +405,12 @@ export function StyledAutocomplete<
         }
         data-error={!!errorText}
         getOptionLabel={getOptionLabel}
-        renderOption={renderOption}
+        renderOption={
+          useVirtualization
+            ? (props, option, state) =>
+                [props, option, state] as React.ReactNode
+            : renderOption
+        }
         isOptionEqualToValue={isOptionEqualToValue}
         onChange={onChangeOverride}
         disableClearable={props.required}

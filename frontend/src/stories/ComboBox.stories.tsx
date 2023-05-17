@@ -20,6 +20,20 @@ export default {
       '4',
       '5',
       '6',
+      '7',
+      '8',
+      '9',
+      '10',
+      '11',
+      '12',
+      '13',
+      '14',
+      '15',
+      '16',
+      '17',
+      '18',
+      '19',
+      '20',
     ],
     required: true,
   } as Partial<React.ComponentProps<typeof StoryComponent>>,
@@ -41,6 +55,7 @@ export const Default = {
       <StoryComponent
         {...args}
         value={value}
+        useVirtualization={true}
         onValueChanged={(value) => {
           setValue(value as any);
         }}

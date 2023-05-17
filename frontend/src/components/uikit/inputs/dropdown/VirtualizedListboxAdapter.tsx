@@ -1,23 +1,29 @@
 // Adapter for react-window
-import React, { ComponentType, useCallback, useMemo } from 'react';
+import React, { ComponentType, useCallback, useMemo, useRef } from 'react';
 import styles from './StyledAutocomplete.module.scss';
 import {
   FixedSizeList as _VirtualList,
   FixedSizeListProps,
   ListChildComponentProps,
 } from 'react-window';
+import { AutocompleteRenderOptionState } from '@mui/material';
 
 const VirtualList = _VirtualList as ComponentType<FixedSizeListProps>;
 
 export type VirtualizedListboxComponentProps = {
   itemSize: number;
+  renderOption: (
+    props: React.HTMLAttributes<HTMLLIElement>,
+    option: any,
+    state: AutocompleteRenderOptionState,
+  ) => React.ReactNode;
 } & React.HTMLAttributes<HTMLElement>;
 
 export const VirtualizedListboxComponent = React.forwardRef<
   HTMLDivElement,
   VirtualizedListboxComponentProps
 >(function ListboxComponent(props, ref) {
-  const { children, itemSize, ...other } = props;
+  const { children, itemSize, renderOption, ...other } = props;
   const items = children as [];
 
   const itemCount = items.length;
@@ -28,17 +34,28 @@ export const VirtualizedListboxComponent = React.forwardRef<
     return itemCount * itemSize + 1;
   };
 
+  const otherRef = useRef(other);
+  otherRef.current = other;
   const outerElementType = useMemo(() => {
     return React.forwardRef<HTMLDivElement>((props, ref) => {
-      return <div ref={ref} {...props} {...other} />;
+      return <div ref={ref} {...props} {...otherRef.current} />;
     });
   }, []);
 
-  const renderRow = useCallback(function (props: ListChildComponentProps) {
-    const { data, index, style } = props;
+  const renderRow = useCallback(
+    function (props: ListChildComponentProps) {
+      const { data, index, style } = props;
+      const dataSet = data[index];
+      const [liProps, option, state] = dataSet;
 
-    return <div style={style}>{data[index]}</div>;
-  }, []);
+      return renderOption(
+        { ...liProps, style: { ...style, ...liProps.style } },
+        option,
+        state,
+      ) as any;
+    },
+    [renderOption],
+  );
 
   return (
     <div ref={ref} className={styles.virtualizedList}>
