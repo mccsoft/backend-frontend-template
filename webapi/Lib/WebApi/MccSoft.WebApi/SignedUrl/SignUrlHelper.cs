@@ -7,6 +7,7 @@ using System.Text;
 using MccSoft.LowLevelPrimitives;
 using MccSoft.LowLevelPrimitives.Exceptions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -19,16 +20,22 @@ public class SignUrlHelper
 {
     private readonly IOptions<SignUrlOptions> _signUrlOptions;
     private readonly IUserAccessor _userAccessor;
+    private readonly ILogger<SignUrlHelper> _logger;
     private readonly Lazy<SymmetricSecurityKey> _securityKey;
 
     public const string UserIdClaimName = "id";
     public const string UrlParameterName = "sign";
     public const string HeaderName = "X-Sign";
 
-    public SignUrlHelper(IOptions<SignUrlOptions> signUrlOptions, IUserAccessor userAccessor)
+    public SignUrlHelper(
+        IOptions<SignUrlOptions> signUrlOptions,
+        IUserAccessor userAccessor,
+        ILogger<SignUrlHelper> logger
+    )
     {
         _signUrlOptions = signUrlOptions;
         _userAccessor = userAccessor;
+        _logger = logger;
         _securityKey = new Lazy<SymmetricSecurityKey>(
             () => new SymmetricSecurityKey(Encoding.ASCII.GetBytes(signUrlOptions.Value.Secret))
         );
@@ -110,6 +117,7 @@ public class SignUrlHelper
         }
         catch (Exception e)
         {
+            _logger.LogInformation(e, "Error validating SignUrl");
             claimsPrincipal = null;
             return false;
         }

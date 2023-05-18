@@ -8,12 +8,7 @@ public class SignUrlHelperTests : AppServiceTestBase
 {
     public SignUrlHelperTests(ITestOutputHelper outputHelper) : base(outputHelper, null)
     {
-        Sut = new SignUrlHelper(
-            new OptionsWrapper<SignUrlOptions>(
-                new SignUrlOptions() { Secret = "12345678901234567890123456789012" }
-            ),
-            _userAccessorMock.Object
-        );
+        Sut = CreateService<SignUrlHelper>(x => x.AddSignUrl("fDmp1K2YveBbfDmpfDmp1K2YveBbfDmp"));
     }
 
     public SignUrlHelper Sut { get; set; }
