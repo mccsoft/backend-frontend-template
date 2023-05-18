@@ -58,6 +58,13 @@ export const App = () => {
           refetchOnWindowFocus: false,
           useErrorBoundary: true,
           suspense: false,
+          retry(failureCount, error) {
+            if (failureCount >= 3) return false;
+            if (axios.isAxiosError(error) && error.response?.status === 401) {
+              return false;
+            }
+            return true;
+          },
         },
       },
     });
