@@ -19,7 +19,7 @@ Template contains (you could also check [CHANGELOG](./docs/CHANGELOG.md) for lat
       1. [OpenSearch](https://logs.mcc-soft.de) (credentials: backend-frontend-template/$a55IVHBhAJ@)
       2. [Loggly](https://loggly.com) (free up to 250MB/day). You could check out logs [yourself](https://mcctemplateapp.loggly.com/) (credentials: mcc.template.app@gmail.com/dBAeFm7_y5mq3)
 1. React frontend
-   1. CRA-based template
+   1. Vite-based template
    1. API client autogeneration (including react-query hooks)
    1. UI Kit to simplify app restyling
    1. Guidance/examples on setting up forms (react-hook-form), tables (with sorting/paging) and filters
