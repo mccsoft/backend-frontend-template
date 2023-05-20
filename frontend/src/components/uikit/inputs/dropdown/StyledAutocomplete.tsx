@@ -57,6 +57,7 @@ export function StyledAutocomplete<
     additionalWidth,
     isSearch,
     endAdornment,
+    endAdornmentClassname,
     InputComponent,
     renderInput,
     inputRef,
@@ -363,6 +364,7 @@ export function StyledAutocomplete<
               size={undefined}
               readOnly={!enableSearch && !props.freeSolo}
               endAdornment={endAdornment ?? caretDown}
+              endAdornmentClassname={endAdornmentClassname}
               variant={variant}
               errorText={errorText}
               selectedValue={props.value as any}

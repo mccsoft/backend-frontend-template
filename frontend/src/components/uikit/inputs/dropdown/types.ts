@@ -119,6 +119,11 @@ export type StyledAutocompleteProps<
   endAdornment?: React.ReactNode;
 
   /*
+   * Overrides input's endAdornment's style class name
+   */
+  endAdornmentClassname?: string;
+
+  /*
    * Input's ref
    */
   inputRef?: React.RefObject<HTMLInputElement>;
