@@ -1,8 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 export function copyProjectFolder(
-  relativePathInsideProject,
-  options = { ignorePattern: undefined },
+  relativePathInsideProject: string,
+  options: { ignorePattern: string | RegExp | undefined } = {
+    ignorePattern: undefined,
+  },
 ) {
   const templateFolder = process.cwd() + '_template';
 
@@ -12,11 +14,17 @@ export function copyProjectFolder(
   copyRecursively(copyFrom, copyTo, options);
 }
 
-function copyRecursively(src, dest, options = { ignorePattern: undefined }) {
+function copyRecursively(
+  src: string,
+  dest: string,
+  options: { ignorePattern: string | RegExp | undefined } = {
+    ignorePattern: undefined,
+  },
+) {
   const exists = fs.existsSync(src);
   if (!exists) return;
   const stats = fs.statSync(src);
-  if (stats.isFile) {
+  if (stats.isFile()) {
     fs.copyFileSync(src, dest);
   } else if (stats.isDirectory()) {
     if (!fs.existsSync(dest)) {
@@ -54,14 +62,18 @@ function copyRecursively(src, dest, options = { ignorePattern: undefined }) {
   }
 }
 
-function getPartialFileName(fileName) {
+function getPartialFileName(fileName: string) {
   return fileName.replace(
     path.extname(fileName),
     '.partial' + path.extname(fileName),
   );
 }
 
-export function patchFile(relativePath, search, replace) {
+export function patchFile(
+  relativePath: string,
+  search: string | RegExp,
+  replace: string,
+) {
   const filePath = path.join(process.cwd(), relativePath);
   let contents = fs.readFileSync(filePath).toString('utf8');
 
@@ -69,15 +81,19 @@ export function patchFile(relativePath, search, replace) {
 
   fs.writeFileSync(filePath, contents);
 }
-export function removePackageReference(relativePath, packageName) {
+export function removePackageReference(
+  relativePath: string,
+  packageName: string,
+) {
   // <PackageReference Include="OpenIddict.AspNetCore" Version="4.2.0" />
   patchFile(
     relativePath,
-    new RegExp(`<PackageReference\s+Include="${packageName}".*?/>`, ''),
+    new RegExp(`<PackageReference\s+Include="${packageName}".*?/>`),
+    '',
   );
 }
 
-export function updatePlaywright(version) {
+export function updatePlaywright(version: string) {
   patchFile('e2e/package.json', /playwright:v.*-/, `playwright:v${version}-`);
   patchFile(
     '.ci/azure-pipelines-template.yml',

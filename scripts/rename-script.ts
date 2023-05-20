@@ -15,19 +15,22 @@ import {
 
 const args = yargs(hideBin(process.argv))
   .version('0.1')
-  .option('name', {
-    alias: 'n',
-    type: 'string',
-    description: 'Name of the project (e.g. StudyApp)',
-  })
-  .option('company', {
-    alias: 'c',
-    type: 'string',
-    description: 'Name of the root level namespace (e.g. MccSoft)',
-    default: 'MccSoft',
+  .options({
+    name: {
+      alias: 'n',
+      type: 'string',
+      description: 'Name of the project (e.g. StudyApp)',
+    },
+    company: {
+      alias: 'c',
+      type: 'string',
+      description: 'Name of the root level namespace (e.g. MccSoft)',
+      default: 'MccSoft',
+    },
   })
   .demandOption(['name'])
-  .help().argv;
+  .help()
+  .parseSync();
 
 const companyName = args.company;
 const projectName = args.name;
@@ -90,7 +93,9 @@ await fs.rename(
 await renameFiles(replacements);
 await replaceInFiles(replacements);
 
-async function replaceInFiles(replacements) {
+async function replaceInFiles(
+  replacements: { find: string | RegExp; replace: string }[],
+) {
   for (const replacement of replacements) {
     replace({
       regex: replacement.find,
@@ -103,7 +108,9 @@ async function replaceInFiles(replacements) {
   }
 }
 
-async function renameFiles(replacements) {
+async function renameFiles(
+  replacements: { find: string | RegExp; replace: string }[],
+) {
   const renamer = new Renamer();
   for (const replacement of replacements) {
     await renamer.rename({
@@ -114,7 +121,7 @@ async function renameFiles(replacements) {
   }
 }
 
-function changeFrontendPortNumber(port) {
+function changeFrontendPortNumber(port: string | number) {
   replace({
     regex: /react-query-swagger \/input:https:\/\/localhost\d+;/g,
     replacement: `react-query-swagger /input:https://localhost${port};`,
@@ -170,7 +177,7 @@ function changeFrontendPortNumber(port) {
   });
 }
 
-function changeBackendPortNumber(httpsPort) {
+function changeBackendPortNumber(httpsPort: number) {
   const nonHttpsPort = httpsPort + 1;
 
   replace({
@@ -225,7 +232,7 @@ function changeBackendPortNumber(httpsPort) {
   });
 }
 
-function changeStorybookPortNumber(port) {
+function changeStorybookPortNumber(port: number) {
   replace({
     regex: /start-storybook -p \d+/g,
     replacement: `start-storybook -p ${port}`,
@@ -292,7 +299,7 @@ function changePasswordsInAppsettings() {
   });
 }
 
-function generatePassword(length) {
+function generatePassword(length: number) {
   var result = '';
   var characters =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

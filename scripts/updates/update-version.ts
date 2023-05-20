@@ -17,7 +17,7 @@ const updateList = [
   { from: '1.5.0', update: updateFrom_1p5_to_1p6 },
 ];
 
-export function updateVersion(prefix) {
+export function updateVersion(prefix: string) {
   const currentFolder = process.cwd();
   const templateFolder = process.cwd() + '_template';
 
@@ -26,10 +26,10 @@ export function updateVersion(prefix) {
     templateJsonFileName,
   );
   var currentTemplateSettings = fs.existsSync(currentFolderJsonFileName)
-    ? JSON.parse(fs.readFileSync(currentFolderJsonFileName))
+    ? JSON.parse(fs.readFileSync(currentFolderJsonFileName).toString())
     : { version: '1.0.0' };
   var newTemplateSettings = JSON.parse(
-    fs.readFileSync(path.join(templateFolder, templateJsonFileName)),
+    fs.readFileSync(path.join(templateFolder, templateJsonFileName)).toString(),
   );
 
   process.chdir(templateFolder.replace('_template', ''));
@@ -53,18 +53,26 @@ export function updateVersion(prefix) {
   );
 }
 
-function patchPackageJson(regExp, replacement) {
+function patchPackageJson(regExp: RegExp | string, replacement: string) {
   patchFile('package.json', regExp, replacement);
   patchFile('frontend/package.json', regExp, replacement);
   patchFile('e2e/package.json', regExp, replacement);
 }
 
-function updateFrom_1p3_to_1p4(currentFolder, templateFolder, prefix) {
+function updateFrom_1p3_to_1p4(
+  currentFolder: string,
+  templateFolder: string,
+  prefix: string,
+) {
   copyProjectFolder(`webapi/src/${prefix}.App/Features/TestApi`);
   copyProjectFolder(`webapi/tests/${prefix}.App.Tests/TestApiServiceTests.cs`);
 }
 
-function updateFrom_1p4_to_1p5(currentFolder, templateFolder, prefix) {
+function updateFrom_1p4_to_1p5(
+  currentFolder: string,
+  templateFolder: string,
+  prefix: string,
+) {
   patchPackageJson(/\"nswag\": \".*?\",/, '');
   patchPackageJson(
     'nswag openapi2csclient',
@@ -82,14 +90,22 @@ function updateFrom_1p4_to_1p5(currentFolder, templateFolder, prefix) {
   updatePlaywright('1.33.0');
 }
 
-function updateFrom_1p5_to_1p6(currentFolder, templateFolder, prefix) {}
+function updateFrom_1p5_to_1p6(
+  currentFolder: string,
+  templateFolder: string,
+  prefix: string,
+) {}
 
 /*
  * This function is run for every `pull-template-changes`.
  * It makes sense to put all modifications here, and once there's a good number of them,
  * create a new version and move them to versioned update.
  */
-function updateAll(currentFolder, templateFolder, prefix) {
+function updateAll(
+  currentFolder: string,
+  templateFolder: string,
+  prefix: string,
+) {
   removePackageReference(
     `webapi/src/${prefix}.App/${prefix}.App.csproj`,
     'OpenIddict.AspNetCore',

@@ -15,7 +15,8 @@
     "renamer": "4.0.0",
     "rimraf": "3.0.2",
     "semver": "7.3.7",
-    "yargs": "17.0.1"
+    "ts-node": "10.9.1",
+    "yargs": "17.7.2"
   },
   "workspaces": [
     "frontend",
@@ -28,8 +29,8 @@
     "test": "yarn frontend test",
     "generate-api-clients": "yarn frontend generate-api-clients",
     "generate-api-client-remote": "yarn frontend generate-api-client-remote",
-    "rename": "node scripts/rename-script.js",
-    "pull-template-changes": "node scripts/pull-template-changes.js && yarn install && yarn typecheck",
+    "rename": "npx ts-node scripts/rename-script.ts",
+    "pull-template-changes": "npx ts-node scripts/pull-template-changes.ts && yarn install && yarn typecheck",
     "frontend": "yarn workspace @templateApp/frontend",
     "e2e": "yarn workspace e2e",
     "build-dotnet": "rimraf publish && cross-env-shell dotnet publish webapi/src/MccSoft.TemplateApp.App/MccSoft.TemplateApp.App.csproj -c Release -o publish -p:Version=$npm_package_version",

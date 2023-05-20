@@ -11,20 +11,23 @@ import { updateVersion } from './updates/update-version.js';
 
 const args = yargs(hideBin(process.argv))
   .version('0.1')
-  .option('name', {
-    alias: 'n',
-    type: 'string',
-    description: 'Name of the project (e.g. StudyApp)',
-  })
-  .option('company', {
-    alias: 'c',
-    type: 'string',
-    description: 'Name of the root level namespace (e.g. MccSoft)',
+  .options({
+    name: {
+      alias: 'n',
+      type: 'string',
+      description: 'Name of the project (e.g. StudyApp)',
+    },
+    company: {
+      alias: 'c',
+      type: 'string',
+      description: 'Name of the root level namespace (e.g. MccSoft)',
+    },
   })
   //.demandOption(["name"])
-  .help().argv;
+  .help()
+  .parseSync();
 
-if (!fs.existsSync('./scripts/pull-template-changes.js')) {
+if (!fs.existsSync('./scripts/pull-template-changes.ts')) {
   console.error('You should run the script from repository root folder');
   process.exit();
 }
@@ -32,8 +35,11 @@ if (!fs.existsSync('./scripts/pull-template-changes.js')) {
 const currentDir = process.cwd();
 if (!currentDir.endsWith('_template')) {
   const detectedInfo = detectProjectAndCompanyName();
-  const companyName = args.company || detectedInfo.company;
-  const projectName = args.name || detectedInfo.project;
+  const companyName = args.company || detectedInfo?.company;
+  const projectName = args.name || detectedInfo?.project;
+
+  if (!companyName) throw new Error('Unable to determine the company name');
+  if (!projectName) throw new Error('Unable to determine the project name');
 
   // if we are run from project folder do the following:
   // 1. Clone template and rename files according to project & company
@@ -43,7 +49,7 @@ if (!currentDir.endsWith('_template')) {
   cloneTemplate(templateFolder);
   renameFilesInTemplate(templateFolder, projectName, companyName);
 
-  execSync(`node scripts/pull-template-changes.js`, {
+  execSync(`npx ts-node scripts/pull-template-changes.ts`, {
     cwd: templateFolder,
     stdio: 'inherit',
   });
@@ -55,8 +61,10 @@ const templateFolder = process.cwd();
 process.chdir(templateFolder.replace('_template', ''));
 
 const detectedInfo = detectProjectAndCompanyName();
-const companyName = args.company || detectedInfo.company;
-const projectName = args.name || detectedInfo.project;
+const companyName = args.company || detectedInfo?.company;
+const projectName = args.name || detectedInfo?.project;
+if (!companyName) throw new Error('Unable to determine the company name');
+if (!projectName) throw new Error('Unable to determine the project name');
 
 const prefix = `${companyName}.${projectName}`;
 
@@ -69,9 +77,15 @@ if (!projectName) {
 }
 
 // run post-processor, so each specific project could modify template files before they are copied over
-execSync(
-  `node scripts/pull-template-post-processor.js --templateFolder "${templateFolder}"`,
-);
+if (fs.existsSync('scripts/pull-template-post-processor.ts')) {
+  execSync(
+    `npx ts-node scripts/pull-template-post-processor.ts --templateFolder "${templateFolder}"`,
+  );
+} else {
+  execSync(
+    `node scripts/pull-template-post-processor.ts --templateFolder "${templateFolder}"`,
+  );
+}
 
 console.log('Starting to copy files...');
 const defaultOptions = {
@@ -121,7 +135,11 @@ console.log(`folder syncing is finished`);
 updateVersion(prefix);
 console.log(`finished successfully`);
 
-function renameFilesInTemplate(templateFolder, projectName, companyName) {
+function renameFilesInTemplate(
+  templateFolder: string,
+  projectName: string,
+  companyName: string,
+) {
   console.log('Calling `yarn install` in template...');
   execSync(`yarn install`, {
     cwd: templateFolder,
@@ -133,7 +151,7 @@ function renameFilesInTemplate(templateFolder, projectName, companyName) {
   });
 }
 
-function cloneTemplate(folder) {
+function cloneTemplate(folder: string) {
   if (fs.existsSync(folder)) {
     fs.rmdirSync(folder, { recursive: true });
   }
@@ -142,12 +160,15 @@ function cloneTemplate(folder) {
   );
 }
 
-function detectProjectAndCompanyName() {
+function detectProjectAndCompanyName(): {
+  company: string;
+  project: string;
+} | null {
   const regex = /(.*?)\.(.*)\.App/;
   const appFolder = findFileMatching('webapi/src', regex);
 
   console.log('Found App folder:', appFolder);
-  const result = appFolder.match(regex);
+  const result = appFolder?.match(regex);
   if (!result) return null;
 
   return {
@@ -156,7 +177,7 @@ function detectProjectAndCompanyName() {
   };
 }
 
-function findFileMatching(dir, regex) {
+function findFileMatching(dir: string, regex: RegExp) {
   const files = fs.readdirSync(dir);
 
   for (const file of files) {
@@ -168,14 +189,14 @@ function findFileMatching(dir, regex) {
   return null;
 }
 
-export function syncReferencesInProjects(relativePathInsideProject) {
+export function syncReferencesInProjects(relativePathInsideProject: string) {
   console.log(`syncReferencesInProjects '${relativePathInsideProject}'`);
   const copyFrom = path.join(templateFolder, relativePathInsideProject);
   const copyTo = path.join(process.cwd(), relativePathInsideProject);
   doSyncReferencesInProjects(copyFrom, copyTo);
 }
 
-export function doSyncReferencesInProjects(src, dest) {
+export function doSyncReferencesInProjects(src: string, dest: string) {
   if (!fs.existsSync(src) || !fs.existsSync(dest)) return;
   const sourceFileContent = fs.readFileSync(src).toString('utf8');
   let destinationFileContent = fs.readFileSync(dest).toString('utf8');
@@ -228,30 +249,32 @@ export function doSyncReferencesInProjects(src, dest) {
   fs.writeFileSync(dest, destinationFileContent);
 }
 
-function syncPacketsInPackageJson(relativePathInsideProject) {
+function syncPacketsInPackageJson(relativePathInsideProject: string) {
   console.log(`syncPacketsInPackageJson '${relativePathInsideProject}'`);
   const copyFrom = path.join(templateFolder, relativePathInsideProject);
   const copyTo = path.join(process.cwd(), relativePathInsideProject);
   doSyncPacketsInPackageJson(copyFrom, copyTo);
 }
 
-function doSyncPacketsInPackageJson(src, dest) {
+function doSyncPacketsInPackageJson(src: string, dest: string) {
   if (!fs.existsSync(src) || !fs.existsSync(dest)) return;
   const sourceFileContent = fs.readFileSync(src);
   const destinationFileContent = fs.readFileSync(dest);
 
-  const sourceJson = JSON.parse(sourceFileContent);
-  const destJson = JSON.parse(destinationFileContent);
+  const sourceJson = JSON.parse(sourceFileContent.toString());
+  const destJson = JSON.parse(destinationFileContent.toString());
   if (sourceJson.dependencies) {
     Object.keys(sourceJson.dependencies).forEach((key) => {
       try {
         const value = sourceJson.dependencies[key];
         const sourceVersion = semver.coerce(value)?.version;
-        const destVersion = semver.coerce(
-          destJson.dependencies[key] ?? '',
-        )?.version;
-        if (!destVersion || semver.gt(sourceVersion, destVersion)) {
-          destJson.dependencies[key] = value;
+        if (sourceVersion) {
+          const destVersion = semver.coerce(
+            destJson.dependencies[key] ?? '',
+          )?.version;
+          if (!destVersion || semver.gt(sourceVersion, destVersion)) {
+            destJson.dependencies[key] = value;
+          }
         }
       } catch (e) {
         console.error(`Key: ${key}`);
@@ -265,11 +288,13 @@ function doSyncPacketsInPackageJson(src, dest) {
       try {
         const value = sourceJson.devDependencies[key];
         const sourceVersion = semver.coerce(value)?.version;
-        const destVersion = semver.coerce(
-          destJson.dependencies?.[key] ?? '',
-        )?.version;
-        if (!destVersion || semver.gt(sourceVersion, destVersion)) {
-          destJson.devDependencies[key] = value;
+        if (sourceVersion) {
+          const destVersion = semver.coerce(
+            destJson.dependencies?.[key] ?? '',
+          )?.version;
+          if (!destVersion || semver.gt(sourceVersion, destVersion)) {
+            destJson.devDependencies[key] = value;
+          }
         }
       } catch (e) {
         console.error(`Key: ${key}`);
@@ -281,12 +306,12 @@ function doSyncPacketsInPackageJson(src, dest) {
   fs.writeFileSync(dest, JSON.stringify(destJson, undefined, 2));
 }
 
-function getPackageReferences(root) {
-  const packageReferences = [];
+function getPackageReferences(root: any /* csproj parsed as XML*/) {
+  const packageReferences: any[] = [];
   let itemGroups = root.Project?.ItemGroup;
   if (!itemGroups) return [];
   if (!Array.isArray(itemGroups)) itemGroups = [itemGroups];
-  itemGroups.forEach((x) => {
+  itemGroups.forEach((x: any) => {
     let groupPackageReferences = x.PackageReference;
     if (!groupPackageReferences) return;
     if (!Array.isArray(groupPackageReferences))
