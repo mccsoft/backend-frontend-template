@@ -106,4 +106,8 @@ function updateAll(currentFolder, templateFolder, prefix) {
     `webapi/Lib/Testing/MccSoft.Testing/MccSoft.Testing.csproj`,
     'Newtonsoft.Json',
   );
+  copyProjectFolder('frontend/src/components/uikit/inputs/dropdown/types.ts');
+  copyProjectFolder(
+    'frontend/src/components/uikit/inputs/dropdown/StyledAutocomplete.ts',
+  );
 }
