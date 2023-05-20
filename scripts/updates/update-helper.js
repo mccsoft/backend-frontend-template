@@ -15,9 +15,10 @@ export function copyProjectFolder(
 function copyRecursively(src, dest, options = { ignorePattern: undefined }) {
   const exists = fs.existsSync(src);
   if (!exists) return;
-  const stats = exists && fs.statSync(src);
-  const isDirectory = exists && stats.isDirectory();
-  if (isDirectory) {
+  const stats = fs.statSync(src);
+  if (stats.isFile) {
+    fs.copyFileSync(src, dest);
+  } else if (stats.isDirectory()) {
     if (!fs.existsSync(dest)) {
       fs.mkdirSync(dest);
     }
@@ -70,9 +71,11 @@ export function patchFile(relativePath, search, replace) {
 }
 export function removePackageReference(relativePath, packageName) {
   // <PackageReference Include="OpenIddict.AspNetCore" Version="4.2.0" />
-  patchFile(relativePath, new RegExp(`<PackageReference\s+Include="${packageName}".*?/>`,''))
+  patchFile(
+    relativePath,
+    new RegExp(`<PackageReference\s+Include="${packageName}".*?/>`, ''),
+  );
 }
-
 
 export function updatePlaywright(version) {
   patchFile('e2e/package.json', /playwright:v.*-/, `playwright:v${version}-`);
