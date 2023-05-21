@@ -124,6 +124,6 @@ function updateAll(
   );
   copyProjectFolder('frontend/src/components/uikit/inputs/dropdown/types.ts');
   copyProjectFolder(
-    'frontend/src/components/uikit/inputs/dropdown/StyledAutocomplete.ts',
+    'frontend/src/components/uikit/inputs/dropdown/StyledAutocomplete.tsx',
   );
 }
