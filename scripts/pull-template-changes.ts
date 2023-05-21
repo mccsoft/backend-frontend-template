@@ -49,7 +49,7 @@ if (!currentDir.endsWith('_template')) {
   cloneTemplate(templateFolder);
   renameFilesInTemplate(templateFolder, projectName, companyName);
 
-  execSync(`npx ts-node scripts/pull-template-changes.ts`, {
+  execSync(`npx ts-node --esm scripts/pull-template-changes.ts`, {
     cwd: templateFolder,
     stdio: 'inherit',
   });
@@ -79,7 +79,7 @@ if (!projectName) {
 // run post-processor, so each specific project could modify template files before they are copied over
 if (fs.existsSync('scripts/pull-template-post-processor.ts')) {
   execSync(
-    `npx ts-node scripts/pull-template-post-processor.ts --templateFolder "${templateFolder}"`,
+    `npx ts-node --esm scripts/pull-template-post-processor.ts --templateFolder "${templateFolder}"`,
   );
 } else {
   execSync(

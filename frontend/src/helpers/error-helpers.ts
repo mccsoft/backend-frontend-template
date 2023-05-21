@@ -96,5 +96,5 @@ export function convertToErrorStringInternal(error: any): string {
 }
 
 export function mapServerErrorToFormReadableResult(errorKey: string) {
-  return errorKey.charAt(0).toLowerCase() + errorKey.substr(1);
+  return errorKey.charAt(0).toLowerCase() + errorKey.substring(1);
 }
