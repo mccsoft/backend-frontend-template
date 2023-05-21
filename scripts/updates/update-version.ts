@@ -119,6 +119,27 @@ function updateAll(
     'Newtonsoft.Json',
   );
   removePackageReference(
+    `webapi/src/${prefix}.Persistence/${prefix}.Persistence.csproj`,
+    'Npgsql.EntityFrameworkCore.PostgreSQL',
+  );
+  removePackageReference(
+    `webapi/src/${prefix}.Persistence/${prefix}.Persistence.csproj`,
+    'Npgsql.Json.NET',
+  );
+  removePackageReference(
+    `webapi/src/${prefix}.App/${prefix}.Persistence.csproj`,
+    'Audit.NET',
+  );
+  removePackageReference(
+    `webapi/src/${prefix}.App/${prefix}.Persistence.csproj`,
+    'Audit.EntityFramework.Core',
+  );
+  removePackageReference(
+    `webapi/src/${prefix}.App/${prefix}.Persistence.csproj`,
+    'System.IdentityModel.Tokens.Jwt',
+  );
+
+  removePackageReference(
     `webapi/Lib/Testing/MccSoft.Testing/MccSoft.Testing.csproj`,
     'Newtonsoft.Json',
   );

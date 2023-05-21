@@ -21,7 +21,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.5" />
     <PackageReference Include="NeinLinq.EntityFrameworkCore" Version="6.1.1" />
-    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="4.2.0" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Lib\LowLevelPrimitives\MccSoft.LowLevelPrimitives\MccSoft.LowLevelPrimitives.csproj" />

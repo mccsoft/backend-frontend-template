@@ -36,13 +36,15 @@ steps:
     displayName: deploy postgres
 
   - script: |
-      kubectl -n templateapp create configmap templateapp-configmap --from-env-file=./.ci/_stages/${{ parameters.stage }}.env || \
-        (kubectl -n templateapp create configmap templateapp-configmap --from-env-file=./.ci/_stages/${{ parameters.stage }}.env -o yaml --dry-run=client | kubectl replace -f -)
+      cat ./.ci/_stages/_default.env >> ./united.env
+      cat ./.ci/_stages/${{ parameters.stage }}.env >> ./united.env
+      kubectl -n templateapp create configmap templateapp-configmap --from-env-file=./united.env || \
+        (kubectl -n templateapp create configmap templateapp-configmap --from-env-file=./united.env -o yaml --dry-run=client | kubectl replace -f -)
     displayName: apply env variables from ${{ parameters.stage }}.env
 
   - script: |
       export DOCKER_IMAGE="$(DOCKER_REGISTRY):$(BUILD_NUMBER)";
-      export $(cat ./.ci/_stages/${{ parameters.stage }}.env | xargs)
+      export $(cat ./united.env | xargs)
 
       envsubst < k8s/app.yaml > k8s/app.yaml.tmp && mv k8s/app.yaml.tmp k8s/app.yaml
       cat k8s/app.yaml

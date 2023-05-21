@@ -2,7 +2,9 @@ import fs from 'fs';
 import path from 'path';
 export function copyProjectFolder(
   relativePathInsideProject: string,
-  options: { ignorePattern: string | RegExp | undefined } = {
+  options: {
+    ignorePattern: string | RegExp | string[] | RegExp[] | undefined;
+  } = {
     ignorePattern: undefined,
   },
 ) {
@@ -17,7 +19,9 @@ export function copyProjectFolder(
 function copyRecursively(
   src: string,
   dest: string,
-  options: { ignorePattern: string | RegExp | undefined } = {
+  options: {
+    ignorePattern: string | RegExp | string[] | RegExp[] | undefined;
+  } = {
     ignorePattern: undefined,
   },
 ) {
@@ -42,8 +46,14 @@ function copyRecursively(
         return;
       }
       if (options?.ignorePattern) {
-        if (src.match(options.ignorePattern)) {
-          return;
+        const ignorePatterns = Array.isArray(options.ignorePattern)
+          ? options.ignorePattern
+          : [options.ignorePattern];
+
+        for (const ignorePattern of ignorePatterns) {
+          if (src.match(ignorePattern)) {
+            return;
+          }
         }
       }
       const sourceFileContent = fs.readFileSync(src);
