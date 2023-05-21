@@ -24,9 +24,7 @@ function copyRecursively(
   const exists = fs.existsSync(src);
   if (!exists) return;
   const stats = fs.statSync(src);
-  if (stats.isFile()) {
-    fs.copyFileSync(src, dest);
-  } else if (stats.isDirectory()) {
+  if (stats.isDirectory()) {
     if (!fs.existsSync(dest)) {
       fs.mkdirSync(dest);
     }
@@ -39,13 +37,10 @@ function copyRecursively(
       );
     });
   } else {
-    if (src.includes('.partial')) return;
-    const srcPartialFile = getPartialFileName(src);
-    const destPartialFile = getPartialFileName(dest);
-    if (fs.existsSync(srcPartialFile) && !fs.existsSync(destPartialFile)) {
-      fs.copyFileSync(srcPartialFile, destPartialFile);
-    }
     if (fs.existsSync(dest)) {
+      if (src.includes('.partial')) {
+        return;
+      }
       if (options?.ignorePattern) {
         if (src.match(options.ignorePattern)) {
           return;
