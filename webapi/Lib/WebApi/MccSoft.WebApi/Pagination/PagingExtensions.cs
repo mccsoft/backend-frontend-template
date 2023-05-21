@@ -6,7 +6,7 @@ using NeinLinq;
 
 namespace MccSoft.WebApi.Pagination;
 
-public static class PagingExtensions
+public static partial class PagingExtensions
 {
     /// <summary>
     /// Create a paging list based on the EntityFramework query with a given sort order
@@ -21,7 +21,7 @@ public static class PagingExtensions
         this IQueryable<T> query,
         PagedRequestDto pagedRequestDto,
         string defaultSortExpression,
-        int defaultLimit = 20,
+        int defaultLimit = DefaultLimit,
         IList<string>? allowedSortFields = null /* null means all fields are allowed */
     ) where T : class
     {
@@ -83,7 +83,7 @@ public static class PagingExtensions
         this IQueryable<T> query,
         PagedRequestDto pagedRequestDto,
         string defaultSortExpression,
-        int defaultLimit = 20,
+        int defaultLimit = DefaultLimit,
         IList<string>? allowedSortFields = null /* null means all fields are allowed */
     ) where T : class
     {
