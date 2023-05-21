@@ -246,7 +246,7 @@ export function doSyncReferencesInProjects(src: string, dest: string) {
   });
   destinationFileContent = builder.build(destinationXml);
 
-  fs.writeFileSync(dest, destinationFileContent);
+  fs.writeFileSync(dest, destinationFileContent.replace('&apos;', "'"));
 }
 
 function syncPacketsInPackageJson(relativePathInsideProject: string) {
