@@ -170,7 +170,7 @@ function changeFrontendPortNumber(port: string | number) {
   });
   replace({
     regex: /BASE_URL=https:\/\/localhost:\d+/g,
-    replacement: `BASE_URL=https://localhost:5003${port}`,
+    replacement: `BASE_URL=https://localhost:${port}`,
     paths: ['./e2e/.env.local_sample'],
     silent: true,
     recursive: true,
