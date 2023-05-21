@@ -249,6 +249,7 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
               <Field title={options.fieldName}>
                 <Input
                   value={fieldValue}
+                  autoFocus={true}
                   onChange={(e) => setFieldValue(e.target.value)}
                   errorText={options.fieldError}
                 />
