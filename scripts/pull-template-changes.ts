@@ -91,7 +91,7 @@ console.log('Starting to copy files...');
 const defaultOptions = {
   ignorePattern: /partial\./,
 };
-copyProjectFolder(`.ci`);
+copyProjectFolder(`.ci`, defaultOptions);
 copyProjectFolder(`scripts`, { ignorePattern: 'pull-template-post-processor' });
 copyProjectFolder('webapi/Lib', defaultOptions);
 copyProjectFolder('docs');
