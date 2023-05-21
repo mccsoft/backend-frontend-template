@@ -83,7 +83,7 @@ if (fs.existsSync('scripts/pull-template-post-processor.ts')) {
   );
 } else {
   execSync(
-    `node scripts/pull-template-post-processor.ts --templateFolder "${templateFolder}"`,
+    `node scripts/pull-template-post-processor.js --templateFolder "${templateFolder}"`,
   );
 }
 
