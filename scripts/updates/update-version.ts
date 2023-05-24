@@ -127,15 +127,15 @@ function updateAll(
     'Npgsql.Json.NET',
   );
   removePackageReference(
-    `webapi/src/${prefix}.App/${prefix}.Persistence.csproj`,
+    `webapi/src/${prefix}.Persistence/${prefix}.Persistence.csproj`,
     'Audit.NET',
   );
   removePackageReference(
-    `webapi/src/${prefix}.App/${prefix}.Persistence.csproj`,
+    `webapi/src/${prefix}.Persistence/${prefix}.Persistence.csproj`,
     'Audit.EntityFramework.Core',
   );
   removePackageReference(
-    `webapi/src/${prefix}.App/${prefix}.Persistence.csproj`,
+    `webapi/src/${prefix}.Persistence/${prefix}.Persistence.csproj`,
     'System.IdentityModel.Tokens.Jwt',
   );
 
