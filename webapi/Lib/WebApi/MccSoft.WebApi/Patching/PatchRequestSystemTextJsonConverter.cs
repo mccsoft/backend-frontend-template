@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
@@ -63,12 +64,31 @@ public class PatchRequestConverter : JsonConverter<IPatchRequest>
                     return patchRequest;
 
                 case JsonTokenType.PropertyName:
-                    var propertyName = reader.GetString()!.ToLower();
+                    var propertyName = reader.GetString()!;
+                    var propertyNameLowercase = propertyName.ToLower();
 
                     reader.Read();
 
-                    if (properties.TryGetValue(propertyName, out var property))
+                    if (properties.TryGetValue(propertyNameLowercase, out var property))
                     {
+                        if (reader.TokenType == JsonTokenType.Null)
+                        {
+                            var isPropertyNullable =
+                                Nullable.GetUnderlyingType(property.PropertyType) != null;
+                            if (!isPropertyNullable)
+                            {
+                                var requiredAttribute = new RequiredAttribute();
+
+                                throw new ValidationException(
+                                    new ValidationResult(
+                                        requiredAttribute.FormatErrorMessage(propertyName),
+                                        new[] { propertyName }
+                                    ),
+                                    requiredAttribute,
+                                    null
+                                );
+                            }
+                        }
                         var value = JsonSerializer.Deserialize(
                             ref reader,
                             property.PropertyType,
@@ -101,6 +121,7 @@ public class PatchRequestConverter : JsonConverter<IPatchRequest>
     }
 
     private static JsonSerializerOptions? _writeOptions = null;
+    private static object _writeLockObject = new();
 
     public override void Write(
         Utf8JsonWriter writer,
@@ -110,10 +131,16 @@ public class PatchRequestConverter : JsonConverter<IPatchRequest>
     {
         if (_writeOptions == null)
         {
-            _writeOptions = new(options);
-            _writeOptions.Converters.Remove(
-                _writeOptions.Converters.First(x => x is PatchRequestConverterFactory)
-            );
+            lock (_writeLockObject)
+            {
+                if (_writeOptions == null)
+                {
+                    _writeOptions = new(options);
+                    _writeOptions.Converters.Remove(
+                        _writeOptions.Converters.First(x => x is PatchRequestConverterFactory)
+                    );
+                }
+            }
         }
         JsonSerializer.Serialize(writer, value, value.GetType(), _writeOptions);
     }
