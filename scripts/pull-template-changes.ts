@@ -9,7 +9,12 @@ import semver from 'semver';
 import { copyProjectFolder } from './updates/update-helper.js';
 import { updateVersion } from './updates/update-version.js';
 
-const args = yargs(hideBin(process.argv))
+const args = yargs(
+  hideBin(process.argv).filter(
+    (x) =>
+      x !== 'ts-node' && x !== '--esm' && x !== 'npx' && !x.includes('.ts'),
+  ),
+)
   .version('0.1')
   .options({
     name: {
