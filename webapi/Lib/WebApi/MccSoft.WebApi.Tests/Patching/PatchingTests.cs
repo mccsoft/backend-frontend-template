@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 using FluentAssertions;
 using MccSoft.WebApi.Patching;
 using MccSoft.WebApi.Patching.Models;
@@ -96,5 +98,26 @@ public class PatchingTests
         result.Zxc.IsFieldPresent(nameof(result.Asd)).Should().BeTrue();
         result.Zxc.IsFieldPresent(nameof(result.Zxc)).Should().BeFalse();
         result.Zxc.IsFieldPresent(nameof(result.Qwe)).Should().BeFalse();
+    }
+
+    public class NonNullableProp : PatchRequest<object>
+    {
+        public int Qwe { get; set; }
+    }
+
+    [Fact]
+    public void AssignNullToNonNullableProperty()
+    {
+        FluentActions
+            .Invoking(
+                () =>
+                    JsonSerializer.Deserialize<NonNullableProp>(
+                        "{\"Qwe\": null}",
+                        _deserializationOptions
+                    )
+            )
+            .Should()
+            .Throw<ValidationException>()
+            .WithMessage("The Qwe field is required.");
     }
 }
