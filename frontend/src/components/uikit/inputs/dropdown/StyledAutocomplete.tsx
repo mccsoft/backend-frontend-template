@@ -272,7 +272,7 @@ export function StyledAutocomplete<
       }
       onChange?.(e, value, reason, details);
     },
-    [onChange, props.options, getOptionLabel],
+    [props.freeSolo, props.options, onChange, getOptionLabel],
   );
   const listboxRef = useRef<HTMLDivElement>(null);
   const virtualizedListboxComponent = useMemo(() => {
@@ -286,7 +286,8 @@ export function StyledAutocomplete<
         />
       );
     });
-  }, [props.useVirtualization]);
+  }, [props.useVirtualization, renderOption]);
+  const lastKeyPressed = useRef<string>('');
   return (
     <div
       className={clsx(styles.rootContainer, rootClassName)}
@@ -376,11 +377,16 @@ export function StyledAutocomplete<
           // because otherwise it selects the currently highlighted value, not the one that you typed.
           // Testing scenario: find a TimePicker, select '10:00', then type '12:00' and press Enter.
           // Expected: '12:00' is selected. (without this code '10:00' would be selected)
+          // Another testing scenario:
+          // Try to select an item with Keyboard (up/down keys), then press Enter
+          // Expected: the item you chose is selected
           if (
             props.freeSolo &&
             !isSearch &&
             !enableSearch &&
-            event.key === 'Enter'
+            event.key === 'Enter' &&
+            lastKeyPressed.current !== 'ArrowUp' &&
+            lastKeyPressed.current !== 'ArrowDown'
           ) {
             closeAutocomplete.current?.(event as any);
             // we need to preventDefault, so that containing Form would not be submitted
@@ -388,6 +394,7 @@ export function StyledAutocomplete<
             (event as any).defaultMuiPrevented = true;
             return;
           }
+          lastKeyPressed.current = event.key;
           rest.onKeyDown?.(event);
         }}
         onClose={onClosed}
