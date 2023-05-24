@@ -252,6 +252,12 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
                   autoFocus={true}
                   onChange={(e) => setFieldValue(e.target.value)}
                   errorText={options.fieldError}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      options.resolve(fieldValue);
+                      setFieldValue('');
+                    }
+                  }}
                 />
               </Field>
             ) : null}
