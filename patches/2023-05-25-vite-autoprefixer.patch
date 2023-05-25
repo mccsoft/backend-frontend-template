@@ -1,0 +1,26 @@
+Index: frontend/vite.config.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/vite.config.ts b/frontend/vite.config.ts
+--- a/frontend/vite.config.ts	(revision 3e55baa7b08397561930b23e05b95a3c7855ae7f)
++++ b/frontend/vite.config.ts	(date 1684984128665)
+@@ -7,6 +7,7 @@
+ import { visualizer } from 'rollup-plugin-visualizer';
+ import mkcert from 'vite-plugin-mkcert';
+ import ImportmapPlugin from 'importmap-plugin';
++import autoprefixer from 'autoprefixer';
+ 
+ var proxyTarget = process.env.BACKEND_URI ?? 'https://localhost:5001';
+ var frontendPort = process.env.PORT ?? 5003;
+@@ -75,6 +76,9 @@
+       modules: {
+         localsConvention: 'camelCase',
+       },
++      postcss: {
++        plugins: [autoprefixer],
++      },
+     },
+     build: {
+       outDir: 'build',

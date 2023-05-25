@@ -7,6 +7,7 @@ import ImportMetaEnvPlugin from '@import-meta-env/unplugin';
 import { visualizer } from 'rollup-plugin-visualizer';
 import mkcert from 'vite-plugin-mkcert';
 import ImportmapPlugin from 'importmap-plugin';
+import autoprefixer from 'autoprefixer';
 
 var proxyTarget = process.env.BACKEND_URI ?? 'https://localhost:5001';
 var frontendPort = process.env.PORT ?? 5003;
@@ -74,6 +75,9 @@ export default defineConfig(({ command, mode }) => {
     css: {
       modules: {
         localsConvention: 'camelCase',
+      },
+      postcss: {
+        plugins: [autoprefixer],
       },
     },
     build: {
