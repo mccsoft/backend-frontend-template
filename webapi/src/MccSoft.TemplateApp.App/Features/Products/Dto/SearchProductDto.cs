@@ -1,4 +1,3 @@
-using System;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.WebApi.Pagination;
 

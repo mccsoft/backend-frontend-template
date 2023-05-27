@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using Sentry;
 using Sentry.AspNetCore;
 using Sentry.Extensibility;
-using Sentry.Protocol;
 
 namespace MccSoft.WebApi.Sentry;
 

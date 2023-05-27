@@ -1,11 +1,11 @@
 ﻿using System;
-using MccSoft.DomainHelpers;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using MccSoft.DomainHelpers;
 using MccSoft.LowLevelPrimitives.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace MccSoft.PersistenceHelpers;
 

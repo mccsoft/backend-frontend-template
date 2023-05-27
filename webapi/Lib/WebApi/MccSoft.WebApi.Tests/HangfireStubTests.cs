@@ -1,10 +1,8 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Hangfire;
 using MccSoft.IntegreSql.EF.DatabaseInitialization;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
 using Xunit.Abstractions;
 
 public class HangfireStubTests : WebApiTestBase
@@ -25,9 +23,7 @@ public class HangfireStubTests : WebApiTestBase
     public async Task HangfireStub_InstanceMethod_Works()
     {
         var backgroundJobClient = CreateService<IBackgroundJobClient>();
-        backgroundJobClient.Enqueue<HangfireStubTestService>(
-            x => x.AddEntity("zxc")
-        );
+        backgroundJobClient.Enqueue<HangfireStubTestService>(x => x.AddEntity("zxc"));
 
         await WithDbContext(async db =>
         {

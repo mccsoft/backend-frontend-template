@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Threading.Tasks;
+using Audit.Core;
 using MccSoft.IntegreSql.EF.DatabaseInitialization;
-using MccSoft.LowLevelPrimitives;
 using MccSoft.TemplateApp.App.Utils.Localization;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Persistence;
@@ -16,7 +15,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
-using Xunit.Abstractions;
 
 namespace MccSoft.TemplateApp.App.Tests;
 
@@ -32,7 +30,7 @@ public class AppServiceTestBase : TestBase<TemplateAppDbContext>
         DatabaseType? testDatabaseType = DatabaseType.Postgres
     ) : base(outputHelper, testDatabaseType)
     {
-        Audit.Core.Configuration.AuditDisabled = true;
+        Configuration.AuditDisabled = true;
 
         // initialize some variables to be available in all tests
         if (testDatabaseType != null)
@@ -87,6 +85,7 @@ public class AppServiceTestBase : TestBase<TemplateAppDbContext>
             .AddRoles<IdentityRole>()
             .AddRoleManager<RoleManager<IdentityRole>>()
             .AddEntityFrameworkStores<TemplateAppDbContext>();
+
         // Here you could override type registration (e.g. mock http clients that call other microservices).
         // Most probably you'd need to remove existing registration before registering new one.
         // You could remove the registration by calling:

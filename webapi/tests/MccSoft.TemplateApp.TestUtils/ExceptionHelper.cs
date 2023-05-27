@@ -8,7 +8,6 @@ using FluentAssertions.Execution;
 using FluentAssertions.Specialized;
 using MccSoft.HttpClientExtension;
 using MccSoft.TemplateApp.Http.Generated;
-using ValidationProblemDetails = MccSoft.TemplateApp.Http.Generated.ValidationProblemDetails;
 
 namespace MccSoft.TemplateApp.TestUtils;
 

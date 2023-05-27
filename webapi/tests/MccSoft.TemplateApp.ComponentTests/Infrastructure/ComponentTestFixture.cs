@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using MartinCostello.Logging.XUnit;
 using MccSoft.TemplateApp.ComponentTests.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Xunit.Abstractions;
 
 namespace MccSoft.TemplateApp.ComponentTests;
 
-public partial class ComponentTestFixture
-    : WebApplicationFactory<Program>
+public partial class ComponentTestFixture : WebApplicationFactory<Program>
 {
     public ITestOutputHelper OutputHelper { get; set; }
 
@@ -28,7 +25,9 @@ public partial class ComponentTestFixture
     {
         base.ConfigureWebHost(builder);
 
-        builder.ConfigureLogging(loggingBuilder => loggingBuilder.ClearProviders().AddXUnit(OutputHelper));
+        builder.ConfigureLogging(
+            loggingBuilder => loggingBuilder.ClearProviders().AddXUnit(OutputHelper)
+        );
         builder.UseEnvironment("Test");
 
         builder.UseSolutionRelativeContentRoot(

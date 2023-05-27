@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.WebApi.Patching.Models;

@@ -10,6 +10,9 @@ using MccSoft.WebApi.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
+using Serilog;
+using Configuration = Audit.Core.Configuration;
+using LogLevel = Audit.NET.Serilog.LogLevel;
 
 namespace MccSoft.TemplateApp.App.Setup;
 
@@ -26,7 +29,7 @@ public partial class SetupAudit
 
     private static partial object CreateAuditMessageForSerilog(AuditEvent auditEvent, object arg2)
     {
-        var logger = Serilog.Log.ForContext<AuditLogContext>();
+        var logger = Log.ForContext<AuditLogContext>();
         if (auditEvent is AuditEventEntityFramework entityFrameworkEvent)
         {
             foreach (var eventEntry in entityFrameworkEvent.EntityFrameworkEvent.Entries)
@@ -34,7 +37,7 @@ public partial class SetupAudit
                 var changes =
                     eventEntry.Changes == null
                         ? null
-                        : Audit.Core.Configuration.JsonAdapter.Serialize(
+                        : Configuration.JsonAdapter.Serialize(
                             eventEntry.Changes.Where(
                                 x =>
                                     !(x.NewValue == null && x.OriginalValue == null)
@@ -74,7 +77,7 @@ public partial class SetupAudit
 
     private static void SetupSavingToEfCore()
     {
-        Audit.Core.Configuration
+        Configuration
             .Setup()
             .UseEntityFramework(
                 config =>
@@ -140,13 +143,10 @@ public partial class SetupAudit
 
     private static void SetupSavingToSerilog()
     {
-        Audit.Core.Configuration
+        Configuration
             .Setup()
             .UseSerilog(
-                config =>
-                    config
-                        .LogLevel(Audit.NET.Serilog.LogLevel.Debug)
-                        .Message(CreateAuditMessageForSerilog)
+                config => config.LogLevel(LogLevel.Debug).Message(CreateAuditMessageForSerilog)
             );
     }
 }

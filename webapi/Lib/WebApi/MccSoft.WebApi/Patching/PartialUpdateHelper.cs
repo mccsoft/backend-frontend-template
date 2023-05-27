@@ -160,7 +160,7 @@ public static class PartialUpdateHelper
         Expression<Func<T, TResult>> field
     )
     {
-        var propertyName = ((System.Linq.Expressions.MemberExpression)field.Body).Member.Name;
+        var propertyName = ((MemberExpression)field.Body).Member.Name;
         return (TResult)patchRequest.GetType().GetProperty(propertyName).GetValue(patchRequest);
     }
 

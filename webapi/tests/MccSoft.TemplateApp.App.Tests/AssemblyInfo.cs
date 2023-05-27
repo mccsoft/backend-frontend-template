@@ -1,3 +1,1 @@
-﻿using Xunit;
-
-[assembly: CollectionBehavior(MaxParallelThreads = 8)]
+﻿[assembly: CollectionBehavior(MaxParallelThreads = 8)]

@@ -1,11 +1,7 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
-using FluentAssertions;
 using MccSoft.WebApi.Patching;
 using MccSoft.WebApi.Patching.Models;
-using MccSoft.WebApi.Serialization;
-using Xunit;
 
 namespace MccSoft.WebApi.Tests.Patching;
 

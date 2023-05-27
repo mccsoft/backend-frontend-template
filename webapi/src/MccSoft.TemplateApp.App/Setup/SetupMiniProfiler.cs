@@ -1,3 +1,5 @@
+using StackExchange.Profiling;
+using StackExchange.Profiling.SqlFormatters;
 using StackExchange.Profiling.Storage;
 
 namespace MccSoft.TemplateApp.App.Setup;
@@ -21,7 +23,7 @@ public static class MiniProfiler
                 (options.Storage as MemoryCacheStorage).CacheDuration = TimeSpan.FromMinutes(60);
 
                 // (Optional) Control which SQL formatter to use, InlineFormatter is the default
-                options.SqlFormatter = new StackExchange.Profiling.SqlFormatters.InlineFormatter();
+                options.SqlFormatter = new InlineFormatter();
 
                 // // (Optional) To control authorization, you can use the Func<HttpRequest, bool> options:
                 // // (default is everyone can access profilers)
@@ -51,7 +53,7 @@ public static class MiniProfiler
 
                 // (Optional) Use something other than the "light" color scheme.
                 // (defaults to "light")
-                options.ColorScheme = StackExchange.Profiling.ColorScheme.Auto;
+                options.ColorScheme = ColorScheme.Auto;
 
                 // The below are newer options, available in .NET Core 3.0 and above:
 

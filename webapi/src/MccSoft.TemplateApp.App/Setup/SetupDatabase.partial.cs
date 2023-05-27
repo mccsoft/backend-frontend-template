@@ -1,10 +1,8 @@
 ﻿using MccSoft.LowLevelPrimitives;
-using MccSoft.NpgSql;
 using MccSoft.TemplateApp.App.Services.Authentication;
 using MccSoft.TemplateApp.App.Services.Authentication.Seed;
 using MccSoft.TemplateApp.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace MccSoft.TemplateApp.App.Setup;
 

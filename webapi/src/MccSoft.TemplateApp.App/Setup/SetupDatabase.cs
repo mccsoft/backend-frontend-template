@@ -4,8 +4,6 @@ using MccSoft.PersistenceHelpers.DomainEvents;
 using MccSoft.TemplateApp.Persistence;
 using Microsoft.EntityFrameworkCore;
 using NeinLinq;
-using Npgsql;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
 using Shaddix.OpenIddict.ExternalAuthentication.Infrastructure;
 
 namespace MccSoft.TemplateApp.App.Setup;

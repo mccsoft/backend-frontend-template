@@ -1,7 +1,8 @@
 using System;
-using MccSoft.TemplateApp.App.Features.Products.Dto;
 using MccSoft.TemplateApp.Domain;
+using MccSoft.TemplateApp.Http.Generated;
 using MccSoft.Testing.Infrastructure;
+using ProductType = MccSoft.TemplateApp.Http.Generated.ProductType;
 
 namespace MccSoft.TemplateApp.TestUtils.Factories;
 
@@ -19,11 +20,10 @@ public static class ProductFactory
         return product;
     }
 
-    public static Http.Generated.CreateProductDto CreateProductGeneratedDto(
+    public static CreateProductDto CreateProductGeneratedDto(
         this MotherFactory a,
         string title = "Default Product 1",
-        MccSoft.TemplateApp.Http.Generated.ProductType productType =
-            MccSoft.TemplateApp.Http.Generated.ProductType.Undefined
+        ProductType productType = ProductType.Undefined
     )
     {
         return new()
@@ -34,10 +34,10 @@ public static class ProductFactory
         };
     }
 
-    public static CreateProductDto CreateProductDto(
+    public static App.Features.Products.Dto.CreateProductDto CreateProductDto(
         this MotherFactory a,
         string title = "Default Product 1",
-        ProductType productType = ProductType.Undefined
+        Domain.ProductType productType = Domain.ProductType.Undefined
     )
     {
         return new() { Title = title, ProductType = productType };

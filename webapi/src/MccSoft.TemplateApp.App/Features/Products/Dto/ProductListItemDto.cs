@@ -1,5 +1,3 @@
-using System;
-using System.Text.Json.Serialization;
 using MccSoft.TemplateApp.Domain;
 
 namespace MccSoft.TemplateApp.App.Features.Products.Dto;

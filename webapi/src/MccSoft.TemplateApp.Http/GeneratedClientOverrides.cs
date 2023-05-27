@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using MccSoft.TemplateApp.Http.Generated;
 
 namespace MccSoft.TemplateApp.Http.Generated;
 

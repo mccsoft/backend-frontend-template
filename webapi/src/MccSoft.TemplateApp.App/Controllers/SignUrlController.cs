@@ -1,7 +1,5 @@
-using MccSoft.TemplateApp.App.Utils;
 using MccSoft.WebApi.SignedUrl;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MccSoft.TemplateApp.App.Controllers;

@@ -1,4 +1,3 @@
-using System;
 using System.Linq.Expressions;
 using MccSoft.TemplateApp.App.Features.Products.Dto;
 using MccSoft.TemplateApp.Domain;

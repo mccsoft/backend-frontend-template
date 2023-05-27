@@ -1,6 +1,8 @@
+using System.Text.Json;
+
 namespace MccSoft.TemplateApp.Http;
 
 public interface IBaseClient
 {
-    public System.Text.Json.JsonSerializerOptions JsonSerializerSettings { get; }
+    public JsonSerializerOptions JsonSerializerSettings { get; }
 }

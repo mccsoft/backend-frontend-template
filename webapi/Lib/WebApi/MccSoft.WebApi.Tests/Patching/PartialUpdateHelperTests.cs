@@ -1,7 +1,7 @@
-﻿using MccSoft.LowLevelPrimitives.Exceptions;
+﻿using System.Collections.Generic;
+using MccSoft.LowLevelPrimitives.Exceptions;
 using MccSoft.WebApi.Patching;
 using MccSoft.WebApi.Patching.Models;
-using System.Collections.Generic;
 
 namespace MccSoft.WebApi.Tests;
 

@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Linq;
@@ -7,8 +9,6 @@ using Metalama.Framework.Code;
 using Metalama.Framework.Diagnostics;
 using Metalama.Framework.Eligibility;
 using Microsoft.Extensions.Logging;
-
-#nullable enable
 
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 public class LogAttribute : OverrideMethodAspect, IAspect<INamedType>

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Net.Http.Headers;
-using System.Security.Claims;
-using MccSoft.LowLevelPrimitives.Exceptions;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 
 namespace MccSoft.WebApi.SignedUrl;

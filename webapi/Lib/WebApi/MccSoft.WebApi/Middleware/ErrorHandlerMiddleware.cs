@@ -1,3 +1,7 @@
+using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 using MccSoft.LowLevelPrimitives;
 using MccSoft.LowLevelPrimitives.Exceptions;
 using MccSoft.WebApi.Helpers;
@@ -8,11 +12,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog.Context;
-using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using BadHttpRequestException = Microsoft.AspNetCore.Http.BadHttpRequestException;
+using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
 
 namespace MccSoft.WebApi.Middleware;
 
@@ -45,13 +45,15 @@ public class ErrorHandlerMiddleware
             httpContext.Request.EnableBuffering();
             await _next(httpContext);
         }
-        catch (System.ComponentModel.DataAnnotations.ValidationException ex)
+        catch (ValidationException ex)
         {
             var fieldName = ex.ValidationResult.MemberNames.FirstOrDefault();
 
             var webApiException = string.IsNullOrEmpty(fieldName)
-                ? new ValidationException(ex.ValidationResult.ErrorMessage)
-                : new ValidationException(
+                ? new LowLevelPrimitives.Exceptions.ValidationException(
+                    ex.ValidationResult.ErrorMessage
+                )
+                : new LowLevelPrimitives.Exceptions.ValidationException(
                     ex.ValidationResult.MemberNames.FirstOrDefault() ?? "",
                     ex.ValidationResult.ErrorMessage
                 );

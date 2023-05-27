@@ -1,11 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 
 namespace MccSoft.TemplateApp.Http;
 
 public class BaseClient
 {
-    protected void UpdateJsonSerializerSettings(System.Text.Json.JsonSerializerOptions settings)
+    protected void UpdateJsonSerializerSettings(JsonSerializerOptions settings)
     {
         // settings.NullValueHandling = NullValueHandling.Ignore;
     }

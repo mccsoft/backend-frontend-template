@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Audit.EntityFramework;
+﻿using Audit.EntityFramework;
 using MccSoft.LowLevelPrimitives;
 using MccSoft.PersistenceHelpers;
 using MccSoft.TemplateApp.Domain;

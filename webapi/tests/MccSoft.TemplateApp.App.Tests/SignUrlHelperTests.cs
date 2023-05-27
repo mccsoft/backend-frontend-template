@@ -1,6 +1,5 @@
 using System.Security.Claims;
 using MccSoft.WebApi.SignedUrl;
-using Microsoft.Extensions.Options;
 
 namespace MccSoft.TemplateApp.App.Tests;
 

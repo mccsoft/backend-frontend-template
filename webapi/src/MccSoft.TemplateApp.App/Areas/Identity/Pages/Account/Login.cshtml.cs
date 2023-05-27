@@ -2,24 +2,18 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using MccSoft.LowLevelPrimitives;
-using Microsoft.AspNetCore.Authorization;
 using MccSoft.TemplateApp.Domain;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 
 namespace MccSoft.TemplateApp.App.Areas.Identity.Pages.Account;
 
-[Microsoft.AspNetCore.Authorization.AllowAnonymous]
+[AllowAnonymous]
 public class LoginModel : PageModel
 {
     private readonly SignInManager<User> _signInManager;

@@ -1,10 +1,7 @@
 ﻿using System.Security.Principal;
-using System.Threading;
-using IdentityModel;
 using MccSoft.HttpClientExtension;
 using MccSoft.LowLevelPrimitives;
 using MccSoft.LowLevelPrimitives.Exceptions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 

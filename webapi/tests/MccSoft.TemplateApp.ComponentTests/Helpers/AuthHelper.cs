@@ -3,7 +3,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using FluentAssertions;
 using MccSoft.TemplateApp.Http;
 
 namespace MccSoft.TemplateApp.ComponentTests.Helpers;

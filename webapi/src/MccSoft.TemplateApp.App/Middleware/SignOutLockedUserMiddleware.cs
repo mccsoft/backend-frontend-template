@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using MccSoft.LowLevelPrimitives;
+﻿using MccSoft.LowLevelPrimitives;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.WebApi.Serialization;
 using Microsoft.AspNetCore.Identity;

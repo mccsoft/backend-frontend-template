@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using MccSoft.Mailing;
+﻿using MccSoft.Mailing;
 using MccSoft.TemplateApp.App.Views.Emails.Example;
 using MccSoft.WebApi.Serialization;
 using Microsoft.AspNetCore.Authorization;

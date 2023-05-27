@@ -1,9 +1,9 @@
 using MccSoft.LowLevelPrimitives;
 using MccSoft.LowLevelPrimitives.Exceptions;
+using MccSoft.PersistenceHelpers;
 using MccSoft.TemplateApp.App.Features.Products.Dto;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Persistence;
-using MccSoft.PersistenceHelpers;
 using MccSoft.WebApi.Pagination;
 using MccSoft.WebApi.Patching;
 using Microsoft.EntityFrameworkCore;

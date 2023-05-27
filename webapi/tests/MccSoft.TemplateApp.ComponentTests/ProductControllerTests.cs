@@ -1,12 +1,8 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
 using MccSoft.TemplateApp.Http.Generated;
 using MccSoft.TemplateApp.TestUtils.Factories;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace MccSoft.TemplateApp.ComponentTests;
 

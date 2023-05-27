@@ -1,4 +1,3 @@
-using System.Text.Json;
 using MccSoft.LowLevelPrimitives;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Persistence;

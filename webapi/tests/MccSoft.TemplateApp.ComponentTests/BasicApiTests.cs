@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MccSoft.Testing;
 using MccSoft.WebApi.Patching.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -39,8 +40,8 @@ public partial class BasicApiTests : ComponentTestBase
             .Where(
                 x =>
                     (
-                        typeof(Microsoft.AspNetCore.Mvc.Controller).IsAssignableFrom(x)
-                        || typeof(Microsoft.AspNetCore.Mvc.ControllerBase).IsAssignableFrom(x)
+                        typeof(Controller).IsAssignableFrom(x)
+                        || typeof(ControllerBase).IsAssignableFrom(x)
                     ) && !x.IsAbstract
             );
 

@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using MccSoft.Logging;
 using MccSoft.TemplateApp.App.Features.Products.Dto;
 using MccSoft.WebApi.Pagination;

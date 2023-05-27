@@ -10,10 +10,7 @@ public static class WebHookRegistration
 
     public static DbSet<WebHook> WebHooks(this DbContext dbContext) => dbContext.Set<WebHook>();
 
-    public static ModelBuilder AddWebHookEntities(
-        this ModelBuilder builder,
-        System.Type dbContextType
-    )
+    public static ModelBuilder AddWebHookEntities(this ModelBuilder builder, Type dbContextType)
     {
         DbContextType = dbContextType;
         builder.Entity<WebHook>(e =>

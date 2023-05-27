@@ -18,9 +18,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using NeinLinq;
 using OpenIddict.Abstractions;
-using Xunit.Abstractions;
 
 namespace MccSoft.TemplateApp.ComponentTests;
 
