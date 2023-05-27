@@ -9,10 +9,9 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddJsonFile("appsettings.local.json", true).AddEnvironmentVariables();
-
 if (!builder.Environment.IsEnvironment("Test"))
 {
+    builder.Configuration.AddJsonFile("appsettings.local.json", true).AddEnvironmentVariables();
     builder.Host.UseSerilog(
         (hostingContext, loggerConfiguration) =>
         {
