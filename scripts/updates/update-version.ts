@@ -7,7 +7,8 @@ import {
   removePackageReference,
   updatePlaywright,
 } from './update-helper.js';
-
+import type * as TemplateJson from '../../.template.json';
+import * as Diff from 'diff';
 // current version is stored here
 const templateJsonFileName = '.template.json';
 
@@ -25,16 +26,38 @@ export function updateVersion(prefix: string) {
     currentFolder,
     templateJsonFileName,
   );
-  var currentTemplateSettings = fs.existsSync(currentFolderJsonFileName)
+  var currentTemplateSettings: typeof TemplateJson = fs.existsSync(
+    currentFolderJsonFileName,
+  )
     ? JSON.parse(fs.readFileSync(currentFolderJsonFileName).toString())
-    : { version: '1.0.0' };
-  var newTemplateSettings = JSON.parse(
+    : { version: '1.0.0', lastPatch: '0000-00-00-00' };
+
+  var newTemplateSettings: typeof TemplateJson = JSON.parse(
     fs.readFileSync(path.join(templateFolder, templateJsonFileName)).toString(),
   );
 
   process.chdir(templateFolder.replace('_template', ''));
 
   try {
+    applyPatches();
+    currentTemplateSettings.lastPatch = newTemplateSettings.lastPatch;
+    saveTemplateJson();
+
+    applyUpdates();
+    currentTemplateSettings.version = newTemplateSettings.version;
+    saveTemplateJson();
+  } finally {
+    process.chdir(currentFolder);
+  }
+
+  function saveTemplateJson() {
+    fs.writeFileSync(
+      currentFolderJsonFileName,
+      JSON.stringify(currentTemplateSettings),
+    );
+  }
+
+  function applyUpdates() {
     const currentVersion = currentTemplateSettings.version;
     for (const update of updateList) {
       if (semver.gte(update.from, currentVersion)) {
@@ -42,17 +65,40 @@ export function updateVersion(prefix: string) {
       }
     }
     updateAll(currentFolder, templateFolder, prefix);
-  } finally {
-    process.chdir(currentFolder);
+  }
+  function applyPatches() {
+    var patches = getNewPatches();
+    for (const patch of patches) {
+      const patchContents = fs
+        .readFileSync(path.join(templateFolder, 'patches', patch))
+        .toString();
+      Diff.applyPatches(patchContents, {
+        loadFile(index, callback) {
+          callback(fs.readFileSync(path.join(currentFolder, index)).toString());
+        },
+        patched(index, content, callback) {
+          fs.writeFileSync(path.join(currentFolder, index), content);
+          callback();
+        },
+      });
+    }
   }
 
-  currentTemplateSettings.version = newTemplateSettings.version;
-  fs.writeFileSync(
-    currentFolderJsonFileName,
-    JSON.stringify(currentTemplateSettings),
-  );
+  function getNewPatches(): string[] {
+    const files = fs.readdirSync(path.join(templateFolder, 'patches'));
+    const filteredFiles = files.filter((x) => {
+      if (x.match('^dddd-dd-dd-dd')) return true;
+      console.warn(
+        `File with name 'patches/${x}' doesn't match the expected pattern.`,
+      );
+    });
+    const sortedFiles = filteredFiles.sort();
+    const filesToApply = sortedFiles.filter(
+      (x) => x > currentTemplateSettings.lastPatch,
+    );
+    return filesToApply;
+  }
 }
-
 function patchPackageJson(regExp: RegExp | string, replacement: string) {
   patchFile('package.json', regExp, replacement);
   patchFile('frontend/package.json', regExp, replacement);
