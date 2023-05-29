@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'fs-extra';
 import path from 'path';
 export function copyProjectFolder(
   relativePathInsideProject: string,
@@ -27,44 +27,25 @@ function copyRecursively(
 ) {
   const exists = fs.existsSync(src);
   if (!exists) return;
-  const stats = fs.statSync(src);
-  if (stats.isDirectory()) {
-    if (!fs.existsSync(dest)) {
-      fs.mkdirSync(dest);
-    }
 
-    fs.readdirSync(src).forEach(function (childItemName) {
-      copyRecursively(
-        path.join(src, childItemName),
-        path.join(dest, childItemName),
-        options,
-      );
-    });
-  } else {
-    if (fs.existsSync(dest)) {
-      if (src.includes('.partial')) {
-        return;
-      }
-      if (options?.ignorePattern) {
-        const ignorePatterns = Array.isArray(options.ignorePattern)
-          ? options.ignorePattern
-          : [options.ignorePattern];
+  let ignorePatterns: (string | RegExp)[] = [];
+  if (options?.ignorePattern) {
+    ignorePatterns = Array.isArray(options.ignorePattern)
+      ? options.ignorePattern
+      : [options.ignorePattern];
+  }
 
-        for (const ignorePattern of ignorePatterns) {
-          if (src.match(ignorePattern)) {
-            return;
-          }
+  fs.copySync(src, dest, {
+    overwrite: true,
+    filter: (src) => {
+      for (const ignorePattern of ignorePatterns) {
+        if (src.match(ignorePattern)) {
+          return false;
         }
       }
-      const sourceFileContent = fs.readFileSync(src);
-      const destinationFileContent = fs.readFileSync(dest);
-      if (sourceFileContent !== destinationFileContent) {
-        fs.cpSync(src, dest, { force: true, preserveTimestamps: true });
-      }
-    } else {
-      fs.cpSync(src, dest, { force: true, preserveTimestamps: true });
-    }
-  }
+      return true;
+    },
+  });
 }
 
 function getPartialFileName(fileName: string) {

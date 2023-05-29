@@ -5,6 +5,7 @@
   "type": "module",
   "dependencies": {
     "@types/diff": "5.0.3",
+    "@types/fs-extra": "11.0.1",
     "@types/semver": "7.5.0",
     "@types/yargs": "17.0.24",
     "change-case": "4.1.2",
@@ -13,6 +14,7 @@
     "cross-env": "7.0.3",
     "diff": "5.1.0",
     "fast-xml-parser": "4.2.2",
+    "fs-extra": "11.1.1",
     "json": "11.0.0",
     "node-replace": "0.3.3",
     "prettier": "2.8.7",

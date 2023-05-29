@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'fs-extra';
 import path from 'path';
 import semver from 'semver';
 import {
@@ -94,7 +94,7 @@ export function updateVersion(prefix: string) {
   function getNewPatches(): string[] {
     const files = fs.readdirSync(path.join(templateFolder, 'patches'));
     const filteredFiles = files.filter((x) => {
-      if (x.match('^dddd-dd-dd-dd')) return true;
+      if (x.match('^\\d\\d\\d\\d-\\d\\d-\\d\\d-\\d\\d')) return true;
       console.warn(
         `File with name 'patches/${x}' doesn't match the expected pattern.`,
       );
@@ -202,7 +202,7 @@ function updateFrom_1p5_to_1p6(
   );
 
   patchFiles('frontend/src', 'helpers/interceptors/auth', 'helpers/auth');
-  fs.renameSync(
+  fs.moveSync(
     path.join(currentFolder, 'frontend/src/helpers/interceptors/auth'),
     path.join(currentFolder, 'frontend/src/helpers/auth'),
   );
