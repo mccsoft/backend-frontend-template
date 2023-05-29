@@ -18,7 +18,7 @@ import {
 } from './auth-data';
 import SuperTokensLock from 'browser-tabs-lock';
 import { useEffect, useState } from 'react';
-import { signOutRedirect } from 'pages/unauthorized/openid/openid-manager';
+import { signOutRedirect } from 'helpers/auth/openid/openid-manager';
 import Logger from 'js-logger';
 
 /*

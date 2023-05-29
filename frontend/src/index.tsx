@@ -4,9 +4,9 @@ import './index.scss';
 import { App } from './App';
 import reportWebVitals from './reportWebVitals';
 import { formatISO } from 'date-fns';
-import { OpenIdCallback } from './pages/unauthorized/openid/OpenIdCallback';
+import { OpenIdCallback } from 'helpers/auth/openid/OpenIdCallback';
 import { postServerLogOut, setAuthData } from 'helpers/auth/auth-interceptor';
-import { backendUri } from './pages/unauthorized/openid/openid-settings';
+import { backendUri } from 'helpers/auth/openid/openid-settings';
 import { Loading } from './components/uikit/suspense/Loading';
 import { LoginErrorPage } from 'pages/unauthorized/LoginErrorPage';
 

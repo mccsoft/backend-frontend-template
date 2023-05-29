@@ -200,11 +200,33 @@ function updateFrom_1p5_to_1p6(
   copyProjectFolder(
     'frontend/src/components/uikit/inputs/dropdown/StyledAutocomplete.tsx',
   );
+
   patchFiles('frontend/src', 'helpers/interceptors/auth', 'helpers/auth');
   fs.renameSync(
     path.join(currentFolder, 'frontend/src/helpers/interceptors/auth'),
     path.join(currentFolder, 'frontend/src/helpers/auth'),
   );
+
+  patchFiles(
+    'frontend/src',
+    './pages/unauthorized/openid',
+    'helpers/auth/openid',
+  );
+  patchFiles(
+    'frontend/src',
+    'pages/unauthorized/openid',
+    'helpers/auth/openid',
+  );
+  patchFiles(
+    'frontend/src/pages/unauthorized/LoginPage.tsx',
+    './openid/',
+    'helpers/auth/',
+  );
+  fs.renameSync(
+    path.join(currentFolder, 'frontend/src/pages/unauthorized/openid'),
+    path.join(currentFolder, 'frontend/src/helpers/auth/openid'),
+  );
+  //
 }
 
 function updateFrom_1p6_to_1p7(

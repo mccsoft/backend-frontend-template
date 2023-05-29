@@ -18,7 +18,7 @@ import {
 } from 'helpers/auth/auth-interceptor';
 import { sendRefreshTokenRequest } from 'helpers/auth/auth-client';
 import { logoutAction } from './application/redux-store/root-reducer';
-import { backendUri } from './pages/unauthorized/openid/openid-settings';
+import { backendUri } from 'helpers/auth/openid/openid-settings';
 import { ThemeProvider } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { ModalProvider } from './components/uikit/modal/useModal';
