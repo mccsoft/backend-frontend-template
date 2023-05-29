@@ -81,7 +81,7 @@ export function patchFiles(
 ) {
   const files = readdirRecursiveSync(relativePath);
   for (const file of files) {
-    patchFile(path.join(relativePath, file), search, replace);
+    patchFile(file, search, replace);
   }
 }
 
@@ -120,12 +120,10 @@ export function updatePlaywright(version: string) {
 
 function readdirRecursiveSync(dirPath: string, result: string[] = []) {
   if (fs.statSync(dirPath).isDirectory())
-    fs.readdirSync(dirPath).map((f) =>
-      readdirRecursiveSync(
-        result[result.push(path.join(dirPath, f)) - 1],
-        result,
-      ),
-    );
+    fs.readdirSync(dirPath).map((f) => {
+      readdirRecursiveSync(path.join(dirPath, f), result);
+    });
+  else result.push(dirPath);
   return result;
 }
 export const copyProjectFolderDefaultOptions = {

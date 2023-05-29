@@ -8,7 +8,7 @@ import {
   patchFiles,
   removePackageReference,
   updatePlaywright,
-} from './update-helper';
+} from './update-helper.ts';
 import type * as TemplateJson from '../../.template.json';
 import * as Diff from 'diff';
 // current version is stored here

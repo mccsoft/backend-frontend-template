@@ -9,8 +9,8 @@ import semver from 'semver';
 import {
   copyProjectFolder,
   copyProjectFolderDefaultOptions,
-} from './updates/update-helper';
-import { updateVersion } from './updates/update-version';
+} from './updates/update-helper.ts';
+import { updateVersion } from './updates/update-version.ts';
 
 const args = yargs(
   hideBin(process.argv).filter(
@@ -57,6 +57,7 @@ if (!currentDir.endsWith('_template')) {
   cloneTemplate(templateFolder);
   renameFilesInTemplate(templateFolder, projectName, companyName);
 
+  console.log(`Calling pull-template-changes from template`);
   execSync(`npx ts-node --esm scripts/pull-template-changes.ts`, {
     cwd: templateFolder,
     stdio: 'inherit',
@@ -155,6 +156,7 @@ function renameFilesInTemplate(
   execSync(`yarn rename -n ${projectName} -c ${companyName}`, {
     cwd: templateFolder,
   });
+  console.log('Rename finished.');
 }
 
 function cloneTemplate(folder: string) {
