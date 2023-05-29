@@ -14,7 +14,7 @@ import {
 } from '../../application/localization/localization';
 import { Language, languages } from '../../application/localization/locales';
 import { useTranslation } from 'react-i18next';
-import { logOut } from '../../helpers/interceptors/auth/auth-interceptor';
+import { logOut } from 'helpers/auth/auth-interceptor';
 import styles from './RootPage.module.scss';
 import Logger from 'js-logger';
 import { ProductDetailsPage } from './products/details/ProductDetailsPage';

@@ -3,7 +3,7 @@ import { RootPage } from 'pages/authorized/RootPage';
 import { LoginPage } from 'pages/unauthorized/LoginPage';
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { useIsAuthorized } from 'helpers/interceptors/auth/auth-interceptor';
+import { useIsAuthorized } from 'helpers/auth/auth-interceptor';
 
 export const AppRouter = () => {
   const isAuth = useIsAuthorized();

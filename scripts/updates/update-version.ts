@@ -3,10 +3,12 @@ import path from 'path';
 import semver from 'semver';
 import {
   copyProjectFolder,
+  copyProjectFolderDefaultOptions,
   patchFile,
+  patchFiles,
   removePackageReference,
   updatePlaywright,
-} from './update-helper.js';
+} from './update-helper';
 import type * as TemplateJson from '../../.template.json';
 import * as Diff from 'diff';
 // current version is stored here
@@ -16,6 +18,7 @@ const updateList = [
   { from: '1.3.0', update: updateFrom_1p3_to_1p4 },
   { from: '1.4.0', update: updateFrom_1p4_to_1p5 },
   { from: '1.5.0', update: updateFrom_1p5_to_1p6 },
+  { from: '1.6.0', update: updateFrom_1p6_to_1p7 },
 ];
 
 export function updateVersion(prefix: string) {
@@ -74,12 +77,16 @@ export function updateVersion(prefix: string) {
         .toString();
       Diff.applyPatches(patchContents, {
         loadFile(index, callback) {
-          callback(fs.readFileSync(path.join(currentFolder, index)).toString());
+          callback(
+            null,
+            fs.readFileSync(path.join(currentFolder, index.index!)).toString(),
+          );
         },
         patched(index, content, callback) {
-          fs.writeFileSync(path.join(currentFolder, index), content);
-          callback();
+          fs.writeFileSync(path.join(currentFolder, index.index!), content);
+          callback(null);
         },
+        complete() {},
       });
     }
   }
@@ -140,18 +147,18 @@ function updateFrom_1p5_to_1p6(
   currentFolder: string,
   templateFolder: string,
   prefix: string,
-) {}
-
-/*
- * This function is run for every `pull-template-changes`.
- * It makes sense to put all modifications here, and once there's a good number of them,
- * create a new version and move them to versioned update.
- */
-function updateAll(
-  currentFolder: string,
-  templateFolder: string,
-  prefix: string,
 ) {
+  copyProjectFolder(`frontend/src/application/constants/create-link.ts`);
+  copyProjectFolder(
+    `frontend/src/components/sign-url`,
+    copyProjectFolderDefaultOptions,
+  );
+  copyProjectFolder(
+    `frontend/src/components/animations`,
+    copyProjectFolderDefaultOptions,
+  );
+  copyProjectFolder(`frontend/src/helpers`, copyProjectFolderDefaultOptions);
+
   removePackageReference(
     `webapi/src/${prefix}.App/${prefix}.App.csproj`,
     'OpenIddict.AspNetCore',
@@ -193,4 +200,25 @@ function updateAll(
   copyProjectFolder(
     'frontend/src/components/uikit/inputs/dropdown/StyledAutocomplete.tsx',
   );
+  patchFiles('frontend/src', 'helpers/interceptors/auth', 'helpers/auth');
+  fs.renameSync(
+    path.join(currentFolder, 'frontend/src/helpers/interceptors/auth'),
+    path.join(currentFolder, 'frontend/src/helpers/auth'),
+  );
 }
+
+function updateFrom_1p6_to_1p7(
+  currentFolder: string,
+  templateFolder: string,
+  prefix: string,
+) {}
+/*
+ * This function is run for every `pull-template-changes`.
+ * It makes sense to put all modifications here, and once there's a good number of them,
+ * create a new version and move them to versioned update.
+ */
+function updateAll(
+  currentFolder: string,
+  templateFolder: string,
+  prefix: string,
+) {}

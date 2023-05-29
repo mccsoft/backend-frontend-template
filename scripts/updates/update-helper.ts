@@ -74,6 +74,17 @@ function getPartialFileName(fileName: string) {
   );
 }
 
+export function patchFiles(
+  relativePath: string,
+  search: string | RegExp,
+  replace: string,
+) {
+  const files = readdirRecursiveSync(relativePath);
+  for (const file of files) {
+    patchFile(path.join(relativePath, file), search, replace);
+  }
+}
+
 export function patchFile(
   relativePath: string,
   search: string | RegExp,
@@ -106,3 +117,17 @@ export function updatePlaywright(version: string) {
     `playwright:v${version}-`,
   );
 }
+
+function readdirRecursiveSync(dirPath: string, result: string[] = []) {
+  if (fs.statSync(dirPath).isDirectory())
+    fs.readdirSync(dirPath).map((f) =>
+      readdirRecursiveSync(
+        result[result.push(path.join(dirPath, f)) - 1],
+        result,
+      ),
+    );
+  return result;
+}
+export const copyProjectFolderDefaultOptions = {
+  ignorePattern: /partial\./,
+};

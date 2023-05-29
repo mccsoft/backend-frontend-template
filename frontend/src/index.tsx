@@ -5,10 +5,7 @@ import { App } from './App';
 import reportWebVitals from './reportWebVitals';
 import { formatISO } from 'date-fns';
 import { OpenIdCallback } from './pages/unauthorized/openid/OpenIdCallback';
-import {
-  postServerLogOut,
-  setAuthData,
-} from './helpers/interceptors/auth/auth-interceptor';
+import { postServerLogOut, setAuthData } from 'helpers/auth/auth-interceptor';
 import { backendUri } from './pages/unauthorized/openid/openid-settings';
 import { Loading } from './components/uikit/suspense/Loading';
 import { LoginErrorPage } from 'pages/unauthorized/LoginErrorPage';

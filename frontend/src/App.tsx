@@ -15,8 +15,8 @@ import { injectLanguageInterceptor } from './helpers/interceptors/inject-languag
 import {
   addLogoutHandler,
   setupAuthInterceptor,
-} from './helpers/interceptors/auth/auth-interceptor';
-import { sendRefreshTokenRequest } from './helpers/interceptors/auth/auth-client';
+} from 'helpers/auth/auth-interceptor';
+import { sendRefreshTokenRequest } from 'helpers/auth/auth-client';
 import { logoutAction } from './application/redux-store/root-reducer';
 import { backendUri } from './pages/unauthorized/openid/openid-settings';
 import { ThemeProvider } from '@mui/material';

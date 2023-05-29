@@ -6,8 +6,11 @@ import { XMLParser, XMLBuilder } from 'fast-xml-parser';
 import { hideBin } from 'yargs/helpers';
 import { execSync } from 'child_process';
 import semver from 'semver';
-import { copyProjectFolder } from './updates/update-helper.js';
-import { updateVersion } from './updates/update-version.js';
+import {
+  copyProjectFolder,
+  copyProjectFolderDefaultOptions,
+} from './updates/update-helper';
+import { updateVersion } from './updates/update-version';
 
 const args = yargs(
   hideBin(process.argv).filter(
@@ -93,25 +96,23 @@ if (fs.existsSync('scripts/pull-template-post-processor.ts')) {
 }
 
 console.log('Starting to copy files...');
-const defaultOptions = {
-  ignorePattern: /partial\./,
-};
 copyProjectFolder(`.ci`, { ignorePattern: ['_stages', 'partial.'] });
 copyProjectFolder(`scripts`, { ignorePattern: 'pull-template-post-processor' });
-copyProjectFolder('webapi/Lib', defaultOptions);
+copyProjectFolder('webapi/Lib', copyProjectFolderDefaultOptions);
 copyProjectFolder('docs');
 copyProjectFolder(`webapi/src/${prefix}.Http/GeneratedClientOverrides.cs`);
 copyProjectFolder(
   `webapi/tests/${prefix}.ComponentTests/Infrastructure/ComponentTestFixture.cs`,
 );
 copyProjectFolder(`webapi/src/${prefix}.Domain/BaseEntity.cs`);
-copyProjectFolder(`webapi/src/${prefix}.App/Utils`, defaultOptions);
-copyProjectFolder(`webapi/src/${prefix}.App/Setup`, defaultOptions);
-
-copyProjectFolder(`frontend/src/application/constants/create-link.ts`);
-copyProjectFolder(`frontend/src/components/sign-url`, defaultOptions);
-copyProjectFolder(`frontend/src/components/animations`, defaultOptions);
-copyProjectFolder(`frontend/src/helpers`, defaultOptions);
+copyProjectFolder(
+  `webapi/src/${prefix}.App/Utils`,
+  copyProjectFolderDefaultOptions,
+);
+copyProjectFolder(
+  `webapi/src/${prefix}.App/Setup`,
+  copyProjectFolderDefaultOptions,
+);
 
 syncPacketsInPackageJson('package.json');
 syncPacketsInPackageJson('frontend/package.json');
