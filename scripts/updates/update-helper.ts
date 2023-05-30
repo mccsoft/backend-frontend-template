@@ -60,6 +60,12 @@ export function patchFiles(
   search: string | RegExp,
   replace: string,
 ) {
+  if (!fs.existsSync(relativePath)) {
+    console.warn(
+      `!!! We were about to patch the file '${relativePath}', but it doesn't exist`,
+    );
+    return;
+  }
   const files = readdirRecursiveSync(relativePath);
   for (const file of files) {
     patchFile(file, search, replace);

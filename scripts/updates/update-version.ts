@@ -248,7 +248,7 @@ function updateFrom_1p5_to_1p6(
     'pages/unauthorized/openid',
     'helpers/auth/openid',
   );
-  patchFiles(
+  patchFile(
     'frontend/src/pages/unauthorized/LoginPage.tsx',
     './openid/',
     'helpers/auth/openid/',
