@@ -69,7 +69,7 @@
 
 ### FAQ
 
-1. You could pull updates from Template into your project by running `yarn pull-changes-from-template` (it will actually run [scripts/pull-changes-from-template.js](../scripts/pull-template-changes.js)).
+1. You could pull updates from Template into your project by running `yarn pull-changes-from-template` (it will actually run [scripts/pull-changes-from-template.ts](../scripts/pull-template-changes.ts)).
    1. It will clone the template repo next to your project folder, rename according to your project and copy Lib folder and other files that are not meant to be changed.
    2. You could examine/compare some other files and copy them to your project manually
    3. Check the changes before commiting them to your repo!

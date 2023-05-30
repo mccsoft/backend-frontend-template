@@ -176,6 +176,7 @@ function updateFrom_1p5_to_1p6(
   prefix: string,
 ) {
   copyProjectFolder(`frontend/src/application/constants/create-link.ts`);
+  copyProjectFolder(`frontend/src/components/sign-url/SignUrlImage.tsx`);
   copyProjectFolder(
     `frontend/src/components/sign-url`,
     copyProjectFolderDefaultOptions,
