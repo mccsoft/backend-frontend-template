@@ -14,6 +14,7 @@ import * as Diff from 'diff';
 // current version is stored here
 const templateJsonFileName = '.template.json';
 
+const patchVersionRegex = '^\\d\\d\\d\\d-\\d\\d-\\d\\d-\\d\\d';
 const updateList = [
   { from: '1.3.0', update: updateFrom_1p3_to_1p4 },
   { from: '1.4.0', update: updateFrom_1p4_to_1p5 },
@@ -42,12 +43,16 @@ export function updateVersion(prefix: string) {
   process.chdir(templateFolder.replace('_template', ''));
 
   try {
-    applyPatches();
-    currentTemplateSettings.lastPatch = newTemplateSettings.lastPatch;
-    saveTemplateJson();
-
     applyUpdates();
     currentTemplateSettings.version = newTemplateSettings.version;
+    saveTemplateJson();
+
+    const lastPatch = applyPatches();
+    if (lastPatch) {
+      currentTemplateSettings.lastPatch =
+        lastPatch.match(patchVersionRegex)![0];
+      console.log(`Last applied patch: ${currentTemplateSettings.lastPatch}`);
+    }
     saveTemplateJson();
   } finally {
     process.chdir(currentFolder);
@@ -61,17 +66,28 @@ export function updateVersion(prefix: string) {
   }
 
   function applyUpdates() {
+    console.log('Applying manual updates...');
     const currentVersion = currentTemplateSettings.version;
     for (const update of updateList) {
       if (semver.gte(update.from, currentVersion)) {
+        console.log(`Applying manual update for version ${update.from}.`);
         update.update(currentFolder, templateFolder, prefix);
       }
     }
+    console.log(`Applying manual update for any version.`);
     updateAll(currentFolder, templateFolder, prefix);
+    console.log('Applying manual updates finished.');
   }
-  function applyPatches() {
+
+  /*
+   * Returns last applied patch
+   */
+  function applyPatches(): string | null {
+    console.log(`Applying patches...`);
     var patches = getNewPatches();
     for (const patch of patches) {
+      console.log(`Applying patch '${patch}'`);
+
       const patchContents = fs
         .readFileSync(path.join(templateFolder, 'patches', patch))
         .toString();
@@ -83,25 +99,36 @@ export function updateVersion(prefix: string) {
           );
         },
         patched(index, content, callback) {
+          if (!content) {
+            const patchIndex = patch.match(patchVersionRegex)![0];
+            callback(
+              new Error(
+                `Error applying patch '${patch}'. Please check it and try to apply manually. To continue (after you manually applied it or decide to skip) set the 'lastPatch' property to '${patchIndex}' in '.template.json'`,
+              ),
+            );
+            return;
+          }
           fs.writeFileSync(path.join(currentFolder, index.index!), content);
           callback(null);
         },
         complete() {},
       });
     }
+    console.log(`Finished applying patches.`);
+    return patches.length > 0 ? patches[patches.length - 1] : null;
   }
 
   function getNewPatches(): string[] {
     const files = fs.readdirSync(path.join(templateFolder, 'patches'));
     const filteredFiles = files.filter((x) => {
-      if (x.match('^\\d\\d\\d\\d-\\d\\d-\\d\\d-\\d\\d')) return true;
+      if (x.match(patchVersionRegex)) return true;
       console.warn(
         `File with name 'patches/${x}' doesn't match the expected pattern.`,
       );
     });
     const sortedFiles = filteredFiles.sort();
     const filesToApply = sortedFiles.filter(
-      (x) => x > currentTemplateSettings.lastPatch,
+      (x) => x > (currentTemplateSettings.lastPatch ?? ''),
     );
     return filesToApply;
   }
@@ -205,6 +232,9 @@ function updateFrom_1p5_to_1p6(
   fs.moveSync(
     path.join(currentFolder, 'frontend/src/helpers/interceptors/auth'),
     path.join(currentFolder, 'frontend/src/helpers/auth'),
+    {
+      overwrite: true,
+    },
   );
 
   patchFiles(
@@ -222,9 +252,12 @@ function updateFrom_1p5_to_1p6(
     './openid/',
     'helpers/auth/',
   );
-  fs.renameSync(
+  fs.moveSync(
     path.join(currentFolder, 'frontend/src/pages/unauthorized/openid'),
     path.join(currentFolder, 'frontend/src/helpers/auth/openid'),
+    {
+      overwrite: true,
+    },
   );
   //
 }
