@@ -117,14 +117,6 @@ export default defineConfig(({ command, mode }) => {
             if (id.includes('assets')) {
               return 'assets';
             }
-            if (
-              id.includes('node_modules') &&
-              // We exclude heavy dependency that are lazy loaded via `lazyRetry` or custom async imports
-              !id.includes('devexpress') &&
-              !id.includes('devextreme')
-            ) {
-              return 'vendors';
-            }
           },
         },
       },

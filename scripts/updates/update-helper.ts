@@ -72,6 +72,12 @@ export function patchFile(
   replace: string,
 ) {
   const filePath = path.join(process.cwd(), relativePath);
+  if (!fs.existsSync(filePath)) {
+    console.warn(
+      `!!! We were about to patch the file '${relativePath}', but it doesn't exist`,
+    );
+    return;
+  }
   let contents = fs.readFileSync(filePath).toString('utf8');
 
   contents = contents.replace(search, replace);
