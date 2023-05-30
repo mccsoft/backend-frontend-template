@@ -140,7 +140,7 @@ syncReferencesInProjects(
 console.log(`folder syncing is finished`);
 
 updateVersion(prefix);
-console.log(`finished successfully`);
+console.log(`Finished successfully`);
 
 function renameFilesInTemplate(
   templateFolder: string,

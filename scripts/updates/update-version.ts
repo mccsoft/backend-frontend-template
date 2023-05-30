@@ -250,8 +250,9 @@ function updateFrom_1p5_to_1p6(
   patchFiles(
     'frontend/src/pages/unauthorized/LoginPage.tsx',
     './openid/',
-    'helpers/auth/',
+    'helpers/auth/openid/',
   );
+  patchFiles('frontend/src', 'helpers/interceptors/auth', 'helpers/auth');
   fs.moveSync(
     path.join(currentFolder, 'frontend/src/pages/unauthorized/openid'),
     path.join(currentFolder, 'frontend/src/helpers/auth/openid'),
