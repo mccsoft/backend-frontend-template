@@ -101,15 +101,6 @@ copyProjectFolder(`.ci`, { ignorePattern: ['_stages', 'partial.'] });
 copyProjectFolder(`scripts`, { ignorePattern: 'pull-template-post-processor' });
 copyProjectFolder('webapi/Lib', copyProjectFolderDefaultOptions);
 copyProjectFolder('docs');
-copyProjectFolder(`webapi/src/${prefix}.Http/GeneratedClientOverrides.cs`);
-copyProjectFolder(
-  `webapi/tests/${prefix}.ComponentTests/Infrastructure/ComponentTestFixture.cs`,
-);
-copyProjectFolder(`webapi/src/${prefix}.Domain/BaseEntity.cs`);
-copyProjectFolder(
-  `webapi/src/${prefix}.App/Utils`,
-  copyProjectFolderDefaultOptions,
-);
 copyProjectFolder(
   `webapi/src/${prefix}.App/Setup`,
   copyProjectFolderDefaultOptions,
@@ -254,7 +245,7 @@ export function doSyncReferencesInProjects(src: string, dest: string) {
   });
   destinationFileContent = builder.build(destinationXml);
 
-  fs.writeFileSync(dest, destinationFileContent.replace('&apos;', "'"));
+  fs.writeFileSync(dest, destinationFileContent.replaceAll('&apos;', "'"));
 }
 
 function syncPacketsInPackageJson(relativePathInsideProject: string) {

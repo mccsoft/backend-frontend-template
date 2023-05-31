@@ -103,7 +103,7 @@ export function updateVersion(prefix: string) {
             const patchIndex = patch.match(patchVersionRegex)![0];
             callback(
               new Error(
-                `Error applying patch '${patch}'. Please check it and try to apply manually. To continue (after you manually applied it or decide to skip) set the 'lastPatch' property to '${patchIndex}' in '.template.json'`,
+                `Error applying patch '${patch}' to file '${index.index}'. Please check it and try to apply manually. To continue (after you manually applied it or decide to skip) set the 'lastPatch' property to '${patchIndex}' in '.template.json'`,
               ),
             );
             return;
@@ -146,6 +146,12 @@ function updateFrom_1p3_to_1p4(
 ) {
   copyProjectFolder(`webapi/src/${prefix}.App/Features/TestApi`);
   copyProjectFolder(`webapi/tests/${prefix}.App.Tests/TestApiServiceTests.cs`);
+  copyProjectFolder(`webapi/src/${prefix}.Http/GeneratedClientOverrides.cs`);
+  copyProjectFolder(`webapi/src/${prefix}.Domain/BaseEntity.cs`);
+  copyProjectFolder(
+    `webapi/src/${prefix}.App/Utils`,
+    copyProjectFolderDefaultOptions,
+  );
 }
 
 function updateFrom_1p4_to_1p5(
@@ -269,6 +275,7 @@ function updateFrom_1p6_to_1p7(
   templateFolder: string,
   prefix: string,
 ) {}
+
 /*
  * This function is run for every `pull-template-changes`.
  * It makes sense to put all modifications here, and once there's a good number of them,

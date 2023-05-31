@@ -2,7 +2,18 @@ import React from 'react';
 import { QueryFactory } from 'services/api';
 
 type Props = Omit<PropsGeneric, 'src'> & {
-  photoId: string;
+  /**
+   *  Url to get the photo from
+   *
+   *  @remarks
+   *  Used only when `photoId` is not set
+   */
+  src?: string | null;
+
+  /**
+   *  Photo id for `/files/{photoId}`
+   */
+  photoId?: string | null;
 };
 
 /*
@@ -11,7 +22,7 @@ type Props = Omit<PropsGeneric, 'src'> & {
 export const SignUrlImage = React.forwardRef<HTMLImageElement, Props>(
   (props, ref) => {
     /* you could build src based on e.g. imageId, width/height/etc. parameters */
-    const src = '/files/' + props.photoId;
+    const src = props.photoId ? '/files/' + props.photoId : props.src;
     return <SignUrlImageGeneric {...props} src={src} ref={ref} />;
   },
 );
