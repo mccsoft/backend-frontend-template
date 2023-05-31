@@ -182,10 +182,17 @@ function updateFrom_1p5_to_1p6(
   prefix: string,
 ) {
   copyProjectFolder(`frontend/src/application/constants/create-link.ts`);
+
   copyProjectFolder(`frontend/src/components/sign-url/SignUrlImage.tsx`);
   copyProjectFolder(
     `frontend/src/components/sign-url`,
     copyProjectFolderDefaultOptions,
+  );
+  fs.removeSync(
+    path.join(
+      currentFolder,
+      `frontend/src/components/sign-url/SignUrlImage.partial.tsx`,
+    ),
   );
   copyProjectFolder(
     `frontend/src/components/animations`,
@@ -234,8 +241,11 @@ function updateFrom_1p5_to_1p6(
   copyProjectFolder(
     'frontend/src/components/uikit/inputs/dropdown/StyledAutocomplete.tsx',
   );
-
+  copyProjectFolder(
+    'frontend/src/components/uikit/inputs/dropdown/StyledAutocomplete.tsx',
+  );
   patchFiles('frontend/src', 'helpers/interceptors/auth', 'helpers/auth');
+
   fs.moveSync(
     path.join(currentFolder, 'frontend/src/helpers/interceptors/auth'),
     path.join(currentFolder, 'frontend/src/helpers/auth'),
