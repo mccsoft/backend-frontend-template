@@ -48,7 +48,8 @@ export const CreateProductPage: React.FC = () => {
           else resetConfirmation();
         });
     }
-  }, [isActive, modals, onConfirm, resetConfirmation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isActive]);
   return (
     <Loading loading={form.formState.isSubmitting}>
       <AppLink
