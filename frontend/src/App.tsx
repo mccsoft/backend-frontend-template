@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { LanguageProvider } from './application/localization/LanguageProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { PersistGate } from 'redux-persist/integration/react';
-import { AppRouter } from 'pages/router';
+import { anonymousRoutes, authorizedRoutes } from 'pages/router';
 import axios from 'axios';
 import { QueryFactory } from './services/api';
 import * as Sentry from '@sentry/react';
@@ -15,6 +15,7 @@ import { injectLanguageInterceptor } from './helpers/interceptors/inject-languag
 import {
   addLogoutHandler,
   setupAuthInterceptor,
+  useIsAuthorized,
 } from 'helpers/auth/auth-interceptor';
 import { sendRefreshTokenRequest } from 'helpers/auth/auth-client';
 import { logoutAction } from './application/redux-store/root-reducer';
@@ -23,6 +24,8 @@ import { ThemeProvider } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { ModalProvider } from './components/uikit/modal/useModal';
 import { MiniProfiler, miniProfilerInterceptor } from './helpers/MiniProfiler';
+import { QuerySuspenseErrorWrapper } from 'helpers/retry-helper';
+import { RouterProvider } from 'react-router-dom';
 
 QueryFactory.setAxiosFactory(() => axios);
 
@@ -77,6 +80,7 @@ export const App = () => {
   const fallback = useMemo(() => {
     return <Loading loading={true} />;
   }, []);
+  const isAuth = useIsAuthorized();
 
   return (
     <Suspense fallback={fallback}>
@@ -86,7 +90,12 @@ export const App = () => {
             <PersistGate loading={fallback} persistor={RootStore.persistor}>
               <LanguageProvider>
                 <ModalProvider>
-                  <AppRouter />
+                  <QuerySuspenseErrorWrapper>
+                    <RouterProvider
+                      router={!!isAuth ? authorizedRoutes : anonymousRoutes}
+                    />
+                  </QuerySuspenseErrorWrapper>
+
                   {FeatureFlags.isMiniProfilerEnabled() && <MiniProfiler />}
                 </ModalProvider>
               </LanguageProvider>

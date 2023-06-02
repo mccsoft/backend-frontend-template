@@ -8,7 +8,7 @@ import { Input } from 'components/uikit/inputs/Input';
 import { Loading } from 'components/uikit/suspense/Loading';
 import { useAdvancedForm } from 'helpers/form/useAdvancedForm';
 import { requiredRule } from 'helpers/form/react-hook-form-helper';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { QueryFactory } from 'services/api';
 import { CreateProductDto, ProductType } from 'services/api/api-client';
@@ -16,6 +16,8 @@ import { HookFormDropDownInput } from 'components/uikit/inputs/dropdown/HookForm
 import { useNavigate } from 'react-router';
 import { HookFormDatePicker } from 'components/uikit/inputs/date-time/HookFormDatePicker';
 import { Grid } from '@mui/material';
+import { useModal } from 'components/uikit/modal/useModal';
+import { useConfirm } from 'helpers/router/useBlocker';
 
 export const CreateProductPage: React.FC = () => {
   const i18n = useScopedTranslation('Page.Products.Create');
@@ -30,7 +32,23 @@ export const CreateProductPage: React.FC = () => {
       navigate(Links.Authorized.Products.link());
     }, []),
   );
-
+  const modals = useModal();
+  const { isActive, onConfirm, resetConfirmation } = useConfirm(
+    form.formState.isDirty,
+  );
+  useEffect(() => {
+    if (isActive) {
+      void modals
+        .showConfirm({
+          title: i18n.t('unsaved_changes_prompt.title'),
+          text: i18n.t('unsaved_changes_prompt.text'),
+        })
+        .then((result) => {
+          if (result) onConfirm();
+          else resetConfirmation();
+        });
+    }
+  }, [isActive, modals, onConfirm, resetConfirmation]);
   return (
     <Loading loading={form.formState.isSubmitting}>
       <AppLink
