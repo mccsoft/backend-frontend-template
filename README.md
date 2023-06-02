@@ -25,7 +25,7 @@ Template contains (you could also check [CHANGELOG](./docs/CHANGELOG.md) for lat
    1. Guidance/examples on setting up forms (react-hook-form), tables (with sorting/paging) and filters
    1. Support for injecting environment variables (without rebuilding the app)
    1. Redux with persistence
-   1. Routing with react-router ([v.6.3](docs/ReactRouter.md))
+   1. Routing with react-router
    1. Error-boundaries which works with suspense/react-query/code splitting
    1. Pre-built authentication UI
 1. Build-script to build a single Docker container from backend and frontend
