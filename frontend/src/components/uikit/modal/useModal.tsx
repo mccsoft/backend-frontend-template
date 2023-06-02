@@ -282,9 +282,10 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
                   <Button
                     className={styles.button}
                     color={
-                      options.cancelButtonColor ?? options.okButtonColor
+                      options.cancelButtonColor ??
+                      (options.okButtonColor
                         ? ButtonColor.Primary
-                        : ButtonColor.Secondary
+                        : ButtonColor.Secondary)
                     }
                     title={options.cancelButtonText ?? i18n.t('cancel_button')}
                     onClick={onClose}
