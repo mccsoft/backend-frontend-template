@@ -295,4 +295,13 @@ function updateAll(
   currentFolder: string,
   templateFolder: string,
   prefix: string,
-) {}
+) {
+  copyProjectFolder('frontend/src/helpers/router/useBlockNavigation.ts');
+  copyProjectFolder('frontend/src/helpers/router/useBlocker.ts');
+  fs.removeSync(
+    path.join(
+      currentFolder,
+      'frontend/src/helpers/router/useCallbackPrompt.ts',
+    ),
+  );
+}
