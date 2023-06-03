@@ -18,6 +18,7 @@ import { HookFormDatePicker } from 'components/uikit/inputs/date-time/HookFormDa
 import { Grid } from '@mui/material';
 import { useModal } from 'components/uikit/modal/useModal';
 import { useConfirm } from 'helpers/router/useBlocker';
+import { useBlockNavigation } from 'helpers/router/useBlockNavigation';
 
 export const CreateProductPage: React.FC = () => {
   const i18n = useScopedTranslation('Page.Products.Create');
@@ -33,23 +34,14 @@ export const CreateProductPage: React.FC = () => {
     }, []),
   );
   const modals = useModal();
-  const { isActive, onConfirm, resetConfirmation } = useConfirm(
-    form.formState.isDirty,
-  );
-  useEffect(() => {
-    if (isActive) {
-      void modals
-        .showConfirm({
-          title: i18n.t('unsaved_changes_prompt.title'),
-          text: i18n.t('unsaved_changes_prompt.text'),
-        })
-        .then((result) => {
-          if (result) onConfirm();
-          else resetConfirmation();
-        });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isActive]);
+  useBlockNavigation(async () => {
+    if (!form.formState.isDirty) return false;
+    const confirmResult = await modals.showConfirm({
+      title: i18n.t('unsaved_changes_prompt.title'),
+      text: i18n.t('unsaved_changes_prompt.text'),
+    });
+    return confirmResult;
+  });
   return (
     <Loading loading={form.formState.isSubmitting}>
       <AppLink

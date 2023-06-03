@@ -65,10 +65,10 @@ export const useModal = (): ModalContextType => {
 };
 
 export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
-  const [modals, setModals] = useState<UseModalOptions[]>([]);
+  const [modals, setModals] = useState<UseModalOptions<any>[]>([]);
   const i18n = useScopedTranslation('uikit.dialog');
   const addModal = useCallback(
-    (modal: UseModalOptions, promise: Promise<unknown>) => {
+    (modal: UseModalOptions<any>, promise: Promise<unknown>) => {
       setModals((o) => [...o, modal]);
       promise.finally(() => {
         // we use setTimeout to allow hiding form animations to finish
@@ -207,8 +207,11 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
     options.type === 'prompt' ? options.defaultValue : '',
   );
 
-  const onClose = useCallback(() => {
+  const commonClose = useCallback(() => {
     setIsShown(false);
+  }, []);
+  const onClose = useCallback(() => {
+    commonClose();
     if (!options) return;
 
     const type = options.type;
@@ -232,7 +235,7 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
       default:
         assertNever(type);
     }
-  }, [options]);
+  }, [commonClose, options]);
 
   return (
     <CustomModal
@@ -272,7 +275,7 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
                   title={x.text}
                   onClick={() => {
                     options.resolve(x.id);
-                    onClose();
+                    commonClose();
                   }}
                 />
               ))
@@ -288,7 +291,11 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
                         : ButtonColor.Secondary)
                     }
                     title={options.cancelButtonText ?? i18n.t('cancel_button')}
-                    onClick={onClose}
+                    onClick={() => {
+                      if (options.type === 'confirm') options.resolve(false);
+                      else options.resolve(null);
+                      commonClose();
+                    }}
                     data-test-id="dialog-cancelButton"
                   />
                 ) : null}
