@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { useConfirm } from './useBlocker';
 import { Action as HistoryAction, Location } from '@remix-run/router';
 import type { unstable_BlockerFunction as BlockerFunction } from 'react-router';
@@ -18,7 +18,9 @@ export function useBlockNavigation(
   shouldBlockNavigation: boolean | ((args: ArgsType) => Promise<boolean>),
 ) {
   const shouldBlockNavigationRef = useRef(shouldBlockNavigation);
-  shouldBlockNavigationRef.current = shouldBlockNavigation;
+  useLayoutEffect(() => {
+    shouldBlockNavigationRef.current = shouldBlockNavigation;
+  });
 
   // save args passed to `when` to later pass them to `shouldBlockNavigation`
   const whenArgsRef = useRef<ArgsType>(null!);
