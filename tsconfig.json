@@ -2,10 +2,6 @@
   "compilerOptions": {
     "target": "es2020",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "paths": {
-      "node-replace": ["./types/node-replace.d.ts"],
-      "renamer": ["./types/renamer.d.ts"]
-    },
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
