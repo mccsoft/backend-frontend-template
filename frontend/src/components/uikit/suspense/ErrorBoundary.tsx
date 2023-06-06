@@ -1,12 +1,12 @@
 import { errorToString, NetworkError } from 'helpers/error-helpers';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router';
 import { Button } from '../buttons/Button';
-import React from 'react';
 
 import styles from './Loading.module.scss';
 import { QueryFactory } from 'services/api';
+import { isAxiosError } from 'axios';
+import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 
 type ErrorBoundaryFallbackProps = {
   error: Error;
@@ -18,9 +18,9 @@ export const errorBoundaryFallbackFunction = (
   props: ErrorBoundaryFallbackProps,
 ) => <ErrorBoundaryFallback {...props} />;
 export const ErrorBoundaryFallback = (props: ErrorBoundaryFallbackProps) => {
-  const location = useLocation();
+  const location = window.location.href;
   const i18n = useTranslation();
-  const [initialLocation] = useState(location);
+  const [initialLocation] = useState(window.location.href);
   useEffect(() => {
     if (initialLocation !== location) {
       props.resetError();
@@ -34,14 +34,17 @@ export const ErrorBoundaryFallback = (props: ErrorBoundaryFallbackProps) => {
   // if error is NetworkError, but server is available, there's a high chance we are trying to request an old chunk of JS or CSS
   // (unfortunately it's impossible to get the error code of Network response and compare it with 404).
   // so we show proper error message and offer to reload the whole page
-  const isServerUpdated = errorString === NetworkError && isServerAvailable;
+  const isServerUpdated =
+    errorString === NetworkError &&
+    !isAxiosError(props.error) &&
+    isServerAvailable;
+  const queryErrorReset = useQueryErrorResetBoundary();
 
   return (
     <div className={styles.flexContainer}>
       <div className={styles.flexLoadingData} data-test-id="loading-error">
         <div className={styles.loading}>
           <h1>{errorToString(props.error)}</h1>
-          <h1>{errorString}</h1>
           {isServerUpdated ? (
             <>
               <div className={styles.serverUpdated}>
@@ -58,6 +61,7 @@ export const ErrorBoundaryFallback = (props: ErrorBoundaryFallbackProps) => {
             <div>
               <Button
                 onClick={async () => {
+                  queryErrorReset.reset();
                   props.resetError();
                 }}
                 title={i18n.t('suspense.reload')}

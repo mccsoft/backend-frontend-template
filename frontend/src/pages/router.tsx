@@ -7,6 +7,7 @@ import { CreateProductPage } from './authorized/products/create/CreateProductPag
 import { EditProductPage } from './authorized/products/edit/EditProductPage';
 import { ProductListPage } from './authorized/products/ProductListPage';
 import { ProductDetailsPage } from './authorized/products/details/ProductDetailsPage';
+import { ReactRouterErrorBoundary } from './ReactRouterErrorBoundary';
 
 export const authorizedRoutes = () =>
   createBrowserRouter([
@@ -33,6 +34,7 @@ export const authorizedRoutes = () =>
         },
         { path: '', element: <ProductListPage /> },
       ],
+      ErrorBoundary: ReactRouterErrorBoundary,
     },
   ]);
 export const anonymousRoutes = () =>
@@ -40,5 +42,6 @@ export const anonymousRoutes = () =>
     {
       path: '/',
       element: <LoginPage />,
+      ErrorBoundary: ReactRouterErrorBoundary,
     },
   ]);
