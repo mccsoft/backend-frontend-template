@@ -8,35 +8,37 @@ import { EditProductPage } from './authorized/products/edit/EditProductPage';
 import { ProductListPage } from './authorized/products/ProductListPage';
 import { ProductDetailsPage } from './authorized/products/details/ProductDetailsPage';
 
-export const authorizedRoutes = createBrowserRouter([
-  {
-    path: '/',
-    element: <RootPage />,
-    children: [
-      { path: Links.Authorized.UiKit.route, element: <UiKitPage /> },
-      {
-        path: Links.Authorized.CreateProduct.route,
-        element: <CreateProductPage />,
-      },
-      {
-        path: Links.Authorized.EditProduct.route,
-        element: <EditProductPage />,
-      },
-      {
-        path: Links.Authorized.Products.route,
-        element: <ProductListPage />,
-      },
-      {
-        path: Links.Authorized.ProductDetails.route,
-        element: <ProductDetailsPage />,
-      },
-      { path: '', element: <ProductListPage /> },
-    ],
-  },
-]);
-export const anonymousRoutes = createBrowserRouter([
-  {
-    path: '/',
-    element: <LoginPage />,
-  },
-]);
+export const authorizedRoutes = () =>
+  createBrowserRouter([
+    {
+      path: '/',
+      element: <RootPage />,
+      children: [
+        { path: Links.Authorized.UiKit.route, element: <UiKitPage /> },
+        {
+          path: Links.Authorized.CreateProduct.route,
+          element: <CreateProductPage />,
+        },
+        {
+          path: Links.Authorized.EditProduct.route,
+          element: <EditProductPage />,
+        },
+        {
+          path: Links.Authorized.Products.route,
+          element: <ProductListPage />,
+        },
+        {
+          path: Links.Authorized.ProductDetails.route,
+          element: <ProductDetailsPage />,
+        },
+        { path: '', element: <ProductListPage /> },
+      ],
+    },
+  ]);
+export const anonymousRoutes = () =>
+  createBrowserRouter([
+    {
+      path: '/',
+      element: <LoginPage />,
+    },
+  ]);

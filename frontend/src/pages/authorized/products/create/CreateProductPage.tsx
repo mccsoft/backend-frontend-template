@@ -8,7 +8,7 @@ import { Input } from 'components/uikit/inputs/Input';
 import { Loading } from 'components/uikit/suspense/Loading';
 import { useAdvancedForm } from 'helpers/form/useAdvancedForm';
 import { requiredRule } from 'helpers/form/react-hook-form-helper';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { QueryFactory } from 'services/api';
 import { CreateProductDto, ProductType } from 'services/api/api-client';
@@ -17,7 +17,6 @@ import { useNavigate } from 'react-router';
 import { HookFormDatePicker } from 'components/uikit/inputs/date-time/HookFormDatePicker';
 import { Grid } from '@mui/material';
 import { useModal } from 'components/uikit/modal/useModal';
-import { useConfirm } from 'helpers/router/useBlocker';
 import { useBlockNavigation } from 'helpers/router/useBlockNavigation';
 
 export const CreateProductPage: React.FC = () => {

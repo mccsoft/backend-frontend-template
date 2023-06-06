@@ -92,7 +92,7 @@ export const App = () => {
                 <ModalProvider>
                   <QuerySuspenseErrorWrapper>
                     <RouterProvider
-                      router={!!isAuth ? authorizedRoutes : anonymousRoutes}
+                      router={!!isAuth ? authorizedRoutes() : anonymousRoutes()}
                     />
                   </QuerySuspenseErrorWrapper>
 
