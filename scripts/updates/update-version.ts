@@ -93,10 +93,12 @@ export function updateVersion(prefix: string) {
         .toString();
       Diff.applyPatches(patchContents, {
         loadFile(index, callback) {
-          callback(
-            null,
-            fs.readFileSync(path.join(currentFolder, index.index!)).toString(),
-          );
+          const fullPath = path.join(currentFolder, index.index!);
+          if (fs.existsSync(fullPath)) {
+            callback(null, fs.readFileSync(fullPath).toString());
+          } else {
+            callback(null, '');
+          }
         },
         patched(index, content, callback) {
           if (!content) {
