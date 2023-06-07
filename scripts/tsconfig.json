@@ -2,8 +2,8 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "paths": {
-      "node-replace": ["./types/node-replace.d.ts"],
-      "renamer": ["./types/renamer.d.ts"]
-    },
+      "node-replace": ["../types/node-replace.d.ts"],
+      "renamer": ["../types/renamer.d.ts"]
+    }
   }
 }
