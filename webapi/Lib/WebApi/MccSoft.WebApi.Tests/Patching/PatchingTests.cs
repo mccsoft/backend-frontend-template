@@ -23,6 +23,14 @@ public class PatchingTests
         public PatchDto2? Zxc { get; set; }
     }
 
+    public class NullableTestProp : PatchRequest<object>
+    {
+        public int Qwe { get; set; }
+        public int? Zxc { get; set; }
+
+        public PatchDto1 Asd { get; set; }
+    }
+
     public PatchingTests()
     {
         _deserializationOptions = new JsonSerializerOptions() { };
@@ -96,18 +104,13 @@ public class PatchingTests
         result.Zxc.IsFieldPresent(nameof(result.Qwe)).Should().BeFalse();
     }
 
-    public class NonNullableProp : PatchRequest<object>
-    {
-        public int Qwe { get; set; }
-    }
-
     [Fact]
     public void AssignNullToNonNullableProperty()
     {
         FluentActions
             .Invoking(
                 () =>
-                    JsonSerializer.Deserialize<NonNullableProp>(
+                    JsonSerializer.Deserialize<NullableTestProp>(
                         "{\"Qwe\": null}",
                         _deserializationOptions
                     )
@@ -115,5 +118,17 @@ public class PatchingTests
             .Should()
             .Throw<ValidationException>()
             .WithMessage("The Qwe field is required.");
+    }
+
+    [Fact]
+    public void AssignNullToNullableProperty()
+    {
+        var result = JsonSerializer.Deserialize<NullableTestProp>(
+            "{\"Zxc\": null, \"Asd\": null}",
+            _deserializationOptions
+        );
+
+        result.Zxc.Should().BeNull();
+        result.Asd.Should().BeNull();
     }
 }

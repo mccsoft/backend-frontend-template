@@ -74,7 +74,9 @@ public class PatchRequestConverter : JsonConverter<IPatchRequest>
                         if (reader.TokenType == JsonTokenType.Null)
                         {
                             var isPropertyNullable =
-                                Nullable.GetUnderlyingType(property.PropertyType) != null;
+                                Nullable.GetUnderlyingType(property.PropertyType) != null
+                                || !property.PropertyType.IsValueType;
+
                             if (!isPropertyNullable)
                             {
                                 var requiredAttribute = new RequiredAttribute();
