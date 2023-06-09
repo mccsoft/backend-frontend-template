@@ -28,7 +28,9 @@ export const ErrorBoundaryFallback = (props: ErrorBoundaryFallbackProps) => {
   }, [initialLocation, location]);
 
   const errorString = errorToString(props.error);
-  const versionQuery = QueryFactory.VersionQuery.useVersionQuery();
+  const versionQuery = QueryFactory.VersionQuery.useVersionQuery({
+    useErrorBoundary: false,
+  });
   const isServerAvailable = !!versionQuery.data;
 
   // if error is NetworkError, but server is available, there's a high chance we are trying to request an old chunk of JS or CSS
@@ -44,7 +46,7 @@ export const ErrorBoundaryFallback = (props: ErrorBoundaryFallbackProps) => {
     <div className={styles.flexContainer}>
       <div className={styles.flexLoadingData} data-test-id="loading-error">
         <div className={styles.loading}>
-          <h1>{errorToString(props.error)}</h1>
+          <h1>{errorString}</h1>
           {isServerUpdated ? (
             <>
               <div className={styles.serverUpdated}>
