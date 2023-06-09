@@ -5,6 +5,7 @@ import { ReactComponent as Dots } from 'assets/icons/dots.svg';
 
 export type DotMenuProps = Omit<AppMenuProps, 'anchorEl' | 'open'> & {
   size?: 'small' | 'medium';
+  testId?: string;
 };
 
 export const DotMenu: React.FC<DotMenuProps> = React.memo(function DotMenu(
@@ -24,7 +25,11 @@ export const DotMenu: React.FC<DotMenuProps> = React.memo(function DotMenu(
           setIsMenuShown(true);
         }}
       >
-        <Dots className={styles.dotMenuImage} {...style} />
+        <Dots
+          className={styles.dotMenuImage}
+          {...style}
+          data-test-id={props.testId}
+        />
       </div>
       <AppMenu
         {...props}

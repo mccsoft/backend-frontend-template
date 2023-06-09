@@ -28,6 +28,8 @@ export type AppMenuProps = MenuProps & {
    * If `direction` is specified it takes the priority over `anchorOrigin` & `transformOrigin`.
    */
   direction?: MenuDirection;
+
+  testId?: string;
 };
 
 const classes: MenuProps['classes'] = {
@@ -35,7 +37,7 @@ const classes: MenuProps['classes'] = {
   list: styles.list,
 };
 export const AppMenu: React.FC<AppMenuProps> = (props) => {
-  const { menuItems, direction, ...rest } = props;
+  const { menuItems, direction, testId, ...rest } = props;
   const onClose: NonNullable<MenuProps['onClose']> = useCallback(
     (ev: any, reason) => {
       ev.stopPropagation();
@@ -54,6 +56,7 @@ export const AppMenu: React.FC<AppMenuProps> = (props) => {
   return (
     <Menu
       {...rest}
+      data-test-id={testId}
       {...(direction !== undefined
         ? anchorTransformOrigin[direction]
         : undefined)}
