@@ -306,4 +306,6 @@ function updateAll(
       'frontend/src/helpers/router/useCallbackPrompt.ts',
     ),
   );
+
+  updatePlaywright('1.35.0');
 }
