@@ -27,7 +27,7 @@ export function useResetFormWhenDataIsLoaded<
         keepDirtyValues: true,
       });
     }
-  }, [defaultValues]);
+  }, [superjson.stringify(defaultValues)]);
 }
 
 export function requiredRule() {
