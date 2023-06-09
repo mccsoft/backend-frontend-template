@@ -6,7 +6,10 @@ import { Button } from '../buttons/Button';
 import styles from './Loading.module.scss';
 import { QueryFactory } from 'services/api';
 import { isAxiosError } from 'axios';
-import { useQueryErrorResetBoundary } from '@tanstack/react-query';
+import {
+  useQueryClient,
+  useQueryErrorResetBoundary,
+} from '@tanstack/react-query';
 
 type ErrorBoundaryFallbackProps = {
   error: Error;
@@ -20,6 +23,7 @@ export const errorBoundaryFallbackFunction = (
 export const ErrorBoundaryFallback = (props: ErrorBoundaryFallbackProps) => {
   const location = window.location.href;
   const i18n = useTranslation();
+  const queryClient = useQueryClient();
   const [initialLocation] = useState(window.location.href);
   useEffect(() => {
     if (initialLocation !== location) {
@@ -63,6 +67,9 @@ export const ErrorBoundaryFallback = (props: ErrorBoundaryFallbackProps) => {
             <div>
               <Button
                 onClick={async () => {
+                  void queryClient.refetchQueries({
+                    predicate: (x) => !!x.state.error,
+                  });
                   queryErrorReset.reset();
                   props.resetError();
                 }}
