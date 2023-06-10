@@ -43,12 +43,10 @@ for (let i = 0; i < 100; i++)
 
 export const UiKitPage: React.FC = () => {
   const i18n = useScopedTranslation('Page.uikit');
-  const form = useAdvancedForm<UiKitForm>(
-    useCallback(async (data) => {
-      console.log(data);
-      alert(JSON.stringify(data));
-    }, []),
-  );
+  const form = useAdvancedForm<UiKitForm>(async (data) => {
+    console.log(data);
+    alert(JSON.stringify(data));
+  });
   const options = useMemo(() => {
     return [ProductType.Auto, ProductType.Electronic, ProductType.Other];
   }, []);

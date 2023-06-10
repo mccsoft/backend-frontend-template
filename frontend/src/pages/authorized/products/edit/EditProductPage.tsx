@@ -24,7 +24,7 @@ export const EditProductPage: React.FC = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const form = useAdvancedForm<PatchProductDto>(
-    useCallback(async (data) => {
+    async (data) => {
       await QueryFactory.ProductQuery.Client.patch(productId, data);
       await queryClient.invalidateQueries(
         QueryFactory.ProductQuery.searchQueryKey(),
@@ -33,7 +33,7 @@ export const EditProductPage: React.FC = () => {
       //   QueryFactory.ProductQuery.getQueryKey(productId),
       // );
       navigate(Links.Authorized.Products.link());
-    }, []),
+    },
     {
       defaultValues: productQuery.data,
     },

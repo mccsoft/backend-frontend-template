@@ -23,15 +23,13 @@ export const CreateProductPage: React.FC = () => {
   const i18n = useScopedTranslation('Page.Products.Create');
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const form = useAdvancedForm<CreateProductDto>(
-    useCallback(async (data) => {
-      await QueryFactory.ProductQuery.Client.create(data);
-      await queryClient.invalidateQueries(
-        QueryFactory.ProductQuery.searchQueryKey(),
-      );
-      navigate(Links.Authorized.Products.link());
-    }, []),
-  );
+  const form = useAdvancedForm<CreateProductDto>(async (data) => {
+    await QueryFactory.ProductQuery.Client.create(data);
+    await queryClient.invalidateQueries(
+      QueryFactory.ProductQuery.searchQueryKey(),
+    );
+    navigate(Links.Authorized.Products.link());
+  });
   const modals = useModal();
   useBlockNavigation(async () => {
     if (!form.formState.isDirty) return false;

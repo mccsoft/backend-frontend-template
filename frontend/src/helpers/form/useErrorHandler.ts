@@ -1,3 +1,4 @@
+import { useEventCallback } from '@mui/material';
 import { convertToErrorStringInternal } from 'helpers/error-helpers';
 import { useState } from 'react';
 import { FieldValues } from 'react-hook-form';
@@ -108,7 +109,7 @@ export function useErrorHandler<TFieldValues extends FieldValues = FieldValues>(
   const [formErrorsCombined, setFormErrorsCombined] = useState('');
   const navigate = useNavigate();
 
-  async function submitForm(data: TFieldValues) {
+  const submitForm = useEventCallback(async (data: TFieldValues) => {
     try {
       setOverallServerError('');
       await submitFunction(data, navigate);
@@ -122,7 +123,7 @@ export function useErrorHandler<TFieldValues extends FieldValues = FieldValues>(
         setOverallServerError(errorDetails.overallServerError);
       }
     }
-  }
+  });
 
   return {
     handler: submitForm,
