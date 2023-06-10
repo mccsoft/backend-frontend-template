@@ -1,6 +1,6 @@
-import { Menu, MenuItem, MenuProps } from '@mui/material';
+import { Menu, MenuItem, MenuProps, useEventCallback } from '@mui/material';
 import * as React from 'react';
-import { Key, useCallback } from 'react';
+import { Key } from 'react';
 import clsx from 'clsx';
 import styles from './AppMenu.module.scss';
 import { anchorTransformOrigin } from './anchorTransformOrigin';
@@ -38,20 +38,16 @@ const classes: MenuProps['classes'] = {
 };
 export const AppMenu: React.FC<AppMenuProps> = (props) => {
   const { menuItems, direction, testId, ...rest } = props;
-  const onClose: NonNullable<MenuProps['onClose']> = useCallback(
+  const onClose: NonNullable<MenuProps['onClose']> = useEventCallback(
     (ev: any, reason) => {
       ev.stopPropagation();
       props.onClose?.(ev, reason);
     },
-    [props.onClose],
   );
-  const onClick: NonNullable<MenuProps['onClick']> = useCallback(
-    (e) => {
-      e.stopPropagation();
-      props.onClick?.(e);
-    },
-    [props.onClick],
-  );
+  const onClick: NonNullable<MenuProps['onClick']> = useEventCallback((e) => {
+    e.stopPropagation();
+    props.onClick?.(e);
+  });
 
   return (
     <Menu

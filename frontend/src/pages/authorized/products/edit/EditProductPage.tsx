@@ -8,7 +8,7 @@ import { Input } from 'components/uikit/inputs/Input';
 import { Loading } from 'components/uikit/suspense/Loading';
 import { useAdvancedForm } from 'helpers/form/useAdvancedForm';
 import { requiredRule } from 'helpers/form/react-hook-form-helper';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { QueryFactory } from 'services/api';
 import { PatchProductDto, ProductType } from 'services/api/api-client';
