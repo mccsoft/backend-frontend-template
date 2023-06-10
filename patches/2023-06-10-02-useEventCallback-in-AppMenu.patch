@@ -1,0 +1,43 @@
+Index: frontend/src/components/uikit/menu/AppMenu.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/components/uikit/menu/AppMenu.tsx b/frontend/src/components/uikit/menu/AppMenu.tsx
+--- a/frontend/src/components/uikit/menu/AppMenu.tsx	(revision 773d455583a6610191863ba0c4ea3054d5576c36)
++++ b/frontend/src/components/uikit/menu/AppMenu.tsx	(revision f72fbfdc4df13a9d87a7c2876b1e29a4a28fc8b9)
+@@ -1,6 +1,6 @@
+-import { Menu, MenuItem, MenuProps } from '@mui/material';
++import { Menu, MenuItem, MenuProps, useEventCallback } from '@mui/material';
+ import * as React from 'react';
+-import { Key, useCallback } from 'react';
++import { Key } from 'react';
+ import clsx from 'clsx';
+ import styles from './AppMenu.module.scss';
+ import { anchorTransformOrigin } from './anchorTransformOrigin';
+@@ -38,20 +38,16 @@
+ };
+ export const AppMenu: React.FC<AppMenuProps> = (props) => {
+   const { menuItems, direction, testId, ...rest } = props;
+-  const onClose: NonNullable<MenuProps['onClose']> = useCallback(
++  const onClose: NonNullable<MenuProps['onClose']> = useEventCallback(
+     (ev: any, reason) => {
+       ev.stopPropagation();
+       props.onClose?.(ev, reason);
+     },
+-    [props.onClose],
+   );
+-  const onClick: NonNullable<MenuProps['onClick']> = useCallback(
+-    (e) => {
+-      e.stopPropagation();
+-      props.onClick?.(e);
+-    },
+-    [props.onClick],
+-  );
++  const onClick: NonNullable<MenuProps['onClick']> = useEventCallback((e) => {
++    e.stopPropagation();
++    props.onClick?.(e);
++  });
+ 
+   return (
+     <Menu
