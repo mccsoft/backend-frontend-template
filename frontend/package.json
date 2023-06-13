@@ -46,7 +46,7 @@
     "react-router": "6.11.2",
     "react-router-dom": "6.11.2",
     "react-router-prompt": "0.5.3",
-    "react-router-url-params": "0.7.5",
+    "react-router-url-params": "0.8.5",
     "react-textarea-autosize": "8.3.4",
     "react-use": "17.4.0",
     "react-window": "1.8.9",

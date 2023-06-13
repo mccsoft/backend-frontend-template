@@ -5408,7 +5408,7 @@ __metadata:
     react-router: 6.11.2
     react-router-dom: 6.11.2
     react-router-prompt: 0.5.3
-    react-router-url-params: 0.7.5
+    react-router-url-params: 0.8.5
     react-textarea-autosize: 8.3.4
     react-use: 17.4.0
     react-window: 1.8.9
@@ -14977,18 +14977,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router-url-params@npm:0.7.5":
-  version: 0.7.5
-  resolution: "react-router-url-params@npm:0.7.5"
+"react-router-url-params@npm:0.8.5":
+  version: 0.8.5
+  resolution: "react-router-url-params@npm:0.8.5"
   dependencies:
-    serialize-query-params: ^1.3.6
+    serialize-query-params: ^2.0.1
   peerDependencies:
-    query-string: ">=5.1.1"
     react: ">=16"
     react-dom: ">=16.8.0"
     react-router: ">=6.3.0"
     react-router-dom: ">=6.3.0"
-  checksum: 2fc3bcf4ae92993883dffcc66548705669fd89b695a191aa565755add67d782fecc90415d61a118540a8a4603f239ba1430dc479109a47376e7e0d379e49dad1
+  checksum: 23cdc5d26c1bd7956268131c3db6a658f4c5eb09457bf9432735d1300c0eeabed7ba669f4b53910df7f9e69ba421552c0e678632112f309fc251e4786aa6d618
   languageName: node
   linkType: hard
 
@@ -15943,12 +15942,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"serialize-query-params@npm:^1.3.6":
-  version: 1.3.6
-  resolution: "serialize-query-params@npm:1.3.6"
-  peerDependencies:
-    query-string: ">=5.1.1"
-  checksum: 72b496836c8cd16b8bd4f7b86ed6d3b003576e3c0cda1c0f7718b4573d51fce77d177cb30f0b47f7d3a21cba7f9e933d82f0d19f6711bf5760089d43107eacf5
+"serialize-query-params@npm:^2.0.1":
+  version: 2.0.2
+  resolution: "serialize-query-params@npm:2.0.2"
+  checksum: 6dccdbd68cbec44c99599c4f77968e8685a74cc597f473ed93b15a8d03c3a67f50c958af9af3d186e64aabd7f98b59d674a05aa4e69d997ed86a5478cf133b27
   languageName: node
   linkType: hard
 
