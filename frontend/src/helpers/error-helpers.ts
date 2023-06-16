@@ -88,8 +88,12 @@ export function convertToErrorStringInternal(error: any): string {
     return error.message;
   } else if (error.title) {
     return error.title;
-  } else if (error instanceof String || typeof error === 'string') {
-    return error as string;
+  } else if (typeof error.data === 'string') {
+    // when Route corresponding to the current URL is not found,
+    //{"status":404,"statusText":"Not Found","internal":true,"data":"Error: No route matches URL \"/tabs/_5j485gcqq/documents/patient/174803\"","error":{}}
+    return error.data;
+  } else if (typeof error === 'string') {
+    return error;
   }
   console.log('Unknown Error:', error, JSON.stringify(error));
   return error.toString();
