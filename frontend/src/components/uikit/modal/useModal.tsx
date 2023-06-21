@@ -257,6 +257,7 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
                   errorText={options.fieldError}
                   onKeyDown={(event) => {
                     if (event.key === 'Enter') {
+                      commonClose();
                       options.resolve(fieldValue);
                       setFieldValue('');
                     }
