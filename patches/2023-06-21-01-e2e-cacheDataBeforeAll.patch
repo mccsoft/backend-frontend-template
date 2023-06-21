@@ -1,0 +1,121 @@
+Index: e2e/infrastructure/cache.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/e2e/infrastructure/cache.ts b/e2e/infrastructure/cache.ts
+new file mode 100644
+--- /dev/null	(revision 0d45f693bc3749db1aa7ee9ec3774213904278da)
++++ b/e2e/infrastructure/cache.ts	(revision 0d45f693bc3749db1aa7ee9ec3774213904278da)
+@@ -0,0 +1,27 @@
++import { MainPageObject } from 'page-objects/MainPageObject';
++import { authenticatedTest } from './fixtures';
++import { initializeBackendForConsequentTests } from './initialize-backend';
++import { cleanupLocalStorage } from './cleanup-local-storage';
++
++export function cacheDataBeforeAll(
++  testType: typeof authenticatedTest,
++  initFunction: (args: { mainPage: MainPageObject }) => Promise<unknown>,
++) {
++  testType.beforeAll(async ({ mainPageWorker, backendInfo }) => {
++    const page = mainPageWorker.page;
++    if (!backendInfo.isFirstTest) {
++      await initializeBackendForConsequentTests(backendInfo);
++      await cleanupLocalStorage(page);
++    }
++
++    await initFunction({ mainPage: mainPageWorker });
++  });
++  testType.beforeEach(({ backendInfo }) => {
++    // this is to make `mainPage` fixture skip the setup (cleanup tenant)
++    // we need to skip cleanup to preserve the data created in beforeAll above
++    backendInfo.isFirstTest = true;
++  });
++  testType.afterAll(({ backendInfo }) => {
++    backendInfo.isFirstTest = false;
++  });
++}
+Index: e2e/infrastructure/cleanup-local-storage.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/e2e/infrastructure/cleanup-local-storage.ts b/e2e/infrastructure/cleanup-local-storage.ts
+new file mode 100644
+--- /dev/null	(revision 0d45f693bc3749db1aa7ee9ec3774213904278da)
++++ b/e2e/infrastructure/cleanup-local-storage.ts	(revision 0d45f693bc3749db1aa7ee9ec3774213904278da)
+@@ -0,0 +1,28 @@
++import type { Page } from '@playwright/test';
++
++export async function cleanupLocalStorage(page: Page) {
++  await page.addInitScript((tick: number) => {
++    // We use this trick to only reset localStorage once before the test (not on every page reload).
++    // `addInitScript` is normally executed after every page reload
++    // But we don't want to reset Redux storage if we reload the page during the test
++    const key = 'reset_redux_tick';
++    const value = window.localStorage.getItem(key);
++    if (!value || parseInt(value) < tick) {
++      window.localStorage.setItem('i18nextLng', 'en-US');
++      const persistedRedux = window.localStorage.getItem('persist:root');
++      if (persistedRedux) {
++        const persistedReduxAsJson = JSON.parse(persistedRedux);
++        delete persistedReduxAsJson['settings'];
++        delete persistedReduxAsJson['navigation'];
++        delete persistedReduxAsJson['uiConfigurations'];
++        window.localStorage.setItem(
++          'persist:root',
++          JSON.stringify(persistedReduxAsJson),
++        );
++      }
++      window.localStorage.setItem(key, tick.toString());
++    }
++  }, new Date().getTime());
++  // we need to do 'goto' so that `addInitScript` above is executed.
++  await page.goto('/');
++}
+Index: e2e/infrastructure/fixtures.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/e2e/infrastructure/fixtures.ts b/e2e/infrastructure/fixtures.ts
+--- a/e2e/infrastructure/fixtures.ts	(revision 563f6bf278b5577593832c91924d210ec581ba14)
++++ b/e2e/infrastructure/fixtures.ts	(revision 0d45f693bc3749db1aa7ee9ec3774213904278da)
+@@ -8,6 +8,7 @@
+ import { BackendInfo } from 'infrastructure/types';
+ import * as os from 'os';
+ import path from 'path';
++import { cleanupLocalStorage } from './cleanup-local-storage';
+ 
+ const base = test.extend<Record<string, unknown>>({
+   baseURL: process.env.BASE_URL,
+@@ -148,29 +149,3 @@
+     });
+   }, date.getTime() - date.getTimezoneOffset() * 60000);
+ }
+-async function cleanupLocalStorage(page: Page) {
+-  await page.addInitScript((tick: number) => {
+-    // We use this trick to only reset localStorage once before the test (not on every page reload).
+-    // `addInitScript` is normally executed after every page reload
+-    // But we don't want to reset Redux storage if we reload the page during the test
+-    const key = 'reset_redux_tick';
+-    const value = window.localStorage.getItem(key);
+-    if (!value || parseInt(value) < tick) {
+-      window.localStorage.setItem('i18nextLng', 'en-US');
+-      const persistedRedux = window.localStorage.getItem('persist:root');
+-      if (persistedRedux) {
+-        const persistedReduxAsJson = JSON.parse(persistedRedux);
+-        delete persistedReduxAsJson['settings'];
+-        delete persistedReduxAsJson['navigation'];
+-        delete persistedReduxAsJson['uiConfigurations'];
+-        window.localStorage.setItem(
+-          'persist:root',
+-          JSON.stringify(persistedReduxAsJson),
+-        );
+-      }
+-      window.localStorage.setItem(key, tick.toString());
+-    }
+-  }, new Date().getTime());
+-  // we need to do 'goto' so that `addInitScript` above is executed.
+-  await page.goto('/');
+-}
