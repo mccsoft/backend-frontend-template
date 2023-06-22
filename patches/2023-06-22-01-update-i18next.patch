@@ -1,0 +1,37 @@
+Index: frontend/src/application/localization/useScopedTranslation.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/application/localization/useScopedTranslation.ts b/frontend/src/application/localization/useScopedTranslation.ts
+--- a/frontend/src/application/localization/useScopedTranslation.ts	(revision 91c11b427140ed8cbed3215a959630a45c51e4a2)
++++ b/frontend/src/application/localization/useScopedTranslation.ts	(revision b6a1cb43bce59be4b664f04f2d0eabe4a9d167de)
+@@ -1,21 +1,23 @@
+ import {
++  FallbackNs,
+   useTranslation,
+   UseTranslationOptions,
+   UseTranslationResponse,
+ } from 'react-i18next';
+-import { KeyPrefix, Namespace } from 'i18next';
++import { FlatNamespace, KeyPrefix } from 'i18next';
++import { $Tuple } from 'react-i18next/helpers';
+ /*
+ Allows to specify the initial path of all translations returned by the function.
+ E.g. useScopedTranslation('Page.Login'). All translations will start with 'Page.Login.*'
+  */
+ export function useScopedTranslation<
+-  N extends Namespace,
+-  TKPrefix extends KeyPrefix<N>,
++  Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined = undefined,
++  TKPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined,
+ >(
+   path: TKPrefix,
+-  ns?: N | Readonly<N>,
++  ns?: Ns,
+   options?: UseTranslationOptions<TKPrefix>,
+-): UseTranslationResponse<N, TKPrefix> {
++): UseTranslationResponse<FallbackNs<Ns>, TKPrefix> {
+   const i18n = useTranslation(ns, { ...options, keyPrefix: path });
+   return i18n;
+ }
