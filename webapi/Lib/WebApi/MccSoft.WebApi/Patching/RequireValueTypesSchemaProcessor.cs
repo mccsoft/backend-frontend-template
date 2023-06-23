@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using MccSoft.WebApi.Domain.Helpers;
 using MccSoft.WebApi.Patching.Models;
 using Microsoft.AspNetCore.Mvc;
 using NJsonSchema;
@@ -45,22 +46,26 @@ public class RequireValueTypesSchemaProcessor : ISchemaProcessor
         bool isPatchRequest = _patchRequestType.IsAssignableFrom(context.Type);
 
         var schema = context.Schema;
-        if (
-            (isPatchRequest && !_makePatchRequestFieldsNullable)
-            || context.Type == typeof(ValidationProblemDetails)
-            || context.Type == typeof(ProblemDetails)
-        )
-        {
-            // Classes that inherits from PatchRequest are omitted (since all properties in these classes are optional)
-            return;
-        }
 
         if (
-            context.Type.IsAssignableTo(typeof(JsonDocument))
+            context.Type == typeof(ValidationProblemDetails)
+            || context.Type == typeof(ProblemDetails)
+            || context.Type.IsAssignableTo(typeof(JsonDocument))
             || context.Type.IsAssignableTo(typeof(JsonNode))
         )
         {
-            // there's no need to do detailed parsing of json types
+            // there's no need to do detailed parsing of JToken types and system types
+            return;
+        }
+
+        if (isPatchRequest && !_makePatchRequestFieldsNullable)
+        {
+            // this might be needed if some properties are decorated with [RequiredOrMissing] attribute
+            // (to disallow setting null and empty values)
+            foreach (var propertyKeyValue in schema.ActualProperties)
+            {
+                propertyKeyValue.Value.IsRequired = false;
+            }
             return;
         }
 
@@ -120,8 +125,11 @@ public class RequireValueTypesSchemaProcessor : ISchemaProcessor
 
                 property.IsRequired =
                     clrProperty.GetCustomAttribute<RequiredAttribute>() is { }
-                    || clrProperty.GetCustomAttribute<NotRequiredAttribute>() == null
-                        && !(isPatchRequest && _makePatchRequestFieldsNullable);
+                    || (
+                        clrProperty.GetCustomAttribute<NotRequiredAttribute>() == null
+                        && clrProperty.GetCustomAttribute<RequiredOrMissingAttribute>() == null
+                        && !(isPatchRequest && _makePatchRequestFieldsNullable)
+                    );
             }
         }
     }
