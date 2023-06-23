@@ -24,4 +24,15 @@ console.warn('Running pull-template-post-processor script');
 const templateFolder = args.templateFolder;
 
 // If you need NOT to upgrade certain files from template, you could easily remove them here, like:
-// fs.rmdirSync(path.join(templateFolder, "webapi/MccSoft.TemplateApp.App/Utils"));
+// fs.rmdirSync(path.join(templateFolder, "webapi/MccSoft.TemplateApp.App/Utils"), {
+//   recursive: true,
+// });
+
+// if you want to move Docs to a subfolder you could uncomment:
+// const docsFolder = path.join(templateFolder, 'docs');
+// fs.renameSync(docsFolder, docsFolder + '_');
+// fs.mkdirSync(docsFolder);
+// fs.renameSync(
+//   docsFolder + '_',
+//   path.join(templateFolder, 'docs/Template'),
+// );
