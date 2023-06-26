@@ -72,6 +72,9 @@ export default defineConfig(({ command, mode }) => {
         },
       },
     },
+    preview: {
+      port: frontendPort,
+    },
     css: {
       modules: {
         localsConvention: 'camelCase',
