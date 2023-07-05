@@ -52,6 +52,7 @@ export type PromptOptions = {
   defaultValue: string;
   fieldName: string;
   fieldError?: string;
+  maxLength?: number;
   okButtonText?: string;
   okButtonColor?: ButtonColor;
   cancelButtonText?: string;

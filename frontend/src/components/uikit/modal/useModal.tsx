@@ -237,6 +237,17 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
     }
   }, [commonClose, options]);
 
+  const inputRef = useRef<HTMLInputElement>(null);
+  useEffect(
+    function focusInputWhenShown() {
+      if (!isShown) return;
+      inputRef.current?.focus();
+      setTimeout(() => inputRef.current?.focus(), 100);
+      setTimeout(() => inputRef.current?.focus(), 1000);
+    },
+    [isShown],
+  );
+
   return (
     <CustomModal
       isOpen={isShown}
@@ -253,8 +264,10 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
                 <Input
                   value={fieldValue}
                   autoFocus={true}
+                  ref={inputRef}
                   onChange={(e) => setFieldValue(e.target.value)}
                   errorText={options.fieldError}
+                  maxLength={options.maxLength}
                   onKeyDown={(event) => {
                     if (event.key === 'Enter') {
                       commonClose();
