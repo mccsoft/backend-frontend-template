@@ -213,13 +213,13 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
     {
         if (_databaseType == null)
             return action(null, null);
-        return action(CreatePostgresRetryHelper<TService>(), GetLongLivingDbContext());
+        return action(CreateDbRetryHelper<TService>(), GetLongLivingDbContext());
     }
 
     /// <summary>
     /// Creates DbRetryHelper for any service type
     /// </summary>
-    protected DbRetryHelper<TDbContext, TService> CreatePostgresRetryHelper<TService>()
+    protected DbRetryHelper<TDbContext, TService> CreateDbRetryHelper<TService>()
     {
         return CreateService<DbRetryHelper<TDbContext, TService>>();
     }

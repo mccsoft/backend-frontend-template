@@ -1,7 +1,6 @@
 # ------------------------------------
 # This is the base file that is used in all pipelines
-# Please, DO NOT CHANGE it
-# Change 'base.partial.yml' instead
+# Here you can override values defined in 'base.yml'.
 # ------------------------------------
 variables:
   DUMMY: 1
