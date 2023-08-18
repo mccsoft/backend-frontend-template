@@ -20,7 +20,7 @@ public class PartialUpdateHelperTests
         B = 2,
     }
 
-    public class ObjectWithEnum
+    public class ObjectWithEnum : PatchRequest<ObjectWithEnum>
     {
         public TestEnum EnumInObject { get; set; }
     }
@@ -33,6 +33,7 @@ public class PartialUpdateHelperTests
         public TestEnumWithout0Value? EnumWithout0 { get; set; }
         public TestEnumWithout0Value NonNullableEnumWithout0 { get; set; }
         public List<ObjectWithEnum> ObjectsWithEnum { get; set; }
+        public ObjectWithEnum NestedObject { get; set; }
     }
 
     public class Patch1 : PatchRequest<DomainClass1>
@@ -44,6 +45,7 @@ public class PartialUpdateHelperTests
         public TestEnumWithout0Value? EnumWithout0 { get; set; }
         public TestEnumWithout0Value? NonNullableEnumWithout0 { get; set; }
         public List<ObjectWithEnum> ObjectsWithEnum { get; set; }
+        public ObjectWithEnum NestedObject { get; set; }
     }
 
     [Fact]
@@ -160,5 +162,33 @@ public class PartialUpdateHelperTests
         domainClass.Update(patch);
 
         domainClass.ObjectsWithEnum.Should().BeEquivalentTo(objectsWithEnum);
+    }
+
+    [Theory]
+    [InlineData(false, false, TestEnum.A)]
+    [InlineData(false, true, TestEnum.A)]
+    [InlineData(true, false, TestEnum.A)]
+    [InlineData(true, true, TestEnum.B)]
+    public void NestedObject_Simple_Patched(
+        bool setHasPropertyOnRootObject,
+        bool setHasPropertyOnNestedObject,
+        TestEnum expectedValue
+    )
+    {
+        var domainClass = new DomainClass1
+        {
+            NestedObject = new ObjectWithEnum { EnumInObject = TestEnum.A },
+        };
+
+        var nestedPatch = new ObjectWithEnum { EnumInObject = TestEnum.B };
+        if (setHasPropertyOnNestedObject)
+            nestedPatch.SetHasProperty(nameof(ObjectWithEnum.EnumInObject));
+        var patch = new Patch1() { NestedObject = nestedPatch, };
+        if (setHasPropertyOnRootObject)
+            patch.SetHasProperty(nameof(patch.NestedObject));
+
+        domainClass.Update(patch);
+
+        domainClass.NestedObject.EnumInObject.Should().Be(expectedValue);
     }
 }
