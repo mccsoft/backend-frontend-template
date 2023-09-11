@@ -185,9 +185,9 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
     {
         _databaseInitializer.UseProvider(builder, connectionString);
 
-        var factory = LoggerFactory.Create(l =>
+        var factory = LoggerFactory.Create(loggingBuilder =>
         {
-            l.ClearProviders().AddXUnit(OutputHelper);
+            loggingBuilder.ClearProviders().AddXUnit(OutputHelper);
         });
 
         builder
