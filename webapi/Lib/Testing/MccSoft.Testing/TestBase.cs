@@ -66,7 +66,6 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
     protected readonly IDatabaseInitializer _databaseInitializer;
     protected Mock<IWebHostEnvironment> _webHostEnvironment;
     protected IConfigurationRoot _configuration;
-    private ILoggerFactory _factory;
 
     protected TestBase(ITestOutputHelper outputHelper, DatabaseType? databaseType)
     {
@@ -281,7 +280,6 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
         configureRegistrations?.Invoke(serviceCollection);
 
         _serviceProvider = serviceCollection.BuildServiceProvider();
-
         return _serviceProvider;
     }
 
