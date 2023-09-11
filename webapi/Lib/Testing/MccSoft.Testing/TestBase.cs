@@ -66,6 +66,7 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
     protected readonly IDatabaseInitializer _databaseInitializer;
     protected Mock<IWebHostEnvironment> _webHostEnvironment;
     protected IConfigurationRoot _configuration;
+    private ILoggerFactory _factory;
 
     protected TestBase(ITestOutputHelper outputHelper, DatabaseType? databaseType)
     {
@@ -185,9 +186,14 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
     {
         _databaseInitializer.UseProvider(builder, connectionString);
 
+        var factory = LoggerFactory.Create(l =>
+        {
+            l.ClearProviders().AddXUnit(OutputHelper);
+        });
+
         builder
             .WithLambdaInjection()
-            // .UseLoggerFactory(LoggerFactory)
+            .UseLoggerFactory(factory)
             .EnableSensitiveDataLogging()
             .EnableDetailedErrors()
             .UseOpenIddict();
@@ -275,6 +281,7 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
         configureRegistrations?.Invoke(serviceCollection);
 
         _serviceProvider = serviceCollection.BuildServiceProvider();
+
         return _serviceProvider;
     }
 
@@ -344,7 +351,7 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
             loggingBuilder => loggingBuilder.ClearProviders().AddXUnit(OutputHelper)
         );
 
-        serviceCollection.AddSingleton<IConfiguration>(configuration);
+        serviceCollection.AddSingleton(configuration);
 
         /*
          * DO NOT register your project-specific services here!
