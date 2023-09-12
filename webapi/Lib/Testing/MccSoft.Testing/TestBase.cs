@@ -187,7 +187,7 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
 
         builder
             .WithLambdaInjection()
-            // .UseLoggerFactory(LoggerFactory)
+            .UseLoggerFactory(LoggerFactory.Create(ConfigureXunitLogger()))
             .EnableSensitiveDataLogging()
             .EnableDetailedErrors()
             .UseOpenIddict();
@@ -340,16 +340,19 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
             _configuration = new ConfigurationBuilder().AddInMemoryCollection().Build()
         );
 
-        serviceCollection.AddLogging(
-            loggingBuilder => loggingBuilder.ClearProviders().AddXUnit(OutputHelper)
-        );
+        serviceCollection.AddLogging(ConfigureXunitLogger());
 
-        serviceCollection.AddSingleton<IConfiguration>(configuration);
+        serviceCollection.AddSingleton(configuration);
 
         /*
          * DO NOT register your project-specific services here!
          * Register your app-specific services in RegisterServices method
          */
+    }
+
+    private Action<ILoggingBuilder> ConfigureXunitLogger()
+    {
+        return loggingBuilder => loggingBuilder.ClearProviders().AddXUnit(OutputHelper);
     }
 
     protected virtual (ConfigurationBuilder, IWebHostEnvironment) SetupEnvironment()
