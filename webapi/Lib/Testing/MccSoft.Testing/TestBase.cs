@@ -176,6 +176,14 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
     #region InitializeService
 
     /// <summary>
+    /// We need to insert the logger in App Tests
+    /// (because we don't spin up the whole TestServer there, so there's no built-in logging to use)
+    /// But we don't need to insert it in Component Tests, because there's a built-in logger already
+    /// which could be controlled via standard appsettings.json
+    /// </summary>
+    public virtual bool InsertLoggerInEf => false;
+
+    /// <summary>
     /// Returns the DbContextOptionsBuilder
     /// </summary>
     protected virtual void ConfigureDatabaseOptions(
@@ -187,10 +195,16 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
 
         builder
             .WithLambdaInjection()
-            .UseLoggerFactory(LoggerFactory.Create(ConfigureXunitLogger()))
             .EnableSensitiveDataLogging()
             .EnableDetailedErrors()
             .UseOpenIddict();
+
+        if (InsertLoggerInEf)
+        {
+            // this is needed in App Tests, but not in Component Tests.
+            // see comments to InsertLoggerInEf for details
+            builder.UseLoggerFactory(LoggerFactory.Create(ConfigureXunitLogger()));
+        }
     }
 
     /// <summary>

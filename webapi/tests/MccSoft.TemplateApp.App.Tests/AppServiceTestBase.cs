@@ -24,6 +24,7 @@ namespace MccSoft.TemplateApp.App.Tests;
 public class AppServiceTestBase : TestBase<TemplateAppDbContext>
 {
     protected User _defaultUser;
+    public override bool InsertLoggerInEf => true;
 
     protected AppServiceTestBase(
         ITestOutputHelper outputHelper,
