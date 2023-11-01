@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using Audit.Core;
 using MccSoft.IntegreSql.EF.DatabaseInitialization;
 using MccSoft.TemplateApp.App.Utils.Localization;
@@ -21,7 +22,7 @@ namespace MccSoft.TemplateApp.App.Tests;
 /// <summary>
 /// The base class for application service test classes.
 /// </summary>
-public class AppServiceTestBase : TestBase<TemplateAppDbContext>
+public abstract class AppServiceTestBase : TestBase<TemplateAppDbContext>
 {
     protected User _defaultUser;
     public override bool InsertLoggerInEf => true;
@@ -32,19 +33,21 @@ public class AppServiceTestBase : TestBase<TemplateAppDbContext>
     ) : base(outputHelper, testDatabaseType)
     {
         Configuration.AuditDisabled = true;
+    }
+
+    public override async Task InitializeAsync()
+    {
+        await base.InitializeAsync();
 
         // initialize some variables to be available in all tests
-        if (testDatabaseType != null)
+        if (_databaseType != null)
         {
-            TaskUtils.RunSynchronously(async () =>
+            await WithDbContext(async db =>
             {
-                await WithDbContext(async db =>
-                {
-                    _defaultUser = await db.Users.FirstAsync(x => x.Email == "default@test.test");
-                });
-                _userAccessorMock.Setup(x => x.GetUserId()).Returns(_defaultUser.Id);
-                _userAccessorMock.Setup(x => x.GetTenantId()).Returns(_defaultUser.TenantId);
+                _defaultUser = await db.Users.FirstAsync(x => x.Email == "default@test.test");
             });
+            _userAccessorMock.Setup(x => x.GetUserId()).Returns(_defaultUser.Id);
+            _userAccessorMock.Setup(x => x.GetTenantId()).Returns(_defaultUser.TenantId);
         }
     }
 

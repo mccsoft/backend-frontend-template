@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using MccSoft.IntegreSql.EF.DatabaseInitialization;
 using MccSoft.LowLevelPrimitives;
 using MccSoft.TemplateApp.App.Setup;
@@ -22,7 +23,7 @@ using OpenIddict.Abstractions;
 
 namespace MccSoft.TemplateApp.ComponentTests;
 
-public class ComponentTestBase : TestBase<TemplateAppDbContext>, IDisposable
+public abstract class ComponentTestBase : TestBase<TemplateAppDbContext>
 {
     protected TestServer TestServer { get; private set; }
     protected HttpClient Client { get; private set; }
@@ -35,8 +36,11 @@ public class ComponentTestBase : TestBase<TemplateAppDbContext>, IDisposable
     protected ComponentTestBase(
         ITestOutputHelper outputHelper,
         DatabaseType databaseType = DatabaseType.Postgres
-    ) : base(outputHelper, databaseType)
+    ) : base(outputHelper, databaseType) { }
+
+    public override async Task InitializeAsync()
     {
+        await base.InitializeAsync();
         var application = CreateWebApplicationFactory(ConnectionString);
 
         TestServer = application.Server;
@@ -148,13 +152,5 @@ public class ComponentTestBase : TestBase<TemplateAppDbContext>, IDisposable
         services.AddSingleton(
             (_backgroundJobClient = HangfireMock.CreateHangfireMock(() => _serviceProvider)).Object
         );
-    }
-
-    protected override void DisposeImpl()
-    {
-        base.DisposeImpl();
-        _databaseInitializer.RemoveDatabase(ConnectionString);
-        _databaseInitializer.Dispose();
-        // Do not dispose of TestServer, it is disposed together with the applicationFactory.
     }
 }

@@ -6,12 +6,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MccSoft.TemplateApp.ComponentTests;
 
-public class ProductTests : ComponentTestBase
+public sealed class ProductTests : ComponentTestBase
 {
-    private readonly ProductClient _productClient;
+    private ProductClient _productClient;
 
-    public ProductTests(ITestOutputHelper outputHelper) : base(outputHelper)
+    public ProductTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
+
+    public override async Task InitializeAsync()
     {
+        await base.InitializeAsync();
         _productClient = new ProductClient(Client);
     }
 

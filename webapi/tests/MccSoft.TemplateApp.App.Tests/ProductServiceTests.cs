@@ -9,11 +9,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MccSoft.TemplateApp.App.Tests;
 
-public class ProductServiceTests : AppServiceTestBase
+public sealed class ProductServiceTests : AppServiceTestBase
 {
     public ProductServiceTests(ITestOutputHelper outputHelper)
-        : base(outputHelper, DatabaseType.Postgres)
+        : base(outputHelper, DatabaseType.Postgres) { }
+
+    public override async Task InitializeAsync()
     {
+        await base.InitializeAsync();
         Sut = CreateService<ProductService>();
     }
 
