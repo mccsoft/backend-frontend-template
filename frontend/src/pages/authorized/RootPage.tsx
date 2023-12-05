@@ -15,6 +15,9 @@ import Logger from 'js-logger';
 
 export const RootPage: React.FC = () => {
   const i18n = useTranslation();
+  const env = import.meta.env;
+  const tst = env.TST;
+  console.log('qweqwe', tst);
   return (
     <>
       <div className={styles.container} data-test-id="main-page-container">
@@ -23,7 +26,7 @@ export const RootPage: React.FC = () => {
         </div>
         <div className={styles.bottomNavigation}>
           <div>
-            Version: {appVersion()}, {import.meta.env.TST}
+            Version: {appVersion()}, {import.meta.env.TST} - {tst}
           </div>
           <div>
             <DropDownInput
