@@ -1,14 +1,21 @@
 /*
+ * !!!!!
+ * You MUST use full variable name (e.g. `import.meta.env.REACT_APP_VERSION`) to be able to override them at runtime!
+ * This is a requirement of import-meta-env plugin: https://import-meta-env.org/guide/getting-started/introduction.html#syntax
+ * !!!!
+ */
+
+export const sentryDsn = () => import.meta.env.REACT_APP_SENTRY_DSN!;
+/*
  * build.REACT_APP_VERSION is defined at build time (vite.config.ts)
  * you could override it with env. variable REACT_APP_VERSION if you'd like to
  */
-const env = import.meta.env;
 export const appVersion = () =>
-  env.REACT_APP_VERSION! ?? build.REACT_APP_VERSION;
-export const sentryDsn = () => env.REACT_APP_SENTRY_DSN!;
+  import.meta.env.REACT_APP_VERSION! ?? build.REACT_APP_VERSION;
 
 export const FeatureFlags = {
-  isMiniProfilerEnabled: () => toBoolean(env.REACT_APP_MINI_PROFILER_ENABLED),
+  isMiniProfilerEnabled: () =>
+    toBoolean(import.meta.env.REACT_APP_MINI_PROFILER_ENABLED),
 };
 
 /*
