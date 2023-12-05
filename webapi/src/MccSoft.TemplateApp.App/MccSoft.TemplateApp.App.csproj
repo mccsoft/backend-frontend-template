@@ -28,6 +28,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningLevel>3</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <UseRazorSourceGenerator>false</UseRazorSourceGenerator>
+  </PropertyGroup>
 
   <ItemGroup>
     <None Update="Dockerfile">
