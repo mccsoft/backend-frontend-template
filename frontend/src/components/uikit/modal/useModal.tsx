@@ -70,7 +70,7 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
   const addModal = useCallback(
     (modal: UseModalOptions<any>, promise: Promise<unknown>) => {
       setModals((o) => [...o, modal]);
-      promise.finally(() => {
+      void promise.finally(() => {
         // we use setTimeout to allow hiding form animations to finish
         setTimeout(
           () => setModals((o) => [...o.filter((x) => x.id !== modal.id)]),
