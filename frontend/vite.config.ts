@@ -27,7 +27,12 @@ export default defineConfig(({ command, mode }) => {
       // react(),
       reactSwc(),
       tsconfigPaths(),
-      svgrPlugin(),
+      svgrPlugin({
+        svgrOptions: {
+          exportType: 'named',
+          jsxRuntime: 'automatic',
+        },
+      }),
       ImportMetaEnvPlugin.vite({
         example: '.env',
       }),
