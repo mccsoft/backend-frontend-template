@@ -1,6 +1,6 @@
+import { buildVersion } from 'application/constants/env-variables';
 import { InternalAxiosRequestConfig } from 'axios';
 import { createId } from 'components/uikit/type-utils';
-import { appVersion } from 'application/constants/env-variables';
 
 // it's constant while the app is running, and different after app restarts
 export const sessionId = `${createId()}-${createId()}-${createId()}`;
@@ -10,7 +10,7 @@ export const sessionId = `${createId()}-${createId()}-${createId()}`;
  */
 export const sessionAxiosInterceptor = (config: InternalAxiosRequestConfig) => {
   config.headers['ClientSession'] = sessionId;
-  config.headers['ClientVersion'] = appVersion();
+  config.headers['ClientVersion'] = buildVersion;
   config.headers['ClientPlatform'] = 'web';
   return config;
 };

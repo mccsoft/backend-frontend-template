@@ -1,4 +1,4 @@
-import { appVersion } from 'application/constants/env-variables';
+import { buildVersion } from 'application/constants/env-variables';
 import i18n from 'i18next';
 import intervalPlural from 'i18next-intervalplural-postprocessor';
 import { initReactI18next } from 'react-i18next';
@@ -38,7 +38,7 @@ export function initializeLocalization() {
       },
       backend: {
         loadPath: '/dictionaries/{{ns}}.{{lng}}.json',
-        queryStringParams: { v: appVersion() },
+        queryStringParams: { v: buildVersion },
       },
     })
     .then(() => {
