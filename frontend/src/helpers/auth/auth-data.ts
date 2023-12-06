@@ -1,4 +1,4 @@
-import JwtDecode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 export type FetchLoginResponse = {
   access_token: string;
@@ -18,6 +18,6 @@ export type UserClaims = {
 };
 
 export function decodeClaimsFromToken(token: string): UserClaims {
-  const claims = JwtDecode<UserClaims>(token);
+  const claims = jwtDecode<UserClaims>(token);
   return claims;
 }

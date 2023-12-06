@@ -1,4 +1,10 @@
-import { addSeconds, differenceInHours, format, startOfToday } from 'date-fns';
+import {
+  addSeconds,
+  differenceInHours,
+  format,
+  setDefaultOptions,
+  startOfToday,
+} from 'date-fns';
 
 export function convertDateToString(
   date: Date | null | undefined,
@@ -12,7 +18,7 @@ export function convertDateToString(
 }
 
 export const convertToShortDate = (date: Date) => {
-  return localFormat(date, 'do MMM');
+  return format(date, 'do MMM');
 };
 
 export function formatDurationInSecondsAsHHMM(
@@ -23,16 +29,6 @@ export function formatDurationInSecondsAsHHMM(
   return `${differenceInHours(startDate, endDate)}:${format(endDate, 'mm')}`;
 }
 
-let _locale: Locale;
-
-/*
- * Use `localFormat` everywhere, otherwise it's not possible to specify locale globally
- * That's an advice from https://github.com/date-fns/date-fns/issues/816#issuecomment-961280538
- */
-export function localFormat(date: Date, dateFormat: string): string {
-  return format(date, dateFormat, { locale: _locale });
-}
-
 export function setLocale(locale: Locale) {
-  _locale = locale;
+  setDefaultOptions({ locale: locale });
 }
