@@ -26,14 +26,18 @@ interface TimeEntry {
 function parseTime(timeString: string): number | null {
   if (timeString == '') return null;
 
-  const time = timeString.match(/(\d+)(:(\d\d))?\s*(p?)/i);
+  const time = timeString.match(/(\d+)(:(\d\d))?/i);
+  const hasAmPm =
+    timeString.toLowerCase().includes('am') ||
+    timeString.toLowerCase().includes('pm');
+  const hasPm = timeString.toLowerCase().includes('pm');
   if (time == null) return null;
 
   let hours = parseInt(time[1], 10);
-  if (hours == 12 && !time[4]) {
+  if (hours == 12 && hasAmPm && !hasPm) {
     hours = 0;
   } else {
-    hours += hours < 12 && time[4] ? 12 : 0;
+    hours += hours < 12 && hasPm ? 12 : 0;
   }
   const minutes = parseInt(time[3], 10) || 0;
 
