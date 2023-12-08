@@ -1,12 +1,16 @@
 using System.Security.Claims;
+using System.Threading.Tasks;
 using MccSoft.WebApi.SignedUrl;
 
 namespace MccSoft.TemplateApp.App.Tests;
 
-public class SignUrlHelperTests : AppServiceTestBase
+public sealed class SignUrlHelperTests : AppServiceTestBase
 {
-    public SignUrlHelperTests(ITestOutputHelper outputHelper) : base(outputHelper, null)
+    public SignUrlHelperTests(ITestOutputHelper outputHelper) : base(outputHelper, null) { }
+
+    public override async Task InitializeAsync()
     {
+        await base.InitializeAsync();
         Sut = CreateService<SignUrlHelper>(x => x.AddSignUrl("fDmp1K2YveBbfDmpfDmp1K2YveBbfDmp"));
     }
 

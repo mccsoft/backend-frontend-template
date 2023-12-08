@@ -18,6 +18,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NeinLinq;
+using Xunit;
 using Xunit.Abstractions;
 
 namespace MccSoft.Testing;
@@ -36,11 +37,11 @@ namespace MccSoft.Testing;
 /// (the state of objects loaded in a separate DbContext will be incorrect, if SaveChanges is
 /// forgotten).
 /// </remarks>
-public abstract class TestBase<TDbContext> where TDbContext : DbContext
+public abstract class TestBase<TDbContext> : IAsyncLifetime where TDbContext : DbContext
 {
     protected string ConnectionString { get; private set; }
     public ITestOutputHelper OutputHelper { get; set; }
-    protected TDbContext _dbContext;
+    protected TDbContext? _dbContext;
     protected Mock<IBackgroundJobClient> _backgroundJobClient;
     protected ServiceProvider _serviceProvider;
     protected Mock<IUserAccessor> _userAccessorMock;
@@ -63,7 +64,7 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
     public static MotherFactory an = null;
 
     protected readonly DatabaseType? _databaseType;
-    protected readonly IDatabaseInitializer _databaseInitializer;
+    protected readonly IDatabaseInitializer? _databaseInitializer;
     protected Mock<IWebHostEnvironment> _webHostEnvironment;
     protected IConfigurationRoot _configuration;
 
@@ -86,12 +87,12 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
             DatabaseType.Sqlite => new SqliteDatabaseInitializer(),
             _ => throw new ArgumentOutOfRangeException(nameof(databaseType), databaseType, null)
         };
+    }
 
-        if (databaseType != null)
-        {
-            // ReSharper disable once VirtualMemberCallInConstructor
-            InitializeDatabase(SeedDatabase());
-        }
+    public virtual async Task InitializeAsync()
+    {
+        if (_databaseType != null)
+            await InitializeDatabase(SeedDatabase());
     }
 
     /// <summary>
@@ -191,7 +192,7 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
         string connectionString
     )
     {
-        _databaseInitializer.UseProvider(builder, connectionString);
+        _databaseInitializer?.UseProvider(builder, connectionString);
 
         builder
             .WithLambdaInjection()
@@ -394,11 +395,11 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
 
     #region Initialize database
 
-    protected virtual void InitializeDatabase(
-        DatabaseSeedingOptions<TDbContext> seedingOptions = null
+    protected virtual async Task InitializeDatabase(
+        DatabaseSeedingOptions<TDbContext>? seedingOptions = null
     )
     {
-        ConnectionString = _databaseInitializer?.CreateDatabaseGetConnectionStringSync(
+        ConnectionString = await _databaseInitializer.CreateDatabaseGetConnectionString(
             seedingOptions
         );
         OutputHelper.WriteLine($"Connection string: {ConnectionString}");
@@ -411,19 +412,16 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
 
     #region Dispose
 
-    public void Dispose()
-    {
-        DisposeImpl();
-    }
-
     /// <summary>
     /// Override this method to dispose of expensive resources created in descendants
     /// of this class. Always call the base method.
     /// </summary>
-    protected virtual void DisposeImpl()
+    public virtual async Task DisposeAsync()
     {
-        _dbContext?.Dispose();
-        _databaseInitializer?.RemoveDatabase(ConnectionString);
+        if (_dbContext is { })
+            await _dbContext.DisposeAsync();
+        if (_databaseInitializer is { })
+            await _databaseInitializer.RemoveDatabase(ConnectionString);
     }
 
     #endregion

@@ -6,11 +6,14 @@ using MccSoft.TemplateApp.TestUtils.Factories;
 
 namespace MccSoft.TemplateApp.App.Tests;
 
-public class TestApiServiceTests : AppServiceTestBase
+public sealed class TestApiServiceTests : AppServiceTestBase
 {
     public TestApiServiceTests(ITestOutputHelper outputHelper)
-        : base(outputHelper, DatabaseType.Postgres)
+        : base(outputHelper, DatabaseType.Postgres) { }
+
+    public override async Task InitializeAsync()
     {
+        await base.InitializeAsync();
         Sut = CreateService<TestApiService>();
     }
 
