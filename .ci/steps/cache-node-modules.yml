@@ -10,7 +10,7 @@ steps:
   - task: UseDotNet@2
     inputs:
       packageType: 'sdk'
-      version: '7.x'
+      version: '8.x'
 
   - task: Cache@2
     inputs:
