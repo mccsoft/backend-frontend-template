@@ -60,7 +60,7 @@ public class LogAttribute : OverrideMethodAspect, IAspect<INamedType>
         }
     }
 
-    [Template]
+    //[Template]
     public override dynamic? OverrideMethod()
     {
         var logger = (ILogger)meta.This._logger;

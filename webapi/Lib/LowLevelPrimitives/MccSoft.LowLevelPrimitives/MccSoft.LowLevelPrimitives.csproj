@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-  <TargetFramework>net7.0</TargetFramework>
+  <TargetFramework>net8.0</TargetFramework>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <noWarn>1591</noWarn>
     <Description>Contains small classes and interfaces that are meant to be available across(almost) all projects.</Description>
@@ -11,7 +11,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-    <PackageReference Include="NeinLinq" Version="6.1.1" />
+    <PackageReference Include="NeinLinq" Version="6.3.0" />
     <PackageReference Include="SystemTextJson.JsonDiffPatch" Version="1.3.1" />
   </ItemGroup>
 

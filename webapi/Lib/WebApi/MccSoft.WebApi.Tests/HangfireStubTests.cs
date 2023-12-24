@@ -33,8 +33,6 @@ public class HangfireStubTests : WebApiTestBase
         });
     }
 
-    public HangfireStubTests(
-        ITestOutputHelper outputHelper,
-        DatabaseType databaseType = DatabaseType.Postgres
-    ) : base(outputHelper, databaseType) { }
+    public HangfireStubTests(ITestOutputHelper outputHelper)
+        : base(outputHelper, DatabaseType.Postgres) { }
 }

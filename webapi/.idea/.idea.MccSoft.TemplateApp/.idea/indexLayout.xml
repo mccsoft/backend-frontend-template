@@ -3,6 +3,7 @@
   <component name="UserContentModel">
     <attachedFolders>
       <Path>../.ci</Path>
+      <Path>../.config</Path>
       <Path>../docs</Path>
       <Path>../frontend</Path>
       <Path>../scripts</Path>

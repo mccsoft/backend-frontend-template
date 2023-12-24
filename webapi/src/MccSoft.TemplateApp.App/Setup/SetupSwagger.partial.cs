@@ -13,6 +13,6 @@ public static partial class SetupSwagger
         AspNetCoreOpenApiDocumentGeneratorSettings options
     )
     {
-        options.TypeMappers.Add(new JsonObjectTypeMapper());
+        options.SchemaSettings.TypeMappers.Add(new JsonObjectTypeMapper());
     }
 }

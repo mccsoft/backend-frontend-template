@@ -27,19 +27,23 @@ public static partial class SetupSwagger
         services.AddOpenApiDocument(options =>
         {
             ConfigureOpenApiDocument(options, swaggerOptions);
-            options.SchemaProcessors.Add(
+            options.SchemaSettings.SchemaProcessors.Add(
                 new RequireValueTypesSchemaProcessor(makePatchRequestFieldsNullable: false)
             );
-            options.SchemaProcessors.Add(new ValidationProblemDetailsSchemaProcessor());
+            options.SchemaSettings.SchemaProcessors.Add(
+                new ValidationProblemDetailsSchemaProcessor()
+            );
         });
         services.AddOpenApiDocument(options =>
         {
             ConfigureOpenApiDocument(options, swaggerOptions);
             options.DocumentName = "csharp";
-            options.SchemaProcessors.Add(
+            options.SchemaSettings.SchemaProcessors.Add(
                 new RequireValueTypesSchemaProcessor(makePatchRequestFieldsNullable: true)
             );
-            options.SchemaProcessors.Add(new ValidationProblemDetailsSchemaProcessor());
+            options.SchemaSettings.SchemaProcessors.Add(
+                new ValidationProblemDetailsSchemaProcessor()
+            );
         });
 
         // If you'd like to modify this class, consider adding your custom code in the SetupSwagger.partial.cs
@@ -86,7 +90,7 @@ public static partial class SetupSwagger
         };
         options.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("Bearer"));
         // maps JsonDocument to `{ [key: string]: any; }`
-        options.SchemaGenerator.Settings.TypeMappers.Add(
+        options.SchemaSettings.TypeMappers.Add(
             new PrimitiveTypeMapper(
                 typeof(JsonDocument),
                 s =>
@@ -97,7 +101,7 @@ public static partial class SetupSwagger
             )
         );
 
-        options.GenerateEnumMappingDescription = true;
+        options.SchemaSettings.GenerateEnumMappingDescription = true;
 
         AdjustDefaultOpenApiDocument(options);
     }
@@ -114,7 +118,7 @@ public static partial class SetupSwagger
         {
             options.Path = "/swagger/{documentName}/swagger.json";
         });
-        app.UseSwaggerUi3(options =>
+        app.UseSwaggerUi(options =>
         {
             options.Path = "/swagger";
             options.OAuth2Client = new OAuth2ClientSettings()

@@ -1,18 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-  <TargetFramework>net7.0</TargetFramework>
+  <TargetFramework>net8.0</TargetFramework>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Destructurama.JsonNet" Version="2.0.0" />
-    <PackageReference Include="IdentityModel" Version="6.1.0" />
-    <PackageReference Include="Metalama.Framework" Version="2023.0.115" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
-    <PackageReference Include="Sentry.Serilog" Version="3.31.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
-    <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="9.0.1" />
+    <PackageReference Include="Destructurama.JsonNet" Version="2.0.1" />
+    <PackageReference Include="Metalama.Framework" Version="2023.4.8" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="Sentry.Serilog" Version="3.41.3" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
+    <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="9.0.3" />
     <PackageReference Include="Serilog.Sinks.Loggly" Version="5.4.0" />
   </ItemGroup>
 
