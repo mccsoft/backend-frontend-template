@@ -12,7 +12,7 @@ export const sentryDsn = () => import.meta.env.REACT_APP_SENTRY_DSN!;
  */
 export const buildVersion = build.REACT_APP_VERSION;
 export const appVersion = () =>
-  import.meta.env.REACT_APP_VERSION! ?? buildVersion;
+  import.meta.env.REACT_APP_VERSION! || buildVersion;
 
 export const FeatureFlags = {
   isMiniProfilerEnabled: () =>
