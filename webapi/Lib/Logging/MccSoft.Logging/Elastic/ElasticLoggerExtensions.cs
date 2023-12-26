@@ -73,7 +73,7 @@ public static class ElasticLoggerExtensions
             return;
 
         string stage = string.IsNullOrEmpty(options.IndexName) ? options.User : options.IndexName;
-        string serviceName = "Magadan".ToLower();
+        string serviceName = "TemplateApp".ToLower();
         bool initSchema = true;
 
         string replicaId = configuration.GetValue<string>("ReplicaId") ?? "1";
@@ -169,8 +169,7 @@ public static class ElasticLoggerExtensions
                 // Workaround for Override not working in sub-loggers,
                 // see https://github.com/serilog/serilog/issues/1346
                 // and https://github.com/serilog/serilog/issues/1453#issuecomment-654254454
-                .MinimumLevel
-                    .Verbose()
+                .MinimumLevel.Verbose()
                     .ExcludeEfInformation()
                     .WriteTo.Elasticsearch(elasticSearchSinkOptions)
         );
