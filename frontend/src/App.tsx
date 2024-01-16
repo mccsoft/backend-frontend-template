@@ -59,8 +59,7 @@ export const App = () => {
       defaultOptions: {
         queries: {
           refetchOnWindowFocus: false,
-          useErrorBoundary: true,
-          suspense: false,
+          throwOnError: true,
           retry(failureCount, error) {
             if (failureCount >= 3) return false;
             if (axios.isAxiosError(error) && error.response?.status === 401) {

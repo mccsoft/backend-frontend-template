@@ -26,6 +26,7 @@ export function throwError(config?: AxiosRequestConfig | undefined): Promise<str
         method: "GET",
         url: url_,
         headers: {
+            ..._requestConfigThrowError?.headers,
             "Accept": "application/json"
         }
     };
@@ -87,6 +88,7 @@ export function sendEmail(config?: AxiosRequestConfig | undefined): Promise<stri
         method: "POST",
         url: url_,
         headers: {
+            ..._requestConfigSendEmail?.headers,
             "Accept": "application/json"
         }
     };
@@ -156,6 +158,7 @@ export function formData(a?: number | undefined, config?: AxiosRequestConfig | u
         method: "POST",
         url: url_,
         headers: {
+            ..._requestConfigFormData?.headers,
             "Accept": "application/json"
         }
     };

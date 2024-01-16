@@ -23,6 +23,7 @@ export function getSignature(config?: AxiosRequestConfig | undefined): Promise<s
         method: "GET",
         url: url_,
         headers: {
+            ..._requestConfigGetSignature?.headers,
             "Accept": "application/json"
         }
     };
@@ -81,6 +82,7 @@ export function setSignatureCookie(config?: AxiosRequestConfig | undefined): Pro
         method: "GET",
         url: url_,
         headers: {
+            ..._requestConfigSetSignatureCookie?.headers,
         }
     };
 

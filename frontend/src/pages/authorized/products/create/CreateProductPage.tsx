@@ -25,9 +25,9 @@ export const CreateProductPage: React.FC = () => {
   const navigate = useNavigate();
   const form = useAdvancedForm<CreateProductDto>(async (data) => {
     await QueryFactory.ProductQuery.Client.create(data);
-    await queryClient.invalidateQueries(
-      QueryFactory.ProductQuery.searchQueryKey(),
-    );
+    await queryClient.invalidateQueries({
+      queryKey: QueryFactory.ProductQuery.searchQueryKey(),
+    });
     navigate(Links.Authorized.Products.link());
   });
   const modals = useModal();

@@ -27,6 +27,7 @@ export function version(config?: AxiosRequestConfig | undefined): Promise<string
         method: "GET",
         url: url_,
         headers: {
+            ..._requestConfigVersion?.headers,
             "Accept": "application/json"
         }
     };

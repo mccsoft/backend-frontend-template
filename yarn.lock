@@ -5594,68 +5594,61 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:4.29.1":
-  version: 4.29.1
-  resolution: "@tanstack/query-core@npm:4.29.1"
-  checksum: e7a5a73e5e743411e39348bee3ded4b6c5dd3a70009e72e067e257d5f3d612bfe8df0998cddff6ad7a078e0bcf7a3c92ded669758ca697055472ce910e23a368
+"@tanstack/query-core@npm:5.17.10":
+  version: 5.17.10
+  resolution: "@tanstack/query-core@npm:5.17.10"
+  checksum: db970c2ce18ade45c3c54c06e35390fbeca128cbd6bc19ccc3f527eea37df1e42b4d1905ff513475e6ea843c4fc87c427f2ab9e25e8d5ff263a1554185b3469a
   languageName: node
   linkType: hard
 
-"@tanstack/query-persist-client-core@npm:4.29.1":
-  version: 4.29.1
-  resolution: "@tanstack/query-persist-client-core@npm:4.29.1"
+"@tanstack/query-persist-client-core@npm:5.17.11":
+  version: 5.17.11
+  resolution: "@tanstack/query-persist-client-core@npm:5.17.11"
   dependencies:
-    "@tanstack/query-core": 4.29.1
-  checksum: 708a7e39d35069e1fd1a886c6f37fad3809a11590142ce1d58d6fdba243a3646b557f38afc3c2154286d2dbd0242eabea5e5e022f67afe7ceb2d8ae27043bfef
+    "@tanstack/query-core": 5.17.10
+  checksum: ad5f674478f606843b44f456b129c80ab2fa2c004115cfeefb2adaa04db9b63b32fe430227173a41566e8b3b67a8915a523acd974e0bce3817a6fdc77ba1a04b
   languageName: node
   linkType: hard
 
-"@tanstack/react-query-persist-client@npm:4.29.3":
-  version: 4.29.3
-  resolution: "@tanstack/react-query-persist-client@npm:4.29.3"
+"@tanstack/react-query-persist-client@npm:5.17.12":
+  version: 5.17.12
+  resolution: "@tanstack/react-query-persist-client@npm:5.17.12"
   dependencies:
-    "@tanstack/query-persist-client-core": 4.29.1
+    "@tanstack/query-persist-client-core": 5.17.11
   peerDependencies:
-    "@tanstack/react-query": 4.29.3
-  checksum: e72b36ee82229182c88471f3e9f3f1432348a9f3a1be11be44c4d42fa87adb46bea43067aec7fc6e6e8fe732af55a3aa06f2a23adb6733762bf277758ef7b14f
+    "@tanstack/react-query": ^5.17.12
+    react: ^18.0.0
+  checksum: 2c4bcb44e7e7f82617895cafd2358782cbb534bdc54e4c6af41af23e77440fe57da0a501342f4d56b3307d616a12b39d892142173a2a80d3bf72ecd9b8f49fca
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:4.29.3":
-  version: 4.29.3
-  resolution: "@tanstack/react-query@npm:4.29.3"
+"@tanstack/react-query@npm:5.17.12":
+  version: 5.17.12
+  resolution: "@tanstack/react-query@npm:5.17.12"
   dependencies:
-    "@tanstack/query-core": 4.29.1
-    use-sync-external-store: ^1.2.0
+    "@tanstack/query-core": 5.17.10
   peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    react-native: "*"
-  peerDependenciesMeta:
-    react-dom:
-      optional: true
-    react-native:
-      optional: true
-  checksum: 7d33fe001ba6ec2332c28749312e5268e6bc060ea0e7c3faa37a28a12fd4b4fddd3803fdfb4e6551997f06d4cd32568e39d9cc9a26c19f40cfef276fad1eaaee
+    react: ^18.0.0
+  checksum: d91f687f0735d793cbf6cbb03d972715d9a240b1442f41e8db926c610292b9a54426e029e1e26a0fd7fa4d68dc7ddd812893b23c79a862e84e3adc6f138da931
   languageName: node
   linkType: hard
 
-"@tanstack/react-table@npm:8.8.5":
-  version: 8.8.5
-  resolution: "@tanstack/react-table@npm:8.8.5"
+"@tanstack/react-table@npm:8.11.6":
+  version: 8.11.6
+  resolution: "@tanstack/react-table@npm:8.11.6"
   dependencies:
-    "@tanstack/table-core": 8.8.5
+    "@tanstack/table-core": 8.11.6
   peerDependencies:
     react: ">=16"
     react-dom: ">=16"
-  checksum: 6c396b1a175699b8ebca56e81230194b03d94df5a83bde542a643363dfa40065e8fa795ef57bb8d540134d717538c420d7013e3d3cf7b8a93a0680d0d6192765
+  checksum: 8107e796b4dca2ed018d96937b989c83d2c3ae756646dabdf737a17b281217d7e21838764892764884b5211ce6787b425076c10195b25f8033af08b56ddd00fe
   languageName: node
   linkType: hard
 
-"@tanstack/table-core@npm:8.8.5":
-  version: 8.8.5
-  resolution: "@tanstack/table-core@npm:8.8.5"
-  checksum: 7bbf00635e57294dd5bd12d82efb273d3b68c47b905a1d7f2fdabe83d9c10314e67d24f918b570ba8fecf80a120008359c52682cdd917d9de26eeece31c43a7d
+"@tanstack/table-core@npm:8.11.6":
+  version: 8.11.6
+  resolution: "@tanstack/table-core@npm:8.11.6"
+  checksum: 05c958980ef9b6897f56c2452ab2a8a25f9c8ff879a3a2646d7a5a9c8afc7f6cf774d49a1f6ba3b212af4736f799666cef71ed547f9837a70f8e05a5708ac5a0
   languageName: node
   linkType: hard
 
@@ -5710,9 +5703,9 @@ __metadata:
     "@storybook/react": 7.0.6
     "@storybook/react-vite": 7.0.6
     "@storybook/testing-library": 0.1.0
-    "@tanstack/react-query": 4.29.3
-    "@tanstack/react-query-persist-client": 4.29.3
-    "@tanstack/react-table": 8.8.5
+    "@tanstack/react-query": 5.17.12
+    "@tanstack/react-query-persist-client": 5.17.12
+    "@tanstack/react-table": 8.11.6
     "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 13.4.0
     "@testing-library/user-event": 14.4.3
@@ -5728,7 +5721,7 @@ __metadata:
     "@vitejs/plugin-react": 4.2.1
     "@vitejs/plugin-react-swc": 3.5.0
     autoprefixer: 10.4.14
-    axios: 1.6.2
+    axios: 1.6.5
     axios-auth-refresh: 3.3.6
     babel-loader: 8.3.0
     browser-tabs-lock: 1.3.0
@@ -5736,7 +5729,7 @@ __metadata:
     concurrently: 8.0.1
     cross-env: 7.0.3
     date-fns: 2.30.0
-    dotenv: 16.0.3
+    dotenv: 16.3.1
     eslint: 8.26.0
     eslint-config-prettier: 8.5.0
     eslint-config-react-app: 7.0.1
@@ -5761,18 +5754,18 @@ __metadata:
     material-ui-popup-state: 5.0.4
     nock: 13.3.0
     oidc-client-ts: 2.2.0
-    prettier: 2.8.7
+    prettier: 3.2.2
     prop-types: 15.8.1
     query-string: 7.1.1
     react: 18.2.0
     react-devtools: 4.27.1
     react-dom: 18.2.0
     react-dropzone: 14.2.3
-    react-hook-form: 7.48.2
+    react-hook-form: 7.49.3
     react-i18next: 13.5.0
     react-merge-refs: 2.0.1
     react-paginate: 8.2.0
-    react-query-swagger: 15.7.8
+    react-query-swagger: 15.10.4
     react-redux: 9.0.2
     react-router: 6.11.2
     react-router-dom: 6.11.2
@@ -5792,12 +5785,12 @@ __metadata:
     throttle-debounce: 5.0.0
     tsconfig-paths-webpack-plugin: 4.1.0
     typescript: 5.3.2
-    vite: 5.0.5
-    vite-plugin-mkcert: 1.17.1
+    vite: 5.0.11
+    vite-plugin-mkcert: 1.17.2
     vite-plugin-react-svg: 0.2.0
     vite-plugin-svgr: 3.3.0
-    vite-tsconfig-paths: 4.2.1
-    vitest: 1.0.1
+    vite-tsconfig-paths: 4.2.3
+    vitest: 1.2.0
     web-vitals: 1.1.2
   languageName: unknown
   linkType: soft
@@ -6988,56 +6981,57 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitest/expect@npm:1.0.1":
-  version: 1.0.1
-  resolution: "@vitest/expect@npm:1.0.1"
+"@vitest/expect@npm:1.2.0":
+  version: 1.2.0
+  resolution: "@vitest/expect@npm:1.2.0"
   dependencies:
-    "@vitest/spy": 1.0.1
-    "@vitest/utils": 1.0.1
+    "@vitest/spy": 1.2.0
+    "@vitest/utils": 1.2.0
     chai: ^4.3.10
-  checksum: aac86e026314f9af0b5676a9c6c6f7a96b32483c6543306f258370e468718e9f4b16a12ed946c012805e177ddcdacddab4fbe0403afaa65605f000c1114afc30
+  checksum: 591027d67b1006e6d9fb431dab8c2d43e4005353eea466bcafcc98303d31dc7b2f2562b24bb75ba9a5d62143a3b1fb7987c8f8b6244155752118c2c9382b6be0
   languageName: node
   linkType: hard
 
-"@vitest/runner@npm:1.0.1":
-  version: 1.0.1
-  resolution: "@vitest/runner@npm:1.0.1"
+"@vitest/runner@npm:1.2.0":
+  version: 1.2.0
+  resolution: "@vitest/runner@npm:1.2.0"
   dependencies:
-    "@vitest/utils": 1.0.1
+    "@vitest/utils": 1.2.0
     p-limit: ^5.0.0
     pathe: ^1.1.1
-  checksum: 5ba10be1793934af5398db0a807c95a40ccf915e76e47ef60b211eb0238c19c23571447de7ce8ceed009e7701e430d913ae8d348dabc6b78a19d60c9aed8a9ca
+  checksum: fdb13c49a8c78d5eddf4119e55966f6681c3038421252f3ad4bd3302d4d9f686c8da37a80cd0c77ee2268b1a3c8253a22379dfb19ea3248563f174a32680ad9b
   languageName: node
   linkType: hard
 
-"@vitest/snapshot@npm:1.0.1":
-  version: 1.0.1
-  resolution: "@vitest/snapshot@npm:1.0.1"
+"@vitest/snapshot@npm:1.2.0":
+  version: 1.2.0
+  resolution: "@vitest/snapshot@npm:1.2.0"
   dependencies:
     magic-string: ^0.30.5
     pathe: ^1.1.1
     pretty-format: ^29.7.0
-  checksum: fdc1cb76e29b9f7b29f009dece91004e5cd251389fe5c00ee3470fc3b6762dab3ca36eddb9714648d733adf79b70697cf3d99efa85a6cf27b1b8f3ed63b26816
+  checksum: 9af819d67c04c88909446ba2c7b6b941ddccbe3587dadc2d032b09f2434eb24342c51ea0e89b0e298b1a9a5426c846d1b8e1d2e72ae636ec13a1425a058bd9d4
   languageName: node
   linkType: hard
 
-"@vitest/spy@npm:1.0.1":
-  version: 1.0.1
-  resolution: "@vitest/spy@npm:1.0.1"
+"@vitest/spy@npm:1.2.0":
+  version: 1.2.0
+  resolution: "@vitest/spy@npm:1.2.0"
   dependencies:
     tinyspy: ^2.2.0
-  checksum: 4638eec7354fe6608fab9dfd2b224d3bd73bb0fe61b52e0d66d3c04fee6bb0ca3a279fd673c2419d0a4565b9f32130369d3dae36f2927d5f594b37bb7fa5dac7
+  checksum: 6b627b4d15a4f20998873f221184f39fed73d368d8aa17ce7b7fccc4e78c20f2a42dd6ed006b1f5c23ee00466441b0b81d2c999cdb99f5326f25ba91fb6583c9
   languageName: node
   linkType: hard
 
-"@vitest/utils@npm:1.0.1":
-  version: 1.0.1
-  resolution: "@vitest/utils@npm:1.0.1"
+"@vitest/utils@npm:1.2.0":
+  version: 1.2.0
+  resolution: "@vitest/utils@npm:1.2.0"
   dependencies:
     diff-sequences: ^29.6.3
+    estree-walker: ^3.0.3
     loupe: ^2.3.7
     pretty-format: ^29.7.0
-  checksum: a12aef1343a9f2d08e1b417d6dbfd0e255431019c7c4fa1c7487ddda9198d65c69a1d2b7812b0db0c7977b617936187aa729a7aadf6bae731785df003d937a96
+  checksum: ac17b2357366d6ce66efec3788262cb64cd5fcc4043b09a1b060b37ae4626d68577ef493f1b6e66b2bc0c551f1a9640ecf052aefef96fb0ef704bb56c23f636d
   languageName: node
   linkType: hard
 
@@ -7099,10 +7093,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"acorn-walk@npm:^8.3.0":
-  version: 8.3.0
-  resolution: "acorn-walk@npm:8.3.0"
-  checksum: 15ea56ab6529135be05e7d018f935ca80a572355dd3f6d3cd717e36df3346e0f635a93ae781b1c7942607693e2e5f3ef81af5c6fc697bbadcc377ebda7b7f5f6
+"acorn-walk@npm:^8.3.1":
+  version: 8.3.2
+  resolution: "acorn-walk@npm:8.3.2"
+  checksum: 3626b9d26a37b1b427796feaa5261faf712307a8920392c8dce9a5739fb31077667f4ad2ec71c7ac6aaf9f61f04a9d3d67ff56f459587206fc04aa31c27ef392
   languageName: node
   linkType: hard
 
@@ -7623,14 +7617,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:1.6.2, axios@npm:^1.6.2":
-  version: 1.6.2
-  resolution: "axios@npm:1.6.2"
+"axios@npm:1.6.5, axios@npm:^1.6.5":
+  version: 1.6.5
+  resolution: "axios@npm:1.6.5"
   dependencies:
-    follow-redirects: ^1.15.0
+    follow-redirects: ^1.15.4
     form-data: ^4.0.0
     proxy-from-env: ^1.1.0
-  checksum: 4a7429e2b784be0f2902ca2680964391eae7236faa3967715f30ea45464b98ae3f1c6f631303b13dfe721b17126b01f486c7644b9ef276bfc63112db9fd379f8
+  checksum: e28d67b2d9134cb4608c44d8068b0678cfdccc652742e619006f27264a30c7aba13b2cd19c6f1f52ae195b5232734925928fb192d5c85feea7edd2f273df206d
   languageName: node
   linkType: hard
 
@@ -9474,6 +9468,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dotenv@npm:16.3.1":
+  version: 16.3.1
+  resolution: "dotenv@npm:16.3.1"
+  checksum: 15d75e7279018f4bafd0ee9706593dd14455ddb71b3bcba9c52574460b7ccaf67d5cf8b2c08a5af1a9da6db36c956a04a1192b101ee102a3e0cf8817bbcf3dfd
+  languageName: node
+  linkType: hard
+
 "duplexer3@npm:^0.1.4":
   version: 0.1.5
   resolution: "duplexer3@npm:0.1.5"
@@ -10555,6 +10556,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"estree-walker@npm:^3.0.3":
+  version: 3.0.3
+  resolution: "estree-walker@npm:3.0.3"
+  dependencies:
+    "@types/estree": ^1.0.0
+  checksum: a65728d5727b71de172c5df323385755a16c0fdab8234dc756c3854cfee343261ddfbb72a809a5660fac8c75d960bb3e21aa898c2d7e9b19bb298482ca58a3af
+  languageName: node
+  linkType: hard
+
 "esutils@npm:^2.0.2":
   version: 2.0.3
   resolution: "esutils@npm:2.0.3"
@@ -10981,6 +10991,16 @@ __metadata:
     debug:
       optional: true
   checksum: faa66059b66358ba65c234c2f2a37fcec029dc22775f35d9ad6abac56003268baf41e55f9ee645957b32c7d9f62baf1f0b906e68267276f54ec4b4c597c2b190
+  languageName: node
+  linkType: hard
+
+"follow-redirects@npm:^1.15.4":
+  version: 1.15.5
+  resolution: "follow-redirects@npm:1.15.5"
+  peerDependenciesMeta:
+    debug:
+      optional: true
+  checksum: 5ca49b5ce6f44338cbfc3546823357e7a70813cecc9b7b768158a1d32c1e62e7407c944402a918ea8c38ae2e78266312d617dc68783fac502cbb55e1047b34ec
   languageName: node
   linkType: hard
 
@@ -14335,6 +14355,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nswag-portable@npm:13.20.0-v.17":
+  version: 13.20.0-v.17
+  resolution: "nswag-portable@npm:13.20.0-v.17"
+  bin:
+    nswag-portable: nswag-portable.js
+  checksum: aab160cf02d1e5de85b39a28153d29bdc44327b4c2a260d369938d6e76fa850aad31f6533ca5932f28a74335a7e5a12f3148560314ebef3d4d7349c51a05065d
+  languageName: node
+  linkType: hard
+
 "nth-check@npm:^1.0.2":
   version: 1.0.2
   resolution: "nth-check@npm:1.0.2"
@@ -15062,6 +15091,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prettier@npm:3.2.2":
+  version: 3.2.2
+  resolution: "prettier@npm:3.2.2"
+  bin:
+    prettier: bin/prettier.cjs
+  checksum: b416e1e4b26c351403343ebe461feda631c0eee5c3cf316c711204a08f3c639f38a8f9177c75e98a690998ff82e8ddc80c6bc027fb4ef6cedb6a4db035b4fe9a
+  languageName: node
+  linkType: hard
+
 "prettier@npm:^2.8.0":
   version: 2.8.4
   resolution: "prettier@npm:2.8.4"
@@ -15499,12 +15537,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:7.48.2":
-  version: 7.48.2
-  resolution: "react-hook-form@npm:7.48.2"
+"react-hook-form@npm:7.49.3":
+  version: 7.49.3
+  resolution: "react-hook-form@npm:7.49.3"
   peerDependencies:
     react: ^16.8.0 || ^17 || ^18
-  checksum: 39652d08f78f16e5234049ceeb794d8bcd4d146772aca99c6db8c5aea8926cd4a230d02098886a441074deefbc24ffcb5ed57bc7cb0009d950115f5b3e627f12
+  checksum: 9769845e2749f5c9d1d033be3819bc572ffa67f19ec2e567c61a58d0d060107facdf8425aab253c2e667c00853b7706a50bd6739fca6228c284c9313420ca26f
   languageName: node
   linkType: hard
 
@@ -15581,6 +15619,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-query-swagger@npm:15.10.4":
+  version: 15.10.4
+  resolution: "react-query-swagger@npm:15.10.4"
+  dependencies:
+    nswag-portable: 13.20.0-v.17
+  peerDependencies:
+    "@tanstack/react-query": "> 4.0"
+    "@tanstack/react-query-persist-client": ">4.2.0"
+    react: 17.x || 18.x
+    react-query: ">= 3.33 < 4.0"
+    typescript: "> 3.0"
+  bin:
+    react-query-swagger: cli.js
+  checksum: 5990281f007fc6147e3775420e5933754d2f3d013149c3c853d7bcaa58be64105e15cb61e388b83d4d9e8fe2b33e7cefeb05652e27af7e847b711c37033fde66
+  languageName: node
+  linkType: hard
+
 "react-query-swagger@npm:15.7.6":
   version: 15.7.6
   resolution: "react-query-swagger@npm:15.7.6"
@@ -15595,23 +15650,6 @@ __metadata:
   bin:
     react-query-swagger: cli.js
   checksum: e009ac49a682489b1498edda730d508bb65a9564efd790af77316cb671197a8d63238b4791c559b536ce173563a38b64489cd572344cf8cca8b64b7b9598bdfa
-  languageName: node
-  linkType: hard
-
-"react-query-swagger@npm:15.7.8":
-  version: 15.7.8
-  resolution: "react-query-swagger@npm:15.7.8"
-  dependencies:
-    nswag-portable: 13.18.1-v.11
-  peerDependencies:
-    "@tanstack/react-query": "> 4.0"
-    "@tanstack/react-query-persist-client": ">4.2.0"
-    react: 17.x || 18.x
-    react-query: ">= 3.33 < 4.0"
-    typescript: "> 3.0"
-  bin:
-    react-query-swagger: cli.js
-  checksum: 61d6b632755722d4b8c67ef4cf697a4505dab9ab76b0abf86a976bdd1961e603fcf6a03745ec4ccab8c22fed30d7c037f7a883733cc52b73b6d1f76b2b8d8b51
   languageName: node
   linkType: hard
 
@@ -18438,7 +18476,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-sync-external-store@npm:^1.0.0, use-sync-external-store@npm:^1.2.0":
+"use-sync-external-store@npm:^1.0.0":
   version: 1.2.0
   resolution: "use-sync-external-store@npm:1.2.0"
   peerDependencies:
@@ -18528,32 +18566,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-node@npm:1.0.1":
-  version: 1.0.1
-  resolution: "vite-node@npm:1.0.1"
+"vite-node@npm:1.2.0":
+  version: 1.2.0
+  resolution: "vite-node@npm:1.2.0"
   dependencies:
     cac: ^6.7.14
     debug: ^4.3.4
     pathe: ^1.1.1
     picocolors: ^1.0.0
-    vite: ^5.0.0-beta.15 || ^5.0.0
+    vite: ^5.0.0
   bin:
     vite-node: vite-node.mjs
-  checksum: 667cd9eacd5f133af7382aabdd848b81ed976cdf97a136f6f4ecc7b00adc9b85e0ffd8721a8cb9d95cbd24f0d979205e7acfa5cc6ad9979e808d7072e2689482
+  checksum: 18d1dfb8c4a5f926dd8089592634414b26b4a0bbcae4fd5f7f6bf336db14fcc1405481bdd70bdd5bcce25b71b38a0617b7688edf8a5463835920e3fe13e9b917
   languageName: node
   linkType: hard
 
-"vite-plugin-mkcert@npm:1.17.1":
-  version: 1.17.1
-  resolution: "vite-plugin-mkcert@npm:1.17.1"
+"vite-plugin-mkcert@npm:1.17.2":
+  version: 1.17.2
+  resolution: "vite-plugin-mkcert@npm:1.17.2"
   dependencies:
     "@octokit/rest": ^20.0.2
-    axios: ^1.6.2
+    axios: ^1.6.5
     debug: ^4.3.4
     picocolors: ^1.0.0
   peerDependencies:
     vite: ">=3"
-  checksum: ff93ba06b8fac2068ffb3aba90fa515fb494bc93010c75b1b974b660cbf9fdea4317da4089144d4d0b0187ce1b96ea39022fd9ccfd768239ad6fa56bef00a3da
+  checksum: 6cc1a42cfb08612f2d5153b53a223b3ad8e4cc5b5b61a4076f66fce35d79135ff9f7c31b98b5db5d6b3ac86e436d091a9fa8c64b027b6c6ae1d465129bcff369
   languageName: node
   linkType: hard
 
@@ -18584,9 +18622,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-tsconfig-paths@npm:4.2.1":
-  version: 4.2.1
-  resolution: "vite-tsconfig-paths@npm:4.2.1"
+"vite-tsconfig-paths@npm:4.2.3":
+  version: 4.2.3
+  resolution: "vite-tsconfig-paths@npm:4.2.3"
   dependencies:
     debug: ^4.1.1
     globrex: ^0.1.2
@@ -18596,13 +18634,13 @@ __metadata:
   peerDependenciesMeta:
     vite:
       optional: true
-  checksum: 8cfbd314eb82a9db97e193aef826e72a112ca8b98e68ef0f9cd8f8538fd5163afe67652507bae41d4aab967ab9a8b24dcf95bd0a8900d388cd6c500c5a82d3b1
+  checksum: d8a837eded390ea03c56eb97c8e35fbb8a1073c97e3c8119adab5e8c8a3f8b6dc610c5a9236c6dc3f778ea1650e72d7f5a39b82df20feec0e546f23feac74b8e
   languageName: node
   linkType: hard
 
-"vite@npm:5.0.5, vite@npm:^5.0.0-beta.15 || ^5.0.0, vite@npm:^5.0.0-beta.19 || ^5.0.0":
-  version: 5.0.5
-  resolution: "vite@npm:5.0.5"
+"vite@npm:5.0.11, vite@npm:^5.0.0":
+  version: 5.0.11
+  resolution: "vite@npm:5.0.11"
   dependencies:
     esbuild: ^0.19.3
     fsevents: ~2.3.3
@@ -18636,20 +18674,20 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 8df70302934de39ad6fda4f28246e07850f849c2bd197b7af93615f5f39955be460dd19940a46ec5bf2adf81bc32b60985eb5990142212754c733eba4fe3bfa3
+  checksum: 262e41f25ce0cc5fc3c2065b1796f64ec115d3ac2d9625dbfb36d6628ba10e63684ef5515bb2ff1aa8e34c6f89e9c10e8211cb88f6c7f0da6869362851345437
   languageName: node
   linkType: hard
 
-"vitest@npm:1.0.1":
-  version: 1.0.1
-  resolution: "vitest@npm:1.0.1"
+"vitest@npm:1.2.0":
+  version: 1.2.0
+  resolution: "vitest@npm:1.2.0"
   dependencies:
-    "@vitest/expect": 1.0.1
-    "@vitest/runner": 1.0.1
-    "@vitest/snapshot": 1.0.1
-    "@vitest/spy": 1.0.1
-    "@vitest/utils": 1.0.1
-    acorn-walk: ^8.3.0
+    "@vitest/expect": 1.2.0
+    "@vitest/runner": 1.2.0
+    "@vitest/snapshot": 1.2.0
+    "@vitest/spy": 1.2.0
+    "@vitest/utils": 1.2.0
+    acorn-walk: ^8.3.1
     cac: ^6.7.14
     chai: ^4.3.10
     debug: ^4.3.4
@@ -18662,8 +18700,8 @@ __metadata:
     strip-literal: ^1.3.0
     tinybench: ^2.5.1
     tinypool: ^0.8.1
-    vite: ^5.0.0-beta.19 || ^5.0.0
-    vite-node: 1.0.1
+    vite: ^5.0.0
+    vite-node: 1.2.0
     why-is-node-running: ^2.2.2
   peerDependencies:
     "@edge-runtime/vm": "*"
@@ -18687,7 +18725,7 @@ __metadata:
       optional: true
   bin:
     vitest: vitest.mjs
-  checksum: 430697d17d0e3062a67c5a47c8648244a021ae87c4e47b785b3af1fba134c3dc52863e231acc6b018968d94baecdfd671788c2dc07b756bdf3d028e6a4b3327b
+  checksum: eb275607d71d5b101149988204af1f4205cec617bf0f8a1690c68f3f78634256f9a706b409710d258b375d54e6bcc5511b3861b5ae301965701c2849e4e80d0d
   languageName: node
   linkType: hard
 

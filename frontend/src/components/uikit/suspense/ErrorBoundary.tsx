@@ -33,7 +33,7 @@ export const ErrorBoundaryFallback = (props: ErrorBoundaryFallbackProps) => {
 
   const errorString = errorToString(props.error);
   const versionQuery = QueryFactory.VersionQuery.useVersionQuery({
-    useErrorBoundary: false,
+    throwOnError: false,
   });
   const isServerAvailable = !!versionQuery.data;
 

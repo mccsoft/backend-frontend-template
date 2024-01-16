@@ -27,7 +27,7 @@ export function pagingSortingToBackendRequest(query: {
   offset?: number | null;
   limit?: number | null;
   sortBy?: string | null;
-  sortOrder?: SortOrder | null;
+  sortOrder?: SortOrder | undefined;
 } {
   return {
     offset: (query.page - 1) * query.perPage,

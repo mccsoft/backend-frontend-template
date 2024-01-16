@@ -10,7 +10,7 @@
 import * as Types from '../api-client.types';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import type { UseQueryResult, QueryFunctionContext, UseQueryOptions, QueryClient, QueryKey, MutationKey, UseMutationOptions, UseMutationResult, QueryMeta, MutationMeta } from '@tanstack/react-query';
-import { trimArrayEnd, isParameterObject, getBaseUrl, addMetaToOptions  } from './helpers';
+import { trimArrayEnd, isParameterObject, getBaseUrl, addMetaToOptions } from './helpers';
 import type { QueryMetaContextValue } from 'react-query-swagger';
 import { QueryMetaContext } from 'react-query-swagger';
 import { useContext } from 'react';
@@ -18,24 +18,24 @@ import * as Client from './TestDataClient'
 export { Client };
 import type { AxiosRequestConfig } from 'axios';
 
-export type FormDataTestDataMutationParameters = {
-  a?: number | undefined ; 
-};
 
-    
+export type FormDataTestDataMutationParameters = {
+  a?: number | undefined ;
+}
+
 export function throwErrorUrl(): string {
   let url_ = getBaseUrl() + "/error-test";
   url_ = url_.replace(/[?&]$/, "");
   return url_;
 }
 
-let throwErrorDefaultOptions: UseQueryOptions<string, unknown, string> = {
+let throwErrorDefaultOptions: Omit<UseQueryOptions<string, unknown, string>, 'queryKey'> = {
   queryFn: __throwError,
 };
-export function getThrowErrorDefaultOptions(): UseQueryOptions<string, unknown, string> {
+export function getThrowErrorDefaultOptions() {
   return throwErrorDefaultOptions;
 };
-export function setThrowErrorDefaultOptions(options: UseQueryOptions<string, unknown, string>) {
+export function setThrowErrorDefaultOptions(options: typeof throwErrorDefaultOptions) {
   throwErrorDefaultOptions = options;
 }
 
@@ -54,7 +54,7 @@ function __throwError() {
 /**
  * Demonstrates an error response.
  */
-export function useThrowErrorQuery<TSelectData = string, TError = unknown>(options?: UseQueryOptions<string, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
+export function useThrowErrorQuery<TSelectData = string, TError = unknown>(options?: Omit<UseQueryOptions<string, TError, TSelectData>, 'queryKey'>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 export function useThrowErrorQuery<TSelectData = string, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
   let options: UseQueryOptions<string, TError, TSelectData> | undefined = undefined;
   let axiosConfig: AxiosRequestConfig |undefined;
@@ -73,7 +73,7 @@ export function useThrowErrorQuery<TSelectData = string, TError = unknown>(...pa
   return useQuery<string, TError, TSelectData>({
     queryFn: __throwError,
     queryKey: throwErrorQueryKey(),
-    ...throwErrorDefaultOptions as unknown as UseQueryOptions<string, TError, TSelectData>,
+    ...throwErrorDefaultOptions as unknown as Omit<UseQueryOptions<string, TError, TSelectData>, 'queryKey'>,
     ...options,
   });
 }
@@ -92,7 +92,6 @@ export function setThrowErrorData(queryClient: QueryClient, updater: (data: stri
 export function setThrowErrorDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: string | undefined) => string) {
   queryClient.setQueryData(queryKey, updater);
 }
-    
     
 export function sendEmailUrl(): string {
   let url_ = getBaseUrl() + "/send-email";
@@ -116,10 +115,13 @@ export function useSendEmailMutation<TContext>(options?: Omit<UseMutationOptions
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
   
-      return useMutation(() => Client.sendEmail(), {...options, mutationKey: key});
+  return useMutation({
+    ...options,
+    mutationFn: () => Client.sendEmail(),
+    mutationKey: key,
+  });
 }
   
-    
 export function formDataUrl(): string {
   let url_ = getBaseUrl() + "/formdata";
   url_ = url_.replace(/[?&]$/, "");
@@ -143,5 +145,9 @@ export function useFormDataMutation<TContext>(options?: Omit<UseMutationOptions<
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
   
-      return useMutation((formDataTestDataMutationParameters: FormDataTestDataMutationParameters) => Client.formData(formDataTestDataMutationParameters.a), {...options, mutationKey: key});
+  return useMutation({
+    ...options,
+    mutationFn: (formDataTestDataMutationParameters: FormDataTestDataMutationParameters) => Client.formData(formDataTestDataMutationParameters.a),
+    mutationKey: key,
+  });
 }

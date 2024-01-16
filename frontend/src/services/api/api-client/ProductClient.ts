@@ -26,6 +26,7 @@ export function create(dto: Types.CreateProductDto, config?: AxiosRequestConfig 
         method: "POST",
         url: url_,
         headers: {
+            ..._requestConfigCreate?.headers,
             "Content-Type": "application/json",
             "Accept": "application/json"
         }
@@ -87,6 +88,7 @@ export function delete_(id?: number | undefined, config?: AxiosRequestConfig | u
         method: "DELETE",
         url: url_,
         headers: {
+            ..._requestConfigDelete?.headers,
         }
     };
 
@@ -164,6 +166,7 @@ export function search(search?: string | null | undefined, productType?: Types.P
         method: "GET",
         url: url_,
         headers: {
+            ..._requestConfigSearch?.headers,
             "Accept": "application/json"
         }
     };
@@ -212,7 +215,6 @@ function processSearch(response: AxiosResponse): Promise<Types.PagedResultOfProd
 
 export function patch(id: number, dto: Types.PatchProductDto, config?: AxiosRequestConfig | undefined): Promise<Types.ProductDto> {
     let url_ = getBaseUrl() + "/api/products/{id}";
-
     if (id === undefined || id === null)
       throw new Error("The parameter 'id' must be defined.");
     url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -227,6 +229,7 @@ export function patch(id: number, dto: Types.PatchProductDto, config?: AxiosRequ
         method: "PATCH",
         url: url_,
         headers: {
+            ..._requestConfigPatch?.headers,
             "Content-Type": "application/json",
             "Accept": "application/json"
         }
@@ -276,7 +279,6 @@ function processPatch(response: AxiosResponse): Promise<Types.ProductDto> {
 
 export function get(id: number, config?: AxiosRequestConfig | undefined): Promise<Types.ProductDto> {
     let url_ = getBaseUrl() + "/api/products/{id}";
-
     if (id === undefined || id === null)
       throw new Error("The parameter 'id' must be defined.");
     url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -288,6 +290,7 @@ export function get(id: number, config?: AxiosRequestConfig | undefined): Promis
         method: "GET",
         url: url_,
         headers: {
+            ..._requestConfigGet?.headers,
             "Accept": "application/json"
         }
     };

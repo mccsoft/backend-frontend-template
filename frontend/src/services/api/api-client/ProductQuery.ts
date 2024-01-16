@@ -10,7 +10,7 @@
 import * as Types from '../api-client.types';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import type { UseQueryResult, QueryFunctionContext, UseQueryOptions, QueryClient, QueryKey, MutationKey, UseMutationOptions, UseMutationResult, QueryMeta, MutationMeta } from '@tanstack/react-query';
-import { trimArrayEnd, isParameterObject, getBaseUrl, addMetaToOptions  } from './helpers';
+import { trimArrayEnd, isParameterObject, getBaseUrl, addMetaToOptions } from './helpers';
 import type { QueryMetaContextValue } from 'react-query-swagger';
 import { QueryMetaContext } from 'react-query-swagger';
 import { useContext } from 'react';
@@ -18,21 +18,28 @@ import * as Client from './ProductClient'
 export { Client };
 import type { AxiosRequestConfig } from 'axios';
 
+export type DeleteProductQueryParameters = {
+  id?: number | undefined ;
+}
+
 export type SearchProductQueryParameters = {
-  search?: string | null | null;
-  productType?: Types.ProductType | null | null;
-  lastStockUpdatedAt?: Date | null | null;
-  offset?: number | null | null;
-  limit?: number | null | null;
-  sortBy?: string | null | null;
-  sortOrder?: Types.SortOrder | null;
-};
+  search?: string | null | undefined ;
+  productType?: Types.ProductType | null | undefined ;
+  lastStockUpdatedAt?: Date | null | undefined ;
+  offset?: number | null | undefined ;
+  limit?: number | null | undefined ;
+  sortBy?: string | null | undefined ;
+  sortOrder?: Types.SortOrder | undefined ;
+}
+
+export type PatchProductQueryParameters = {
+  id: number ;
+}
 
 export type GetProductQueryParameters = {
-  id: number;
-};
+  id: number ;
+}
 
-    
 export function createUrl(): string {
   let url_ = getBaseUrl() + "/api/products";
   url_ = url_.replace(/[?&]$/, "");
@@ -52,10 +59,13 @@ export function useCreateMutation<TContext>(options?: Omit<UseMutationOptions<Ty
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
   
-      return useMutation((dto: Types.CreateProductDto) => Client.create(dto), {...options, mutationKey: key});
+  return useMutation({
+    ...options,
+    mutationFn: (dto: Types.CreateProductDto) => Client.create(dto),
+    mutationKey: key,
+  });
 }
   
-    
 export function deleteUrl(id?: number | undefined): string {
   let url_ = getBaseUrl() + "/api/products?";
 if (id === null)
@@ -80,10 +90,28 @@ export function useDeleteMutation<TContext>(id?: number | undefined, options?: O
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
   
-      return useMutation(() => Client.delete_(id), {...options, mutationKey: key});
+  return useMutation({
+    ...options,
+    mutationFn: () => Client.delete_(id),
+    mutationKey: key,
+  });
 }
   
-    
+type Delete__MutationParameters = DeleteProductQueryParameters
+
+export function useDeleteMutationWithParameters<TContext>(options?: Omit<UseMutationOptions<void, unknown, Delete__MutationParameters, TContext>, 'mutationKey' | 'mutationFn'> & { parameters?: DeleteProductQueryParameters}): UseMutationResult<void, unknown, Delete__MutationParameters, TContext> {
+  const key = deleteMutationKey(options?.parameters?.id!);
+  
+  const metaContext = useContext(QueryMetaContext);
+  options = addMetaToOptions(options, metaContext);
+  
+return useMutation({
+  ...options, 
+  mutationFn: (data: Delete__MutationParameters) => Client.delete_(data.id ?? options?.parameters?.id!),
+  mutationKey: key,
+});
+}
+  
 export function searchUrl(search?: string | null | undefined, productType?: Types.ProductType | null | undefined, lastStockUpdatedAt?: Date | null | undefined, offset?: number | null | undefined, limit?: number | null | undefined, sortBy?: string | null | undefined, sortOrder?: Types.SortOrder | undefined): string {
   let url_ = getBaseUrl() + "/api/products?";
 if (search !== undefined && search !== null)
@@ -106,13 +134,13 @@ else if (sortOrder !== undefined)
   return url_;
 }
 
-let searchDefaultOptions: UseQueryOptions<Types.PagedResultOfProductListItemDto, unknown, Types.PagedResultOfProductListItemDto> = {
+let searchDefaultOptions: Omit<UseQueryOptions<Types.PagedResultOfProductListItemDto, unknown, Types.PagedResultOfProductListItemDto>, 'queryKey'> = {
   queryFn: __search,
 };
-export function getSearchDefaultOptions(): UseQueryOptions<Types.PagedResultOfProductListItemDto, unknown, Types.PagedResultOfProductListItemDto> {
+export function getSearchDefaultOptions() {
   return searchDefaultOptions;
 };
-export function setSearchDefaultOptions(options: UseQueryOptions<Types.PagedResultOfProductListItemDto, unknown, Types.PagedResultOfProductListItemDto>) {
+export function setSearchDefaultOptions(options: typeof searchDefaultOptions) {
   searchDefaultOptions = options;
 }
 
@@ -146,7 +174,7 @@ function __search(context: QueryFunctionContext) {
       context.queryKey[2] as string | null | undefined,       context.queryKey[3] as Types.ProductType | null | undefined,       context.queryKey[4] as Date | null | undefined,       context.queryKey[5] as number | null | undefined,       context.queryKey[6] as number | null | undefined,       context.queryKey[7] as string | null | undefined,       context.queryKey[8] as Types.SortOrder | undefined    );
 }
 
-export function useSearchQuery<TSelectData = Types.PagedResultOfProductListItemDto, TError = unknown>(dto: SearchProductQueryParameters, options?: UseQueryOptions<Types.PagedResultOfProductListItemDto, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
+export function useSearchQuery<TSelectData = Types.PagedResultOfProductListItemDto, TError = unknown>(dto: SearchProductQueryParameters, options?: Omit<UseQueryOptions<Types.PagedResultOfProductListItemDto, TError, TSelectData>, 'queryKey'>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 /**
  * @param search (optional) 
  * @param productType (optional) 
@@ -156,7 +184,7 @@ export function useSearchQuery<TSelectData = Types.PagedResultOfProductListItemD
  * @param sortBy (optional) Field name for sorting in DB.
  * @param sortOrder (optional) Sort direction. Ascending or Descending.
  */
-export function useSearchQuery<TSelectData = Types.PagedResultOfProductListItemDto, TError = unknown>(search?: string | null | undefined, productType?: Types.ProductType | null | undefined, lastStockUpdatedAt?: Date | null | undefined, offset?: number | null | undefined, limit?: number | null | undefined, sortBy?: string | null | undefined, sortOrder?: Types.SortOrder | undefined, options?: UseQueryOptions<Types.PagedResultOfProductListItemDto, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
+export function useSearchQuery<TSelectData = Types.PagedResultOfProductListItemDto, TError = unknown>(search?: string | null | undefined, productType?: Types.ProductType | null | undefined, lastStockUpdatedAt?: Date | null | undefined, offset?: number | null | undefined, limit?: number | null | undefined, sortBy?: string | null | undefined, sortOrder?: Types.SortOrder | undefined, options?: Omit<UseQueryOptions<Types.PagedResultOfProductListItemDto, TError, TSelectData>, 'queryKey'>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 export function useSearchQuery<TSelectData = Types.PagedResultOfProductListItemDto, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
   let options: UseQueryOptions<Types.PagedResultOfProductListItemDto, TError, TSelectData> | undefined = undefined;
   let axiosConfig: AxiosRequestConfig |undefined;
@@ -188,7 +216,7 @@ export function useSearchQuery<TSelectData = Types.PagedResultOfProductListItemD
   return useQuery<Types.PagedResultOfProductListItemDto, TError, TSelectData>({
     queryFn: __search,
     queryKey: searchQueryKey(search, productType, lastStockUpdatedAt, offset, limit, sortBy, sortOrder),
-    ...searchDefaultOptions as unknown as UseQueryOptions<Types.PagedResultOfProductListItemDto, TError, TSelectData>,
+    ...searchDefaultOptions as unknown as Omit<UseQueryOptions<Types.PagedResultOfProductListItemDto, TError, TSelectData>, 'queryKey'>,
     ...options,
   });
 }
@@ -220,10 +248,8 @@ export function setSearchDataByQueryId(queryClient: QueryClient, queryKey: Query
   queryClient.setQueryData(queryKey, updater);
 }
     
-    
 export function patchUrl(id: number): string {
   let url_ = getBaseUrl() + "/api/products/{id}";
-
 if (id === undefined || id === null)
   throw new Error("The parameter 'id' must be defined.");
 url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -245,13 +271,32 @@ export function usePatchMutation<TContext>(id: number, options?: Omit<UseMutatio
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
   
-      return useMutation((dto: Types.PatchProductDto) => Client.patch(id, dto), {...options, mutationKey: key});
+  return useMutation({
+    ...options,
+    mutationFn: (dto: Types.PatchProductDto) => Client.patch(id, dto),
+    mutationKey: key,
+  });
 }
   
-    
+type Patch__MutationParameters = PatchProductQueryParameters & {
+  dto: Types.PatchProductDto;
+}
+
+export function usePatchMutationWithParameters<TContext>(options?: Omit<UseMutationOptions<Types.ProductDto, unknown, Patch__MutationParameters, TContext>, 'mutationKey' | 'mutationFn'> & { parameters?: PatchProductQueryParameters}): UseMutationResult<Types.ProductDto, unknown, Patch__MutationParameters, TContext> {
+  const key = patchMutationKey(options?.parameters?.id!);
+  
+  const metaContext = useContext(QueryMetaContext);
+  options = addMetaToOptions(options, metaContext);
+  
+return useMutation({
+  ...options, 
+  mutationFn: (data: Patch__MutationParameters) => Client.patch(data.id ?? options?.parameters?.id!, data.dto),
+  mutationKey: key,
+});
+}
+  
 export function getUrl(id: number): string {
   let url_ = getBaseUrl() + "/api/products/{id}";
-
 if (id === undefined || id === null)
   throw new Error("The parameter 'id' must be defined.");
 url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -259,13 +304,13 @@ url_ = url_.replace("{id}", encodeURIComponent("" + id));
   return url_;
 }
 
-let getDefaultOptions: UseQueryOptions<Types.ProductDto, unknown, Types.ProductDto> = {
+let getDefaultOptions: Omit<UseQueryOptions<Types.ProductDto, unknown, Types.ProductDto>, 'queryKey'> = {
   queryFn: __get,
 };
-export function getGetDefaultOptions(): UseQueryOptions<Types.ProductDto, unknown, Types.ProductDto> {
+export function getGetDefaultOptions() {
   return getDefaultOptions;
 };
-export function setGetDefaultOptions(options: UseQueryOptions<Types.ProductDto, unknown, Types.ProductDto>) {
+export function setGetDefaultOptions(options: typeof getDefaultOptions) {
   getDefaultOptions = options;
 }
 
@@ -292,9 +337,9 @@ function __get(context: QueryFunctionContext) {
       context.queryKey[2] as number    );
 }
 
-export function useGetQuery<TSelectData = Types.ProductDto, TError = unknown>(dto: GetProductQueryParameters, options?: UseQueryOptions<Types.ProductDto, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
+export function useGetQuery<TSelectData = Types.ProductDto, TError = unknown>(dto: GetProductQueryParameters, options?: Omit<UseQueryOptions<Types.ProductDto, TError, TSelectData>, 'queryKey'>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 
-export function useGetQuery<TSelectData = Types.ProductDto, TError = unknown>(id: number, options?: UseQueryOptions<Types.ProductDto, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
+export function useGetQuery<TSelectData = Types.ProductDto, TError = unknown>(id: number, options?: Omit<UseQueryOptions<Types.ProductDto, TError, TSelectData>, 'queryKey'>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 export function useGetQuery<TSelectData = Types.ProductDto, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
   let options: UseQueryOptions<Types.ProductDto, TError, TSelectData> | undefined = undefined;
   let axiosConfig: AxiosRequestConfig |undefined;
@@ -320,7 +365,7 @@ export function useGetQuery<TSelectData = Types.ProductDto, TError = unknown>(..
   return useQuery<Types.ProductDto, TError, TSelectData>({
     queryFn: __get,
     queryKey: getQueryKey(id),
-    ...getDefaultOptions as unknown as UseQueryOptions<Types.ProductDto, TError, TSelectData>,
+    ...getDefaultOptions as unknown as Omit<UseQueryOptions<Types.ProductDto, TError, TSelectData>, 'queryKey'>,
     ...options,
   });
 }

@@ -10,7 +10,7 @@
 import * as Types from '../api-client.types';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import type { UseQueryResult, QueryFunctionContext, UseQueryOptions, QueryClient, QueryKey, MutationKey, UseMutationOptions, UseMutationResult, QueryMeta, MutationMeta } from '@tanstack/react-query';
-import { trimArrayEnd, isParameterObject, getBaseUrl, addMetaToOptions  } from './helpers';
+import { trimArrayEnd, isParameterObject, getBaseUrl, addMetaToOptions } from './helpers';
 import type { QueryMetaContextValue } from 'react-query-swagger';
 import { QueryMetaContext } from 'react-query-swagger';
 import { useContext } from 'react';
@@ -18,20 +18,20 @@ import * as Client from './SignUrlClient'
 export { Client };
 import type { AxiosRequestConfig } from 'axios';
 
-    
+
 export function getSignatureUrl(): string {
   let url_ = getBaseUrl() + "/api/sign-url/signature";
   url_ = url_.replace(/[?&]$/, "");
   return url_;
 }
 
-let getSignatureDefaultOptions: UseQueryOptions<string, unknown, string> = {
+let getSignatureDefaultOptions: Omit<UseQueryOptions<string, unknown, string>, 'queryKey'> = {
   queryFn: __getSignature,
 };
-export function getGetSignatureDefaultOptions(): UseQueryOptions<string, unknown, string> {
+export function getGetSignatureDefaultOptions() {
   return getSignatureDefaultOptions;
 };
-export function setGetSignatureDefaultOptions(options: UseQueryOptions<string, unknown, string>) {
+export function setGetSignatureDefaultOptions(options: typeof getSignatureDefaultOptions) {
   getSignatureDefaultOptions = options;
 }
 
@@ -47,7 +47,7 @@ function __getSignature() {
     );
 }
 
-export function useGetSignatureQuery<TSelectData = string, TError = unknown>(options?: UseQueryOptions<string, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
+export function useGetSignatureQuery<TSelectData = string, TError = unknown>(options?: Omit<UseQueryOptions<string, TError, TSelectData>, 'queryKey'>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 export function useGetSignatureQuery<TSelectData = string, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
   let options: UseQueryOptions<string, TError, TSelectData> | undefined = undefined;
   let axiosConfig: AxiosRequestConfig |undefined;
@@ -66,7 +66,7 @@ export function useGetSignatureQuery<TSelectData = string, TError = unknown>(...
   return useQuery<string, TError, TSelectData>({
     queryFn: __getSignature,
     queryKey: getSignatureQueryKey(),
-    ...getSignatureDefaultOptions as unknown as UseQueryOptions<string, TError, TSelectData>,
+    ...getSignatureDefaultOptions as unknown as Omit<UseQueryOptions<string, TError, TSelectData>, 'queryKey'>,
     ...options,
   });
 }
@@ -81,20 +81,19 @@ export function setGetSignatureDataByQueryId(queryClient: QueryClient, queryKey:
   queryClient.setQueryData(queryKey, updater);
 }
     
-    
 export function setSignatureCookieUrl(): string {
   let url_ = getBaseUrl() + "/api/sign-url/signature/cookie";
   url_ = url_.replace(/[?&]$/, "");
   return url_;
 }
 
-let setSignatureCookieDefaultOptions: UseQueryOptions<void, unknown, void> = {
+let setSignatureCookieDefaultOptions: Omit<UseQueryOptions<void, unknown, void>, 'queryKey'> = {
   queryFn: __setSignatureCookie,
 };
-export function getSetSignatureCookieDefaultOptions(): UseQueryOptions<void, unknown, void> {
+export function getSetSignatureCookieDefaultOptions() {
   return setSignatureCookieDefaultOptions;
 };
-export function setSetSignatureCookieDefaultOptions(options: UseQueryOptions<void, unknown, void>) {
+export function setSetSignatureCookieDefaultOptions(options: typeof setSignatureCookieDefaultOptions) {
   setSignatureCookieDefaultOptions = options;
 }
 
@@ -110,7 +109,7 @@ function __setSignatureCookie() {
     );
 }
 
-export function useSetSignatureCookieQuery<TSelectData = void, TError = unknown>(options?: UseQueryOptions<void, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
+export function useSetSignatureCookieQuery<TSelectData = void, TError = unknown>(options?: Omit<UseQueryOptions<void, TError, TSelectData>, 'queryKey'>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 export function useSetSignatureCookieQuery<TSelectData = void, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
   let options: UseQueryOptions<void, TError, TSelectData> | undefined = undefined;
   let axiosConfig: AxiosRequestConfig |undefined;
@@ -129,7 +128,7 @@ export function useSetSignatureCookieQuery<TSelectData = void, TError = unknown>
   return useQuery<void, TError, TSelectData>({
     queryFn: __setSignatureCookie,
     queryKey: setSignatureCookieQueryKey(),
-    ...setSignatureCookieDefaultOptions as unknown as UseQueryOptions<void, TError, TSelectData>,
+    ...setSignatureCookieDefaultOptions as unknown as Omit<UseQueryOptions<void, TError, TSelectData>, 'queryKey'>,
     ...options,
   });
 }

@@ -10,7 +10,7 @@
 import * as Types from '../api-client.types';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import type { UseQueryResult, QueryFunctionContext, UseQueryOptions, QueryClient, QueryKey, MutationKey, UseMutationOptions, UseMutationResult, QueryMeta, MutationMeta } from '@tanstack/react-query';
-import { trimArrayEnd, isParameterObject, getBaseUrl, addMetaToOptions  } from './helpers';
+import { trimArrayEnd, isParameterObject, getBaseUrl, addMetaToOptions } from './helpers';
 import type { QueryMetaContextValue } from 'react-query-swagger';
 import { QueryMetaContext } from 'react-query-swagger';
 import { useContext } from 'react';
@@ -18,20 +18,19 @@ import * as Client from './VersionClient'
 export { Client };
 import type { AxiosRequestConfig } from 'axios';
 
-    
 export function versionUrl(): string {
   let url_ = getBaseUrl() + "/api";
   url_ = url_.replace(/[?&]$/, "");
   return url_;
 }
 
-let versionDefaultOptions: UseQueryOptions<string, unknown, string> = {
+let versionDefaultOptions: Omit<UseQueryOptions<string, unknown, string>, 'queryKey'> = {
   queryFn: __version,
 };
-export function getVersionDefaultOptions(): UseQueryOptions<string, unknown, string> {
+export function getVersionDefaultOptions() {
   return versionDefaultOptions;
 };
-export function setVersionDefaultOptions(options: UseQueryOptions<string, unknown, string>) {
+export function setVersionDefaultOptions(options: typeof versionDefaultOptions) {
   versionDefaultOptions = options;
 }
 
@@ -51,7 +50,7 @@ function __version() {
  * Gets the version of the service.
  * @return A string representing the version.
  */
-export function useVersionQuery<TSelectData = string, TError = unknown>(options?: UseQueryOptions<string, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
+export function useVersionQuery<TSelectData = string, TError = unknown>(options?: Omit<UseQueryOptions<string, TError, TSelectData>, 'queryKey'>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 export function useVersionQuery<TSelectData = string, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
   let options: UseQueryOptions<string, TError, TSelectData> | undefined = undefined;
   let axiosConfig: AxiosRequestConfig |undefined;
@@ -70,7 +69,7 @@ export function useVersionQuery<TSelectData = string, TError = unknown>(...param
   return useQuery<string, TError, TSelectData>({
     queryFn: __version,
     queryKey: versionQueryKey(),
-    ...versionDefaultOptions as unknown as UseQueryOptions<string, TError, TSelectData>,
+    ...versionDefaultOptions as unknown as Omit<UseQueryOptions<string, TError, TSelectData>, 'queryKey'>,
     ...options,
   });
 }

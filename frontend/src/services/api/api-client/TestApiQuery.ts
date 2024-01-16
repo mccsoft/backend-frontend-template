@@ -10,7 +10,7 @@
 import * as Types from '../api-client.types';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import type { UseQueryResult, QueryFunctionContext, UseQueryOptions, QueryClient, QueryKey, MutationKey, UseMutationOptions, UseMutationResult, QueryMeta, MutationMeta } from '@tanstack/react-query';
-import { trimArrayEnd, isParameterObject, getBaseUrl, addMetaToOptions  } from './helpers';
+import { trimArrayEnd, isParameterObject, getBaseUrl, addMetaToOptions } from './helpers';
 import type { QueryMetaContextValue } from 'react-query-swagger';
 import { QueryMetaContext } from 'react-query-swagger';
 import { useContext } from 'react';
@@ -18,7 +18,7 @@ import * as Client from './TestApiClient'
 export { Client };
 import type { AxiosRequestConfig } from 'axios';
 
-    
+
 export function resetTenantUrl(): string {
   let url_ = getBaseUrl() + "/api/test/tenant/reset";
   url_ = url_.replace(/[?&]$/, "");
@@ -45,10 +45,13 @@ export function useResetTenantMutation<TContext>(options?: Omit<UseMutationOptio
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
   
-      return useMutation(() => Client.resetTenant(), {...options, mutationKey: key});
+  return useMutation({
+    ...options,
+    mutationFn: () => Client.resetTenant(),
+    mutationKey: key,
+  });
 }
   
-    
 export function createTestTenantUrl(): string {
   let url_ = getBaseUrl() + "/api/test/tenant";
   url_ = url_.replace(/[?&]$/, "");
@@ -71,5 +74,9 @@ export function useCreateTestTenantMutation<TContext>(options?: Omit<UseMutation
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
   
-      return useMutation((dto: Types.CreateTestTenantDto) => Client.createTestTenant(dto), {...options, mutationKey: key});
+  return useMutation({
+    ...options,
+    mutationFn: (dto: Types.CreateTestTenantDto) => Client.createTestTenant(dto),
+    mutationKey: key,
+  });
 }

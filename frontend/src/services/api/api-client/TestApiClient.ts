@@ -30,6 +30,7 @@ export function resetTenant(config?: AxiosRequestConfig | undefined): Promise<vo
         method: "POST",
         url: url_,
         headers: {
+            ..._requestConfigResetTenant?.headers,
         }
     };
 
@@ -88,6 +89,7 @@ export function createTestTenant(dto: Types.CreateTestTenantDto, config?: AxiosR
         method: "POST",
         url: url_,
         headers: {
+            ..._requestConfigCreateTestTenant?.headers,
             "Content-Type": "application/json",
         }
     };

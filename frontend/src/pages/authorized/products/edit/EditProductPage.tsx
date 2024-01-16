@@ -26,9 +26,9 @@ export const EditProductPage: React.FC = () => {
   const form = useAdvancedForm<PatchProductDto>(
     async (data) => {
       await QueryFactory.ProductQuery.Client.patch(productId, data);
-      await queryClient.invalidateQueries(
-        QueryFactory.ProductQuery.searchQueryKey(),
-      );
+      await queryClient.invalidateQueries({
+        queryKey: QueryFactory.ProductQuery.searchQueryKey(),
+      });
       // await queryClient.invalidateQueries(
       //   QueryFactory.ProductQuery.getQueryKey(productId),
       // );

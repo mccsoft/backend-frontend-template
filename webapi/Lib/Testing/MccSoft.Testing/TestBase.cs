@@ -36,7 +36,8 @@ namespace MccSoft.Testing;
 /// (the state of objects loaded in a separate DbContext will be incorrect, if SaveChanges is
 /// forgotten).
 /// </remarks>
-public abstract class TestBase<TDbContext> where TDbContext : DbContext
+public abstract class TestBase<TDbContext>
+    where TDbContext : DbContext
 {
     protected string ConnectionString { get; private set; }
     public ITestOutputHelper OutputHelper { get; set; }
@@ -65,7 +66,6 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
     protected readonly DatabaseType? _databaseType;
     protected readonly IDatabaseInitializer _databaseInitializer;
     protected Mock<IWebHostEnvironment> _webHostEnvironment;
-    protected IConfigurationRoot _configuration;
 
     protected TestBase(ITestOutputHelper outputHelper, DatabaseType? databaseType)
     {
@@ -245,7 +245,8 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
     /// <param name="configureRegistrations">provides ability to register mocks for some services</param>
     protected TService CreateService<TService>(
         Action<IServiceCollection> configureRegistrations = null
-    ) where TService : class
+    )
+        where TService : class
     {
         return CreateService<TService>(configureRegistrations, out _);
     }
@@ -274,7 +275,8 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
     protected TService CreateService<TService>(
         Action<IServiceCollection> configureRegistrations,
         out IServiceProvider serviceProvider
-    ) where TService : class
+    )
+        where TService : class
     {
         serviceProvider = CreateServiceProvider(configureRegistrations);
         var scope = serviceProvider.CreateScope();
@@ -349,9 +351,6 @@ public abstract class TestBase<TDbContext> where TDbContext : DbContext
         );
         serviceCollection.AddSingleton(
             (_webHostEnvironment = new Mock<IWebHostEnvironment>()).Object
-        );
-        serviceCollection.AddSingleton<IConfiguration>(
-            _configuration = new ConfigurationBuilder().AddInMemoryCollection().Build()
         );
 
         serviceCollection.AddLogging(ConfigureXunitLogger());
