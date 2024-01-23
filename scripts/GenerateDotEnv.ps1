@@ -3,13 +3,13 @@
 Add-Type -AssemblyName 'System.Web'
 . ./GenerateCertificate.ps1
 
-$postgresPassword = [System.Web.Security.Membership]::GeneratePassword(14, 0)
+$postgresPassword = -Join("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".tochararray() | Get-Random -Count 10 | % {[char]$_})
 
-$SigningCertificate_Password = [System.Web.Security.Membership]::GeneratePassword(14, 0)
+$SigningCertificate_Password = -Join("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".tochararray() | Get-Random -Count 14 | % {[char]$_})
 $SigningCertificate_CertificateBytes = GenerateCertificateAsByteArray($SigningCertificate_Password)
 $SigningCertificate_Base64Certificate = [Convert]::ToBase64String($SigningCertificate_CertificateBytes)
 
-$EncryptionCertificate_Password = [System.Web.Security.Membership]::GeneratePassword(14, 0)
+$EncryptionCertificate_Password = -Join("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".tochararray() | Get-Random -Count 14 | % {[char]$_})
 $EncryptionCertificate_CertificateBytes = GenerateCertificateAsByteArray($EncryptionCertificate_Password)
 $EncryptionCertificate_Base64Certificate = [Convert]::ToBase64String($EncryptionCertificate_CertificateBytes)
 
@@ -22,9 +22,9 @@ OpenId__SigningCertificate__Base64Certificate='+$SigningCertificate_Base64Certif
 OpenId__SigningCertificate__Password='+$SigningCertificate_Password+'
 OpenId__EncryptionCertificate__Base64Certificate='+$EncryptionCertificate_Base64Certificate+'
 OpenId__EncryptionCertificate__Password='+$EncryptionCertificate_Password+'
-Hangfire__DashboardPassword='+[System.Web.Security.Membership]::GeneratePassword(14, 0)+'
-DefaultUser__Password='+[System.Web.Security.Membership]::GeneratePassword(14, 0)+'
-SignUrl__Secret='+[System.Web.Security.Membership]::GeneratePassword(32, 4)+'
+Hangfire__DashboardPassword='+-Join("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".tochararray() | Get-Random -Count 14 | % {[char]$_})+'
+DefaultUser__Password='+-Join("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".tochararray() | Get-Random -Count 14 | % {[char]$_})+'
+SignUrl__Secret='+-Join("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".tochararray() | Get-Random -Count 32 | % {[char]$_})+'
 '
 
 $newContent | Set-Content -Path './.env'
