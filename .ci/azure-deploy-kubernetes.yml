@@ -32,6 +32,8 @@ steps:
     displayName: create docker secrets
 
   - script: |
+      cat k8s/postgres.yaml
+      kubectl apply -f k8s/postgres.yaml
       kubectl apply -f k8s/postgres.yaml
     displayName: deploy postgres
 
