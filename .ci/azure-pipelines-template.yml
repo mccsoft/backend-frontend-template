@@ -190,7 +190,8 @@ stages:
           - deployment:
             environment:
               name: 'PROD'
-              resourceType: VirtualMachine
+              ${{ if ne(variables.DEPLOY_KUBERNETES, true) }}:
+                resourceType: VirtualMachine
             strategy:
               runOnce:
                 deploy:
