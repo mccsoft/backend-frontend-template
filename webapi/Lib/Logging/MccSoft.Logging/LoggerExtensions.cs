@@ -71,7 +71,7 @@ public static class LoggerExtensions
         [CallerMemberName] string operationName = ""
     )
     {
-        return LogOperation(logger, context, null, operationName);
+        return LogOperationForAttribute(logger, context, null, operationName);
     }
 
     /// <summary>
