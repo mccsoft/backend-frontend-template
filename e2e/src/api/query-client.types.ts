@@ -15,9 +15,11 @@ export function deserializeProblemDetails(json: string): ProblemDetails {
 export function initProblemDetails(_data: ProblemDetails) {
     return _data;
 }
-export function serializeProblemDetails(_data: ProblemDetails) {
-  const data = prepareSerializeProblemDetails(_data as ProblemDetails);
-  return JSON.stringify(data);
+export function serializeProblemDetails(_data: ProblemDetails | undefined) {
+  if (_data) {
+    _data = prepareSerializeProblemDetails(_data as ProblemDetails);
+  }
+  return JSON.stringify(_data);
 }
 export function prepareSerializeProblemDetails(_data: ProblemDetails): ProblemDetails {
   const data: Record<string, any> = { ..._data };
@@ -34,14 +36,13 @@ export function deserializeHttpValidationProblemDetails(json: string): HttpValid
 }
 export function initHttpValidationProblemDetails(_data: HttpValidationProblemDetails) {
   initProblemDetails(_data);
-  if (_data) {
-    _data.errors = _data["errors"];
-  }
-  return _data;
+    return _data;
 }
-export function serializeHttpValidationProblemDetails(_data: HttpValidationProblemDetails) {
-  const data = prepareSerializeHttpValidationProblemDetails(_data as HttpValidationProblemDetails);
-  return JSON.stringify(data);
+export function serializeHttpValidationProblemDetails(_data: HttpValidationProblemDetails | undefined) {
+  if (_data) {
+    _data = prepareSerializeHttpValidationProblemDetails(_data as HttpValidationProblemDetails);
+  }
+  return JSON.stringify(_data);
 }
 export function prepareSerializeHttpValidationProblemDetails(_data: HttpValidationProblemDetails): HttpValidationProblemDetails {
   const data = prepareSerializeProblemDetails(_data as HttpValidationProblemDetails) as Record<string, any>;
@@ -58,14 +59,13 @@ export function deserializeValidationProblemDetails(json: string): ValidationPro
 }
 export function initValidationProblemDetails(_data: ValidationProblemDetails) {
   initHttpValidationProblemDetails(_data);
-  if (_data) {
-    _data.errors = _data["errors"];
-  }
-  return _data;
+    return _data;
 }
-export function serializeValidationProblemDetails(_data: ValidationProblemDetails) {
-  const data = prepareSerializeValidationProblemDetails(_data as ValidationProblemDetails);
-  return JSON.stringify(data);
+export function serializeValidationProblemDetails(_data: ValidationProblemDetails | undefined) {
+  if (_data) {
+    _data = prepareSerializeValidationProblemDetails(_data as ValidationProblemDetails);
+  }
+  return JSON.stringify(_data);
 }
 export function prepareSerializeValidationProblemDetails(_data: ValidationProblemDetails): ValidationProblemDetails {
   const data = prepareSerializeHttpValidationProblemDetails(_data as ValidationProblemDetails) as Record<string, any>;
@@ -83,9 +83,11 @@ export function deserializeCreateTestTenantDto(json: string): CreateTestTenantDt
 export function initCreateTestTenantDto(_data: CreateTestTenantDto) {
     return _data;
 }
-export function serializeCreateTestTenantDto(_data: CreateTestTenantDto) {
-  const data = prepareSerializeCreateTestTenantDto(_data as CreateTestTenantDto);
-  return JSON.stringify(data);
+export function serializeCreateTestTenantDto(_data: CreateTestTenantDto | undefined) {
+  if (_data) {
+    _data = prepareSerializeCreateTestTenantDto(_data as CreateTestTenantDto);
+  }
+  return JSON.stringify(_data);
 }
 export function prepareSerializeCreateTestTenantDto(_data: CreateTestTenantDto): CreateTestTenantDto {
   const data: Record<string, any> = { ..._data };
@@ -109,9 +111,11 @@ export function initProductDto(_data: ProductDto) {
   }
   return _data;
 }
-export function serializeProductDto(_data: ProductDto) {
-  const data = prepareSerializeProductDto(_data as ProductDto);
-  return JSON.stringify(data);
+export function serializeProductDto(_data: ProductDto | undefined) {
+  if (_data) {
+    _data = prepareSerializeProductDto(_data as ProductDto);
+  }
+  return JSON.stringify(_data);
 }
 export function prepareSerializeProductDto(_data: ProductDto): ProductDto {
   const data: Record<string, any> = { ..._data };
@@ -141,9 +145,11 @@ export function initCreateProductDto(_data: CreateProductDto) {
   }
   return _data;
 }
-export function serializeCreateProductDto(_data: CreateProductDto) {
-  const data = prepareSerializeCreateProductDto(_data as CreateProductDto);
-  return JSON.stringify(data);
+export function serializeCreateProductDto(_data: CreateProductDto | undefined) {
+  if (_data) {
+    _data = prepareSerializeCreateProductDto(_data as CreateProductDto);
+  }
+  return JSON.stringify(_data);
 }
 export function prepareSerializeCreateProductDto(_data: CreateProductDto): CreateProductDto {
   const data: Record<string, any> = { ..._data };
@@ -167,9 +173,11 @@ export function initPatchProductDto(_data: PatchProductDto) {
   }
   return _data;
 }
-export function serializePatchProductDto(_data: PatchProductDto) {
-  const data = prepareSerializePatchProductDto(_data as PatchProductDto);
-  return JSON.stringify(data);
+export function serializePatchProductDto(_data: PatchProductDto | undefined) {
+  if (_data) {
+    _data = prepareSerializePatchProductDto(_data as PatchProductDto);
+  }
+  return JSON.stringify(_data);
 }
 export function prepareSerializePatchProductDto(_data: PatchProductDto): PatchProductDto {
   const data: Record<string, any> = { ..._data };
@@ -195,9 +203,11 @@ export function initPagedResultOfProductListItemDto(_data: PagedResultOfProductL
   }
   return _data;
 }
-export function serializePagedResultOfProductListItemDto(_data: PagedResultOfProductListItemDto) {
-  const data = prepareSerializePagedResultOfProductListItemDto(_data as PagedResultOfProductListItemDto);
-  return JSON.stringify(data);
+export function serializePagedResultOfProductListItemDto(_data: PagedResultOfProductListItemDto | undefined) {
+  if (_data) {
+    _data = prepareSerializePagedResultOfProductListItemDto(_data as PagedResultOfProductListItemDto);
+  }
+  return JSON.stringify(_data);
 }
 export function prepareSerializePagedResultOfProductListItemDto(_data: PagedResultOfProductListItemDto): PagedResultOfProductListItemDto {
   const data: Record<string, any> = { ..._data };
@@ -226,9 +236,11 @@ export function initProductListItemDto(_data: ProductListItemDto) {
   }
   return _data;
 }
-export function serializeProductListItemDto(_data: ProductListItemDto) {
-  const data = prepareSerializeProductListItemDto(_data as ProductListItemDto);
-  return JSON.stringify(data);
+export function serializeProductListItemDto(_data: ProductListItemDto | undefined) {
+  if (_data) {
+    _data = prepareSerializeProductListItemDto(_data as ProductListItemDto);
+  }
+  return JSON.stringify(_data);
 }
 export function prepareSerializeProductListItemDto(_data: ProductListItemDto): ProductListItemDto {
   const data: Record<string, any> = { ..._data };

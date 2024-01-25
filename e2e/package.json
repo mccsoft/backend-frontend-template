@@ -13,7 +13,7 @@
     "eslint-plugin-prettier": "4.2.1",
     "http-server": "14.1.1",
     "randomstring": "1.2.3",
-    "react-query-swagger": "15.7.6",
+    "react-query-swagger": "15.10.7",
     "sinon": "15.0.1",
     "typescript": "5.0.4"
   },

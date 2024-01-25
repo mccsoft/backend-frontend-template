@@ -25,6 +25,7 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off', // we don't have a rule to specify return type for a function
     '@typescript-eslint/no-non-null-assertion': 'off',
     'no-unused-vars': 'off',
+    'no-self-assign': 'off',
     'prefer-const': 'off',
     'no-empty-pattern': 'off',
     '@typescript-eslint/no-floating-promises': 'error',

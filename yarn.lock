@@ -9509,7 +9509,7 @@ __metadata:
     eslint-plugin-prettier: 4.2.1
     http-server: 14.1.1
     randomstring: 1.2.3
-    react-query-swagger: 15.7.6
+    react-query-swagger: 15.10.7
     sinon: 15.0.1
     typescript: 5.0.4
   languageName: unknown
@@ -14346,15 +14346,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nswag-portable@npm:13.18.1-v.11":
-  version: 13.18.1-v.11
-  resolution: "nswag-portable@npm:13.18.1-v.11"
-  bin:
-    nswag-portable: nswag-portable.js
-  checksum: b62fa0732a7d3b7ffcb3451e40a7dba466f220913851e20341056458e1d783c7163c93d87741d14b1aba82f57a26939e4bb0be7966001f6cb77b6cd89908fb58
-  languageName: node
-  linkType: hard
-
 "nswag-portable@npm:13.20.0-v.17":
   version: 13.20.0-v.17
   resolution: "nswag-portable@npm:13.20.0-v.17"
@@ -15636,20 +15627,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-query-swagger@npm:15.7.6":
-  version: 15.7.6
-  resolution: "react-query-swagger@npm:15.7.6"
+"react-query-swagger@npm:15.10.7":
+  version: 15.10.7
+  resolution: "react-query-swagger@npm:15.10.7"
   dependencies:
-    nswag-portable: 13.18.1-v.11
+    nswag-portable: 13.20.0-v.17
   peerDependencies:
     "@tanstack/react-query": "> 4.0"
     "@tanstack/react-query-persist-client": ">4.2.0"
     react: 17.x || 18.x
     react-query: ">= 3.33 < 4.0"
-    typescript: 3.x || 4.x
+    typescript: "> 3.0"
   bin:
     react-query-swagger: cli.js
-  checksum: e009ac49a682489b1498edda730d508bb65a9564efd790af77316cb671197a8d63238b4791c559b536ce173563a38b64489cd572344cf8cca8b64b7b9598bdfa
+  checksum: fc267fc4cd9bb8fa332f12b04fdf8fa4ec5a8996c6cecb56da3ee746ac5974104288eda667935d7f31e6f70779088f04779ff0ea2409c653e93e7bcda8b7795d
   languageName: node
   linkType: hard
 
