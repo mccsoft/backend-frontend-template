@@ -25,8 +25,7 @@ public static class LoggerConfigurationExtensions
     {
         if (!hostingEnvironment.IsEnvironment("Test"))
         {
-            var excludePaths = app.ApplicationServices
-                .GetRequiredService<IConfiguration>()
+            var excludePaths = app.ApplicationServices.GetRequiredService<IConfiguration>()
                 .GetSection(SerilogRequestLoggingOptions.Position)
                 .Get<SerilogRequestLoggingOptions>()
                 ?.ExcludePaths;
@@ -97,8 +96,8 @@ public static class LoggerConfigurationExtensions
         AssemblyName entryAssembly = Assembly.GetEntryAssembly()?.GetName();
         string entryAssemblyVersion = entryAssembly?.Version?.ToString(fieldCount: 3) ?? "";
 
-        loggerConfiguration.Destructure
-            .JsonNetTypes()
+        loggerConfiguration
+            .Destructure.JsonNetTypes()
             .ReadFrom.Configuration(configuration)
             .Enrich.FromLogContext()
             .Enrich.WithProperty("InstanceName", Environment.MachineName)
@@ -194,6 +193,7 @@ public static class LoggerConfigurationExtensions
                             s.MinimumEventLevel = LogEventLevel.Error;
                             s.Dsn = sentryDsn;
                             s.AttachStacktrace = true;
+                            s.Environment = configuration.GetValue<string>("General:SiteUrl");
                         })
             );
         }
