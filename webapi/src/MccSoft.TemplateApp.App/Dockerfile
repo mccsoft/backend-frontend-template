@@ -5,7 +5,8 @@ USER root
 RUN \
   apt-get update \
   && apt-get -y install gettext-base \
-  && mkdir /files
+  && mkdir /files \
+  && chmod 777 /files
 
 ENV ASPNETCORE_URLS="http://*:5000"
 ENV ASPNETCORE_ENVIRONMENT="Docker"
