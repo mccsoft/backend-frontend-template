@@ -221,7 +221,7 @@ public abstract class TestBase<TDbContext>
     /// that should be used to initialize the service being tested.
     /// </summary>
     /// <param name="action">The action that creates the service.</param>
-    protected TService CreateService<TService>(
+    protected virtual TService CreateService<TService>(
         Func<DbRetryHelper<TDbContext, TService>, TDbContext, TService> action
     )
     {
@@ -243,7 +243,7 @@ public abstract class TestBase<TDbContext>
     /// If you want to override/mock some dependencies, please do it in the <paramref name="configureRegistrations"/>
     /// </summary>
     /// <param name="configureRegistrations">provides ability to register mocks for some services</param>
-    protected TService CreateService<TService>(
+    protected virtual TService CreateService<TService>(
         Action<IServiceCollection> configureRegistrations = null
     )
         where TService : class
@@ -255,7 +255,7 @@ public abstract class TestBase<TDbContext>
     /// Creates the Service Under Test.
     /// Returns <paramref name="serviceProvider" /> as `out` parameter, so you could resolve other services from it (in the same Scope as SUT).
     /// </summary>
-    protected TService CreateService<TService>(out IServiceProvider serviceProvider)
+    protected virtual TService CreateService<TService>(out IServiceProvider serviceProvider)
         where TService : class
     {
         return CreateService<TService>(null, out serviceProvider);
@@ -272,7 +272,7 @@ public abstract class TestBase<TDbContext>
     /// Service Provider the service is resolved from.
     /// You could resolve other services from it.
     /// </param>
-    protected TService CreateService<TService>(
+    protected virtual TService CreateService<TService>(
         Action<IServiceCollection> configureRegistrations,
         out IServiceProvider serviceProvider
     )
