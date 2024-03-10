@@ -1,4 +1,4 @@
-import PopperUnstyled from '@mui/base/Popper/Popper';
+import { Popper as PopperUnstyled } from '@mui/base/Popper/Popper';
 import clsx from 'clsx';
 import { useTriggerOnClickOutsideElement } from 'helpers/useTriggerOnClickOutsideElement';
 import React, { MouseEventHandler, useEffect, useRef, useState } from 'react';

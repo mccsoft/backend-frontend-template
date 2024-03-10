@@ -168,7 +168,7 @@ export function StyledAutocomplete<
   const renderOption: NonNullable<
     AutocompleteProps<T, Multiple, Required, FreeSolo>['renderOption']
   > = useCallback(
-    (liProps, option, state) => {
+    (liProps, option, state, ownerState) => {
       // to prevent hovered element from being selected.
       // (otherwise in search combo box if you hover over one of the found results and pressing Enter, the result gets opened)
       delete liProps['onMouseOver'];
@@ -193,7 +193,7 @@ export function StyledAutocomplete<
       }
 
       if (props.renderOption)
-        return props.renderOption(liProps, option as any, state);
+        return props.renderOption(liProps, option as any, state, ownerState);
       return (
         <li
           {...liProps}
