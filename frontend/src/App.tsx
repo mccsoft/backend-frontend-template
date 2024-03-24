@@ -26,6 +26,7 @@ import { ModalProvider } from './components/uikit/modal/useModal';
 import { MiniProfiler, miniProfilerInterceptor } from './helpers/MiniProfiler';
 import { QuerySuspenseErrorWrapper } from 'helpers/retry-helper';
 import { RouterProvider } from 'react-router-dom';
+import { blobResponseErrorInterceptor } from 'helpers/interceptors/blob-error-interceptor';
 
 QueryFactory.setAxiosFactory(() => axios);
 
@@ -39,6 +40,7 @@ addLogoutHandler(() => {
 });
 axios.interceptors.request.use(injectLanguageInterceptor);
 axios.interceptors.request.use(sessionAxiosInterceptor);
+axios.interceptors.response.use(null, blobResponseErrorInterceptor);
 if (FeatureFlags.isMiniProfilerEnabled()) {
   axios.interceptors.response.use(miniProfilerInterceptor, undefined);
 }
