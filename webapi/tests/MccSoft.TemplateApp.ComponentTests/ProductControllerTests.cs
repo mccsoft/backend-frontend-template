@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using MccSoft.TemplateApp.Http.Generated;
@@ -10,9 +11,22 @@ public class ProductTests : ComponentTestBase
 {
     private readonly ProductClient _productClient;
 
-    public ProductTests(ITestOutputHelper outputHelper) : base(outputHelper)
+    public ProductTests(ITestOutputHelper outputHelper)
+        : base(outputHelper)
     {
         _productClient = new ProductClient(Client);
+    }
+
+    [Fact]
+    public async Task Create_ValidationError_Localized()
+    {
+        await FluentActions
+            .Awaiting(
+                async () => await _productClient.CreateAsync(a.CreateProductGeneratedDto("1"))
+            )
+            .Should()
+            .ThrowAsync<Exception>()
+            .WithMessage("Title: The Title field must have minimum of 3 character.");
     }
 
     [Fact]

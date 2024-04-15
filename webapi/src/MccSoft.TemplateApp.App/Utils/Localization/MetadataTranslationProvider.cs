@@ -24,22 +24,31 @@ public class MetadataTranslationProvider : IValidationMetadataProvider
         CreateValidationMetadata(context.ValidationMetadata.ValidatorMetadata);
     }
 
+    private FieldInfo _functionField = typeof(ValidationAttribute).GetField(
+        "_errorMessageResourceAccessor",
+        BindingFlags.NonPublic | BindingFlags.Instance
+    );
+
+    private PropertyInfo _customErrorMessageSetProperty = typeof(ValidationAttribute).GetProperty(
+        "CustomErrorMessageSet",
+        BindingFlags.NonPublic | BindingFlags.Instance
+    );
+
     public void CreateValidationMetadata(IList<object> attributes)
     {
         foreach (var attribute in attributes)
         {
             if (attribute is ValidationAttribute tAttr)
             {
-                if (tAttr.ErrorMessageResourceName != null && tAttr.ErrorMessage == null)
+                if (tAttr.ErrorMessage == null)
                 {
-                    var functionField = typeof(ValidationAttribute).GetField(
-                        "_errorMessageResourceAccessor",
-                        BindingFlags.NonPublic | BindingFlags.Instance
-                    );
+                    var resourceName =
+                        tAttr.ErrorMessageResourceName
+                        ?? tAttr.GetType().Name.Replace("Attribute", "");
 
-                    Func<string> localizer = () =>
-                        _localizer["Frontend:Server_Errors." + tAttr.ErrorMessageResourceName];
-                    functionField.SetValue(attribute, localizer);
+                    Func<string> localizer = () => _localizer["ValidationErrors:" + resourceName];
+                    _functionField.SetValue(attribute, localizer);
+                    _customErrorMessageSetProperty.SetValue(attribute, true);
                 }
             }
         }
