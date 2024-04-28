@@ -35,34 +35,11 @@ public class MailSender : IMailSender
         _logger = logger;
     }
 
-    public List<EmailModelBase> InterceptedModels { get; private set; } = new();
-
-    private readonly HashSet<Type> _interceptedTypes = new HashSet<Type>();
-
-    /// <summary>
-    /// Returns unsubscribe action
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    public Action Intercept<T>() where T : EmailModelBase
-    {
-        _interceptedTypes.Add(typeof(T));
-        return () =>
-        {
-            _interceptedTypes.Remove(typeof(T));
-        };
-    }
-
     public async Task Send<T>(string recipient, T model, List<string> attachments = null)
         where T : EmailModelBase
     {
         model.SiteRootUrl = _options.Value.SiteUrl;
         model.RecipientEmail = recipient;
-        if (_interceptedTypes.Contains(typeof(T)))
-        {
-            InterceptedModels.Add(model);
-            return;
-        }
 
         (string Subject, string Content) rendered = await RenderContentAndSubject(model);
 

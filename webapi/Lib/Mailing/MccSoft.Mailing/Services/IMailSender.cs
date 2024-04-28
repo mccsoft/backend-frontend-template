@@ -7,9 +7,6 @@ namespace MccSoft.Mailing;
 
 public interface IMailSender
 {
-    List<EmailModelBase> InterceptedModels { get; }
-    Action Intercept<T>() where T : EmailModelBase;
-
     Task Send(
         string recipient,
         string subject,
