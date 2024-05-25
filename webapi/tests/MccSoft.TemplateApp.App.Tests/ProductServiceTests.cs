@@ -65,6 +65,10 @@ public class ProductServiceTests : AppServiceTestBase
     {
         ValidateModel(new CreateProductDto { Title = "1" })
             .Should()
-            .Contain(x => x.ErrorMessage.Contains("minimum length") && x.MemberNames == "Title");
+            .Contain(
+                x =>
+                    x.ErrorMessage.Contains("ValidationErrors:MinLength")
+                    && x.MemberNames == "Title"
+            );
     }
 }
