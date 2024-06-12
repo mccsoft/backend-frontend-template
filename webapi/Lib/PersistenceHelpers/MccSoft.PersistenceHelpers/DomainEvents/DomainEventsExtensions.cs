@@ -22,14 +22,22 @@ public static class DomainEventsExtensions
         params Type[] handlerAssemblyMarkerTypes
     )
     {
-        services.AddTransient<DomainEventsSaveChangesInterceptor>();
-        services.AddTransient<DomainEventsTransactionInterceptor>();
-        services.AddMediatR(config =>
+        services.AddDomainEventsWithMediatR(config =>
         {
             foreach (var typeToRegister in handlerAssemblyMarkerTypes)
             {
                 config.RegisterServicesFromAssemblyContaining(typeToRegister);
             }
         });
+    }
+
+    public static void AddDomainEventsWithMediatR(
+        this IServiceCollection services,
+        Action<MediatRServiceConfiguration> configure
+    )
+    {
+        services.AddTransient<DomainEventsSaveChangesInterceptor>();
+        services.AddTransient<DomainEventsTransactionInterceptor>();
+        services.AddMediatR(configure);
     }
 }
