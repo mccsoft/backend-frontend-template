@@ -1,4 +1,5 @@
-﻿using MccSoft.IntegreSql.EF.DatabaseInitialization;
+﻿using System;
+using MccSoft.IntegreSql.EF.DatabaseInitialization;
 using MccSoft.Testing;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,9 @@ public class WebApiTestBase : TestBase<MyDbContext>
     {
         return new DatabaseSeedingOptions<MyDbContext>("Custom");
     }
+
+    protected override MyDbContext CreateDbContext(IServiceProvider serviceProvider) =>
+        new MyDbContext(serviceProvider.GetRequiredService<DbContextOptions<MyDbContext>>());
 
     protected override void RegisterServices(
         IServiceCollection services,

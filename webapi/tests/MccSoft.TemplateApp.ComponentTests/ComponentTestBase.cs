@@ -35,7 +35,8 @@ public class ComponentTestBase : TestBase<TemplateAppDbContext>, IDisposable
     protected ComponentTestBase(
         ITestOutputHelper outputHelper,
         DatabaseType databaseType = DatabaseType.Postgres
-    ) : base(outputHelper, databaseType)
+    )
+        : base(outputHelper, databaseType)
     {
         var application = CreateWebApplicationFactory(ConnectionString);
 
@@ -66,14 +67,7 @@ public class ComponentTestBase : TestBase<TemplateAppDbContext>, IDisposable
                 RegisterServices(services, null, null);
                 services.RemoveDbContextRegistration<TemplateAppDbContext>();
 
-                services.AddDbContext<TemplateAppDbContext>(
-                    options =>
-                    {
-                        ConfigureDatabaseOptions(options, connectionString);
-                    },
-                    contextLifetime: ServiceLifetime.Scoped,
-                    optionsLifetime: ServiceLifetime.Singleton
-                );
+                RegisterDbContext(services, connectionString);
             })
             .UseSetting("ConnectionStrings:DefaultConnection", connectionString);
 
@@ -128,12 +122,12 @@ public class ComponentTestBase : TestBase<TemplateAppDbContext>, IDisposable
             DisableEnsureCreated = true
         };
 
-    protected override TemplateAppDbContext CreateDbContext(
-        DbContextOptions<TemplateAppDbContext> options
-    )
-    {
-        return CreateService<TemplateAppDbContext>();
-    }
+    /// <summary>
+    /// Creates a NEW DbContext.
+    /// Resolving it from ServiceProvider is not enough, because we will get the same DbContext every time.
+    /// </summary>
+    protected override TemplateAppDbContext CreateDbContext(IServiceProvider serviceProvider) =>
+        SetupDatabase.CreateDbContext(serviceProvider);
 
     protected override void RegisterServices(
         IServiceCollection services,

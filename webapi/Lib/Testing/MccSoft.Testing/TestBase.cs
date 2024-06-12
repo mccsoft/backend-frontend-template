@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
@@ -8,6 +9,7 @@ using MccSoft.IntegreSql.EF;
 using MccSoft.IntegreSql.EF.DatabaseInitialization;
 using MccSoft.LowLevelPrimitives;
 using MccSoft.PersistenceHelpers;
+using MccSoft.PersistenceHelpers.DomainEvents;
 using MccSoft.Testing.AspNet;
 using MccSoft.Testing.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
@@ -43,9 +45,8 @@ public abstract class TestBase<TDbContext>
     public ITestOutputHelper OutputHelper { get; set; }
     protected TDbContext _dbContext;
     protected Mock<IBackgroundJobClient> _backgroundJobClient;
-    protected ServiceProvider _serviceProvider;
+    protected IServiceProvider _serviceProvider;
     protected Mock<IUserAccessor> _userAccessorMock;
-    protected DbContextOptionsBuilder<TDbContext> _builder;
 
     /// <summary>
     /// The entity factory.
@@ -108,10 +109,16 @@ public abstract class TestBase<TDbContext>
 
     protected virtual TDbContext CreateDbContext()
     {
-        return CreateDbContext(_builder.Options);
+        return _serviceProvider != null
+            ? CreateDbContext(_serviceProvider)
+            : CreateService<TDbContext>();
     }
 
-    protected abstract TDbContext CreateDbContext(DbContextOptions<TDbContext> options);
+    /// <summary>
+    /// Creates a NEW DbContext.
+    /// Resolving it from ServiceProvider is not enough, because we will get the same DbContext every time.
+    /// </summary>
+    protected abstract TDbContext CreateDbContext(IServiceProvider serviceProvider);
 
     /// <summary>
     /// !!!!!!!!!!!!!
@@ -185,8 +192,11 @@ public abstract class TestBase<TDbContext>
 
     /// <summary>
     /// Returns the DbContextOptionsBuilder
+    /// !!! ServiceProvider will be null when we are seeding the database !!!
+    /// Don't forget to check it for null!
     /// </summary>
     protected virtual void ConfigureDatabaseOptions(
+        IServiceProvider? serviceProvider,
         DbContextOptionsBuilder builder,
         string connectionString
     )
@@ -198,6 +208,9 @@ public abstract class TestBase<TDbContext>
             .EnableSensitiveDataLogging()
             .EnableDetailedErrors()
             .UseOpenIddict();
+
+        if (serviceProvider != null)
+            builder.AddDomainEventsInterceptors(serviceProvider);
 
         if (InsertLoggerInEf)
         {
@@ -329,15 +342,7 @@ public abstract class TestBase<TDbContext>
          * DO NOT register your project-specific services here!
          * Register your app-specific services in RegisterServices method
          */
-
-        if (_builder != null)
-        {
-            serviceCollection
-                .AddScoped(x => CreateDbContext())
-                .AddSingleton<Func<TDbContext>>(CreateDbContext)
-                .AddSingleton(_builder.Options)
-                .RegisterRetryHelper();
-        }
+        RegisterDbContext(serviceCollection, ConnectionString);
 
         serviceCollection
             .AddSingleton<IStringLocalizer>(new DummyStringLocalizer())
@@ -361,6 +366,30 @@ public abstract class TestBase<TDbContext>
          * DO NOT register your project-specific services here!
          * Register your app-specific services in RegisterServices method
          */
+    }
+
+    private static Assembly[] _assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+    protected virtual void RegisterDbContext(
+        IServiceCollection serviceCollection,
+        string connectionString
+    )
+    {
+        serviceCollection.AddDomainEventsWithMediatR(config =>
+        {
+            config.RegisterServicesFromAssemblies(_assemblies);
+        });
+        serviceCollection
+            .AddDbContext<TDbContext>(
+                (serviceProvider, optionsBuilder) =>
+                {
+                    ConfigureDatabaseOptions(serviceProvider, optionsBuilder, connectionString);
+                },
+                contextLifetime: ServiceLifetime.Scoped,
+                optionsLifetime: ServiceLifetime.Singleton
+            )
+            .AddScoped<Func<TDbContext>>((provider) => () => CreateDbContext(provider))
+            .RegisterRetryHelper();
     }
 
     private Action<ILoggingBuilder> ConfigureXunitLogger()
@@ -401,9 +430,6 @@ public abstract class TestBase<TDbContext>
             seedingOptions
         );
         OutputHelper.WriteLine($"Connection string: {ConnectionString}");
-
-        _builder = new DbContextOptionsBuilder<TDbContext>();
-        ConfigureDatabaseOptions(_builder, ConnectionString ?? "");
     }
 
     #endregion

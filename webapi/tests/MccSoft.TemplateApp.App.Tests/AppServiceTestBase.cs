@@ -5,6 +5,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Audit.Core;
 using MccSoft.IntegreSql.EF.DatabaseInitialization;
+using MccSoft.LowLevelPrimitives;
+using MccSoft.TemplateApp.App.Setup;
 using MccSoft.TemplateApp.App.Utils.Localization;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Persistence;
@@ -29,7 +31,8 @@ public class AppServiceTestBase : TestBase<TemplateAppDbContext>
     protected AppServiceTestBase(
         ITestOutputHelper outputHelper,
         DatabaseType? testDatabaseType = DatabaseType.Postgres
-    ) : base(outputHelper, testDatabaseType)
+    )
+        : base(outputHelper, testDatabaseType)
     {
         Configuration.AuditDisabled = true;
 
@@ -40,6 +43,7 @@ public class AppServiceTestBase : TestBase<TemplateAppDbContext>
             {
                 await WithDbContext(async db =>
                 {
+                    using var _ = CustomTenantIdAccessor.IgnoreTenantIdQueryFilter();
                     _defaultUser = await db.Users.FirstAsync(x => x.Email == "default@test.test");
                 });
                 _userAccessorMock.Setup(x => x.GetUserId()).Returns(_defaultUser.Id);
@@ -69,8 +73,7 @@ public class AppServiceTestBase : TestBase<TemplateAppDbContext>
                 db.Users.Add(user);
                 user.SetTenantIdUnsafe(tenant.Id);
                 await db.SaveChangesAsync();
-            },
-            CreateDbContext
+            }
         );
 
     protected override void RegisterServices(
@@ -94,15 +97,11 @@ public class AppServiceTestBase : TestBase<TemplateAppDbContext>
     }
 
     /// <summary>
-    /// Creates a new instance of <see cref="TemplateAppDbContext"/>.
+    /// Creates a NEW DbContext.
+    /// Resolving it from ServiceProvider is not enough, because we will get the same DbContext every time.
     /// </summary>
-    /// <returns>A new DbContext instance.</returns>
-    protected override TemplateAppDbContext CreateDbContext(
-        DbContextOptions<TemplateAppDbContext> options
-    )
-    {
-        return new TemplateAppDbContext(options, _userAccessorMock.Object);
-    }
+    protected override TemplateAppDbContext CreateDbContext(IServiceProvider serviceProvider) =>
+        SetupDatabase.CreateDbContext(serviceProvider);
 
     #region Validation
 
