@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using MccSoft.IntegreSql.EF.DatabaseInitialization;
 using MccSoft.TemplateApp.App.Features.TestApi;
 using MccSoft.TemplateApp.TestUtils.Factories;
+using Microsoft.EntityFrameworkCore;
+using Xunit.Sdk;
 
 namespace MccSoft.TemplateApp.App.Tests;
 
@@ -39,5 +41,19 @@ public class TestApiServiceTests : AppServiceTestBase
         {
             db.Products.Count().Should().Be(0);
         });
+    }
+
+    [Fact]
+    public async Task UpdateUser_CheckDomainEvents()
+    {
+        await WithDbContext(async db =>
+        {
+            var user = await db.Users.FirstOrDefaultAsync();
+            user.ChangeFirstNameAndLastName("123", "asd");
+            await db.SaveChangesAsync();
+        });
+        ((TestOutputHelper)OutputHelper)
+            .Output.Should()
+            .Contain("FirstName/LastName changed to 123, asd");
     }
 }

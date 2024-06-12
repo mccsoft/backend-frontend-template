@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace MccSoft.TemplateApp.Domain;
 
-public class User : IdentityUser, ITenantEntity
+public class User : IdentityUser, ITenantEntity, IDomainEventEntity
 {
     public int TenantId { get; private set; }
 
