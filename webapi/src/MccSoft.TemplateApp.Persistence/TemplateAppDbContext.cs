@@ -22,8 +22,8 @@ public class TemplateAppDbContext
     public TemplateAppDbContext(
         DbContextOptions<TemplateAppDbContext> options,
         IUserAccessor userAccessor
-    ) : base(options)
-    // : base(options)
+    )
+        : base(options)
     {
         UserAccessor = userAccessor;
     }

@@ -16,11 +16,6 @@ public class WebApiTestBase : TestBase<MyDbContext>
         return new DatabaseSeedingOptions<MyDbContext>("Custom");
     }
 
-    protected override MyDbContext CreateDbContext(DbContextOptions<MyDbContext> options)
-    {
-        return new MyDbContext(options);
-    }
-
     protected override void RegisterServices(
         IServiceCollection services,
         IConfiguration configuration,

@@ -28,7 +28,7 @@ public static partial class SetupDatabase
         services.Configure<DefaultUserOptions>(configuration.GetSection("DefaultUser"));
     }
 
-    private static partial TemplateAppDbContext CreateDbContext(IServiceProvider provider)
+    public static partial TemplateAppDbContext CreateDbContext(IServiceProvider provider)
     {
         return new TemplateAppDbContext(
             provider.GetRequiredService<DbContextOptions<TemplateAppDbContext>>(),

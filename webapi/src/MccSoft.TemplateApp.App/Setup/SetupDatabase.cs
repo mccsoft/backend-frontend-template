@@ -78,7 +78,7 @@ public static partial class SetupDatabase
         AddSeeders(services, configuration);
     }
 
-    private static partial TemplateAppDbContext CreateDbContext(IServiceProvider provider);
+    public static partial TemplateAppDbContext CreateDbContext(IServiceProvider provider);
 
     /// <summary>
     /// Performs database seeding operation.
