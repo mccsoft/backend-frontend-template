@@ -9,7 +9,6 @@ RUN \
   && chmod 777 /files
 
 ENV ASPNETCORE_URLS="http://*:5000"
-ENV ASPNETCORE_ENVIRONMENT="Docker"
 COPY . /webapi
 
 RUN useradd dotnetuser --create-home --uid 1000 && \
