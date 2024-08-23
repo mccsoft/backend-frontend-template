@@ -1,4 +1,5 @@
 ﻿using MccSoft.LowLevelPrimitives;
+using MccSoft.TemplateApp.App.Features.Files;
 using MccSoft.TemplateApp.App.Features.Products;
 using MccSoft.TemplateApp.App.Features.TestApi;
 using MccSoft.TemplateApp.App.Services.Authentication;
@@ -20,6 +21,7 @@ public static class SetupServices
             .AddTransient<IUserAccessor, UserAccessor>()
             .AddScoped<DefaultUserSeeder>()
             .AddScoped<TestApiService>()
-            .AddScoped<ProductService>();
+            .AddScoped<ProductService>()
+            .AddScoped<FileService>();
     }
 }

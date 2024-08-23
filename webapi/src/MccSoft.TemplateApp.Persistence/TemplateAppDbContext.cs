@@ -19,6 +19,8 @@ public class TemplateAppDbContext
     public DbSet<Tenant> Tenants { get; set; }
     public DbSet<AuditLog> AuditLogs { get; set; }
 
+    public DbSet<DbFile> Files { get; set; }
+
     public TemplateAppDbContext(
         DbContextOptions<TemplateAppDbContext> options,
         IUserAccessor userAccessor
