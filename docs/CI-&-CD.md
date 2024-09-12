@@ -71,7 +71,7 @@ As a result, we should have a linux host with new user which runs Azure Agent an
 1. SSH into the Stage
 1. Downloads the [docker-compose.yaml](https://github.com/mccsoft/backend-frontend-template/blob/master/docker-compose.yaml) from Build Artifacts and copies it to HOME directory.
 1. Renames the `~/.env.base` file into `~/.env` (so it will be consumed by docker-compose) and appends the Docker Image version to this file.
-1. Runs `docker-compose up -d`.
+1. Runs `docker compose up -d`.
 
 The default docker-compose runs the following Containers:
 

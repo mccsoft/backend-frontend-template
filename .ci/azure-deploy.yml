@@ -37,7 +37,7 @@ steps:
 - script: |
     cd $HOME
     sudo docker network create load-balancer
-    sudo docker-compose up -d
+    sudo docker compose up -d
   displayName: run docker-compose
 
 - script: |

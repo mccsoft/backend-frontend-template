@@ -8,7 +8,7 @@ This is a small incstruction how to run Opensearch
 1. Adjust `.env` to contain yours VIRTUAL_HOST for generating certificates for your vm host.
 1. Change mod for script files: `sudo chmod 777 ./apply-internal-users.sh ./generate-password.sh ./generate-certs.sh`
 
-1. Run the stack (`docker-compose up -d`). Make sure it opens in the browser and user/password `admin/admin` works.
+1. Run the stack (`docker compose up -d`). Make sure it opens in the browser and user/password `admin/admin` works.
 1. Change password for `admin` user.
 
    1. Stop the stack (`docker-compose down`)
@@ -17,7 +17,7 @@ This is a small incstruction how to run Opensearch
    1. Edit `internal-users.yml`, change `hash` field for admin user to the hash generated in previous step
    1. Run `./apply-internal-users.sh`
    1. Edit `docker-compose.yml` and uncomment the line: `- plugins.security.ssl.http.enabled=false` for `node1`
-   1. Run the stack (`docker-compose up -d`). Make sure it opens in the browser and new password for `admin` user works.
+   1. Run the stack (`docker compose up -d`). Make sure it opens in the browser and new password for `admin` user works.
 
 ## Step 2 - Configure additional users
 
