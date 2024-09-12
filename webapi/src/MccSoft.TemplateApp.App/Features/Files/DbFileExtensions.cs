@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using MccSoft.TemplateApp.App.Features.Files.Dto;
+using MccSoft.TemplateApp.Domain;
 using NeinLinq;
 
 namespace MccSoft.TemplateApp.App.Features.Files;

@@ -6,7 +6,7 @@ steps:
 
   - script: |
       cd scripts/integresql
-      docker-compose up -d
+      docker compose up -d
     displayName: 'run integresql'
 
   - task: DotNetCoreCLI@2

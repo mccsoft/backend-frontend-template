@@ -1,16 +1,19 @@
 ﻿using System.Security.Cryptography;
 using MccSoft.LowLevelPrimitives;
+using MccSoft.PersistenceHelpers;
 using MccSoft.TemplateApp.App.Features.Files.Dto;
+using MccSoft.TemplateApp.Domain;
+using MccSoft.TemplateApp.Persistence;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MccSoft.TemplateApp.App.Features.Files;
 
 public class FileService
 {
-    private readonly KundenPortalDbContext _dbContext;
+    private readonly TemplateAppDbContext _dbContext;
     private readonly string _filesDirectory;
 
-    public FileService(KundenPortalDbContext dbContext, IConfiguration configuration)
+    public FileService(TemplateAppDbContext dbContext, IConfiguration configuration)
     {
         _dbContext = dbContext;
         _filesDirectory = configuration.GetValue<string>("DefaultFileStorage");
