@@ -20,6 +20,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NeinLinq;
+using Npgsql;
 using Xunit.Abstractions;
 
 namespace MccSoft.Testing;
@@ -68,7 +69,11 @@ public abstract class TestBase<TDbContext>
     protected readonly IDatabaseInitializer _databaseInitializer;
     protected Mock<IWebHostEnvironment> _webHostEnvironment;
 
-    protected TestBase(ITestOutputHelper outputHelper, DatabaseType? databaseType)
+    protected TestBase(
+        ITestOutputHelper outputHelper,
+        DatabaseType? databaseType,
+        Action<NpgsqlDataSourceBuilder> adjustNpgsqlDataSource = null
+    )
     {
         _databaseType = databaseType;
         OutputHelper = outputHelper;
@@ -82,7 +87,8 @@ public abstract class TestBase<TDbContext>
             null => null,
             DatabaseType.Postgres
                 => new NpgsqlDatabaseInitializer(
-                    connectionStringOverride: new() { Host = "localhost", Port = 5434, }
+                    connectionStringOverride: new() { Host = "localhost", Port = 5434, },
+                    adjustNpgsqlDataSource: adjustNpgsqlDataSource
                 ),
             DatabaseType.Sqlite => new SqliteDatabaseInitializer(),
             _ => throw new ArgumentOutOfRangeException(nameof(databaseType), databaseType, null)

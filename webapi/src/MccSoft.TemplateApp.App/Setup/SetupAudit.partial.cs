@@ -12,7 +12,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Serilog;
 using Configuration = Audit.Core.Configuration;
-using LogLevel = Audit.NET.Serilog.LogLevel;
 
 namespace MccSoft.TemplateApp.App.Setup;
 
@@ -105,8 +104,11 @@ public partial class SetupAudit
                         .AuditEntityAction<AuditLog>(
                             (ev, entry, auditLog) =>
                             {
-                                auditLog.UserId =
-                                    HttpContextAccessor?.HttpContext?.User?.Identity?.GetUserIdOrNull();
+                                auditLog.UserId = HttpContextAccessor
+                                    ?.HttpContext
+                                    ?.User
+                                    ?.Identity
+                                    ?.GetUserIdOrNull();
                                 auditLog.ChangeDate = DateTime.UtcNow;
                                 auditLog.EntityType = entry.Name;
                                 auditLog.Action = entry.Action;
@@ -146,7 +148,10 @@ public partial class SetupAudit
         Configuration
             .Setup()
             .UseSerilog(
-                config => config.LogLevel(LogLevel.Debug).Message(CreateAuditMessageForSerilog)
+                config =>
+                    config
+                        .LogLevel(Audit.Serilog.LogLevel.Debug)
+                        .Message(CreateAuditMessageForSerilog)
             );
     }
 }

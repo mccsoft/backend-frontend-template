@@ -4,6 +4,7 @@ using MccSoft.PersistenceHelpers.DomainEvents;
 using MccSoft.TemplateApp.Persistence;
 using Microsoft.EntityFrameworkCore;
 using NeinLinq;
+using Npgsql;
 using Shaddix.OpenIddict.ExternalAuthentication.Infrastructure;
 
 namespace MccSoft.TemplateApp.App.Setup;
@@ -55,6 +56,10 @@ public static partial class SetupDatabase
             .AddDbContext<TemplateAppDbContext>(
                 (provider, opt) =>
                 {
+                    var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
+                    dataSourceBuilder.EnableDynamicJson();
+                    TemplateAppDbContext.MapEnums(dataSourceBuilder);
+
                     opt.UseNpgsql(
                             connectionString,
                             builder => builder.EnableRetryOnFailureWithAdditionalErrorCodes()

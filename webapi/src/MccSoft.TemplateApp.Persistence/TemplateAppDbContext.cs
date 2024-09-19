@@ -30,7 +30,7 @@ public class TemplateAppDbContext
         UserAccessor = userAccessor;
     }
 
-    static TemplateAppDbContext() => NpgsqlConnection.GlobalTypeMapper.MapEnum<ProductType>();
+    public static void MapEnums(NpgsqlDataSourceBuilder builder) => builder.MapEnum<ProductType>();
 
     // when adding enum here don't forget to OnModelCreating as well (see below)
 
