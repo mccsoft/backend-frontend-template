@@ -53,7 +53,8 @@ internal class SentryEventProcessor : ISentryEventProcessor
                 // which was failed to consume, from LogEntry.
                 string failedServiceBusMessageName = Regex
                     .Match(message, "Failed to consume \'(?<failedServiceBusMessageName>.*)\' in")
-                    .Groups["failedServiceBusMessageName"].ToString();
+                    .Groups["failedServiceBusMessageName"]
+                    .ToString();
 
                 @event.SetFingerprint(
                     new[]
@@ -66,7 +67,9 @@ internal class SentryEventProcessor : ISentryEventProcessor
         }
         else
         {
-            _logger.LogError("Error logging message to Sentry. event.LogEntry?.Message is null.");
+            _logger.LogInformation(
+                "Error logging message to Sentry. event.LogEntry?.Message is null."
+            );
         }
 
         return @event;
