@@ -6,6 +6,7 @@ using MccSoft.TemplateApp.Domain.Audit;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using Npgsql.TypeMapping;
 
 namespace MccSoft.TemplateApp.Persistence;
 
@@ -30,7 +31,8 @@ public class TemplateAppDbContext
         UserAccessor = userAccessor;
     }
 
-    public static void MapEnums(NpgsqlDataSourceBuilder builder) => builder.MapEnum<ProductType>();
+    public static INpgsqlTypeMapper MapEnums(NpgsqlDataSourceBuilder builder) =>
+        builder.MapEnum<ProductType>();
 
     // when adding enum here don't forget to OnModelCreating as well (see below)
 

@@ -32,7 +32,12 @@ public class AppServiceTestBase : TestBase<TemplateAppDbContext>
         ITestOutputHelper outputHelper,
         DatabaseType? testDatabaseType = DatabaseType.Postgres
     )
-        : base(outputHelper, testDatabaseType)
+        : base(
+            outputHelper,
+            testDatabaseType,
+            adjustNpgsqlDataSource: builder =>
+                TemplateAppDbContext.MapEnums(builder.EnableDynamicJson())
+        )
     {
         Configuration.AuditDisabled = true;
 

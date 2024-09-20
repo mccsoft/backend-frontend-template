@@ -51,17 +51,18 @@ public static partial class SetupDatabase
             options.SizeLimit = null;
         });
 
+        var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
+        dataSourceBuilder.EnableDynamicJson();
+        TemplateAppDbContext.MapEnums(dataSourceBuilder);
+        var dataSource = dataSourceBuilder.Build();
+
         services
             .AddEntityFrameworkNpgsql()
             .AddDbContext<TemplateAppDbContext>(
                 (provider, opt) =>
                 {
-                    var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
-                    dataSourceBuilder.EnableDynamicJson();
-                    TemplateAppDbContext.MapEnums(dataSourceBuilder);
-
                     opt.UseNpgsql(
-                            connectionString,
+                            dataSource,
                             builder => builder.EnableRetryOnFailureWithAdditionalErrorCodes()
                         )
                         .WithLambdaInjection()
