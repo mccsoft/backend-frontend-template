@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { mergeRefs } from 'react-merge-refs';
-import { StyledAutocomplete } from './StyledAutocomplete';
+import {
+  convertPropertyAccessorToFunction,
+  StyledAutocomplete,
+} from './StyledAutocomplete';
 import type {
   DropDownInputProps,
   StyledAutocompleteControl,
@@ -16,6 +19,17 @@ export function DropDownInput<
   const { onValueChanged, ...rest } = props;
   const onValueChanged_ValueRef = useRef(props.value);
 
+  const idFunction = props.idFunction
+    ? convertPropertyAccessorToFunction<T, false, Required, false>(
+        props.idFunction,
+      )
+    : (v: any) => v;
+  let value = props.value;
+  if (props.useIdFunctionAsValue && idFunction && value) {
+    value =
+      (props.options.find((x) => idFunction(x as any) == value) as any) ??
+      value;
+  }
   const onChange: StyledAutocompleteProps<
     T,
     false,
@@ -55,7 +69,7 @@ export function DropDownInput<
        *
        * To overcome this, we verify that if `props.value` wasn't changed after calling `onValueChanged`, we reset the value in DropDown.
        */
-      if (props.value != onValueChanged_ValueRef.current) {
+      if (props.value != idFunction(onValueChanged_ValueRef.current as any)) {
         actionsRef.current?.blur();
       }
     },
@@ -67,7 +81,7 @@ export function DropDownInput<
     <StyledAutocomplete<T, false, Required, false>
       {...rest}
       multiple={false}
-      value={props.value as any}
+      value={value as any}
       onChange={onChange}
       actions={actionsRef}
     />

@@ -46,17 +46,14 @@ export function HookFormDropDownInput<
       name={name}
       rules={rules}
       render={({ field: { onChange, onBlur, value } }) => {
-        if (useIdFunctionAsValue && idFunction && value) {
-          value =
-            (props.options.find((x) => idFunction(x as any) == value) as any) ??
-            value;
-        }
         return (
           <DropDownInput
             {...rest}
             value={value}
             onBlur={onBlur}
             variant={props.variant ?? 'formInput'}
+            useIdFunctionAsValue={useIdFunctionAsValue}
+            idFunction={props.idFunction}
             onValueChanged={(v: T | null) => {
               if (useIdFunctionAsValue && idFunction && v) {
                 onChange(idFunction(v));

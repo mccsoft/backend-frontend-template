@@ -19,6 +19,7 @@ import { PopperExample } from './components/PopperExample';
 import { MultiSelectDropDownInput } from 'components/uikit/inputs/dropdown/MultiSelectDropDownInput';
 import { HookFormComboBoxInput } from '../../../components/uikit/inputs/dropdown/HookFormComboBoxInput';
 import { TimePicker } from 'components/uikit/inputs/date-time/TimePicker';
+import { DropDownInput } from 'components/uikit/inputs/dropdown/DropDownInput';
 
 type UiKitForm = {
   dropDown: ProductType;
@@ -52,6 +53,8 @@ export const UiKitPage: React.FC = () => {
   }, []);
   const modals = useModal();
   const [multiValues, setMultiValues] = useState<ProductType[]>([]);
+  const [complexDropDownValue, setComplexDropDownValue] =
+    useState<ProductType | null>(null);
   return (
     <div>
       <AppLink
@@ -84,6 +87,7 @@ export const UiKitPage: React.FC = () => {
         <Field title={i18n.t('dropdown')}>
           <HookFormDropDownInput
             options={options}
+            enableSearch={true}
             customOptions={[
               {
                 label: 'Add new',
@@ -98,13 +102,27 @@ export const UiKitPage: React.FC = () => {
         </Field>
         <Field title={i18n.t('hook_form_dropdown_complex_option')}>
           <HookFormDropDownInput
+            enableSearch={true}
             options={categories}
             useVirtualization={true}
             popupWidth={'autosize'}
             name={'category'}
             getOptionLabel={'title'}
-            idFunction={(x) => x.id}
+            idFunction={(x) => x?.id}
             control={form.control}
+          />
+          <DropDownInput
+            required={false}
+            disableAutomaticResetAfterOnValueChanged={true}
+            enableSearch={true}
+            options={categories}
+            useVirtualization={true}
+            popupWidth={'autosize'}
+            getOptionLabel={'title'}
+            idFunction={(x) => x?.id}
+            useIdFunctionAsValue={true}
+            value={complexDropDownValue}
+            onValueChanged={(o) => setComplexDropDownValue(o?.id ?? null)}
           />
         </Field>
         <Field title={i18n.t('multi_select_dropdown')}>
