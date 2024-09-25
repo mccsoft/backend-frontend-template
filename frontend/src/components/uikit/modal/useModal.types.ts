@@ -3,15 +3,13 @@ import { ButtonColor } from '../buttons/Button';
 
 export type UseModalOptions<T = string> = {
   id: string;
-  title: string;
-  text: React.ReactNode;
   okButtonText?: string;
   okButtonColor?: ButtonColor;
 } & (
-  | {
+  | (AlertOptions & {
       type: 'alert';
       resolve: () => void;
-    }
+    })
   | (ConfirmOptions & {
       type: 'confirm';
       resolve: (result: boolean) => void;
@@ -22,6 +20,10 @@ export type UseModalOptions<T = string> = {
     })
   | (MultiButtonOptions<T> & {
       type: 'multibutton';
+      resolve: (result: T | null) => void;
+    })
+  | (CustomModalOptions<T> & {
+      type: 'custom';
       resolve: (result: T | null) => void;
     })
 );
@@ -63,6 +65,17 @@ export type MultiButtonOptions<T = string> = {
   text: React.ReactNode;
   buttons: { id: T; text: string; color?: ButtonColor }[];
 };
+
+export type CustomModalOptions<T> = Omit<
+  ConfirmOptions,
+  'text' | 'allowStyleTagsInText'
+> & {
+  Component: React.FC<{
+    value: T | null | undefined;
+    setValue: (value: T | null | undefined) => void;
+  }>;
+  // validate?: (value: T | null | undefined) => Promise<boolean>;
+};
 export type ModalContextType = {
   hide: (id: string) => void;
   showError: (options: ErrorOptions) => Promise<void> & { id: string };
@@ -84,5 +97,8 @@ export type ModalContextType = {
   ) => Promise<string | null> & { id: string };
   showMultiButton: <T = string>(
     options: MultiButtonOptions<T>,
+  ) => Promise<T | null> & { id: string };
+  showCustom: <T>(
+    options: CustomModalOptions<T>,
   ) => Promise<T | null> & { id: string };
 };

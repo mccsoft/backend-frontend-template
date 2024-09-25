@@ -60,6 +60,12 @@ export const useModal = (): ModalContextType => {
         void result.then(() => idsRef.current.delete(result.id));
         return result;
       },
+      showCustom(options) {
+        const result = context.showCustom({ ...options });
+        idsRef.current.add(result.id);
+        void result.then(() => idsRef.current.delete(result.id));
+        return result;
+      },
     };
   }, [context]);
 };
@@ -184,6 +190,25 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = (props) => {
         (promise as any).id = id;
         return promise;
       },
+      showCustom: async (options) => {
+        const id = createId();
+        const promise = new Promise<any | null>((resolve, reject) => {
+          // we use setTimout to be able to access the promise
+          setTimeout(() =>
+            addModal(
+              {
+                type: 'custom',
+                ...options,
+                id,
+                resolve: resolve,
+              },
+              promise,
+            ),
+          );
+        });
+        (promise as any).id = id;
+        return promise;
+      },
     } as ModalContextType;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addModal, i18n.i18n.language]);
@@ -206,6 +231,7 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
   const [fieldValue, setFieldValue] = useState(
     options.type === 'prompt' ? options.defaultValue : '',
   );
+  const [customValue, setCustomValue] = useState<any>(null);
 
   const commonClose = useCallback(() => {
     setIsShown(false);
@@ -229,6 +255,10 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
         break;
 
       case 'multibutton':
+        options.resolve(null);
+        break;
+
+      case 'custom':
         options.resolve(null);
         break;
 
@@ -258,26 +288,35 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
       {options ? (
         <>
           <div className={styles.body}>
-            {options.text}
-            {options.type === 'prompt' ? (
-              <Field title={options.fieldName}>
-                <Input
-                  value={fieldValue}
-                  autoFocus={true}
-                  ref={inputRef}
-                  onChange={(e) => setFieldValue(e.target.value)}
-                  errorText={options.fieldError}
-                  maxLength={options.maxLength}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                      commonClose();
-                      options.resolve(fieldValue);
-                      setFieldValue('');
-                    }
-                  }}
-                />
-              </Field>
-            ) : null}
+            {options.type === 'custom' ? (
+              <options.Component
+                value={customValue}
+                setValue={setCustomValue}
+              />
+            ) : (
+              <>
+                {options.text}
+                {options.type === 'prompt' ? (
+                  <Field title={options.fieldName}>
+                    <Input
+                      value={fieldValue}
+                      autoFocus={true}
+                      ref={inputRef}
+                      onChange={(e) => setFieldValue(e.target.value)}
+                      errorText={options.fieldError}
+                      maxLength={options.maxLength}
+                      onKeyDown={(event) => {
+                        if (event.key === 'Enter') {
+                          commonClose();
+                          options.resolve(fieldValue);
+                          setFieldValue('');
+                        }
+                      }}
+                    />
+                  </Field>
+                ) : null}
+              </>
+            )}
           </div>
           <div className={styles.footer}>
             {options.type === 'multibutton' ? (
@@ -296,7 +335,9 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
               ))
             ) : (
               <>
-                {options.type === 'confirm' || options.type === 'prompt' ? (
+                {options.type === 'confirm' ||
+                options.type === 'prompt' ||
+                options.type === 'custom' ? (
                   <Button
                     className={styles.button}
                     color={
@@ -322,11 +363,29 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
                   type={'submit'}
                   title={options.okButtonText ?? i18n.t('ok_button')}
                   onClick={async () => {
-                    if (options.type === 'confirm') options.resolve(true);
-                    else if (options.type === 'prompt') {
-                      options.resolve(fieldValue);
-                      setFieldValue('');
-                    } else if (options.type === 'alert') options.resolve();
+                    const type = options.type;
+                    switch (type) {
+                      case 'alert':
+                        options.resolve();
+                        break;
+
+                      case 'confirm':
+                        options.resolve(true);
+                        break;
+
+                      case 'prompt':
+                        options.resolve(fieldValue);
+                        setFieldValue('');
+                        break;
+
+                      case 'custom':
+                        options.resolve(customValue);
+                        break;
+
+                      default:
+                        assertNever(type);
+                    }
+
                     setIsShown(false);
                   }}
                 />

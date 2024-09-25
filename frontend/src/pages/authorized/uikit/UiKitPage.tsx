@@ -200,6 +200,27 @@ export const UiKitPage: React.FC = () => {
         }}
         title={'Show prompt'}
       ></Button>
+      <Button
+        color={ButtonColor.Secondary}
+        onClick={async () => {
+          const result = await modals.showCustom<string>({
+            title: 'asd',
+            Component: (props) => {
+              return (
+                <>
+                  <div>enter some value</div>
+                  <Input
+                    value={props.value ?? ''}
+                    onChange={(e) => props.setValue(e.target.value)}
+                  />
+                </>
+              );
+            },
+          });
+          alert(result);
+        }}
+        title={'Show custom'}
+      ></Button>
       <PopperExample />
     </div>
   );
