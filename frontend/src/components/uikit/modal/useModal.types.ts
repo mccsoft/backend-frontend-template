@@ -70,6 +70,7 @@ export type CustomModalOptions<T> = Omit<
   ConfirmOptions,
   'text' | 'allowStyleTagsInText'
 > & {
+  defaultValue?: T | null;
   Component: React.FC<{
     value: T | null | undefined;
     setValue: (value: T | null | undefined) => void;

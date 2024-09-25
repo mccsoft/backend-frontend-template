@@ -231,7 +231,9 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
   const [fieldValue, setFieldValue] = useState(
     options.type === 'prompt' ? options.defaultValue : '',
   );
-  const [customValue, setCustomValue] = useState<any>(null);
+  const [customValue, setCustomValue] = useState<any>(
+    options.type === 'custom' ? options.defaultValue ?? null : null,
+  );
 
   const commonClose = useCallback(() => {
     setIsShown(false);
@@ -380,6 +382,7 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
 
                       case 'custom':
                         options.resolve(customValue);
+                        setCustomValue(null);
                         break;
 
                       default:
