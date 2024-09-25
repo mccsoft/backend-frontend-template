@@ -281,9 +281,10 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
           </div>
           <div className={styles.footer}>
             {options.type === 'multibutton' ? (
-              options.buttons.map((x) => (
+              options.buttons.map((x, index) => (
                 <Button
                   key={x.id}
+                  autoFocus={index === options.buttons.length - 1}
                   color={x.color ?? ButtonColor.Default}
                   className={clsx(styles.button, styles.multibutton)}
                   title={x.text}
@@ -315,6 +316,8 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
                 ) : null}
                 <Button
                   className={styles.button}
+                  /* autofocus allows to close modals via Escape button if there are no inputs inside the modal */
+                  autoFocus={true}
                   color={options.okButtonColor ?? ButtonColor.Default}
                   type={'submit'}
                   title={options.okButtonText ?? i18n.t('ok_button')}

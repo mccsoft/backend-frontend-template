@@ -27,9 +27,8 @@ export type ButtonProps = {
   icon?: string;
   iconClassName?: string;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
-  style?: CSSProperties;
   testId?: string;
-};
+} & Pick<React.ButtonHTMLAttributes<HTMLButtonElement>, 'autoFocus' | 'style'>;
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   function Button(props, ref) {
