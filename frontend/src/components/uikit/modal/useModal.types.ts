@@ -71,12 +71,16 @@ export type CustomModalOptions<T> = Omit<
   'text' | 'allowStyleTagsInText'
 > & {
   defaultValue?: T | null;
-  Component: React.FC<{
-    value: T | null | undefined;
-    setValue: (value: T | null | undefined) => void;
-  }>;
+  Component: React.FC<CustomComponentProps<T>>;
+  Controls?: React.FC<CustomComponentProps<T>>;
   // validate?: (value: T | null | undefined) => Promise<boolean>;
 };
+export type CustomComponentProps<T> = {
+  value: T | null | undefined;
+  setValue: (value: T | null | undefined) => void;
+  onClose: (value: T | null | undefined) => void;
+};
+
 export type ModalContextType = {
   hide: (id: string) => void;
   showError: (options: ErrorOptions) => Promise<void> & { id: string };

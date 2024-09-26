@@ -16,6 +16,7 @@ import styles from './Modal.module.scss';
 import { assertNever } from 'helpers/assert-never';
 import clsx from 'clsx';
 import { createId } from '../type-utils';
+import useEventCallback from '@mui/material/utils/useEventCallback';
 
 const ModalContext = React.createContext<ModalContextType>({} as any);
 
@@ -253,13 +254,7 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
         break;
 
       case 'prompt':
-        options.resolve(null);
-        break;
-
       case 'multibutton':
-        options.resolve(null);
-        break;
-
       case 'custom':
         options.resolve(null);
         break;
@@ -268,6 +263,12 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
         assertNever(type);
     }
   }, [commonClose, options]);
+
+  const onCloseCustom = useEventCallback((value: any) => {
+    setIsShown(false);
+    if (!options || options.type !== 'custom') return;
+    options.resolve(value);
+  });
 
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(
@@ -294,6 +295,7 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
               <options.Component
                 value={customValue}
                 setValue={setCustomValue}
+                onClose={onCloseCustom}
               />
             ) : (
               <>
@@ -321,77 +323,90 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
             )}
           </div>
           <div className={styles.footer}>
-            {options.type === 'multibutton' ? (
-              options.buttons.map((x, index) => (
-                <Button
-                  key={x.id}
-                  autoFocus={index === options.buttons.length - 1}
-                  color={x.color ?? ButtonColor.Default}
-                  className={clsx(styles.button, styles.multibutton)}
-                  title={x.text}
-                  onClick={() => {
-                    options.resolve(x.id);
-                    commonClose();
-                  }}
-                />
-              ))
+            {options.type === 'custom' && options.Controls ? (
+              <options.Controls
+                value={customValue}
+                setValue={setCustomValue}
+                onClose={onCloseCustom}
+              />
             ) : (
               <>
-                {options.type === 'confirm' ||
-                options.type === 'prompt' ||
-                options.type === 'custom' ? (
-                  <Button
-                    className={styles.button}
-                    color={
-                      options.cancelButtonColor ??
-                      (options.okButtonColor
-                        ? ButtonColor.Primary
-                        : ButtonColor.Secondary)
-                    }
-                    title={options.cancelButtonText ?? i18n.t('cancel_button')}
-                    onClick={() => {
-                      if (options.type === 'confirm') options.resolve(false);
-                      else options.resolve(null);
-                      commonClose();
-                    }}
-                    data-test-id="dialog-cancelButton"
-                  />
-                ) : null}
-                <Button
-                  className={styles.button}
-                  /* autofocus allows to close modals via Escape button if there are no inputs inside the modal */
-                  autoFocus={true}
-                  color={options.okButtonColor ?? ButtonColor.Default}
-                  type={'submit'}
-                  title={options.okButtonText ?? i18n.t('ok_button')}
-                  onClick={async () => {
-                    const type = options.type;
-                    switch (type) {
-                      case 'alert':
-                        options.resolve();
-                        break;
+                {options.type === 'multibutton' ? (
+                  options.buttons.map((x, index) => (
+                    <Button
+                      key={x.id}
+                      autoFocus={index === options.buttons.length - 1}
+                      color={x.color ?? ButtonColor.Default}
+                      className={clsx(styles.button, styles.multibutton)}
+                      title={x.text}
+                      onClick={() => {
+                        options.resolve(x.id);
+                        commonClose();
+                      }}
+                    />
+                  ))
+                ) : (
+                  <>
+                    {options.type === 'confirm' ||
+                    options.type === 'prompt' ||
+                    options.type === 'custom' ? (
+                      <Button
+                        className={styles.button}
+                        color={
+                          options.cancelButtonColor ??
+                          (options.okButtonColor
+                            ? ButtonColor.Primary
+                            : ButtonColor.Secondary)
+                        }
+                        title={
+                          options.cancelButtonText ?? i18n.t('cancel_button')
+                        }
+                        onClick={() => {
+                          if (options.type === 'confirm')
+                            options.resolve(false);
+                          else options.resolve(null);
+                          commonClose();
+                        }}
+                        data-test-id="dialog-cancelButton"
+                      />
+                    ) : null}
+                    <Button
+                      className={styles.button}
+                      /* autofocus allows to close modals via Escape button if there are no inputs inside the modal */
+                      autoFocus={true}
+                      color={options.okButtonColor ?? ButtonColor.Default}
+                      type={'submit'}
+                      title={options.okButtonText ?? i18n.t('ok_button')}
+                      onClick={async () => {
+                        const type = options.type;
+                        switch (type) {
+                          case 'alert':
+                            options.resolve();
+                            break;
 
-                      case 'confirm':
-                        options.resolve(true);
-                        break;
+                          case 'confirm':
+                            options.resolve(true);
+                            break;
 
-                      case 'prompt':
-                        options.resolve(fieldValue);
-                        setFieldValue('');
-                        break;
+                          case 'prompt':
+                            options.resolve(fieldValue);
+                            setFieldValue('');
+                            break;
 
-                      case 'custom':
-                        options.resolve(customValue);
-                        setCustomValue(null);
-                        break;
+                          case 'custom':
+                            options.resolve(customValue);
+                            setCustomValue(null);
+                            break;
 
-                      default:
-                        assertNever(type);
-                    }
+                          default:
+                            assertNever(type);
+                        }
 
-                    setIsShown(false);
-                  }}
-                />
+                        setIsShown(false);
+                      }}
+                    />
+                  </>
+                )}
               </>
             )}
           </div>
