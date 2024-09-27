@@ -52,7 +52,7 @@ spec:
             claimName: postgres-volume-pvc
       containers:
         - name: templateapp-main-postgres
-          image: postgres:latest
+          image: postgres:15
           ports:
             - containerPort: 5432
           envFrom:
