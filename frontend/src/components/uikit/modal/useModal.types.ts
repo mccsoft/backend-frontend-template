@@ -59,6 +59,8 @@ export type PromptOptions = {
   okButtonColor?: ButtonColor;
   cancelButtonText?: string;
   cancelButtonColor?: ButtonColor;
+  placeholder?: string;
+  validate?: (value: string) => Promise<boolean> | boolean;
 };
 export type MultiButtonOptions<T = string> = {
   title: string;
@@ -73,7 +75,7 @@ export type CustomModalOptions<T> = Omit<
   defaultValue?: T | null;
   Component: React.FC<CustomComponentProps<T>>;
   Controls?: React.FC<CustomComponentProps<T>>;
-  // validate?: (value: T | null | undefined) => Promise<boolean>;
+  validate?: (value: T | null | undefined) => Promise<boolean> | boolean;
 };
 export type CustomComponentProps<T> = {
   value: T | null | undefined;

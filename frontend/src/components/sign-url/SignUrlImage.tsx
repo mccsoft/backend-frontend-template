@@ -71,7 +71,7 @@ export const SignUrlImageGeneric = React.forwardRef<
            */
         !src
           ? fallback
-          : cookieQuery.isInitialLoading
+          : cookieQuery.isLoading
           ? ''
           : cookieQuery.isError
           ? fallback
