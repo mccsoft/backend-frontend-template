@@ -145,7 +145,9 @@ public class ComponentTestBase : TestBase<TemplateAppDbContext>, IDisposable
         // services.RemoveRegistration<TService>();
 
         services.AddSingleton(
-            (_backgroundJobClient = HangfireMock.CreateHangfireMock(() => _serviceProvider)).Object
+            (
+                _backgroundJobClient = HangfireMock.CreateHangfireMock(() => TestServer.Services)
+            ).Object
         );
     }
 
