@@ -51,7 +51,7 @@ export type ConfirmOptions = {
 export type PromptOptions = {
   title: string;
   text: React.ReactNode;
-  defaultValue: string;
+  defaultValue?: string;
   fieldName: string;
   fieldError?: string;
   maxLength?: number;
@@ -60,7 +60,7 @@ export type PromptOptions = {
   cancelButtonText?: string;
   cancelButtonColor?: ButtonColor;
   placeholder?: string;
-  validate?: (value: string) => Promise<boolean> | boolean;
+  onSubmit?: (value: string) => Promise<boolean | string> | boolean | string;
 };
 export type MultiButtonOptions<T = string> = {
   title: string;
@@ -75,7 +75,7 @@ export type CustomModalOptions<T> = Omit<
   defaultValue?: T | null;
   Component: React.FC<CustomComponentProps<T>>;
   Controls?: React.FC<CustomComponentProps<T>>;
-  validate?: (value: T | null | undefined) => Promise<boolean> | boolean;
+  onSubmit?: (value: T | null | undefined) => Promise<boolean> | boolean;
 };
 export type CustomComponentProps<T> = {
   value: T | null | undefined;

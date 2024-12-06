@@ -17,6 +17,7 @@ import { assertNever } from 'helpers/assert-never';
 import clsx from 'clsx';
 import { createId } from '../type-utils';
 import useEventCallback from '@mui/material/utils/useEventCallback';
+import { Loading } from '../suspense/Loading';
 
 const ModalContext = React.createContext<ModalContextType>({} as any);
 
@@ -228,9 +229,13 @@ type SingleModalProps = { options: UseModalOptions };
 const SingleModal: React.FC<SingleModalProps> = (props) => {
   const options = props.options;
   const i18n = useScopedTranslation('uikit.dialog');
-  const [isShown, setIsShown] = useState<boolean>(true);
+  const [isShown, setIsShown] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [fieldValue, setFieldValue] = useState(
-    options.type === 'prompt' ? options.defaultValue : '',
+    options.type === 'prompt' ? options.defaultValue ?? '' : '',
+  );
+  const [fieldError, setFieldError] = useState(
+    options.type === 'prompt' ? options.fieldError ?? '' : '',
   );
   const [customValue, setCustomValue] = useState<any>(
     options.type === 'custom' ? options.defaultValue ?? null : null,
@@ -288,146 +293,173 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
       title={options?.title ?? ''}
       onClose={onClose}
     >
-      {options ? (
-        <>
-          <div className={styles.body}>
-            {options.type === 'custom' ? (
-              <options.Component
-                value={customValue}
-                setValue={setCustomValue}
-                onClose={onCloseCustom}
-              />
-            ) : (
-              <>
-                {options.text}
-                {options.type === 'prompt' ? (
-                  <Field title={options.fieldName}>
-                    <Input
-                      value={fieldValue}
-                      autoFocus={true}
-                      ref={inputRef}
-                      onChange={(e) => setFieldValue(e.target.value)}
-                      errorText={options.fieldError}
-                      maxLength={options.maxLength}
-                      onKeyDown={(event) => {
-                        if (event.key === 'Enter') {
-                          commonClose();
-                          options.resolve(fieldValue);
-                          setFieldValue('');
-                        }
-                      }}
-                    />
-                  </Field>
-                ) : null}
-              </>
-            )}
-          </div>
-          <div className={styles.footer}>
-            {options.type === 'custom' && options.Controls ? (
-              <options.Controls
-                value={customValue}
-                setValue={setCustomValue}
-                onClose={onCloseCustom}
-              />
-            ) : (
-              <>
-                {options.type === 'multibutton' ? (
-                  options.buttons.map((x, index) => (
-                    <Button
-                      key={x.id}
-                      autoFocus={index === options.buttons.length - 1}
-                      color={x.color ?? ButtonColor.Default}
-                      className={clsx(styles.button, styles.multibutton)}
-                      title={x.text}
-                      onClick={() => {
-                        options.resolve(x.id);
-                        commonClose();
-                      }}
-                    />
-                  ))
-                ) : (
-                  <>
-                    {options.type === 'confirm' ||
-                    options.type === 'prompt' ||
-                    options.type === 'custom' ? (
-                      <Button
-                        className={styles.button}
-                        color={
-                          options.cancelButtonColor ??
-                          (options.okButtonColor
-                            ? ButtonColor.Primary
-                            : ButtonColor.Secondary)
-                        }
-                        title={
-                          options.cancelButtonText ?? i18n.t('cancel_button')
-                        }
-                        onClick={() => {
-                          if (options.type === 'confirm')
-                            options.resolve(false);
-                          else options.resolve(null);
-                          commonClose();
-                        }}
-                        data-test-id="dialog-cancelButton"
-                      />
-                    ) : null}
-                    <Button
-                      className={styles.button}
-                      /* autofocus allows to close modals via Escape button if there are no inputs inside the modal */
-                      autoFocus={true}
-                      color={options.okButtonColor ?? ButtonColor.Default}
-                      type={'submit'}
-                      title={options.okButtonText ?? i18n.t('ok_button')}
-                      onClick={async () => {
-                        const type = options.type;
-                        switch (type) {
-                          case 'alert':
-                            options.resolve();
-                            break;
-
-                          case 'confirm':
-                            options.resolve(true);
-                            break;
-
-                          case 'prompt':
-                            if (options.validate) {
-                              const result = await options.validate(fieldValue);
-                              if (!result) {
-                                return;
-                              }
-                            }
+      <Loading loading={isLoading}>
+        {options ? (
+          <>
+            <div className={styles.body}>
+              {options.type === 'custom' ? (
+                <options.Component
+                  value={customValue}
+                  setValue={setCustomValue}
+                  onClose={onCloseCustom}
+                />
+              ) : (
+                <>
+                  {options.text}
+                  {options.type === 'prompt' ? (
+                    <Field title={options.fieldName}>
+                      <Input
+                        value={fieldValue}
+                        autoFocus={true}
+                        ref={inputRef}
+                        onChange={(e) => setFieldValue(e.target.value)}
+                        errorText={fieldError}
+                        maxLength={options.maxLength}
+                        onKeyDown={(event) => {
+                          if (event.key === 'Enter') {
+                            commonClose();
                             options.resolve(fieldValue);
                             setFieldValue('');
-                            break;
+                          }
+                        }}
+                      />
+                    </Field>
+                  ) : null}
+                </>
+              )}
+            </div>
+            <div className={styles.footer}>
+              {options.type === 'custom' && options.Controls ? (
+                <options.Controls
+                  value={customValue}
+                  setValue={setCustomValue}
+                  onClose={onCloseCustom}
+                />
+              ) : (
+                <>
+                  {options.type === 'multibutton' ? (
+                    options.buttons.map((x, index) => (
+                      <Button
+                        key={x.id}
+                        autoFocus={index === options.buttons.length - 1}
+                      color={x.color ?? ButtonColor.Default}
+                        className={clsx(styles.button, styles.multibutton)}
+                        title={x.text}
+                        onClick={() => {
+                          options.resolve(x.id);
+                          commonClose();
+                        }}
+                      />
+                    ))
+                  ) : (
+                    <>
+                      {options.type === 'confirm' ||
+                      options.type === 'prompt' ||
+                      options.type === 'custom' ? (
+                        <Button
+                          className={styles.button}
+                          color={
+                            options.cancelButtonColor ??
+                            (options.okButtonColor
+                              ? ButtonColor.Primary
+                              : ButtonColor.Secondary)
+                          }
+                          title={
+                            options.cancelButtonText ?? i18n.t('cancel_button')
+                          }
+                          onClick={() => {
+                            if (options.type === 'confirm')
+                              options.resolve(false);
+                            else options.resolve(null);
+                            commonClose();
+                          }}
+                          data-test-id="dialog-cancelButton"
+                        />
+                      ) : null}
+                      <Button
+                        className={styles.button}
+                        /* autofocus allows to close modals via Escape button if there are no inputs inside the modal */
+                        autoFocus={true}
+                      color={options.okButtonColor ?? ButtonColor.Default}
+                        type={'submit'}
+                        title={options.okButtonText ?? i18n.t('ok_button')}
+                        onClick={async () => {
+                          const type = options.type;
+                          switch (type) {
+                            case 'alert':
+                              options.resolve();
+                              break;
 
-                          case 'custom':
-                            if (options.validate) {
-                              const result =
-                                await options.validate(customValue);
-                              if (!result) {
-                                setCustomValue(customValue);
-                                rerender((x) => x + 1);
-                                return;
+                            case 'confirm':
+                              options.resolve(true);
+                              break;
+
+                            case 'prompt':
+                              if (options.onSubmit) {
+                                const resultPromise =
+                                  options.onSubmit(fieldValue);
+                                if (isPromise(resultPromise)) {
+                                  setIsLoading(true);
+                                }
+                                try {
+                                  const result = await resultPromise;
+
+                                  if (result === false) {
+                                    return;
+                                  } else if (typeof result === 'string') {
+                                    setFieldError(result);
+                                    return;
+                                  }
+                                } finally {
+                                  setIsLoading(false);
+                                }
                               }
-                            }
+                              options.resolve(fieldValue);
+                              setFieldValue('');
+                              break;
 
-                            options.resolve(customValue);
-                            setCustomValue(null);
-                            break;
+                            case 'custom':
+                              if (options.onSubmit) {
+                                const resultPromise =
+                                  options.onSubmit(customValue);
+                                if (isPromise(resultPromise)) {
+                                  setIsLoading(true);
+                                }
+                                try {
+                                  const result = await resultPromise;
 
-                          default:
-                            assertNever(type);
-                        }
+                                  if (!result) {
+                                    setCustomValue(customValue);
+                                    rerender((x) => x + 1);
+                                    return;
+                                  }
+                                } finally {
+                                  setIsLoading(false);
+                                }
+                              }
 
-                        setIsShown(false);
-                      }}
-                    />
-                  </>
-                )}
-              </>
-            )}
-          </div>
-        </>
-      ) : null}
+                              options.resolve(customValue);
+                              setCustomValue(null);
+                              break;
+
+                            default:
+                              assertNever(type);
+                          }
+
+                          setIsShown(false);
+                        }}
+                      />
+                    </>
+                  )}
+                </>
+              )}
+            </div>
+          </>
+        ) : null}
+      </Loading>
     </CustomModal>
   );
 };
+function isPromise(value: any) {
+  return Boolean(value && typeof value.then === 'function');
+}
