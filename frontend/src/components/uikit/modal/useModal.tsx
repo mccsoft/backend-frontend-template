@@ -231,14 +231,14 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
   const i18n = useScopedTranslation('uikit.dialog');
   const [isShown, setIsShown] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [fieldValue, setFieldValue] = useState(
-    options.type === 'prompt' ? options.defaultValue ?? '' : '',
-  );
   const [fieldError, setFieldError] = useState(
     options.type === 'prompt' ? options.fieldError ?? '' : '',
   );
+  const defaultDefaultValue = options.type === 'prompt' ? '' : null;
   const [customValue, setCustomValue] = useState<any>(
-    options.type === 'custom' ? options.defaultValue ?? null : null,
+    options.type === 'custom' || options.type === 'prompt'
+      ? options.defaultValue ?? defaultDefaultValue
+      : defaultDefaultValue,
   );
   const [_, rerender] = useState(1);
   const commonClose = useCallback(() => {
@@ -268,7 +268,40 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
         assertNever(type);
     }
   }, [commonClose, options]);
+  const closeOk = useEventCallback(async () => {
+    if (options.type === 'custom' || options.type === 'prompt') {
+      if (options.onSubmit) {
+        const resultPromise = options.onSubmit(customValue);
+        if (isPromise(resultPromise)) {
+          setIsLoading(true);
+        }
+        try {
+          const result = await resultPromise;
 
+          if (options.type === 'prompt') {
+            if (result === false) {
+              return;
+            } else if (typeof result === 'string') {
+              setFieldError(result);
+              return;
+            }
+          }
+
+          if (!result) {
+            setCustomValue(customValue);
+            rerender((x) => x + 1);
+            return;
+          }
+        } finally {
+          setIsLoading(false);
+        }
+      }
+
+      options.resolve(customValue);
+      commonClose();
+      setCustomValue(defaultDefaultValue);
+    }
+  });
   const onCloseCustom = useEventCallback((value: any) => {
     setIsShown(false);
     if (!options || options.type !== 'custom') return;
@@ -309,17 +342,15 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
                   {options.type === 'prompt' ? (
                     <Field title={options.fieldName}>
                       <Input
-                        value={fieldValue}
+                        value={customValue}
                         autoFocus={true}
                         ref={inputRef}
-                        onChange={(e) => setFieldValue(e.target.value)}
+                        onChange={(e) => setCustomValue(e.target.value)}
                         errorText={fieldError}
                         maxLength={options.maxLength}
-                        onKeyDown={(event) => {
+                        onKeyDown={async (event) => {
                           if (event.key === 'Enter') {
-                            commonClose();
-                            options.resolve(fieldValue);
-                            setFieldValue('');
+                            await closeOk();
                           }
                         }}
                       />
@@ -395,51 +426,8 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
                               break;
 
                             case 'prompt':
-                              if (options.onSubmit) {
-                                const resultPromise =
-                                  options.onSubmit(fieldValue);
-                                if (isPromise(resultPromise)) {
-                                  setIsLoading(true);
-                                }
-                                try {
-                                  const result = await resultPromise;
-
-                                  if (result === false) {
-                                    return;
-                                  } else if (typeof result === 'string') {
-                                    setFieldError(result);
-                                    return;
-                                  }
-                                } finally {
-                                  setIsLoading(false);
-                                }
-                              }
-                              options.resolve(fieldValue);
-                              setFieldValue('');
-                              break;
-
                             case 'custom':
-                              if (options.onSubmit) {
-                                const resultPromise =
-                                  options.onSubmit(customValue);
-                                if (isPromise(resultPromise)) {
-                                  setIsLoading(true);
-                                }
-                                try {
-                                  const result = await resultPromise;
-
-                                  if (!result) {
-                                    setCustomValue(customValue);
-                                    rerender((x) => x + 1);
-                                    return;
-                                  }
-                                } finally {
-                                  setIsLoading(false);
-                                }
-                              }
-
-                              options.resolve(customValue);
-                              setCustomValue(null);
+                              await closeOk();
                               break;
 
                             default:
