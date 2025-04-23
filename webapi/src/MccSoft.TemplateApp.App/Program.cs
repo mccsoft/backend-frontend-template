@@ -36,7 +36,7 @@ SetupAspNet.AddAspNet(builder);
 
 SetupSwagger.AddSwagger(builder);
 
-// builder.Services.AddWebHooks();
+SetupWebhooks.AddWebhooks(builder);
 
 // Set up your application-specific services here
 SetupServices.AddServices(builder.Services, builder.Configuration, builder.Environment);
