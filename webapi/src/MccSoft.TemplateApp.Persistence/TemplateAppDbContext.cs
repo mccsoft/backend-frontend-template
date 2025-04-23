@@ -51,7 +51,7 @@ public class TemplateAppDbContext
 
         SetupQueryFilters(builder);
 
-        builder.AddWebHookEntities(this.GetType());
+        // builder.AddWebHookEntities(this.GetType());
     }
 
     private void SetupQueryFilters(ModelBuilder builder)
