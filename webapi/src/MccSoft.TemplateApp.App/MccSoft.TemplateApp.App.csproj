@@ -45,7 +45,7 @@
   <ItemGroup>
     <PackageReference Include="Roslyn.Analyzers" Version="1.0.3.4" />
     <PackageReference Include="Vp.Roslyn.Analyzers.All" Version="1.0.0" />
-    <PackageReference Include="Metalama.Framework" Version="2023.4.8" />
+    <PackageReference Include="Metalama.Framework" Version="2025.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="8.0.8" />
     <PackageReference Include="Audit.NET.Serilog" Version="27.0.2" />
     <PackageReference Include="Audit.NET.PostgreSql" Version="27.0.2" />
