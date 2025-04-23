@@ -3,6 +3,9 @@ using MccSoft.LowLevelPrimitives;
 using MccSoft.PersistenceHelpers;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Domain.Audit;
+using MccSoft.TemplateApp.Domain.WebHook;
+using MccSoft.WebHooks;
+using MccSoft.WebHooks.Domain;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
@@ -50,6 +53,26 @@ public class TemplateAppDbContext
         // For details see https://github.com/mccsoft/backend-frontend-template/wiki/_new#migration-of-existing-data
 
         SetupQueryFilters(builder);
+
+        /*
+            Demonstrates how to register WebHook entities using a custom subscription type.
+            If the default <see cref="WebHookSubscription"/> entity meets your requirements,
+            you can simply register it as shown below:
+
+            builder.AddWebHookEntities<WebHookSubscription>(GetType());
+
+            Otherwise, provide your own type that inherits from WebHookSubscription,
+            e.g. <see cref="TemplateWebHookSubscription"/>, to extend or override behavior.
+        */
+        builder.AddWebHookEntities<TemplateWebHookSubscription>(GetType());
+
+        /*
+            [Optional]
+            We recommend placing WebHook-related entities in a separate schema
+            (e.g. "webhooks") to keep them isolated from your main business logic tables.
+        */
+        builder.Entity<WebHook<TemplateWebHookSubscription>>().Metadata.SetSchema("webhooks");
+        builder.Entity<TemplateWebHookSubscription>().Metadata.SetSchema("webhooks");
     }
 
     private void SetupQueryFilters(ModelBuilder builder)
