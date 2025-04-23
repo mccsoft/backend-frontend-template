@@ -116,7 +116,7 @@ namespace MccSoft.TemplateApp.Persistence.Migrations
                         .HasColumnType("date");
 
                     b.Property<int>("ProductType")
-                        .HasColumnType("integer");
+                        .HasColumnType("product_type");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("integer");

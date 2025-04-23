@@ -17,15 +17,6 @@ namespace MccSoft.TemplateApp.Persistence.Migrations
 
             migrationBuilder.EnsureSchema(name: "webhooks");
 
-            migrationBuilder.AlterColumn<int>(
-                name: "ProductType",
-                table: "Products",
-                type: "integer",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "product_type"
-            );
-
             migrationBuilder.CreateTable(
                 name: "WebHookSubscriptions",
                 schema: "webhooks",
@@ -122,15 +113,6 @@ namespace MccSoft.TemplateApp.Persistence.Migrations
             migrationBuilder.DropTable(name: "WebHooks", schema: "webhooks");
 
             migrationBuilder.DropTable(name: "WebHookSubscriptions", schema: "webhooks");
-
-            migrationBuilder.AlterColumn<int>(
-                name: "ProductType",
-                table: "Products",
-                type: "product_type",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "integer"
-            );
 
             migrationBuilder.CreateTable(
                 name: "WebHook",
