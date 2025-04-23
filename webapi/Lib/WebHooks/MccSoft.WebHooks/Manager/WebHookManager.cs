@@ -38,6 +38,7 @@ public class WebHookManager<TSub> : IWebHookManager<TSub>
         _logger = logger;
     }
 
+    /// <inheritdoc />
     public async Task<TSub> GetSubscriptionAsync(Guid subscriptionId)
     {
         return await _dbContext
@@ -45,11 +46,13 @@ public class WebHookManager<TSub> : IWebHookManager<TSub>
             .FirstAsync(x => x.Id == subscriptionId);
     }
 
+    /// <inheritdoc />
     public async Task<IEnumerable<TSub>> GetSubscriptionsAsync(bool withAttempts = false)
     {
         return await _dbContext.WebHookSubscriptions<TSub>().ToListAsync();
     }
 
+    /// <inheritdoc />
     public async Task<TSub> Subscribe(
         string name,
         string url,
@@ -67,6 +70,7 @@ public class WebHookManager<TSub> : IWebHookManager<TSub>
         return subscription;
     }
 
+    /// <inheritdoc />
     public async Task Unsubscribe(Guid subscriptionId)
     {
         // We use local context because we need to hold context during all method
@@ -96,6 +100,7 @@ public class WebHookManager<TSub> : IWebHookManager<TSub>
         await localDbContext.SaveChangesAsync();
     }
 
+    /// <inheritdoc />
     public async Task<TSub> UpdateSubscriptionAsync(TSub subscription)
     {
         _dbContext.Update(subscription);

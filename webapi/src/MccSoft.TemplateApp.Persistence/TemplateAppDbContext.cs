@@ -50,8 +50,6 @@ public class TemplateAppDbContext
         // For details see https://github.com/mccsoft/backend-frontend-template/wiki/_new#migration-of-existing-data
 
         SetupQueryFilters(builder);
-
-        // builder.AddWebHookEntities(this.GetType());
     }
 
     private void SetupQueryFilters(ModelBuilder builder)

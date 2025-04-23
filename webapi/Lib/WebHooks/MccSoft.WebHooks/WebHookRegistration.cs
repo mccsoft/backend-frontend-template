@@ -7,6 +7,7 @@ using MccSoft.WebHooks.Domain;
 using MccSoft.WebHooks.Interceptors;
 using MccSoft.WebHooks.Manager;
 using MccSoft.WebHooks.Processing;
+using MccSoft.WebHooks.Publisher;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
@@ -24,6 +25,14 @@ public static class WebHookRegistration
     public static DbSet<TSub> WebHookSubscriptions<TSub>(this DbContext dbContext)
         where TSub : WebHookSubscription => dbContext.Set<TSub>();
 
+    /// <summary>
+    /// Registers WebHook and WebHookSubscription entities for the specified subscription type <typeparamref name="TSub"/>.
+    /// Must be called from the <c>OnModelCreating</c> method of your DbContext.
+    /// </summary>
+    /// <typeparam name="TSub">The type of WebHook subscription entity.</typeparam>
+    /// <param name="builder">The EF Core model builder.</param>
+    /// <param name="dbContextType">The concrete type of the DbContext.</param>
+    /// <returns>The same model builder instance to support chaining.</returns>
     public static ModelBuilder AddWebHookEntities<TSub>(
         this ModelBuilder builder,
         Type dbContextType
@@ -54,6 +63,14 @@ public static class WebHookRegistration
         return builder;
     }
 
+    /// <summary>
+    /// Registers WebHook-related services and configuration in the dependency injection container.
+    /// Includes configuration of resilience policies, Hangfire filters, and WebHook processing components.
+    /// </summary>
+    /// <typeparam name="TSub">The type of WebHook subscription.</typeparam>
+    /// <param name="serviceCollection">The service collection to which the services will be added.</param>
+    /// <param name="builder">Optional configuration delegate for setting WebHook options.</param>
+    /// <returns>The modified service collection.</returns>
     public static IServiceCollection AddWebHooks<TSub>(
         this IServiceCollection serviceCollection,
         Action<WebHookOptionBuilder<TSub>>? builder = null
@@ -96,9 +113,16 @@ public static class WebHookRegistration
     }
 }
 
+/// <summary>
+/// Provides configuration options for WebHook processing,
+/// including retry policies, interceptors, and Hangfire-specific settings.
+/// </summary>
 public class WebHookOptionBuilder<TSub>
     where TSub : WebHookSubscription
 {
+    /// <summary>
+    /// Options for configuring Polly-based retry and timeout resilience policies.
+    /// </summary>
     public ResiliencePipelineOptions ResilienceOptions { get; set; } =
         new()
         {
@@ -109,8 +133,14 @@ public class WebHookOptionBuilder<TSub>
             Timeout = TimeSpan.FromSeconds(30),
         };
 
+    /// <summary>
+    /// Optional custom interceptors to handle WebHook execution lifecycle events.
+    /// </summary>
     public IWebHookInterceptors<TSub>? WebHookInterceptors { get; set; } =
         new WebHookInterceptors<TSub>();
 
+    /// <summary>
+    /// Defines delay intervals (in minutes) used by Hangfire retry policies for failed jobs.
+    /// </summary>
     public IEnumerable<int> HangfireDelayInMinutes = [60];
 }

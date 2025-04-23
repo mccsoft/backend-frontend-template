@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Hangfire;
 using MccSoft.WebHooks.Domain;
 using MccSoft.WebHooks.Interceptors;
+using MccSoft.WebHooks.Publisher;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,10 @@ using Polly.Registry;
 
 namespace MccSoft.WebHooks.Processing;
 
+/// <summary>
+/// Handles the execution of WebHook delivery jobs, including retry policies and error handling.
+/// </summary>
+/// <typeparam name="TSub">The type of WebHook subscription.</typeparam>
 public class WebHookProcessor<TSub>
     where TSub : WebHookSubscription
 {
@@ -21,6 +26,15 @@ public class WebHookProcessor<TSub>
     private readonly IWebHookInterceptors<TSub> _webHookInterceptors;
     private readonly WebHookOptionBuilder<TSub> _configuration;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="WebHookProcessor{TSub}"/> class.
+    /// </summary>
+    /// <param name="serviceProvider">Service provider to resolve the required DbContext and services.</param>
+    /// <param name="pipelineProvider">Polly resilience pipeline provider.</param>
+    /// <param name="logger">Logger instance for logging execution details.</param>
+    /// <param name="webHookInterceptors">Optional interceptors to hook into WebHook execution lifecycle.</param>
+    /// <param name="configuration">WebHook execution configuration options.</param>
+    /// <exception cref="ArgumentNullException">Thrown if the DbContext type was not registered.</exception>
     public WebHookProcessor(
         IServiceProvider serviceProvider,
         ResiliencePipelineProvider<string> pipelineProvider,
@@ -44,6 +58,12 @@ public class WebHookProcessor<TSub>
         _configuration = configuration;
     }
 
+    /// <summary>
+    /// Executes the delivery job for the specified WebHook, applying retry policies and invoking interceptors.
+    /// </summary>
+    /// <param name="webHookId">The ID of the WebHook to process.</param>
+    /// <param name="cancellationToken">Token to cancel the operation.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     [CustomRetry]
     public async Task RunWebHookDeliveryJob(
         int webHookId,
@@ -72,6 +92,12 @@ public class WebHookProcessor<TSub>
         _webHookInterceptors.ExecutionSucceeded?.Invoke(webHook.Id);
     }
 
+    /// <summary>
+    /// Attempts to process the WebHook using Polly resilience policies (retry, timeout, etc.).
+    /// </summary>
+    /// <param name="webHook">The WebHook instance to process.</param>
+    /// <param name="cancellationToken">Token to cancel the operation.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task TryToProcessWithPolly(
         WebHook<TSub> webHook,
         CancellationToken cancellationToken = default
@@ -88,6 +114,12 @@ public class WebHookProcessor<TSub>
         );
     }
 
+    /// <summary>
+    /// Sends the actual HTTP request for the given WebHook, handling success/failure and updating its status.
+    /// </summary>
+    /// <param name="webHook">The WebHook to send.</param>
+    /// <param name="cancellationToken">Token to cancel the operation.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     private async Task ProcessWebHook(
         WebHook<TSub> webHook,
         CancellationToken cancellationToken = default

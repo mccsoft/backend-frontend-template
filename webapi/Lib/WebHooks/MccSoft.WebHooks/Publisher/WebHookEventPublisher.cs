@@ -4,18 +4,27 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
-using MccSoft.WebHooks;
 using MccSoft.WebHooks.Domain;
 using MccSoft.WebHooks.Processing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
+namespace MccSoft.WebHooks.Publisher;
+
+/// <summary>
+/// Responsible for publishing WebHook events and scheduling their delivery using Hangfire.
+/// </summary>
+/// <typeparam name="TSub">The type of WebHook subscription.</typeparam>
 public class WebHookEventPublisher<TSub> : IWebHookEventPublisher
     where TSub : WebHookSubscription
 {
-    private readonly DbContext _dbContext;
-    private readonly IBackgroundJobClient _jobClient;
-
+    /// <summary>
+    /// Initializes the WebHook event publisher by resolving the necessary services.
+    /// </summary>
+    /// <param name="serviceProvider">Service provider to resolve dependencies.</param>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown if the WebHookRegistration.DbContextType was not initialized.
+    /// </exception>
     public WebHookEventPublisher(IServiceProvider serviceProvider)
     {
         if (WebHookRegistration.DbContextType == null)
@@ -29,6 +38,7 @@ public class WebHookEventPublisher<TSub> : IWebHookEventPublisher
         _jobClient = serviceProvider.GetRequiredService<IBackgroundJobClient>();
     }
 
+    /// <inheritdoc />
     public async Task PublishEvent<T>(
         string eventType,
         T data,
@@ -51,4 +61,7 @@ public class WebHookEventPublisher<TSub> : IWebHookEventPublisher
                 x => x.RunWebHookDeliveryJob(webHook.Id, cancellationToken)
             );
     }
+
+    private readonly DbContext _dbContext;
+    private readonly IBackgroundJobClient _jobClient;
 }
