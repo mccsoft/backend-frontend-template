@@ -26,7 +26,7 @@ public class ProductTests : ComponentTestBase
             )
             .Should()
             .ThrowAsync<Exception>()
-            .WithMessage("Title: The Title field must have minimum of 3 character.");
+            .WithMessage("Title: Field must have minimum of 3 character");
     }
 
     [Fact]
