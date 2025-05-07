@@ -5763,7 +5763,7 @@ __metadata:
     "@vitejs/plugin-react": 4.2.1
     "@vitejs/plugin-react-swc": 3.5.0
     autoprefixer: 10.4.14
-    axios: 1.6.5
+    axios: 1.9.0
     axios-auth-refresh: 3.3.6
     babel-loader: 8.3.0
     browser-tabs-lock: 1.3.0
@@ -7657,7 +7657,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:1.6.5, axios@npm:^1.6.5":
+"axios@npm:1.9.0":
+  version: 1.9.0
+  resolution: "axios@npm:1.9.0"
+  dependencies:
+    follow-redirects: ^1.15.6
+    form-data: ^4.0.0
+    proxy-from-env: ^1.1.0
+  checksum: 631f02c9c279f2ae90637a4989cc9d75c1c27aefd16b6e8eb90f98a4d0bddaccfd1cb1387be12101d1ab0f9bbf0c47e2451b4de0cf2870462a7d9ed3de8da3f2
+  languageName: node
+  linkType: hard
+
+"axios@npm:^1.6.5":
   version: 1.6.5
   resolution: "axios@npm:1.6.5"
   dependencies:
@@ -11048,6 +11059,16 @@ __metadata:
     debug:
       optional: true
   checksum: 5ca49b5ce6f44338cbfc3546823357e7a70813cecc9b7b768158a1d32c1e62e7407c944402a918ea8c38ae2e78266312d617dc68783fac502cbb55e1047b34ec
+  languageName: node
+  linkType: hard
+
+"follow-redirects@npm:^1.15.6":
+  version: 1.15.9
+  resolution: "follow-redirects@npm:1.15.9"
+  peerDependenciesMeta:
+    debug:
+      optional: true
+  checksum: 859e2bacc7a54506f2bf9aacb10d165df78c8c1b0ceb8023f966621b233717dab56e8d08baadc3ad3b9db58af290413d585c999694b7c146aaf2616340c3d2a6
   languageName: node
   linkType: hard
 
