@@ -30,9 +30,6 @@ public static partial class SetupDatabase
 
     public static partial TemplateAppDbContext CreateDbContext(IServiceProvider provider)
     {
-        return new TemplateAppDbContext(
-            provider.GetRequiredService<DbContextOptions<TemplateAppDbContext>>(),
-            provider.GetRequiredService<IUserAccessor>()
-        );
+        return provider.CreateScope().ServiceProvider.GetRequiredService<TemplateAppDbContext>();
     }
 }

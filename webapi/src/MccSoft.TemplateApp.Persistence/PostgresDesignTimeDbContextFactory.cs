@@ -1,5 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MccSoft.LowLevelPrimitives;
+using MccSoft.TemplateApp.Domain;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MccSoft.TemplateApp.Persistence;
 
@@ -12,14 +15,22 @@ public class PostgresDesignTimeDbContextFactory : IDesignTimeDbContextFactory<Te
 {
     public TemplateAppDbContext CreateDbContext(string[] args)
     {
-        var optionsBuilder = new DbContextOptionsBuilder<TemplateAppDbContext>();
+        var services = new ServiceCollection();
 
-        optionsBuilder
-            .UseNpgsql(
-                "Server=localhost;Database=template_app;Port=5432;Username=postgres;Password=postgres;Pooling=true;Keepalive=5;Command Timeout=60;"
-            )
-            .UseOpenIddict();
-
-        return new TemplateAppDbContext(optionsBuilder.Options, null);
+        services.AddLogging();
+        services.AddDefaultIdentity<User>();
+        services.AddSingleton<IUserAccessor>(sp => null);
+        services.AddDbContext<TemplateAppDbContext>(
+            (provider, opt) =>
+            {
+                opt.UseNpgsql(
+                    "Server=localhost;Database=template_app;Port=5432;Username=postgres;Password=postgres;Pooling=true;Keepalive=5;Command Timeout=60;",
+                    builder => TemplateAppDbContext.MapEnums(builder)
+                );
+                opt.UseOpenIddict();
+            }
+        );
+        var dbContext = services.BuildServiceProvider().GetRequiredService<TemplateAppDbContext>();
+        return dbContext;
     }
 }

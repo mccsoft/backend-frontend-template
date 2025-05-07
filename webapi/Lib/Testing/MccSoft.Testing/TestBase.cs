@@ -21,6 +21,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NeinLinq;
 using Npgsql;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
 using Xunit.Abstractions;
 
 namespace MccSoft.Testing;
@@ -72,7 +73,7 @@ public abstract class TestBase<TDbContext>
     protected TestBase(
         ITestOutputHelper outputHelper,
         DatabaseType? databaseType,
-        Action<NpgsqlDataSourceBuilder> adjustNpgsqlDataSource = null
+        Action<NpgsqlDbContextOptionsBuilder> npgsqlOptionsAction = null
     )
     {
         _databaseType = databaseType;
@@ -88,7 +89,7 @@ public abstract class TestBase<TDbContext>
             DatabaseType.Postgres
                 => new NpgsqlDatabaseInitializer(
                     connectionStringOverride: new() { Host = "localhost", Port = 5434, },
-                    adjustNpgsqlDataSource: adjustNpgsqlDataSource
+                    npgsqlOptionsAction: npgsqlOptionsAction
                 ),
             DatabaseType.Sqlite => new SqliteDatabaseInitializer(),
             _ => throw new ArgumentOutOfRangeException(nameof(databaseType), databaseType, null)
@@ -208,7 +209,6 @@ public abstract class TestBase<TDbContext>
     )
     {
         _databaseInitializer.UseProvider(builder, connectionString);
-
         builder
             .WithLambdaInjection()
             .EnableSensitiveDataLogging()

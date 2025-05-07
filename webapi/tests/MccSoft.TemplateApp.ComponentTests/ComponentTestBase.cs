@@ -36,12 +36,7 @@ public class ComponentTestBase : TestBase<TemplateAppDbContext>, IDisposable
         ITestOutputHelper outputHelper,
         DatabaseType databaseType = DatabaseType.Postgres
     )
-        : base(
-            outputHelper,
-            databaseType,
-            adjustNpgsqlDataSource: builder =>
-                TemplateAppDbContext.MapEnums(builder.EnableDynamicJson())
-        )
+        : base(outputHelper, databaseType)
     {
         var application = CreateWebApplicationFactory(ConnectionString);
 

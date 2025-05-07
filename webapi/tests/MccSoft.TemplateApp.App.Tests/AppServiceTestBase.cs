@@ -35,8 +35,7 @@ public class AppServiceTestBase : TestBase<TemplateAppDbContext>
         : base(
             outputHelper,
             testDatabaseType,
-            adjustNpgsqlDataSource: builder =>
-                TemplateAppDbContext.MapEnums(builder.EnableDynamicJson())
+            npgsqlOptionsAction: options => TemplateAppDbContext.MapEnums(options)
         )
     {
         Configuration.AuditDisabled = true;

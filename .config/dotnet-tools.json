@@ -6,37 +6,43 @@
       "version": "0.26.7",
       "commands": [
         "dotnet-csharpier"
-      ]
+      ],
+      "rollForward": false
     },
     "dotnet-reportgenerator-globaltool": {
       "version": "4.8.13",
       "commands": [
         "reportgenerator"
-      ]
+      ],
+      "rollForward": false
     },
     "dotnet-outdated-tool": {
       "version": "4.6.0",
       "commands": [
         "dotnet-outdated"
-      ]
+      ],
+      "rollForward": false
     },
     "dotnet-ef": {
-      "version": "8.0.0",
+      "version": "9.0.4",
       "commands": [
         "dotnet-ef"
-      ]
+      ],
+      "rollForward": false
     },
     "dotnet-aspnet-codegenerator": {
       "version": "7.0.0",
       "commands": [
         "dotnet-aspnet-codegenerator"
-      ]
+      ],
+      "rollForward": false
     },
     "husky": {
       "version": "0.6.4",
       "commands": [
         "husky"
-      ]
+      ],
+      "rollForward": false
     }
   }
 }

@@ -6,6 +6,7 @@ using MccSoft.TemplateApp.Domain.Audit;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
 using Npgsql.TypeMapping;
 
 namespace MccSoft.TemplateApp.Persistence;
@@ -31,16 +32,12 @@ public class TemplateAppDbContext
         UserAccessor = userAccessor;
     }
 
-    public static INpgsqlTypeMapper MapEnums(NpgsqlDataSourceBuilder builder) =>
+    public static NpgsqlDbContextOptionsBuilder MapEnums(NpgsqlDbContextOptionsBuilder builder) =>
         builder.MapEnum<ProductType>();
-
-    // when adding enum here don't forget to OnModelCreating as well (see below)
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        builder.HasPostgresEnum<ProductType>();
-        // when adding enum here don't forget to add it to static constructor as well (see above)
 
         // if you already have some data in the table, which column you'd like to convert to enum
         // you'd need to adjust migration SQL to something like the following

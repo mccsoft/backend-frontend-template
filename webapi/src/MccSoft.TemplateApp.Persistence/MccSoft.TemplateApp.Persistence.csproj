@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-  <TargetFramework>net8.0</TargetFramework>
+  <TargetFramework>net9.0</TargetFramework>
     <Version>1.0.0</Version>
     <Description>
       Provides functionality to work with the database of the ServiceTemplate microservice.
@@ -14,14 +14,15 @@
 
   <ItemGroup>
     <PackageReference Include="Audit.EntityFramework.Core" Version="27.0.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
-    <PackageReference Include="NeinLinq.EntityFrameworkCore" Version="7.1.0" />
-    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="5.8.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.4" />
+    <PackageReference Include="NeinLinq.EntityFrameworkCore" Version="7.3.0" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="6.2.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Lib\LowLevelPrimitives\MccSoft.LowLevelPrimitives\MccSoft.LowLevelPrimitives.csproj" />
@@ -30,5 +31,20 @@
     <ProjectReference Include="..\..\Lib\WebHooks\MccSoft.WebHooks\MccSoft.WebHooks.csproj" />
     <ProjectReference Include="..\MccSoft.TemplateApp.Common\MccSoft.TemplateApp.Common.csproj" />
     <ProjectReference Include="..\MccSoft.TemplateApp.Domain\MccSoft.TemplateApp.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Migrations\20250506105023_EF9.cs" />
+    <Compile Remove="Migrations\20250506105023_EF9.Designer.cs" />
+    <Compile Remove="Migrations\20250506123722_Initial2.cs" />
+    <Compile Remove="Migrations\20250506123722_Initial2.Designer.cs" />
+    <Compile Remove="Migrations\20250506124130_Initial2.Designer.cs" />
+    <Compile Remove="Migrations\20250506124818_Initial3.Designer.cs" />
+    <Compile Remove="Migrations\20250506125057_Initial5.Designer.cs" />
+    <Compile Remove="Migrations\20250506125229_Initial5.Designer.cs" />
+    <Compile Remove="Migrations\20250506125744_Initial5.cs" />
+    <Compile Remove="Migrations\20250506125744_Initial5.Designer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 </Project>

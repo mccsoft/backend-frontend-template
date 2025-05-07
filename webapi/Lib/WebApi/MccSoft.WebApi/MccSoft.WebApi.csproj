@@ -1,32 +1,32 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-  <TargetFramework>net8.0</TargetFramework>
+  <TargetFramework>net9.0</TargetFramework>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Roslyn.Analyzers" Version="1.0.3.4" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.9.0" />
     <PackageReference Include="Vp.Roslyn.Analyzers.All" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Routing.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.8" />
-    <PackageReference Include="NJsonSchema" Version="11.0.2" />
-    <PackageReference Include="OpenIddict.EntityFrameworkCore.Models" Version="5.8.0" />
-    <PackageReference Include="OpenIddict.Server" Version="5.8.0" />
-    <PackageReference Include="OpenIddict.AspNetCore" Version="5.8.0" />
-    <PackageReference Include="Sentry.AspNetCore" Version="4.10.2" />
-    <PackageReference Include="NeinLinq.EntityFrameworkCore" Version="7.1.0" />
-    <PackageReference Include="NSwag.AspNetCore" Version="14.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Routing.Abstractions" Version="2.3.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.4" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.4" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="9.0.4" />
+    <PackageReference Include="NJsonSchema" Version="11.3.2" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore.Models" Version="6.2.1" />
+    <PackageReference Include="OpenIddict.Server" Version="6.2.1" />
+    <PackageReference Include="OpenIddict.AspNetCore" Version="6.2.1" />
+    <PackageReference Include="Sentry.AspNetCore" Version="5.6.0" />
+    <PackageReference Include="NeinLinq.EntityFrameworkCore" Version="7.3.0" />
+    <PackageReference Include="NSwag.AspNetCore" Version="14.4.0" />
   </ItemGroup>
 
   <ItemGroup>
