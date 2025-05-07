@@ -5,6 +5,7 @@ export type UseModalOptions<T = string> = {
   id: string;
   okButtonText?: string;
   okButtonColor?: ButtonColor;
+  hideClose?: boolean;
 } & (
   | (AlertOptions & {
       type: 'alert';

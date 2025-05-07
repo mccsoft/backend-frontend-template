@@ -325,6 +325,7 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
       isBlocking={true}
       title={options?.title ?? ''}
       onClose={onClose}
+      hideClose={options.hideClose}
     >
       <Loading loading={isLoading}>
         {options ? (
@@ -373,7 +374,7 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
                       <Button
                         key={x.id}
                         autoFocus={index === options.buttons.length - 1}
-                      color={x.color ?? ButtonColor.Default}
+                        color={x.color ?? ButtonColor.Default}
                         className={clsx(styles.button, styles.multibutton)}
                         title={x.text}
                         onClick={() => {
@@ -411,7 +412,7 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
                         className={styles.button}
                         /* autofocus allows to close modals via Escape button if there are no inputs inside the modal */
                         autoFocus={true}
-                      color={options.okButtonColor ?? ButtonColor.Default}
+                        color={options.okButtonColor ?? ButtonColor.Default}
                         type={'submit'}
                         title={options.okButtonText ?? i18n.t('ok_button')}
                         onClick={async () => {
@@ -428,7 +429,8 @@ const SingleModal: React.FC<SingleModalProps> = (props) => {
                             case 'prompt':
                             case 'custom':
                               await closeOk();
-                              break;
+                              // we shouldn't proceed to `setIsShown(false);`, because we might be running some async validations
+                              return;
 
                             default:
                               assertNever(type);
