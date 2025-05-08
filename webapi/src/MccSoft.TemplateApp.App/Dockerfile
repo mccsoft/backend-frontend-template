@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/aspnet:9.0-noble-chiseled-extra
+FROM mcr.microsoft.com/dotnet/aspnet:9.0-noble
 USER root
 
 # we need gettext-base for envsubst to work
