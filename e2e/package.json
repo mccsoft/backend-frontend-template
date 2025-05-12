@@ -2,7 +2,7 @@
   "name": "e2e",
   "packageManager": "yarn@3.3.0",
   "devDependencies": {
-    "@playwright/test": "1.35.0",
+    "@playwright/test": "1.52.0",
     "@types/randomstring": "1.1.8",
     "@typescript-eslint/eslint-plugin": "5.59.0",
     "@typescript-eslint/parser": "5.59.0",
@@ -25,7 +25,7 @@
     "test": "npx playwright test",
     "generate-api-client": "react-query-swagger /input:https://localhost:5001/swagger/v1/swagger.json /output:src/api/query-client.ts /template:Axios /serviceHost:. /no-hooks /minimal",
     "generate-api-client-remote": "react-query-swagger /input:https://template.mcc-soft.de/swagger/v1/swagger.json /output:src/api/query-client.ts /template:Axios /serviceHost:. /no-hooks /minimal",
-    "update-storybook-snapshots-linux": "cd .. && docker run --env STORYBOOK_URL=http://host.docker.internal:6006 --env STORYBOOK=1 --rm --network host -v $(pwd):/work/ -w /work/e2e -it mcr.microsoft.com/playwright:v1.35.0-focal npx playwright test storybook -j 1 --update-snapshots",
-    "update-e2e-snapshots-linux": "cd .. && docker run --env BASE_URL=https://host.docker.internal:5003 --rm --network host -v $(pwd):/work/ -w /work/e2e -it mcr.microsoft.com/playwright:v1.35.0-focal npx playwright test tests -j 1 --update-snapshots"
+    "update-storybook-snapshots-linux": "cd .. && docker run --env STORYBOOK_URL=http://host.docker.internal:6006 --env STORYBOOK=1 --rm --network host -v $(pwd):/work/ -w /work/e2e -it mcr.microsoft.com/playwright:v1.52.0-noble npx playwright test storybook -j 1 --update-snapshots",
+    "update-e2e-snapshots-linux": "cd .. && docker run --env BASE_URL=https://host.docker.internal:5003 --rm --network host -v $(pwd):/work/ -w /work/e2e -it mcr.microsoft.com/playwright:v1.52.0-noble npx playwright test tests -j 1 --update-snapshots"
   }
 }

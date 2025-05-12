@@ -10,7 +10,7 @@ import * as os from 'os';
 import path from 'path';
 import { cleanupLocalStorage } from './cleanup-local-storage';
 
-const base = test.extend<Record<string, unknown>>({
+const base = test.extend({
   baseURL: process.env.BASE_URL,
   contextOptions: {
     timezoneId: 'UTC',

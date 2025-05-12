@@ -13,7 +13,8 @@ export class DialogPageObject extends PageObjectBase {
   getButton = (text: string) => this.getButtons().filter({ hasText: text });
   clickButton = (text: string) => this.getButton(text).click();
   title = () => this.locator('.MuiDialogTitle-root');
-  text = () => this.locator('[data-test-id=dialog-text]').textContent();
+  textLocator = () => this.locator('[data-test-id=dialog-text]');
+  text = () => this.textLocator().textContent();
   closeButton = () =>
     this.title().locator('[data-test-id=dialog-close-button]');
   submitButton = () => this.region.locator('button[type="submit"]');
@@ -55,10 +56,10 @@ export async function expectValidationPopup(
 ) {
   const dialog = await new DialogPageObject(page).ensureVisible();
   if (title) {
-    expect(dialog.title()).toContain(title);
+    await expect(dialog.title()).toContainText(title);
   }
   if (text) {
-    expect(await dialog.text()).toContain(text);
+    await expect(dialog.textLocator()).toContainText(text);
   }
 
   await dialog.submit();
