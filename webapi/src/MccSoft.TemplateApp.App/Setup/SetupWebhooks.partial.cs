@@ -1,0 +1,49 @@
+using MccSoft.TemplateApp.Domain.WebHook;
+using MccSoft.WebHooks;
+using Polly;
+
+namespace MccSoft.TemplateApp.App.Setup;
+
+public partial class SetupWebhooks
+{
+    static partial void AddProjectSpecifics(
+        WebApplicationBuilder builder,
+        WebHookOptionBuilder<TemplateWebHookSubscription> optionsBuilder
+    )
+    {
+        ConfigureResilienceOptions(optionsBuilder);
+        ConfigureInterceptors(builder, optionsBuilder);
+    }
+
+    private static void ConfigureResilienceOptions(
+        WebHookOptionBuilder<TemplateWebHookSubscription> optionsBuilder
+    )
+    {
+        optionsBuilder.ResilienceOptions.Delay = TimeSpan.FromSeconds(2);
+        optionsBuilder.ResilienceOptions.BackoffType = DelayBackoffType.Exponential;
+        optionsBuilder.ResilienceOptions.UseJitter = true;
+        optionsBuilder.ResilienceOptions.MaxRetryAttempts = 5;
+        optionsBuilder.ResilienceOptions.Timeout = TimeSpan.FromSeconds(30);
+    }
+
+    private static void ConfigureInterceptors(
+        WebApplicationBuilder builder,
+        WebHookOptionBuilder<TemplateWebHookSubscription> optionsBuilder
+    )
+    {
+        using ServiceProvider serviceProvider = builder.Services.BuildServiceProvider();
+        var logger = serviceProvider.GetRequiredService<ILogger<SetupWebhooks>>();
+        optionsBuilder.WebHookInterceptors.BeforeExecution = (webHookId) =>
+        {
+            logger.LogInformation($"Start delivering Webhook with ID: {webHookId}");
+        };
+        optionsBuilder.WebHookInterceptors.AfterAllAttemptsFailed = (webHookId) =>
+        {
+            logger.LogInformation($"Webhook with ID: {webHookId} failed");
+        };
+        optionsBuilder.WebHookInterceptors.ExecutionSucceeded = (webHookId) =>
+        {
+            logger.LogInformation($"Webhook with ID: {webHookId} delivered");
+        };
+    }
+}

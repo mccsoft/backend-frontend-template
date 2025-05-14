@@ -2,10 +2,12 @@ using MccSoft.LowLevelPrimitives;
 using MccSoft.LowLevelPrimitives.Exceptions;
 using MccSoft.PersistenceHelpers;
 using MccSoft.TemplateApp.App.Features.Products.Dto;
+using MccSoft.TemplateApp.App.Features.Webhooks;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Persistence;
 using MccSoft.WebApi.Pagination;
 using MccSoft.WebApi.Patching;
+using MccSoft.WebHooks.Publisher;
 using Microsoft.EntityFrameworkCore;
 
 namespace MccSoft.TemplateApp.App.Features.Products;
@@ -18,18 +20,21 @@ public class ProductService
     private readonly IUserAccessor _userAccessor;
 
     private readonly ILogger<ProductService> _logger;
+    private readonly IWebHookEventPublisher _webHookEventPublisher;
 
     public ProductService(
         TemplateAppDbContext dbContext,
         DbRetryHelper<TemplateAppDbContext, ProductService> retryHelper,
         IUserAccessor userAccessor,
-        ILogger<ProductService> logger
+        ILogger<ProductService> logger,
+        IWebHookEventPublisher webHookEventPublisher
     )
     {
         _dbContext = dbContext;
         _retryHelper = retryHelper;
         _userAccessor = userAccessor;
         _logger = logger;
+        _webHookEventPublisher = webHookEventPublisher;
     }
 
     public async Task<ProductDto> Create(CreateProductDto dto)
@@ -65,7 +70,11 @@ public class ProductService
                 return product.Id;
             }
         );
-        return await Get(productId);
+
+        var result = await Get(productId);
+        await _webHookEventPublisher.PublishEvent(WebHookEventType.NewProduct.ToString(), result);
+
+        return result;
     }
 
     public async Task<ProductDto> Patch(int id, PatchProductDto dto)
@@ -109,5 +118,10 @@ public class ProductService
         _dbContext.Products.Remove(product);
 
         await _dbContext.SaveChangesAsync();
+
+        await _webHookEventPublisher.PublishEvent(
+            WebHookEventType.ProductDeleted.ToString(),
+            new { Id = id }
+        );
     }
 }
