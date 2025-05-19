@@ -25,7 +25,7 @@ steps:
 
   - script: |
       yarn frontend build-scss-for-razor
-      SOURCEMAP=false yarn build-frontend 
+      SOURCEMAP=false yarn build-frontend
       yarn build-frontend
     displayName: 'build frontend'
 
@@ -45,8 +45,8 @@ steps:
           yarn frontend build-storybook
         displayName: 'build storybook'
 
-      - publish: './frontend/storybook-static'
-        artifact: 'storybook'
+#      - publish: './frontend/storybook-static'
+#        artifact: 'storybook'
 
       - script: |
           yarn copy-storybook
