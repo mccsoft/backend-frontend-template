@@ -9,9 +9,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.18" />
+    <PackageReference Include="Hangfire.Core" Version="1.8.18" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.4" />
+    <PackageReference Include="Polly.Core" Version="8.5.2" />
+    <PackageReference Include="Polly.Extensions" Version="8.5.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="IWebHookSender.cs" />
+    <Compile Remove="WebHookSender.cs" />
+    <Compile Remove="Interceptors\IWebHookInterceptor.cs" />
+    <Compile Remove="Interceptors\WebHookInterceptor.cs" />
+    <Compile Remove="Processing\WebHookHostedService.cs" />
+    <Compile Remove="Processing\WebHookConfiguration.cs" />
+    <Compile Remove="Domain\WebHookAdditionalData.cs" />
   </ItemGroup>
 
 </Project>

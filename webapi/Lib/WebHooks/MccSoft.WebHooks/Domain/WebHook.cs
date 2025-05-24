@@ -1,40 +1,35 @@
 using System;
-using System.Collections.Generic;
-using System.Text.Json;
-using Microsoft.EntityFrameworkCore;
+using System.Net;
 
-[Index(nameof(WebHook.IsSucceeded), nameof(WebHook.NextRun))]
-public class WebHook
+namespace MccSoft.WebHooks.Domain;
+
+public class WebHook<TSub>
+    where TSub : WebHookSubscription
 {
-    protected WebHook() { }
-
-    public WebHook(
-        string httpMethod,
-        string url,
-        string? body,
-        Dictionary<string, string>? headers = null,
-        WebHookAdditionalData? additionalData = null
-    )
-    {
-        HttpMethod = httpMethod;
-        TargetUrl = url;
-        SerializedBody = body;
-        Headers = headers ?? new();
-        AdditionalData = additionalData ?? new();
-        CreatedAt = DateTime.UtcNow;
-        NextRun = DateTime.UtcNow;
-    }
-
+    /// <summary>
+    /// Id
+    /// </summary>
     public int Id { get; private set; }
-    public DateTime CreatedAt { get; private set; }
-    public DateTime? LastRun { get; private set; }
-    public DateTime? NextRun { get; private set; }
+
+    /// <summary>
+    /// Date and time when the event was triggered
+    /// </summary>
+    public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
+
+    /// <summary>
+    /// The result of attempt
+    /// </summary>
     public bool IsSucceeded { get; private set; }
 
     /// <summary>
     /// No more retries will be performed
     /// </summary>
     public bool IsFinished { get; private set; }
+
+    /// <summary>
+    /// Status code received from a client
+    /// </summary>
+    public int? StatusCode { get; private set; }
 
     /// <summary>
     /// Response received from a failed webhook
@@ -47,43 +42,72 @@ public class WebHook
     public string? Response { get; private set; }
 
     /// <summary>
+    /// The type of event that was triggered
+    /// </summary>
+    public string EventType { get; init; }
+
+    /// <summary>
+    /// Data for the triggered event
+    /// </summary>
+    public string Data { get; init; }
+
+    /// <summary>
     /// Number of attempts performed
     /// </summary>
     public int AttemptsPerformed { get; private set; }
 
-    public string TargetUrl { get; } = null!;
-    public string HttpMethod { get; } = null!;
-    public string? SerializedBody { get; }
+    /// <summary>
+    /// Date of last attempt (http call)
+    /// </summary>
+    public DateTime? LastAttempt { get; private set; }
 
-    public Dictionary<string, string> Headers { get; } = new Dictionary<string, string>();
-    public WebHookAdditionalData AdditionalData { get; private set; } = new WebHookAdditionalData();
+    /// <summary>
+    /// Proxy entity for Webhook subscription.
+    /// </summary>
+    public TSub Subscription { get; private set; }
+    public Guid SubscriptionId { get; private set; }
 
-    public void MarkSuccessful(string webHookResponse)
+    public WebHook(TSub subscription, string eventType, string data)
     {
-        Response = webHookResponse;
+        EventType = eventType;
+        Data = data;
+        Subscription = subscription;
+        SubscriptionId = subscription.Id;
+    }
 
-        NextRun = null;
+    public WebHook() { }
+
+    internal void MarkSuccessful(HttpStatusCode? statusCode, string webHookResponse)
+    {
+        StatusCode = (int?)statusCode;
+        Response = webHookResponse;
         LastError = null;
         IsSucceeded = true;
-        IsFinished = true;
+
+        FinishAttempts();
     }
 
-    public void MarkFailed(Exception e)
+    internal void MarkFailed(HttpStatusCode? statusCode, string? message)
     {
-        LastError = JsonSerializer.Serialize(e);
+        StatusCode = (int?)statusCode;
+        Response = null;
+        LastError = message;
         IsSucceeded = false;
     }
 
-    public void MarkFailedNoRetry()
+    internal void FinishAttempts()
     {
-        IsSucceeded = false;
         IsFinished = true;
     }
 
-    internal void BeforeRun(DateTime now, DateTime nextRun)
+    internal void BeforeAttempt(DateTime now)
     {
-        LastRun = now;
-        NextRun = nextRun;
+        LastAttempt = now;
         AttemptsPerformed++;
+    }
+
+    internal void ResetAttempts()
+    {
+        IsFinished = false;
     }
 }

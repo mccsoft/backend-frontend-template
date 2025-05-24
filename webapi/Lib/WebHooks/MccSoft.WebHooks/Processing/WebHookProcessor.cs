@@ -1,32 +1,32 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using MccSoft.WebHooks.Domain;
+using MccSoft.WebHooks.Interceptors;
+using MccSoft.WebHooks.Publisher;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Polly.Registry;
 
-public class WebHookProcessor : IWebHookInterceptor
+namespace MccSoft.WebHooks.Processing;
+
+public class WebHookProcessor<TSub>
+    where TSub : WebHookSubscription
 {
     private readonly DbContext _dbContext;
-    private readonly IEnumerable<IWebHookInterceptor> _interceptors;
-    private readonly WebHookConfiguration _webHookConfiguration;
-    private readonly ILogger<WebHookProcessor> _logger;
-    private static readonly DateTime LastRunNextDateTime;
-
-    static WebHookProcessor()
-    {
-        LastRunNextDateTime = DateTime.MaxValue;
-        DateTime.SpecifyKind(LastRunNextDateTime, DateTimeKind.Utc);
-    }
+    private readonly ILogger<WebHookEventPublisher<TSub>> _logger;
+    private readonly ResiliencePipelineProvider<string> _pipelineProvider;
+    private readonly IWebHookInterceptors<TSub> _webHookInterceptors;
+    private readonly WebHookOptionBuilder<TSub> _configuration;
 
     public WebHookProcessor(
         IServiceProvider serviceProvider,
-        IEnumerable<IWebHookInterceptor> interceptors,
-        WebHookConfiguration webHookConfiguration,
-        ILogger<WebHookProcessor> logger
+        ResiliencePipelineProvider<string> pipelineProvider,
+        ILogger<WebHookEventPublisher<TSub>> logger,
+        IWebHookInterceptors<TSub> webHookInterceptors,
+        WebHookOptionBuilder<TSub> configuration
     )
     {
         if (WebHookRegistration.DbContextType == null)
@@ -36,87 +36,86 @@ public class WebHookProcessor : IWebHookInterceptor
 
         _dbContext = (DbContext)
             serviceProvider.GetRequiredService(WebHookRegistration.DbContextType);
-        _interceptors = interceptors;
-        _webHookConfiguration = webHookConfiguration;
+
+        _webHookInterceptors = webHookInterceptors;
+        _pipelineProvider = pipelineProvider;
         _logger = logger;
+        _pipelineProvider = pipelineProvider;
+        _configuration = configuration;
     }
 
-    public virtual async Task RunJob(CancellationToken stoppingToken)
+    [CustomRetry]
+    public async Task RunWebHookDeliveryJob(
+        int webHookId,
+        CancellationToken cancellationToken = default
+    )
     {
-        _logger.LogInformation("Starting {Method}", nameof(RunJob));
+        var webHook = await _dbContext
+            .WebHooks<TSub>()
+            .Include(x => x.Subscription)
+            .FirstAsync(x => x.Id == webHookId, cancellationToken: cancellationToken);
 
-        await using var transaction = await _dbContext.Database.BeginTransactionAsync(
-            stoppingToken
-        );
-        var webHooks = await _dbContext
-            .WebHooks()
-            .Where(x => !x.IsSucceeded && x.NextRun < DateTime.UtcNow)
-            .Take(10)
-            .OrderByDescending(x => x.CreatedAt)
-            .ToListAsync(cancellationToken: stoppingToken);
+        webHook.ResetAttempts();
+        await _dbContext.SaveChangesAsync(cancellationToken);
 
-        AdjustNextRun(_webHookConfiguration, webHooks);
-        await _dbContext.SaveChangesAsync(stoppingToken);
-        await transaction.CommitAsync(stoppingToken);
+        _webHookInterceptors.BeforeExecution?.Invoke(webHook);
 
-        foreach (var webHook in webHooks)
+        if (webHook.AttemptsPerformed <= _configuration.ResilienceOptions.MaxRetryAttempts)
         {
-            try
-            {
-                var result = await ProcessWebHook(webHook);
-                webHook.MarkSuccessful(result);
-                await ExecutionSucceeded(webHook);
-            }
-            catch (Exception e)
-            {
-                webHook.MarkFailed(e);
-                await ExecutionFailed(webHook, e);
-
-                if (webHook.NextRun == LastRunNextDateTime)
-                {
-                    _logger.LogInformation(
-                        e,
-                        "Method {Method}, sending to {TargetUrl} failed completely, no more retries will be performed",
-                        nameof(RunJob),
-                        webHook.TargetUrl
-                    );
-
-                    webHook.MarkFailedNoRetry();
-                    await AfterAllAttemptsFailed(webHook);
-                }
-            }
-            finally
-            {
-                await _dbContext.SaveChangesAsync(stoppingToken);
-            }
+            await TryToProcessWithPolly(webHook, cancellationToken);
         }
+        else
+        {
+            await ProcessWebHook(webHook, cancellationToken);
+        }
+
+        _webHookInterceptors.ExecutionSucceeded?.Invoke(webHook);
     }
 
-    protected virtual async Task<string> ProcessWebHook(WebHook webHook)
+    public async Task TryToProcessWithPolly(
+        WebHook<TSub> webHook,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var pipeline = _pipelineProvider.GetPipeline("default");
+        await pipeline.ExecuteAsync(
+            async (webHook, cancellationToken) =>
+            {
+                await ProcessWebHook(webHook, cancellationToken);
+            },
+            webHook,
+            cancellationToken
+        );
+    }
+
+    private async Task ProcessWebHook(
+        WebHook<TSub> webHook,
+        CancellationToken cancellationToken = default
+    )
     {
         _logger.LogInformation(
             "Starting {Method}, sending to {TargetUrl}",
             nameof(ProcessWebHook),
-            webHook.TargetUrl
+            webHook.Subscription.Url
         );
 
-        var client = new HttpClient();
         var message = new HttpRequestMessage()
         {
-            Method = new HttpMethod(webHook.HttpMethod),
-            Content =
-                webHook.SerializedBody == null ? null : new StringContent(webHook.SerializedBody),
-            RequestUri = new Uri(webHook.TargetUrl),
+            Method = new HttpMethod(webHook.Subscription.Method),
+            Content = webHook.Data == null ? null : new StringContent(webHook.Data),
+            RequestUri = new Uri(webHook.Subscription.Url),
         };
 
-        foreach (var item in webHook.Headers)
+        foreach (var item in webHook.Subscription.Headers)
         {
             message.Headers.Add(item.Key, item.Value);
         }
 
-        var result = await client.SendAsync(message);
+        using var client = new HttpClient();
 
-        var content = await result.Content.ReadAsStringAsync();
+        webHook.BeforeAttempt(DateTime.UtcNow);
+        var result = await client.SendAsync(message, cancellationToken);
+        var content = await result.Content.ReadAsStringAsync(cancellationToken);
 
         try
         {
@@ -124,9 +123,9 @@ public class WebHookProcessor : IWebHookInterceptor
             _logger.LogInformation(
                 "Method {Method}, sending to {TargetUrl} succeeded",
                 nameof(ProcessWebHook),
-                webHook.TargetUrl
+                webHook.Subscription.Url
             );
-            return content;
+            webHook.MarkSuccessful(result.StatusCode, content);
         }
         catch (Exception e)
         {
@@ -134,63 +133,16 @@ public class WebHookProcessor : IWebHookInterceptor
                 e,
                 "Method {Method}, sending to {TargetUrl} failed",
                 nameof(ProcessWebHook),
-                webHook.TargetUrl
+                webHook.Subscription.Url
             );
+
+            webHook.MarkFailed(result.StatusCode, e.Message);
             throw new HttpRequestException(content, e, result.StatusCode);
         }
-    }
-
-    protected virtual void AdjustNextRun(WebHookConfiguration configuration, List<WebHook> webHooks)
-    {
-        var delaysConfiguration = configuration.SendingDelaysInMinutes;
-        var now = DateTime.UtcNow;
-        foreach (var webHook in webHooks)
+        finally
         {
-            if (delaysConfiguration.Length <= webHook.AttemptsPerformed)
-            {
-                webHook.BeforeRun(now, LastRunNextDateTime);
-            }
-            else
-            {
-                var delayTillNextExecution = delaysConfiguration[webHook.AttemptsPerformed];
-                webHook.BeforeRun(now, now.AddMinutes(delayTillNextExecution));
-            }
-        }
-    }
-
-    public async Task BeforeExecutionAttempt(
-        WebHook webHook,
-        HttpClient httpClient,
-        HttpRequestMessage message
-    )
-    {
-        foreach (var interceptor in _interceptors)
-        {
-            await interceptor.BeforeExecutionAttempt(webHook, httpClient, message);
-        }
-    }
-
-    public async Task ExecutionSucceeded(WebHook webHook)
-    {
-        foreach (var interceptor in _interceptors)
-        {
-            await interceptor.ExecutionSucceeded(webHook);
-        }
-    }
-
-    public async Task ExecutionFailed(WebHook webHook, Exception e)
-    {
-        foreach (var interceptor in _interceptors)
-        {
-            await interceptor.ExecutionFailed(webHook, e);
-        }
-    }
-
-    public async Task AfterAllAttemptsFailed(WebHook webHook)
-    {
-        foreach (var interceptor in _interceptors)
-        {
-            await interceptor.AfterAllAttemptsFailed(webHook);
+            _dbContext.Update(webHook);
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }
