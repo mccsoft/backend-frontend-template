@@ -20,6 +20,10 @@ This library provides everything you need to publish and reliably deliver WebHoo
 
 This library is already available in the [feature/webhooks](https://github.com/mav10/backend-frontend-template/tree/feature/webhooks) branch of the [backend-frontend-template](https://github.com/mav10/backend-frontend-template) repository.
 
+> ℹ️ Prerequisite: Your project must have [Hangfire](https://www.hangfire.io/) configured.
+> This library schedules background jobs via Hangfire for reliable delivery.
+
+
 > Alternatively, you can copy the contents of the `WebHooks` folder directly into your own project or turn it into a shared package.
 
 ---
@@ -103,9 +107,11 @@ Retries are implemented using Polly. The default settings:
 - Backoff: exponential with jitter
 - Timeout per call: 30 seconds
 
-You can override these via builder.ResilienceOptions.
+You can override these via `builder.ResilienceOptions`.
 
 Delivery retries are managed via Hangfire and controlled by HangfireDelayInMinutes.
+
+⚠️ Retry attempts are executed via Hangfire. Make sure Hangfire server is running, otherwise WebHooks will not be delivered.
 
 ----
 
@@ -114,8 +120,8 @@ Customize the execution pipeline using IWebHookInterceptors<TSub>:
 ```csharp
 builder.WebHookInterceptors = new WebHookInterceptors<TemplateWebHookSubscription>
 {
-    BeforeExecution = id => Console.WriteLine($"Sending webhook #{id}"),
-    ExecutionSucceeded = id => Console.WriteLine($"Webhook #{id} succeeded"),
+    BeforeExecution = webhook => Console.WriteLine($"Sending webhook #{webhook.id}"),
+    ExecutionSucceeded = webhook => Console.WriteLine($"Webhook #{webhook.id} succeeded"),
     AfterAllAttemptsFailed = id => Console.WriteLine($"Webhook #{id} failed permanently"),
 };
 ```
