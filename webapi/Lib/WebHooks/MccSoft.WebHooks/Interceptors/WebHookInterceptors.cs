@@ -7,7 +7,7 @@ public class WebHookInterceptors<TSub> : IWebHookInterceptors<TSub>
 {
     public Action<int>? AfterAllAttemptsFailed { get; set; }
 
-    public Action<int>? ExecutionSucceeded { get; set; }
+    public Action<WebHook<TSub>>? ExecutionSucceeded { get; set; }
 
-    public Action<int>? BeforeExecution { get; set; }
+    public Action<WebHook<TSub>>? BeforeExecution { get; set; }
 }

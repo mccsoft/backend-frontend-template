@@ -33,17 +33,20 @@ public partial class SetupWebhooks
     {
         using ServiceProvider serviceProvider = builder.Services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<SetupWebhooks>>();
-        optionsBuilder.WebHookInterceptors.BeforeExecution = (webHookId) =>
+        optionsBuilder.WebHookInterceptors.BeforeExecution = (webHook) =>
         {
-            logger.LogInformation($"Start delivering Webhook with ID: {webHookId}");
+            logger.LogInformation("Start delivering Webhook with ID: {WebHookId}", webHook?.Id);
         };
         optionsBuilder.WebHookInterceptors.AfterAllAttemptsFailed = (webHookId) =>
         {
             logger.LogInformation($"Webhook with ID: {webHookId} failed");
         };
-        optionsBuilder.WebHookInterceptors.ExecutionSucceeded = (webHookId) =>
+        optionsBuilder.WebHookInterceptors.ExecutionSucceeded = (webHook) =>
         {
-            logger.LogInformation($"Webhook with ID: {webHookId} delivered");
+            logger.LogInformation(
+                "Webhook with ID: Webhook with ID: {WebHookId} delivered",
+                webHook?.Id
+            );
         };
     }
 }

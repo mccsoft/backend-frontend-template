@@ -17,13 +17,13 @@ public interface IWebHookInterceptors<TSub>
 
     /// <summary>
     /// Callback invoked after a WebHook is successfully delivered.
-    /// Provides the WebHook ID so that consumers can log, audit, or trigger follow-up actions.
+    /// Provides the WebHook so that consumers can log, audit, or trigger follow-up actions.
     /// </summary>
-    Action<int>? ExecutionSucceeded { get; set; }
+    Action<WebHook<TSub>>? ExecutionSucceeded { get; set; }
 
     /// <summary>
     /// Callback invoked immediately before a WebHook is sent.
-    /// Provides the WebHook ID to support custom pre-processing or logging.
+    /// Provides the WebHook to support custom pre-processing or logging.
     /// </summary>
-    Action<int>? BeforeExecution { get; set; }
+    Action<WebHook<TSub>>? BeforeExecution { get; set; }
 }

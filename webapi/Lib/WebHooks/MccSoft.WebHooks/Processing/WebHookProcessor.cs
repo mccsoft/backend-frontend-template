@@ -2,7 +2,6 @@ using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Hangfire;
 using MccSoft.WebHooks.Domain;
 using MccSoft.WebHooks.Interceptors;
 using MccSoft.WebHooks.Publisher;
@@ -59,7 +58,7 @@ public class WebHookProcessor<TSub>
         webHook.ResetAttempts();
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        _webHookInterceptors.BeforeExecution?.Invoke(webHook.Id);
+        _webHookInterceptors.BeforeExecution?.Invoke(webHook);
 
         if (webHook.AttemptsPerformed <= _configuration.ResilienceOptions.MaxRetryAttempts)
         {
@@ -70,7 +69,7 @@ public class WebHookProcessor<TSub>
             await ProcessWebHook(webHook, cancellationToken);
         }
 
-        _webHookInterceptors.ExecutionSucceeded?.Invoke(webHook.Id);
+        _webHookInterceptors.ExecutionSucceeded?.Invoke(webHook);
     }
 
     public async Task TryToProcessWithPolly(
