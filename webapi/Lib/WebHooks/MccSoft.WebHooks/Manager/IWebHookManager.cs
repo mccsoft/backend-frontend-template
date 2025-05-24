@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using MccSoft.WebHooks.Domain;
@@ -18,7 +17,7 @@ public interface IWebHookManager<TSub>
     /// <summary>
     /// Requests all created webhook subscriptions in tenant.
     /// </summary>
-    IQueryable<TSub> GetSubscriptions(bool withAttempts = false);
+    Task<IEnumerable<TSub>> GetSubscriptionsAsync(bool withAttempts = false);
 
     /// <summary>
     /// Creates new WebHook integration

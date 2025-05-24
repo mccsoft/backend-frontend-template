@@ -26,8 +26,8 @@ public class WebHookController : Controller
     [HttpGet("subscriptions")]
     public async Task<List<WebhookSubscriptionDto>> GetSubscriptions()
     {
-        var subscriptions = _webHookManager.GetSubscriptions();
-        return await subscriptions.Select(x => x.ToSubscriptionDto()).ToListAsync();
+        var subscriptions = await _webHookManager.GetSubscriptionsAsync();
+        return subscriptions.Select(x => x.ToSubscriptionDto()).ToList();
     }
 
     /// <summary>
