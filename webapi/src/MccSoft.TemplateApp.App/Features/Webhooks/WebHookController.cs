@@ -1,6 +1,7 @@
 using MccSoft.TemplateApp.App.Features.Webhooks.Dto;
 using MccSoft.TemplateApp.Domain.WebHook;
 using MccSoft.WebApi.Patching;
+using MccSoft.WebHooks.Manager;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

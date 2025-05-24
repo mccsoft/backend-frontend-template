@@ -64,7 +64,7 @@ public class WebHookManager<TSub> : IWebHookManager<TSub>
         var subscription = (TSub)
             Activator.CreateInstance(typeof(TSub), [name, url, eventType, method, headers]);
 
-        await _dbContext.WebHookSubscriptions<TSub>().AddAsync(subscription);
+        _dbContext.WebHookSubscriptions<TSub>().Add(subscription);
         await _dbContext.SaveChangesAsync();
 
         return subscription;

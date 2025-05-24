@@ -4,6 +4,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using MccSoft.WebHooks.Domain;
 
+namespace MccSoft.WebHooks.Manager;
+
 public interface IWebHookManager<TSub>
     where TSub : WebHookSubscription
 {

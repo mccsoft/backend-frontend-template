@@ -1,8 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace MccSoft.WebHooks.Domain;
 
+/// <summary>
+/// Represents a subscription to a specific WebHook event,
+/// including the endpoint URL, HTTP method, and custom headers.
+/// </summary>
 public class WebHookSubscription
 {
     /// <summary>
@@ -16,34 +20,43 @@ public class WebHookSubscription
     public string Name { get; set; }
 
     /// <summary>
-    /// Webhook URL for integration.
+    /// The target URL to which WebHooks should be delivered.
     /// </summary>
     public string Url { get; set; }
 
     /// <summary>
-    /// HTTP method for accessing URL via specified http method.
+    /// The HTTP method (e.g., POST, PUT) used to deliver WebHooks.
     /// </summary>
     public string Method { get; set; }
 
+    /// <summary>
+    /// The event type this subscription is interested in (e.g., "user.created").
+    /// </summary>
     public string EventType { get; set; }
 
+    /// <summary>
+    /// Optional custom HTTP headers to include in the WebHook request.
+    /// </summary>
     public Dictionary<string, string> Headers { get; set; } = [];
 
+    /// <summary>
+    /// The UTC timestamp when the subscription was created.
+    /// </summary>
     public DateTime SubscribedAt { get; init; }
 
     /// <summary>
-    /// Default EF core constructor
+    /// Default constructor required by EF Core.
     /// </summary>
     protected WebHookSubscription() { }
 
     /// <summary>
-    /// Constructor for creating subscription.
+    /// Initializes a new instance of the <see cref="WebHookSubscription"/> class.
     /// </summary>
-    /// <param name="name">Human-readable name for integration.</param>
-    /// <param name="url">URL for integration (callback)</param>
-    /// <param name="eventType"></param>
-    /// <param name="method">Optional HTTP method</param>
-    /// <param name="headers"></param>
+    /// <param name="name">Human-readable name of the integration.</param>
+    /// <param name="url">The callback URL for WebHook delivery.</param>
+    /// <param name="eventType">The type of event this subscription listens to.</param>
+    /// <param name="method">The HTTP method to use for delivery (e.g., "POST").</param>
+    /// <param name="headers">Optional custom headers for the HTTP request.</param>
     public WebHookSubscription(
         string name,
         string url,
@@ -61,6 +74,12 @@ public class WebHookSubscription
         SubscribedAt = DateTime.UtcNow;
     }
 
+    /// <summary>
+    /// Creates a new <see cref="WebHook{TSub}"/> instance using the current subscription.
+    /// </summary>
+    /// <typeparam name="TSub">The specific type of the subscription.</typeparam>
+    /// <param name="data">The serialized payload to be sent with the WebHook.</param>
+    /// <returns>A new WebHook instance ready to be persisted and processed.</returns>
     public WebHook<TSub> CreateWebHook<TSub>(string data)
         where TSub : WebHookSubscription => new((TSub)this, EventType, data);
 }
