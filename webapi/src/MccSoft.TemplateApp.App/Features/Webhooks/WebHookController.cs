@@ -4,6 +4,7 @@ using MccSoft.WebApi.Patching;
 using MccSoft.WebHooks.Manager;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace MccSoft.TemplateApp.App.Features.Webhooks;
 
@@ -25,8 +26,8 @@ public class WebHookController : Controller
     [HttpGet("subscriptions")]
     public async Task<List<WebhookSubscriptionDto>> GetSubscriptions()
     {
-        var result = await _webHookManager.GetSubscriptionsAsync();
-        return result.Select(x => x.ToSubscriptionDto()).ToList();
+        var subscriptions = _webHookManager.GetSubscriptions();
+        return await subscriptions.Select(x => x.ToSubscriptionDto()).ToListAsync();
     }
 
     /// <summary>

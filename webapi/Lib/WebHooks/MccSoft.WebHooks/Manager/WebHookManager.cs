@@ -47,9 +47,9 @@ public class WebHookManager<TSub> : IWebHookManager<TSub>
     }
 
     /// <inheritdoc />
-    public async Task<IEnumerable<TSub>> GetSubscriptionsAsync(bool withAttempts = false)
+    public IQueryable<TSub> GetSubscriptions(bool withAttempts = false)
     {
-        return await _dbContext.WebHookSubscriptions<TSub>().ToListAsync();
+        return _dbContext.WebHookSubscriptions<TSub>();
     }
 
     /// <inheritdoc />
