@@ -1,4 +1,4 @@
-[![Build Status](https://dev.azure.com/mcctomsk/Backend-Frontend-Template/_apis/build/status/mccsoft.backend-frontend-template?branchName=master)](https://dev.azure.com/mcctomsk/Backend-Frontend-Template/_apis/build/status/mccsoft.backend-frontend-template?branchName=master) [![MIT](https://img.shields.io/dub/l/vibe-d.svg)](https://opensource.org/licenses/MIT) [![NET8](https://img.shields.io/badge/-.NET%208.0-blueviolet)](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+[![Build Status](https://dev.azure.com/mcctomsk/Backend-Frontend-Template/_apis/build/status/mccsoft.backend-frontend-template?branchName=master)](https://dev.azure.com/mcctomsk/Backend-Frontend-Template/_apis/build/status/mccsoft.backend-frontend-template?branchName=master) [![MIT](https://img.shields.io/dub/l/vibe-d.svg)](https://opensource.org/licenses/MIT) [![NET9](https://img.shields.io/badge/-.NET%208.0-blueviolet)](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 
 ## What's that
 
@@ -8,7 +8,7 @@ Developers are encouraged to start with [setting up the environment](docs/Settin
 
 Template contains (you could also check [CHANGELOG](./docs/CHANGELOG.md) for latest changes):
 
-1. ASP.NET Core backend (.NET 8)
+1. ASP.NET Core backend (.NET 9)
    1. OpenIddict authentication (with support for Social Networks authentication)
    2. Guidance/example on how to structure backend
    3. Helpers for easy implementation of REST API for CRUD (with PATCH instead of UPDATE)

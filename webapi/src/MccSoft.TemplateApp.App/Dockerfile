@@ -11,7 +11,7 @@ RUN \
 ENV ASPNETCORE_URLS="http://*:5000"
 COPY . /webapi
 
-RUN useradd dotnetuser --create-home --uid 1000 && \
+RUN useradd dotnetuser --create-home --uid 4000 && \
   chown dotnetuser /webapi && \
   chown -R dotnetuser /webapi/wwwroot && \
   chmod +x /webapi/import-meta-env

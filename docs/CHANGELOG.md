@@ -1,12 +1,16 @@
 ﻿# Changelog
 
+### 2025-05-20 .NET 9
+
+Update to .NET 9
+
 ### 2023-05-13 Deploy to Kubernetes (k3s)
 
 [Official instructions](/k8s/README.md) & scripts are available to deploy to Kubernetes (and how to setup the Kubernetes cluster). It's now a recommended way to deploy the app.
 
 ### 2023-05-11 Update SignUrl
 
-To use the new version please increase the length of `SignUrl__Secret` to be at least 32 symbols.
+To use the new version, please increase the length of `SignUrl__Secret` to be at least 32 symbols.
 
 ### 2023-04-22 Update ASP.NET Core to 7.0.5, add [FromJsonQuery] attribute
 
