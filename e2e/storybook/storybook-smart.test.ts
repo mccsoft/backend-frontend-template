@@ -32,6 +32,8 @@ async function clickOnSingleButtonIfExists(page: Page, screenshotName: string) {
   if ((await singleButtonLocator.count()) === 1) {
     await singleButtonLocator.click();
 
+    await page.waitForTimeout(1000);
+
     expect(await page.screenshot({ animations: 'disabled' })).toMatchSnapshot(
       screenshotName,
     );
