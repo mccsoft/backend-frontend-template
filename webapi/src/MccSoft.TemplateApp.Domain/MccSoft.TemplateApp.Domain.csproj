@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Lib\DomainHelpers\MccSoft.DomainHelpers\MccSoft.DomainHelpers.csproj" />
+    <ProjectReference Include="..\..\Lib\WebHooks\MccSoft.WebHooks\MccSoft.WebHooks.csproj" />
     <ProjectReference Include="..\MccSoft.TemplateApp.Common\MccSoft.TemplateApp.Common.csproj" />
   </ItemGroup>
 
