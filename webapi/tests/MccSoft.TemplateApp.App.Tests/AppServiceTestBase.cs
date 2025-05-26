@@ -9,8 +9,10 @@ using MccSoft.LowLevelPrimitives;
 using MccSoft.TemplateApp.App.Setup;
 using MccSoft.TemplateApp.App.Utils.Localization;
 using MccSoft.TemplateApp.Domain;
+using MccSoft.TemplateApp.Domain.WebHook;
 using MccSoft.TemplateApp.Persistence;
 using MccSoft.Testing;
+using MccSoft.WebHooks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -87,6 +89,7 @@ public class AppServiceTestBase : TestBase<TemplateAppDbContext>
     )
     {
         SetupServices.AddServices(services, configuration, environment);
+        services.AddWebHooks<TemplateWebHookSubscription>();
 
         services
             .AddDefaultIdentity<User>()
