@@ -2,16 +2,16 @@ import { appVersion } from 'application/constants/env-variables';
 import { Button } from 'components/uikit/buttons/Button';
 import React from 'react';
 import { Outlet } from 'react-router';
-import { DropDownInput } from '../../components/uikit/inputs/dropdown/DropDownInput';
-import {
-  changeLanguage,
-  getCurrentSupportedLanguage,
-} from '../../application/localization/localization';
-import { Language, languages } from '../../application/localization/locales';
 import { useTranslation } from 'react-i18next';
 import { logOut } from 'helpers/auth/auth-interceptor';
 import styles from './RootPage.module.scss';
 import Logger from 'js-logger';
+import { DropDownInput } from 'components/uikit/inputs/dropdown/DropDownInput';
+import {
+  changeLanguage,
+  getCurrentSupportedLanguage,
+} from 'application/localization/localization';
+import { Language, languages } from 'application/localization/locales';
 
 export const RootPage: React.FC = () => {
   const i18n = useTranslation();

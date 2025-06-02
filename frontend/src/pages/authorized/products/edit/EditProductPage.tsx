@@ -14,8 +14,8 @@ import { QueryFactory } from 'services/api';
 import { PatchProductDto, ProductType } from 'services/api/api-client';
 import { HookFormDropDownInput } from 'components/uikit/inputs/dropdown/HookFormDropDownInput';
 import { useNavigate } from 'react-router';
-import { HookFormDatePicker } from '../../../../components/uikit/inputs/date-time/HookFormDatePicker';
 import { Grid } from '@mui/material';
+import { HookFormDatePicker } from 'components/uikit/inputs/date-time/HookFormDatePicker';
 
 export const EditProductPage: React.FC = () => {
   const { id: productId } = Links.Authorized.EditProduct.useParams();

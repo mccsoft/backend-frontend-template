@@ -17,16 +17,16 @@ import {
 } from '@tanstack/react-table';
 import { QueryFactory } from 'services/api';
 import { ProductListItemDto } from 'services/api/api-client';
-import { useScopedTranslation } from '../../../application/localization/useScopedTranslation';
 import styles from './ProductListPage.module.scss';
 import { StringParam, useQueryParams } from 'react-router-url-params';
 import { DotMenu } from 'components/uikit/menu/DotMenu';
 import { useNavigate } from 'react-router';
 import { AppPagination } from 'components/uikit/pagination/AppPagination';
-import { MenuDirection } from '../../../components/uikit/menu/MenuDirection';
 import { emptyArray } from 'helpers/empty-array';
 import { useModal } from 'components/uikit/modal/useModal';
 import { format } from 'date-fns';
+import { useScopedTranslation } from 'application/localization/useScopedTranslation';
+import { MenuDirection } from 'components/uikit/menu/MenuDirection';
 
 export const ProductListPage: React.FC = () => {
   const i18n = useScopedTranslation('Page.Products.list');
