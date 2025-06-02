@@ -130,7 +130,7 @@ export const ProductListPage: React.FC = () => {
         onChange={(e) => setQueryParams({ search: e.target.value, page: 1 })}
       />
 
-      <Loading loading={productsQuery.isInitialLoading}>
+      <Loading loading={productsQuery.isLoading}>
         <AppTable table={table} />
         <AppPagination
           page={queryParams.page}
