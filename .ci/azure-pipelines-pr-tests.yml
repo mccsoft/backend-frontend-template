@@ -1,6 +1,9 @@
 # This is a build for checking Pull Requests.
 # It should be triggered by Azure DevOps automatically when Pull Request is created
-# (you need to configure triggering in Azure DevOps by yourself).
+# (you need to configure triggering in Azure DevOps by yourself, to do that:
+# 1. Go to Branches (Repo -> Branches)
+# 2. Choose `main` branch, go to Branch Policies
+# 3. Add `Build Validation` step pointing it to the current file
 # Parameters for this build are defined in
 # - ./_settings/base.yml
 # - ./_settings/base.partial.yml -- change here
