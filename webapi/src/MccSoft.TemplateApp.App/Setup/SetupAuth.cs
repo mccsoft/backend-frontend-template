@@ -84,8 +84,12 @@ public static partial class SetupAuth
             {
                 options
                     .DisableAccessTokenEncryption()
-                    .AddSigningCertificateFromConfiguration(configuration)
-                    .AddEncryptionCertificateFromConfiguration(configuration);
+                    .AddSigningCertificateFromConfiguration(
+                        configuration.GetSection("OpenId:SigningCertificate")
+                    )
+                    .AddEncryptionCertificateFromConfiguration(
+                        configuration.GetSection("OpenId:EncryptionCertificate")
+                    );
                 if (configuration.GetValue<bool>("TestApiEnabled"))
                     options.AllowPasswordFlow();
 
