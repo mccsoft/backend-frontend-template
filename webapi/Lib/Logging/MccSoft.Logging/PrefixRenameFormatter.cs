@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Serilog.Events;
-using Serilog.Formatting.Elasticsearch;
+using Serilog.Formatting.OpenSearch;
 
 namespace MccSoft.Logging;
 
@@ -13,7 +13,7 @@ namespace MccSoft.Logging;
 /// This is a workaround for Serilog not allowing dots in message templates.
 /// See https://github.com/serilog/serilog/issues/1384
 /// </summary>
-public class PrefixRenameFormatter : ElasticsearchJsonFormatter
+public class PrefixRenameFormatter : OpenSearchJsonFormatter
 {
     private const string _prefix = Field.FieldPrefix + "_";
     private const string _dottedPrefix = Field.FieldPrefix + ".";

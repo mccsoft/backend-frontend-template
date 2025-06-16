@@ -11,8 +11,8 @@ using Serilog;
 using Serilog.Debugging;
 using Serilog.Formatting;
 using Serilog.Formatting.Compact;
-using Serilog.Sinks.Elasticsearch;
 using Serilog.Sinks.File;
+using Serilog.Sinks.OpenSearch;
 
 namespace MccSoft.Logging;
 
@@ -80,7 +80,7 @@ public static class ElasticLoggerExtensions
 
         var isoCulture = LoggerConfigurationExtensions.GetFormatProvider();
 
-        var elasticSearchSinkOptions = new ElasticsearchSinkOptions(new Uri(options.Url))
+        var elasticSearchSinkOptions = new OpenSearchSinkOptions(new Uri(options.Url))
         {
             // Default batch posting limit is 50, making us send batches too frequently in highly loaded services,
             // we trade a bit of memory for sending performance.
@@ -171,7 +171,7 @@ public static class ElasticLoggerExtensions
                 // and https://github.com/serilog/serilog/issues/1453#issuecomment-654254454
                 .MinimumLevel.Verbose()
                     .ExcludeEfInformation()
-                    .WriteTo.Elasticsearch(elasticSearchSinkOptions)
+                    .WriteTo.OpenSearch(elasticSearchSinkOptions)
         );
     }
 
