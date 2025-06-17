@@ -76,7 +76,7 @@ export function DropDownInput<
     [resetValueIfUnchangedAfterCallingOnValueChanged],
   );
 
-  const actionsRef = useRef<StyledAutocompleteControl>(null);
+  const actionsRef = useRef<StyledAutocompleteControl>(null!);
   return (
     <StyledAutocomplete<T, false, Required, false>
       {...rest}

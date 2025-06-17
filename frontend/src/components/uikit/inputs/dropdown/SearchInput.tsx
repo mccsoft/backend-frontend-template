@@ -11,7 +11,7 @@ export const SearchInput: React.FC<Props> = React.forwardRef<
   HTMLInputElement,
   Props
 >(function SearchInput(props, ref) {
-  const localRef = React.useRef<HTMLInputElement>();
+  const localRef = React.useRef<HTMLInputElement>(undefined);
   const onCrossIconClick = useCallback(() => {
     localRef.current!.value = '';
 

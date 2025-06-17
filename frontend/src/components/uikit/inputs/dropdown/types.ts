@@ -20,6 +20,7 @@ export type StyledAutocompleteProps<
   AutocompleteProps<T, Multiple, Required, FreeSolo>,
   'disableClearable' | 'renderInput' | 'getOptionLabel'
 > & {
+  placeholder?: string;
   actions?: React.RefObject<StyledAutocompleteControl>;
   /*
    * Defines the text for the option.

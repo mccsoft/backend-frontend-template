@@ -30,9 +30,7 @@ export function StyledAutocomplete<
   Multiple extends boolean | undefined = undefined,
   Required extends boolean | undefined = undefined,
   FreeSolo extends boolean | undefined = undefined,
->(
-  props: StyledAutocompleteProps<T, Multiple, Required, FreeSolo>,
-): JSX.Element {
+>(props: StyledAutocompleteProps<T, Multiple, Required, FreeSolo>) {
   const i18next = useTranslation();
   const {
     onChange,
@@ -207,8 +205,8 @@ export function StyledAutocomplete<
     [props.renderOption, postfixRenderer],
   );
 
-  const closeAutocomplete = useRef<React.FocusEventHandler>();
-  const onBlurRef = useRef<React.FocusEventHandler>();
+  const closeAutocomplete = useRef<React.FocusEventHandler>(undefined);
+  const onBlurRef = useRef<React.FocusEventHandler>(undefined);
   const onClickOutsidePaper = useCallback((event: MouseEvent) => {
     closeAutocomplete.current?.(event as any);
   }, []);
@@ -548,7 +546,7 @@ type PaperComponentProps = {
 const PaperComponentWithHeaderFooter = React.memo(
   function PaperComponentWithHeaderFooter(props: PaperComponentProps & any) {
     const { onClickOutside, header, footer, children, ...rest } = props;
-    const ref = useRef<HTMLDivElement>(null);
+    const ref = useRef<HTMLDivElement>(null!);
     useTriggerOnClickOutsideElement(
       ref,
       props.onClickOutside!,

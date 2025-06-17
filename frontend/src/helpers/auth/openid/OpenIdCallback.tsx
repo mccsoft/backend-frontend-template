@@ -19,10 +19,10 @@ export const OpenIdCallback: React.FC<
     signOutRedirectHandler: SignOutRedirectHandler;
     loading?: React.ReactNode | undefined;
     error?:
-      | ((props: {
+      | React.FC<{
           error: string;
           error_description: string;
-        }) => React.ReactElement | null)
+        }>
       | undefined;
   }>
 > = (props) => {

@@ -18,7 +18,7 @@ export const Lottie = ({
   className,
 }: LottieProps) => {
   const element = useRef<HTMLDivElement>(null);
-  const lottieInstance = useRef<any>();
+  const lottieInstance = useRef<any>(undefined);
 
   useEffect(() => {
     if (element.current) {

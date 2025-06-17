@@ -4,6 +4,7 @@ import { useTriggerOnClickOutsideElement } from 'helpers/useTriggerOnClickOutsid
 import React, { MouseEventHandler, useEffect, useRef, useState } from 'react';
 import styles from './AppPopper.module.scss';
 import { useTransitionClass } from './useTransitionClass';
+import { PopperProps } from '@mui/base/Popper/Popper.types';
 // import type { PopperUnstyledOwnProps } from '@mui/base/PopperUnstyled/PopperUnstyled';
 
 /*
@@ -13,7 +14,7 @@ import { useTransitionClass } from './useTransitionClass';
  */
 export const AppPopper: React.FC<
   React.PropsWithChildren<
-    React.ComponentProps<typeof PopperUnstyled> & {
+    PopperProps & {
       noArrow?: boolean;
       delay?: number;
       disableTransition?: boolean;
@@ -125,7 +126,7 @@ const PopperContent: React.FC<
   const transitionClass = useTransitionClass(
     disableTransition ? undefined : styles.popperEnterActive,
   );
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null!);
   useTriggerOnClickOutsideElement(
     ref,
     onClose!,
