@@ -1,4 +1,20 @@
 ﻿# Changelog
+### 2025-06-16 update frontend dependencies
+
+Vite / SASS / etc. were updated. The following regexps might help you updating your codebase:
+```
+Search
+Replace
+
+@import '(.*?)'
+@use '$1' as *
+
+@import "(.*?)"
+@use "$1" as *
+
+import \{ ReactComponent as (.*?) \} from '(.*?)\.svg';
+import $1 from '$2.svg?react';
+```
 
 ### 2025-05-20 .NET 9
 
