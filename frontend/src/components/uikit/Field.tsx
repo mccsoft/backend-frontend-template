@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { AppLink } from 'components/uikit/buttons/AppLink';
 import { ButtonColor } from './buttons/Button';
 import clsx from 'clsx';
-import { ReactComponent as HintIcon } from 'assets/icons/i.svg';
+import HintIcon from 'assets/icons/i.svg?react';
 
 import styles from './Field.module.scss';
 import { AppTooltip } from './menu/AppTooltip';

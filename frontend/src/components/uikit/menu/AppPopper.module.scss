@@ -1,5 +1,5 @@
 @use 'sass:math';
-@import 'src/styles/variables';
+@use 'src/styles/variables' as *;
 $arrowSize: 20px;
 $topMargin: 10px;
 
@@ -24,7 +24,8 @@ $topMargin: 10px;
 .popper {
   background-color: white;
   border-radius: 2px;
-  box-shadow: rgb(0 0 0 / 13%) 0px 6.4px 14.4px 0px,
+  box-shadow:
+    rgb(0 0 0 / 13%) 0px 6.4px 14.4px 0px,
     rgb(0 0 0 / 11%) 0px 1.2px 3.6px 0px;
 }
 .content {

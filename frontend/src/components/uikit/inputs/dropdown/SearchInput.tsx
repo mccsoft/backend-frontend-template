@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { Input, Props } from '../Input';
-import { ReactComponent as SearchIcon } from 'assets/icons/search.svg';
-import { ReactComponent as CrossIcon } from 'assets/icons/close-button.svg';
+import SearchIcon from 'assets/icons/search.svg?react';
+import CrossIcon from 'assets/icons/close-button.svg?react';
 import React, { ChangeEvent, useCallback } from 'react';
 
 import styles from '../Input.module.scss';

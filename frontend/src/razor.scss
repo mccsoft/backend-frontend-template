@@ -1,8 +1,9 @@
-@import './styles/base';
-@import './index';
-@import './components/uikit/Field.module';
-@import './components/uikit/inputs/Input.module';
-@import './components/uikit/buttons/Button.module';
+@use './styles/base' as *;
+@use './styles/variables' as *;
+@use './index' as *;
+@use './components/uikit/Field.module' as *;
+@use './components/uikit/inputs/Input.module' as *;
+@use './components/uikit/buttons/Button.module' as *;
 
 /*SVG load from resources as image and cannot be updated
   Original color should be #a5aaa5

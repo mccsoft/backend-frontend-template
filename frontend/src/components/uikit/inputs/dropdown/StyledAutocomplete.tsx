@@ -5,7 +5,7 @@ import equal from 'fast-deep-equal';
 import * as React from 'react';
 import { useCallback, useImperativeHandle, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ReactComponent as ArrowDownIcon } from 'assets/icons/arrow-down.svg';
+import ArrowDownIcon from 'assets/icons/arrow-down.svg?react';
 
 import styles from './StyledAutocomplete.module.scss';
 import { Autocomplete, Paper, Popper, PopperProps } from '@mui/material';
@@ -109,7 +109,7 @@ export function StyledAutocomplete<
     return (option) =>
       option === null || option === undefined
         ? placeholder
-        : baseFunction(option) ?? option;
+        : (baseFunction(option) ?? option);
   }, [props.getOptionLabel, placeholder]);
 
   const isOptionEqualToValue: AutocompleteProps<
@@ -299,7 +299,7 @@ export function StyledAutocomplete<
         options={options}
         renderInput={(params) => {
           const value = props.multiple
-            ? (params.InputProps.startAdornment as string) ?? ''
+            ? ((params.InputProps.startAdornment as string) ?? '')
             : params.inputProps.value;
           onBlurRef.current = params.inputProps.onBlur;
           closeAutocomplete.current = (e) => {
@@ -410,7 +410,7 @@ export function StyledAutocomplete<
         // freeSolo requires autoSelect to be True to trigger onChange when input is blurred
         // Search inputs require autoselect to be False
         autoSelect={
-          props.autoSelect ?? (props.freeSolo && !isSearch) ? true : undefined
+          (props.autoSelect ?? (props.freeSolo && !isSearch)) ? true : undefined
         }
         data-error={!!errorText}
         getOptionLabel={getOptionLabel}

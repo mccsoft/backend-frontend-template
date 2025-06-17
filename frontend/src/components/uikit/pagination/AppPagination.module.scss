@@ -1,4 +1,4 @@
-@import 'src/styles/variables';
+@use 'src/styles/variables' as *;
 
 .rows-count-container {
   margin-top: 16px;

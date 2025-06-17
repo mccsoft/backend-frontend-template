@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
-import { ReactComponent as CloseIcon } from 'assets/icons/close-button.svg';
+import CloseIcon from 'assets/icons/close-button.svg?react';
 import styles from './CustomModal.module.scss';
 
 export type CustomModalProps = {

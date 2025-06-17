@@ -1,4 +1,4 @@
-@import '../../styles/base';
+@use '../../styles/base' as *;
 .container {
   flex: 1;
   display: flex;

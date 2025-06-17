@@ -1,6 +1,9 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "paths": {
+      "src/*": ["src/*"]
+    },
     "typeRoots": ["types"],
     "baseUrl": "./src"
   },

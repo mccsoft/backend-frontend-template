@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import ReactPaginate from 'react-paginate';
 
-import { ReactComponent as PreviousPageIcon } from 'assets/icons/left.svg';
-import { ReactComponent as NextPageIcon } from 'assets/icons/right.svg';
+import PreviousPageIcon from 'assets/icons/left.svg?react';
+import NextPageIcon from 'assets/icons/right.svg?react';
 import styles from './AppPagination.module.scss';
 
 // const items = [10, 20, 50];

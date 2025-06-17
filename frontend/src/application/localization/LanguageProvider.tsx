@@ -1,16 +1,19 @@
 import Logger from 'js-logger';
-import React, { useEffect, useState } from 'react';
+  import React, { useMemo, useState } from 'react';
 import { initializeLocalization } from './localization';
+let i18nConfigurationStarted = false;
 
 export const LanguageProvider: React.FC<React.PropsWithChildren> = (props) => {
-  const [isLoading, setLoading] = useState<boolean>(true);
+  const [isLoading, setLoading] = useState<boolean>(false);
 
-  useEffect(() => {
+  useMemo(() => {
+    if (i18nConfigurationStarted) return;
+    i18nConfigurationStarted = true;
+
     const bootstrapAsync = async () => {
       await initializeLocalization();
       setLoading(false);
     };
-
     bootstrapAsync().catch((e) => Logger.error(e));
   }, []);
 
