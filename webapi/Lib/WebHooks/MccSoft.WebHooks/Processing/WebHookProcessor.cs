@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MccSoft.WebHooks.Domain;
 using MccSoft.WebHooks.Interceptors;
 using MccSoft.WebHooks.Publisher;
+using MccSoft.WebHooks.Signing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -20,13 +21,15 @@ public class WebHookProcessor<TSub>
     private readonly ResiliencePipelineProvider<string> _pipelineProvider;
     private readonly IWebHookInterceptors<TSub> _webHookInterceptors;
     private readonly WebHookOptionBuilder<TSub> _configuration;
+    private readonly IWebHookSignatureService _webHookSignatureService;
 
     public WebHookProcessor(
         IServiceProvider serviceProvider,
         ResiliencePipelineProvider<string> pipelineProvider,
         ILogger<WebHookEventPublisher<TSub>> logger,
         IWebHookInterceptors<TSub> webHookInterceptors,
-        WebHookOptionBuilder<TSub> configuration
+        WebHookOptionBuilder<TSub> configuration,
+        IWebHookSignatureService webHookSignatureService
     )
     {
         if (WebHookRegistration.DbContextType == null)
@@ -42,6 +45,7 @@ public class WebHookProcessor<TSub>
         _logger = logger;
         _pipelineProvider = pipelineProvider;
         _configuration = configuration;
+        _webHookSignatureService = webHookSignatureService;
     }
 
     [CustomRetry]
@@ -106,6 +110,10 @@ public class WebHookProcessor<TSub>
             RequestUri = new Uri(webHook.Subscription.Url),
         };
 
+        message.Headers.Add(
+            _webHookSignatureService.GetSignatureHeaderName(),
+            _webHookSignatureService.ComputeSignature(webHook.Data ?? "", "SOME_SECRET")
+        );
         foreach (var item in webHook.Subscription.Headers)
         {
             message.Headers.Add(item.Key, item.Value);
