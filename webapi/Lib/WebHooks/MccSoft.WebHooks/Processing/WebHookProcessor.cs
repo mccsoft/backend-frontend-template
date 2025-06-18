@@ -112,7 +112,10 @@ public class WebHookProcessor<TSub>
 
         message.Headers.Add(
             _configuration.WebhookSignatureHeaderName,
-            _webHookSignatureService.ComputeSignature(webHook.Data ?? "", "SOME_SECRET")
+            _webHookSignatureService.ComputeSignature(
+                webHook.Data ?? "",
+                webHook.Subscription.SignatureSecret
+            )
         );
         foreach (var item in webHook.Subscription.Headers)
         {

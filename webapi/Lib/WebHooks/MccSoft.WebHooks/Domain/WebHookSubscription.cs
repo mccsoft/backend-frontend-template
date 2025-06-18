@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 
 namespace MccSoft.WebHooks.Domain;
 
@@ -45,6 +46,11 @@ public class WebHookSubscription
     public DateTime SubscribedAt { get; init; }
 
     /// <summary>
+    /// Secret is used to sign outgoing WebHooks.
+    /// </summary>
+    public string SignatureSecret { get; private set; }
+
+    /// <summary>
     /// Default constructor required by EF Core.
     /// </summary>
     protected WebHookSubscription() { }
@@ -72,6 +78,7 @@ public class WebHookSubscription
         Headers = headers ?? [];
 
         SubscribedAt = DateTime.UtcNow;
+        SignatureSecret = GenerateSecret();
     }
 
     /// <summary>
@@ -82,4 +89,11 @@ public class WebHookSubscription
     /// <returns>A new WebHook instance ready to be persisted and processed.</returns>
     public WebHook<TSub> CreateWebHook<TSub>(string data)
         where TSub : WebHookSubscription => new((TSub)this, EventType, data);
+
+    /// <summary>
+    /// Generates crypto-random secret for outgoing webhooks.
+    /// </summary>
+    /// <returns></returns>
+    private static string GenerateSecret() =>
+        Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
 }
