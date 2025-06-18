@@ -8,6 +8,7 @@ using MccSoft.WebHooks.Interceptors;
 using MccSoft.WebHooks.Manager;
 using MccSoft.WebHooks.Processing;
 using MccSoft.WebHooks.Publisher;
+using MccSoft.WebHooks.Signing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
@@ -87,6 +88,7 @@ public static class WebHookRegistration
         serviceCollection.AddTransient<IWebHookManager<TSub>, WebHookManager<TSub>>();
         serviceCollection.AddTransient<IWebHookEventPublisher, WebHookEventPublisher<TSub>>();
         serviceCollection.AddTransient<WebHookProcessor<TSub>>();
+        serviceCollection.AddSingleton<IWebHookSignatureService, WebHookSignatureService>();
 
         serviceCollection.AddResiliencePipeline(
             "default",
