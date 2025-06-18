@@ -7,8 +7,6 @@ namespace MccSoft.WebHooks.Signing;
 /// <inheritdoc cref="IWebHookSignatureService"/>
 public class WebHookSignatureService : IWebHookSignatureService
 {
-    private const string _signatureHeader = "X-Signature";
-
     /// <inheritdoc />
     public string ComputeSignature(string payload, string secret)
     {
@@ -18,9 +16,6 @@ public class WebHookSignatureService : IWebHookSignatureService
         var hash = hmac.ComputeHash(bodyBytes);
         return Convert.ToHexString(hash).ToLowerInvariant();
     }
-
-    /// <inheritdoc />
-    public string GetSignatureHeaderName() => _signatureHeader;
 
     /// <inheritdoc />
     public bool ValidateSignature(string body, string secret, string signature)

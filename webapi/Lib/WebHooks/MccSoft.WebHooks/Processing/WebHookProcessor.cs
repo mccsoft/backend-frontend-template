@@ -111,7 +111,7 @@ public class WebHookProcessor<TSub>
         };
 
         message.Headers.Add(
-            _webHookSignatureService.GetSignatureHeaderName(),
+            _configuration.WebhookSignatureHeaderName,
             _webHookSignatureService.ComputeSignature(webHook.Data ?? "", "SOME_SECRET")
         );
         foreach (var item in webHook.Subscription.Headers)

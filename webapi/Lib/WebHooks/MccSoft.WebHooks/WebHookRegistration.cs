@@ -145,4 +145,11 @@ public class WebHookOptionBuilder<TSub>
     /// Defines delay intervals (in minutes) used by Hangfire retry policies for failed jobs.
     /// </summary>
     public IEnumerable<int> HangfireDelayInMinutes = [60];
+
+    /// <summary>
+    /// The name of the HTTP header used to transmit the WebHook signature.
+    /// Default is <c>X-Signature</c>.
+    /// Change this if your receivers expect a custom header name.
+    /// </summary>
+    public string WebhookSignatureHeaderName { get; set; } = "X-Signature";
 }

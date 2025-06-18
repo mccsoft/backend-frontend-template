@@ -13,11 +13,6 @@ public interface IWebHookSignatureService
     string ComputeSignature(string payload, string secret);
 
     /// <summary>
-    /// Returns the name of the header where signature is sent.
-    /// </summary>
-    string GetSignatureHeaderName();
-
-    /// <summary>
     /// Validates signature for webhook event.
     /// </summary>
     bool ValidateSignature(string body, string secret, string signature);
