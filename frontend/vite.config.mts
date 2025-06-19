@@ -97,7 +97,7 @@ export default defineConfig(({ command, mode }) => {
         output: {
           // This is to make stable hashes of chunks.
           // see https://github.com/vitejs/vite/issues/6773#issuecomment-1308048405 for details
-          format: 'systemjs',
+          // format: 'systemjs',
           entryFileNames: 'app/index.js', // DO NOT INCLUDE HASH HERE
           chunkFileNames: 'chunks/[name].js', // DO NOT INCLUDE HASH HERE
           plugins: [
@@ -115,9 +115,6 @@ export default defineConfig(({ command, mode }) => {
           // (and exclude these heavy dependencies that you want to lazy load from 'vendors' chunk below)
           // !!!-----------------!!!
           manualChunks(id) {
-            if (id.includes('env-variables')) {
-              return 'env-variables';
-            }
             if (id.includes('lottie-web')) {
               return 'lottie-web';
             }
