@@ -3784,7 +3784,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@templateApp/build@workspace:."
   dependencies:
-    "@storybook/react-vite": 9.0.12
     "@types/diff": 5.0.3
     "@types/fs-extra": 11.0.1
     "@types/semver": 7.5.0
@@ -3802,7 +3801,6 @@ __metadata:
     renamer: 4.0.0
     rimraf: 3.0.2
     semver: 7.3.7
-    storybook: 9.0.12
     ts-node: 10.9.1
     yargs: 17.7.2
   languageName: unknown
