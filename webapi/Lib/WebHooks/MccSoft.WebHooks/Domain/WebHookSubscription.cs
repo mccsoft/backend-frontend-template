@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 
 namespace MccSoft.WebHooks.Domain;
 
@@ -46,9 +45,9 @@ public class WebHookSubscription
     public DateTime SubscribedAt { get; init; }
 
     /// <summary>
-    /// Secret is used to sign outgoing WebHooks.
+    /// Encrypted secret is used to sign outgoing WebHooks.
     /// </summary>
-    public string SignatureSecret { get; private set; }
+    public string SignatureSecret { get; private set; } = "";
 
     /// <summary>
     /// Default constructor required by EF Core.
@@ -78,16 +77,22 @@ public class WebHookSubscription
         Headers = headers ?? [];
 
         SubscribedAt = DateTime.UtcNow;
-        SignatureSecret = GenerateSecret();
     }
 
     /// <summary>
-    /// Re-generates signature secret for outgoing webhook events.
+    /// Sets new secret.
     /// </summary>
-    public void RegenerateSignature()
+    /// <remarks>You must care about passing encrypted instance of secret by your self.</remarks>
+    /// <param name="encryptedSecret"></param>
+    public void UpdateSignatureSecret(string encryptedSecret)
     {
-        SignatureSecret = GenerateSecret();
+        SignatureSecret = encryptedSecret;
     }
+
+    /// <summary>
+    /// Returns boolean flag do we have signing secret or not for further using in outgoing webhook.
+    /// </summary>
+    public bool IsSignatureDefined() => !string.IsNullOrEmpty(SignatureSecret.Trim());
 
     /// <summary>
     /// Creates a new <see cref="WebHook{TSub}"/> instance using the current subscription.
@@ -97,11 +102,4 @@ public class WebHookSubscription
     /// <returns>A new WebHook instance ready to be persisted and processed.</returns>
     public WebHook<TSub> CreateWebHook<TSub>(string data)
         where TSub : WebHookSubscription => new((TSub)this, EventType, data);
-
-    /// <summary>
-    /// Generates crypto-random secret for outgoing webhooks.
-    /// </summary>
-    /// <returns></returns>
-    private static string GenerateSecret() =>
-        Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
 }

@@ -11,6 +11,7 @@ public record WebhookSubscriptionDto(
     string Name,
     string Url,
     WebHookEventType eventType,
+    bool isSignatureGenerated,
     string? method = null,
     Dictionary<string, string>? headers = null
 );

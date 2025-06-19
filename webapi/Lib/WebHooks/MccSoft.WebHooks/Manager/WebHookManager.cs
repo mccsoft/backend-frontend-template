@@ -7,6 +7,7 @@ using Hangfire;
 using Hangfire.Common;
 using MccSoft.WebHooks.Domain;
 using MccSoft.WebHooks.Processing;
+using MccSoft.WebHooks.Signing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -19,11 +20,13 @@ public class WebHookManager<TSub> : IWebHookManager<TSub>
     private readonly ILogger<WebHookManager<TSub>> _logger;
     private readonly DbContext _dbContext;
     private readonly IServiceScopeFactory _serviceScopeFactory;
+    private readonly IWebHookSignatureService<TSub> _signatureService;
 
     public WebHookManager(
         IServiceScopeFactory serviceScopeFactory,
         IServiceProvider serviceProvider,
-        ILogger<WebHookManager<TSub>> logger
+        ILogger<WebHookManager<TSub>> logger,
+        IWebHookSignatureService<TSub> signatureService
     )
     {
         if (WebHookRegistration.DbContextType == null)
@@ -36,6 +39,7 @@ public class WebHookManager<TSub> : IWebHookManager<TSub>
             serviceProvider.GetRequiredService(WebHookRegistration.DbContextType);
 
         _logger = logger;
+        _signatureService = signatureService;
     }
 
     /// <inheritdoc />
@@ -64,8 +68,17 @@ public class WebHookManager<TSub> : IWebHookManager<TSub>
         var subscription = (TSub)
             Activator.CreateInstance(typeof(TSub), [name, url, eventType, method, headers]);
 
+        // TODO: think how to expose it from here
+        var secret = _signatureService.GenerateEncryptedSecret(subscription);
+
         _dbContext.WebHookSubscriptions<TSub>().Add(subscription);
         await _dbContext.SaveChangesAsync();
+
+        // temporary solution for providing insecure secret to user just after sub creation.
+        if (!string.IsNullOrWhiteSpace(secret))
+        {
+            subscription.UpdateSignatureSecret(secret);
+        }
 
         return subscription;
     }
@@ -107,10 +120,15 @@ public class WebHookManager<TSub> : IWebHookManager<TSub>
             .WebHookSubscriptions<TSub>()
             .FirstAsync(webhook => webhook.Id == subscriptionId);
 
-        webHookSubscription.RegenerateSignature();
+        var secret = _signatureService.GenerateEncryptedSecret(webHookSubscription);
+        if (string.IsNullOrWhiteSpace(secret))
+            throw new InvalidOperationException(
+                $"{nameof(WebHookOptionBuilder<TSub>.UseSigning)} is disabled or EncryptionKey is missing."
+            );
 
         await UpdateSubscriptionAsync(webHookSubscription);
-        return webHookSubscription.SignatureSecret;
+
+        return secret;
     }
 
     /// <inheritdoc />

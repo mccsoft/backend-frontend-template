@@ -53,6 +53,7 @@ public class WebHookController : Controller
             result.Name,
             result.Url,
             (WebHookEventType)Enum.Parse(typeof(WebHookEventType), result.EventType),
+            result.IsSignatureDefined(),
             result.SignatureSecret,
             result.Method.ToString(),
             result.Headers

@@ -24,6 +24,8 @@ public partial class SetupWebhooks
         optionsBuilder.ResilienceOptions.UseJitter = true;
         optionsBuilder.ResilienceOptions.MaxRetryAttempts = 5;
         optionsBuilder.ResilienceOptions.Timeout = TimeSpan.FromSeconds(30);
+
+        optionsBuilder.UseSigning = true;
     }
 
     private static void ConfigureInterceptors(

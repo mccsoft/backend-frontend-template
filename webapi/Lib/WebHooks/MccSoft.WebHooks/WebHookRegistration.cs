@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text.Json;
 using Hangfire;
 using MccSoft.WebHooks.Domain;
@@ -88,7 +89,10 @@ public static class WebHookRegistration
         serviceCollection.AddTransient<IWebHookManager<TSub>, WebHookManager<TSub>>();
         serviceCollection.AddTransient<IWebHookEventPublisher, WebHookEventPublisher<TSub>>();
         serviceCollection.AddTransient<WebHookProcessor<TSub>>();
-        serviceCollection.AddSingleton<IWebHookSignatureService, WebHookHMACSignatureService>();
+        serviceCollection.AddSingleton<
+            IWebHookSignatureService<TSub>,
+            WebHookHMACSignatureService<TSub>
+        >();
 
         serviceCollection.AddResiliencePipeline(
             "default",
@@ -152,4 +156,15 @@ public class WebHookOptionBuilder<TSub>
     /// Change this if your receivers expect a custom header name.
     /// </summary>
     public string WebhookSignatureHeaderName { get; set; } = "X-Signature";
+
+    /// <summary>
+    /// Base64-string Key for storing encrypted signature secret in DB.
+    /// </summary>
+    public string SignatureEncryptionKey { get; set; } =
+        Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
+
+    /// <summary>
+    /// Enables/disable webhook signing feature.
+    /// </summary>
+    public bool UseSigning { get; set; } = true;
 }
