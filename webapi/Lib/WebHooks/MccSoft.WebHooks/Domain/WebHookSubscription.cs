@@ -82,6 +82,14 @@ public class WebHookSubscription
     }
 
     /// <summary>
+    /// Re-generates signature secret for outgoing webhook events.
+    /// </summary>
+    public void RegenerateSignature()
+    {
+        SignatureSecret = GenerateSecret();
+    }
+
+    /// <summary>
     /// Creates a new <see cref="WebHook{TSub}"/> instance using the current subscription.
     /// </summary>
     /// <typeparam name="TSub">The specific type of the subscription.</typeparam>

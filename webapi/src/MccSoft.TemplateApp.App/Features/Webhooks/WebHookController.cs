@@ -99,4 +99,14 @@ public class WebHookController : Controller
         _webHookManager.Unsubscribe(subscriptionId);
         return new OkResult();
     }
+
+    /// <summary>
+    /// Rotate already generated signature secret.
+    /// </summary>
+    /// <param name="id">Subscription Id</param>
+    [HttpPost("subscriptions/{id}/rotate-secret")]
+    public async Task<string> RotateSecret(Guid id)
+    {
+        return await _webHookManager.RotateSecret(id);
+    }
 }

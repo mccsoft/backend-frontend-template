@@ -101,6 +101,19 @@ public class WebHookManager<TSub> : IWebHookManager<TSub>
     }
 
     /// <inheritdoc />
+    public async Task<string> RotateSecret(Guid subscriptionId)
+    {
+        var webHookSubscription = await _dbContext
+            .WebHookSubscriptions<TSub>()
+            .FirstAsync(webhook => webhook.Id == subscriptionId);
+
+        webHookSubscription.RegenerateSignature();
+
+        await UpdateSubscriptionAsync(webHookSubscription);
+        return webHookSubscription.SignatureSecret;
+    }
+
+    /// <inheritdoc />
     public async Task<TSub> UpdateSubscriptionAsync(TSub subscription)
     {
         _dbContext.Update(subscription);

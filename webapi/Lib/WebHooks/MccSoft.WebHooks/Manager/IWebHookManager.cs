@@ -22,11 +22,11 @@ public interface IWebHookManager<TSub>
     /// <summary>
     /// Creates new WebHook integration
     /// </summary>
-    /// <param name="name"></param>
-    /// <param name="url"></param>
-    /// <param name="eventType"></param>
-    /// <param name="method"></param>
-    /// <param name="headers"></param>
+    /// <param name="name">Webhook human-readable name</param>
+    /// <param name="url">Callback URL</param>
+    /// <param name="eventType">Type of webhook event (triggered in business logic)</param>
+    /// <param name="method">Remote HTTP method for calling <see cref="url"/>(Callback URL)</param>
+    /// <param name="headers">Provided header with sent webhook event.</param>
     Task<TSub> Subscribe(
         string name,
         string url,
@@ -46,4 +46,12 @@ public interface IWebHookManager<TSub>
     /// </summary>
     /// <param name="subscriptionId">Subscription Id</param>
     Task Unsubscribe(Guid subscriptionId);
+
+    /// <summary>
+    /// Re-generates signing secret for current subscription.
+    /// </summary>
+    /// <remarks>All re-tried events will be sent with old signature. New ones - with re-generated secret.</remarks>
+    /// <param name="subscriptionId">Subscription id</param>
+    /// <exception cref="InvalidOperationException">Webhook subscription not found</exception>
+    Task<string> RotateSecret(Guid subscriptionId);
 }
