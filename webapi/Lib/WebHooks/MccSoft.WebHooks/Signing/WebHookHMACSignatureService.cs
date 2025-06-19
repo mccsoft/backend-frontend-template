@@ -4,8 +4,10 @@ using System.Text;
 
 namespace MccSoft.WebHooks.Signing;
 
-/// <inheritdoc cref="IWebHookSignatureService"/>
-public class WebHookSignatureService : IWebHookSignatureService
+/// <summary>
+/// Computes HMAC-based signatures for webhook payloads.
+/// </summary>
+public class WebHookHMACSignatureService : IWebHookSignatureService
 {
     /// <inheritdoc />
     public string ComputeSignature(string payload, string secret)
@@ -18,6 +20,10 @@ public class WebHookSignatureService : IWebHookSignatureService
     }
 
     /// <inheritdoc />
+    /// <remarks>
+    /// It should be used on client side (incoming webhook).
+    /// It mostly demonstrates how to verify and for test proposal.
+    /// </remarks>
     public bool ValidateSignature(string body, string secret, string signature)
     {
         var computed = ComputeSignature(body, secret);

@@ -88,7 +88,7 @@ public static class WebHookRegistration
         serviceCollection.AddTransient<IWebHookManager<TSub>, WebHookManager<TSub>>();
         serviceCollection.AddTransient<IWebHookEventPublisher, WebHookEventPublisher<TSub>>();
         serviceCollection.AddTransient<WebHookProcessor<TSub>>();
-        serviceCollection.AddSingleton<IWebHookSignatureService, WebHookSignatureService>();
+        serviceCollection.AddSingleton<IWebHookSignatureService, WebHookHMACSignatureService>();
 
         serviceCollection.AddResiliencePipeline(
             "default",

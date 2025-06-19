@@ -1,7 +1,7 @@
 namespace MccSoft.WebHooks.Signing;
 
 /// <summary>
-/// Computes HMAC-based signatures for webhook payloads.
+/// Computes signatures for webhook payloads.
 /// </summary>
 public interface IWebHookSignatureService
 {
