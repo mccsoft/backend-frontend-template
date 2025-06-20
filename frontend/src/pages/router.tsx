@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { LoginPage } from './unauthorized/LoginPage';
+import { ServerSideLoginPage } from './unauthorized/ServerSideLoginPage';
 import { RootPage } from './authorized/RootPage';
 import { Links } from 'application/constants/links';
 import { UiKitPage } from './authorized/uikit/UiKitPage';
@@ -8,6 +8,8 @@ import { EditProductPage } from './authorized/products/edit/EditProductPage';
 import { ProductListPage } from './authorized/products/ProductListPage';
 import { ProductDetailsPage } from './authorized/products/details/ProductDetailsPage';
 import { ReactRouterErrorBoundary } from './ReactRouterErrorBoundary';
+import { LoginPage } from './unauthorized/LoginPage';
+import { UseCookieAuth } from 'helpers/auth/auth-settings';
 
 export const authorizedRoutes = () =>
   createBrowserRouter([
@@ -41,7 +43,11 @@ export const anonymousRoutes = () =>
   createBrowserRouter([
     {
       path: '/',
-      element: <LoginPage />,
+      element: UseCookieAuth ? <LoginPage /> : <ServerSideLoginPage />,
       ErrorBoundary: ReactRouterErrorBoundary,
+    },
+    {
+      path: Links.Unauthorized.Login.route,
+      element: <LoginPage />,
     },
   ]);

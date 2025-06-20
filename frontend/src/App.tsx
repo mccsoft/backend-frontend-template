@@ -56,53 +56,30 @@ if (sentryDsn()) {
 const theme = createTheme();
 
 export const App = () => {
-  const queryClient = useMemo(() => {
-    const queryClient = new QueryClient({
-      defaultOptions: {
-        queries: {
-          refetchOnWindowFocus: false,
-          throwOnError: true,
-          retry(failureCount, error) {
-            if (failureCount >= 3) return false;
-            if (axios.isAxiosError(error) && error.response?.status === 401) {
-              return false;
-            }
-            return true;
-          },
-        },
-      },
-    });
-    addLogoutHandler(() => {
-      queryClient.clear();
-    });
-    return queryClient;
-  }, []);
-
   const fallback = useMemo(() => {
     return <Loading loading={true} />;
   }, []);
   const isAuth = useIsAuthorized();
 
+  if (isAuth === 'loading') return <Loading loading={true} />;
   return (
     <Suspense fallback={fallback}>
       <ThemeProvider theme={theme}>
-        <QueryClientProvider client={queryClient}>
-          <Provider store={RootStore.store}>
-            <PersistGate loading={fallback} persistor={RootStore.persistor}>
-              <LanguageProvider>
-                <ModalProvider>
-                  <QuerySuspenseErrorWrapper>
-                    <RouterProvider
-                      router={!!isAuth ? authorizedRoutes() : anonymousRoutes()}
-                    />
-                  </QuerySuspenseErrorWrapper>
+        <Provider store={RootStore.store}>
+          <PersistGate loading={fallback} persistor={RootStore.persistor}>
+            <LanguageProvider>
+              <ModalProvider>
+                <QuerySuspenseErrorWrapper>
+                  <RouterProvider
+                    router={!!isAuth ? authorizedRoutes() : anonymousRoutes()}
+                  />
+                </QuerySuspenseErrorWrapper>
 
-                  {FeatureFlags.isMiniProfilerEnabled() && <MiniProfiler />}
-                </ModalProvider>
-              </LanguageProvider>
-            </PersistGate>
-          </Provider>
-        </QueryClientProvider>
+                {FeatureFlags.isMiniProfilerEnabled() && <MiniProfiler />}
+              </ModalProvider>
+            </LanguageProvider>
+          </PersistGate>
+        </Provider>
       </ThemeProvider>
     </Suspense>
   );

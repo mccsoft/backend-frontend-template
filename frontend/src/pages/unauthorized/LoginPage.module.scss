@@ -1,0 +1,200 @@
+@use '../../styles/base' as *;
+
+.inputContainer {
+  margin-bottom: 16px;
+}
+
+.loginContainer {
+  box-sizing: border-box;
+  background-color: #ffffff;
+  max-width: 320px;
+  min-width: 320px;
+  max-height: 312px;
+  //  min-height: 312px;
+  margin-left: 135px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  padding: 20px 24px 20px 24px;
+}
+
+.inputField {
+  padding-bottom: 15px;
+}
+.infoContainer {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  font-family: Roboto, Sans-Serif;
+  justify-content: center;
+}
+
+.appInfo {
+  display: flex;
+  flex-direction: column;
+  max-width: 381px;
+  margin-bottom: 28px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+
+  /*font-family: Inter;*/
+}
+
+.address {
+  white-space: pre-wrap;
+}
+
+.appName {
+  margin-bottom: 32px;
+  margin-top: auto;
+  font-size: 64px;
+  font-weight: 600;
+  /*font-family: Inter;*/
+  width: 288px;
+  height: 94px;
+  line-height: 96px;
+}
+
+.manufacturerName {
+  margin-top: 0;
+  margin-bottom: auto;
+  width: 140px;
+  height: 40px;
+  background: url('../resources/manufacter_logo.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.buttonContainer {
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.loginSeparator {
+  display: flex;
+  flex-direction: row;
+  font-size: 12px;
+  font-family: Inter;
+  font-weight: 400;
+  text-align: center;
+  color: #7e8b8b;
+  margin-top: 24px;
+  margin-bottom: 16px;
+}
+
+.loginSeparator::before {
+  content: '';
+  width: 116px;
+  height: 1px;
+  background: #bfc5c5;
+  margin-top: 8px;
+  margin-right: 11px;
+}
+
+.loginSeparator::after {
+  content: '';
+  width: 116px;
+  height: 1px;
+  background: #bfc5c5;
+  margin-top: 8px;
+  margin-left: 11px;
+}
+
+.linkContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.azureLink {
+  font-family: Inter;
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: none;
+  color: #39a935;
+  background: transparent;
+  border: 0;
+  display: flex;
+}
+
+.azureLink:hover {
+  color: #30902d;
+}
+
+.azureLink:active {
+  color: #2d762f;
+}
+
+.mainBackground {
+  background: url('/public/assets/login-background.jpg');
+  background-repeat: repeat;
+  background-size: cover;
+  position: absolute;
+  width: 100%;
+  height: calc(50% + 52px);
+  left: 0;
+  top: 0;
+  z-index: -1;
+}
+
+.gridContainer {
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+  z-index: 2;
+}
+
+.root {
+  justify-content: center;
+  align-items: center;
+  flex: 1 1;
+  display: flex;
+  background: #1a2745 !important;
+  // z-index: -2;
+}
+
+form {
+  flex: 1;
+}
+
+.flex {
+  display: flex;
+  flex: 1;
+}
+
+.flexColumn {
+  flex-direction: column;
+}
+
+.relative {
+  position: relative;
+}
+
+.socialLoginForm {
+  flex: unset;
+  position: absolute;
+  margin-top: -30px;
+}
+
+.socialButtonsContainer {
+  justify-content: flex-end;
+  display: flex;
+  /*padding-right: 12px;*/
+}
+
+.textDanger {
+  height: 16px;
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.summaryValidContainer {
+  display: flex;
+  justify-content: center;
+  height: 16px;
+}
+
+.summaryValidContainer ul {
+  padding: 0;
+  list-style-type: none;
+}

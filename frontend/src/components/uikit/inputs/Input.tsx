@@ -85,34 +85,36 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(
         style={style}
         className={styles.inputContainer}
       >
-        <input
-          ref={ref}
-          className={clsx(
-            styles.input,
-            endAdornment ? styles.inputWithAdornment : null,
-            variant === 'normal' ? styles.nonFormInput : null,
-            className,
-          )}
-          data-error={isError.toString()}
-          onKeyDown={onEnterPressed ? onKeyDown : undefined}
-          type={showPassword ? 'input' : type}
-          data-test-id={testId}
-          {...rest}
-        />
-        {endAdornment ? (
-          <div
+        <div className={styles.inputWithAdornmentWrapper}>
+          <input
+            ref={ref}
             className={clsx(
-              styles.endAdornment,
-              type === 'password' && styles.passwordEye,
-              endAdornmentClassname,
+              styles.input,
+              endAdornment ? styles.inputWithAdornment : null,
+              variant === 'normal' ? styles.nonFormInput : null,
+              className,
             )}
-            onClick={endAdornment.onClick}
-            onFocus={props.onFocus}
-            onMouseDown={props.onMouseDown}
-          >
-            {endAdornment.element}
-          </div>
-        ) : null}
+            data-error={isError.toString()}
+            onKeyDown={onEnterPressed ? onKeyDown : undefined}
+            type={showPassword ? 'input' : type}
+            data-test-id={testId}
+            {...rest}
+          />
+          {endAdornment ? (
+            <div
+              className={clsx(
+                styles.endAdornment,
+                type === 'password' && styles.passwordEye,
+                endAdornmentClassname,
+              )}
+              onClick={endAdornment.onClick}
+              onFocus={props.onFocus}
+              onMouseDown={props.onMouseDown}
+            >
+              {endAdornment.element}
+            </div>
+          ) : null}
+        </div>
         {badge}
         {!!(helperText || errorText) && (
           <div data-error={isError.toString()} className={styles.helperText}>

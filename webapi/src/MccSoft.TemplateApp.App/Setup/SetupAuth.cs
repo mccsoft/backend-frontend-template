@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Logging;
 using OpenIddict.Abstractions;
 using OpenIddict.Validation.AspNetCore;
+using Shaddix.OpenIddict.ExternalAuthentication.Cookies;
 using Shaddix.OpenIddict.ExternalAuthentication.Infrastructure;
 
 namespace MccSoft.TemplateApp.App.Setup;
@@ -80,6 +81,7 @@ public static partial class SetupAuth
 
                 ConfigureDefaultAuthorizationController(options);
             })
+            .AddSupportForHttpOnlyCookieClients()
             .AddServer(options =>
             {
                 options

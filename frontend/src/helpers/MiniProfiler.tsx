@@ -9,7 +9,7 @@ export const miniProfilerInterceptor = async (response: AxiosResponse<any>) => {
 
   if (miniProfilerIds) {
     const ids = JSON.parse(miniProfilerIds) as string[];
-    ((window as any).MiniProfiler as any).fetchResults(ids);
+    ((window as any).MiniProfiler as any)?.fetchResults(ids);
   }
   return response;
 };

@@ -20,6 +20,10 @@ import SuperTokensLock from 'browser-tabs-lock';
 import { useEffect, useState } from 'react';
 import { signOutRedirect } from 'helpers/auth/openid/openid-manager';
 import Logger from 'js-logger';
+import { UseCookieAuth } from './auth-settings';
+import { QueryFactory } from 'services/api';
+import { createId } from 'components/uikit/type-utils';
+import { sendLogoutRequest } from './auth-client';
 
 /*
  * this is a local storage key that will store the AuthData structure (containing access_token and refresh_token)
@@ -42,11 +46,16 @@ function setAuthDataVariable(data: AuthData | null) {
  * Function to be called from user-side (e.g. 'Log Out' button) to start log out process
  */
 export async function logOut() {
-  await signOutRedirect();
-
-  // uncomment the code below if you'd like to use sign out via popup
-  // await signOutPopup();
-  // postServerLogOut();
+  if (UseCookieAuth) {
+    // show loading?
+    await sendLogoutRequest();
+    postServerLogOut();
+  } else {
+    await signOutRedirect();
+    // uncomment the code below if you'd like to use sign out via popup
+    // await signOutPopup();
+    //postServerLogOut();
+  }
 }
 
 /*
@@ -54,7 +63,7 @@ export async function logOut() {
  */
 export function postServerLogOut() {
   setAuthDataVariable(null);
-  _logoutHandler()?.catch((e) => Logger.error(e));
+  _logoutHandler();
 }
 
 export function setAuthData(data: Omit<AuthData, 'claims'>) {
@@ -73,6 +82,14 @@ const lockKey = 'refresh_token_lock';
 const lockAcquiringTimeout = 10000;
 
 export function setupAuthInterceptor(
+  axios: AxiosInstance,
+  refreshAuthCall: (authData: AuthData) => Promise<FetchLoginResponse>,
+) {
+  if (UseCookieAuth) setupCookiesAuthInterceptor(axios, refreshAuthCall);
+  else setupOAuthInterceptor(axios, refreshAuthCall);
+}
+
+export function setupOAuthInterceptor(
   axios: AxiosInstance,
   refreshAuthCall: (authData: AuthData) => Promise<FetchLoginResponse>,
 ) {
@@ -126,6 +143,22 @@ export function setupAuthInterceptor(
   axios.interceptors.request.use(injectAccessTokenInterceptor);
 }
 
+export function setupCookiesAuthInterceptor(
+  axios: AxiosInstance,
+  refreshAuthCall: (authData: AuthData) => Promise<FetchLoginResponse>,
+) {
+  createAuthRefreshInterceptor(axios, async (error) => {
+    try {
+      await refreshAuthCall({} as any);
+    } catch (e: any) {
+      if (e.message === 'Login_Unknown_Failure') {
+        postServerLogOut();
+      }
+      throw e;
+    }
+  });
+}
+
 export async function injectAccessTokenInterceptor(
   config: InternalAxiosRequestConfig<any>,
 ) {
@@ -142,11 +175,40 @@ export async function injectAccessTokenInterceptor(
   return config;
 }
 
-export function useIsAuthorized() {
-  return useAuth() !== null;
+export function useIsAuthorized(): boolean | 'loading' {
+  const auth = useAuth();
+  return auth === 'loading' ? 'loading' : !!auth;
 }
 
-export function useAuth() {
+export function useAuth(): AuthData | null | 'loading' {
+  if (UseCookieAuth) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useCookieAuth();
+  } else {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useOAuthAuth();
+  }
+}
+
+function useCookieAuth(): AuthData | null | 'loading' {
+  const data = QueryFactory.UserQuery.useGetCurrentUserInfoQuery({
+    throwOnError: false,
+    retryOnMount: false,
+    retry: false,
+  });
+  console.log('useCookieAuth', data);
+  return data.isError || !data.data?.id
+    ? null
+    : data.isLoading
+      ? 'loading'
+      : {
+          access_token: '',
+          refresh_token: '',
+          claims: { id: data.data.id, name: data.data.username },
+        };
+}
+
+function useOAuthAuth(): AuthData | null {
   const [auth, setAuth] = useState<AuthData | null>(_authData);
   useEffect(() => {
     _setAuthFunctions.add(setAuth);
@@ -156,15 +218,19 @@ export function useAuth() {
   }, []);
   return auth;
 }
-
-let _logoutHandler: () => void | Promise<void> = () => {
-  /* no action by default */
+const _logoutHandlers: Record<string, () => void> = {};
+const _logoutHandler = () => {
+  try {
+    Object.values(_logoutHandlers).forEach((x) => x());
+  } catch (e) {
+    Logger.error(e);
+  }
 };
 
-export function addLogoutHandler(handler: () => void | Promise<void>) {
-  const oldLogoutHandler = _logoutHandler;
-  _logoutHandler = async () => {
-    await oldLogoutHandler();
-    await handler();
+export function addLogoutHandler(handler: () => void) {
+  const id = createId();
+  _logoutHandlers[id] = handler;
+  return () => {
+    delete _logoutHandlers[id];
   };
 }

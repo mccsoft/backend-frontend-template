@@ -9,6 +9,8 @@ import { postServerLogOut, setAuthData } from 'helpers/auth/auth-interceptor';
 import { backendUri } from 'helpers/auth/openid/openid-settings';
 import { Loading } from './components/uikit/suspense/Loading';
 import { LoginErrorPage } from 'pages/unauthorized/LoginErrorPage';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from 'helpers/queryClientHelper';
 
 //to send dates to backend in local timezone (not in UTC)
 Date.prototype.toISOString = function () {
@@ -21,22 +23,24 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <OpenIdCallback
-      signInRedirectHandler={(user) => {
-        setAuthData({
-          access_token: user.access_token,
-          refresh_token: user.refresh_token!,
-        });
-        window.history.pushState(null, '', backendUri);
-      }}
-      signOutRedirectHandler={() => {
-        postServerLogOut();
-      }}
-      loading={<Loading loading={true} />}
-      error={LoginErrorPage}
-    >
-      <App />
-    </OpenIdCallback>
+    <QueryClientProvider client={queryClient}>
+      <OpenIdCallback
+        signInRedirectHandler={(user) => {
+          setAuthData({
+            access_token: user.access_token,
+            refresh_token: user.refresh_token!,
+          });
+          window.history.pushState(null, '', backendUri);
+        }}
+        signOutRedirectHandler={() => {
+          postServerLogOut();
+        }}
+        loading={<Loading loading={true} />}
+        error={LoginErrorPage}
+      >
+        <App />
+      </OpenIdCallback>
+    </QueryClientProvider>
   </React.StrictMode>,
 );
 

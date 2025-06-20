@@ -4,7 +4,12 @@
     "Login": {
       "login_field": "Login",
       "password_field": "Password",
-      "login_button": "Login"
+      "login_button": "Login",
+      "login_unknown_failure": "Authentication failed",
+      "login_failed": "Invalid login or password",
+      "login_user_locked": "User is locked",
+      "login_failed_or_user_is_locked": "Invalid login attempt or user is locked",
+      "network_error": "Network error"
     },
     "Products": {
       "Create": {

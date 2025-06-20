@@ -2,11 +2,36 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import queryString from 'query-string';
 import { FetchLoginResponse } from './auth-data';
 import { Base64 } from 'js-base64';
+import { errorToString } from 'helpers/error-helpers';
 
 const clientId = 'web_client';
 const clientKey = '';
 const scopes = 'offline_access';
 const backendUri = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
+
+export const sendLogoutRequest = async () => {
+  try {
+    await axios
+      .create()
+      .post(`${backendUri}/connect/logout`, queryString.stringify({}), {
+        maxRedirects: 0,
+        headers: {
+          Authorization: `Basic ${Base64.btoa(`${clientId}:${clientKey}`)}`,
+        },
+      });
+  } catch (e) {
+    if (axios.isAxiosError(e)) {
+      if (!e.request?.responseURL?.includes('/connect/logout')) {
+        return;
+      }
+    }
+
+    const errorMessage = errorToString(e);
+    alert(errorMessage);
+    throw e;
+  }
+};
+
 export const sendLoginRequest = async (
   username: string,
   password: string,
@@ -15,6 +40,7 @@ export const sendLoginRequest = async (
     grant_type: 'password',
     username,
     password,
+    scope: scopes,
   };
 
   return fetchTokenEndpoint('/connect/token', accountAuthBody);
