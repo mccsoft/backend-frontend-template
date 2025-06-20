@@ -11,6 +11,7 @@ This library provides everything you need to publish and reliably deliver WebHoo
 -  Integration via interceptors for pre/post execution and failure handling
 -  Integration with [Hangfire](https://www.hangfire.io/) for background processing
 -  Minimal configuration required — works out of the box 📦
+-  Signing webgook payload
 
 ---
 
@@ -139,6 +140,53 @@ public class TemplateWebHookSubscription : WebHookSubscription
 {
     public string? TenantName { get; set; }
 }
+```
+
+---
+## 🔐 Signing & Secrets
+
+You can enable automatic signing of WebHook payloads using a shared secret, signed with HMAC SHA-256.
+
+When `UseSigning = true`, the system:
+- Generates a secret for every subscription (`SignatureSecret`)
+- Encrypts it using AES (via `IWebHookSignatureService`)
+- Automatically adds an `X-Signature` (or configured name) header to outgoing WebHook requests
+
+### Setup
+
+1. Add a strong encryption key in `appsettings.json`:
+```json
+"WebHooks": {
+  "EncryptionKey": "base64-encoded-32-byte-key"
+}
+```
+
+2. Register services in `Program.cs`:
+```csharp
+builder.Services.AddSingleton<ISecretEncryptor>(
+  new AesSecretEncryptor(keyBase64: config["WebHooks:EncryptionKey"], ivBase64: "..."));
+
+builder.Services.AddSingleton<IWebHookSignatureService, WebHookSignatureService>();
+```
+
+3. Enable signing in options:
+```csharp
+builder.Services.AddWebHooks<MySubscription>(options =>
+{
+    options.UseSigning = true;
+    options.EncryptionKey = configuration["WebHooks:EncryptionKey"];
+    options.WebhookSignatureHeaderName = "X-Signature"; // optional
+});
+```
+
+### Rotation
+
+To rotate a secret:
+```csharp
+var newSecret = await webHookService.RotateSecret(subscriptionId);
+```
+
+The new secret will be encrypted and stored, and used for signing from now on.
 ```
 
 ---

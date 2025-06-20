@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text.Json;
 using Hangfire;
 using MccSoft.WebHooks.Domain;
@@ -8,6 +9,7 @@ using MccSoft.WebHooks.Interceptors;
 using MccSoft.WebHooks.Manager;
 using MccSoft.WebHooks.Processing;
 using MccSoft.WebHooks.Publisher;
+using MccSoft.WebHooks.Signing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
@@ -87,6 +89,10 @@ public static class WebHookRegistration
         serviceCollection.AddTransient<IWebHookManager<TSub>, WebHookManager<TSub>>();
         serviceCollection.AddTransient<IWebHookEventPublisher, WebHookEventPublisher<TSub>>();
         serviceCollection.AddTransient<WebHookProcessor<TSub>>();
+        serviceCollection.AddSingleton<
+            IWebHookSignatureService<TSub>,
+            WebHookHMACSignatureService<TSub>
+        >();
 
         serviceCollection.AddResiliencePipeline(
             "default",
@@ -143,4 +149,22 @@ public class WebHookOptionBuilder<TSub>
     /// Defines delay intervals (in minutes) used by Hangfire retry policies for failed jobs.
     /// </summary>
     public IEnumerable<int> HangfireDelayInMinutes = [60];
+
+    /// <summary>
+    /// The name of the HTTP header used to transmit the WebHook signature.
+    /// Default is <c>X-Signature</c>.
+    /// Change this if your receivers expect a custom header name.
+    /// </summary>
+    public string WebhookSignatureHeaderName { get; set; } = "X-Signature";
+
+    /// <summary>
+    /// Base64-string Key for storing encrypted signature secret in DB.
+    /// </summary>
+    public string SignatureEncryptionKey { get; set; } =
+        Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
+
+    /// <summary>
+    /// Enables/disable webhook signing feature.
+    /// </summary>
+    public bool UseSigning { get; set; } = true;
 }

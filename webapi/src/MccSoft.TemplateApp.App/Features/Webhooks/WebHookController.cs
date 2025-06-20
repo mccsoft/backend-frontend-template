@@ -38,7 +38,7 @@ public class WebHookController : Controller
     /// <response code="200">Subscription created successfully.</response>
     /// <response code="400">Invalid subscription data.</response>
     [HttpPost("subscriptions/subscribe")]
-    public async Task<WebhookSubscriptionDto> SubscribeToEvent([FromBody] CreateWebHookDto dto)
+    public async Task<WebHookSubscribedDto> SubscribeToEvent([FromBody] CreateWebHookDto dto)
     {
         var result = await _webHookManager.Subscribe(
             dto.Name,
@@ -47,7 +47,17 @@ public class WebHookController : Controller
             new HttpMethod(dto.method),
             dto.Headers
         );
-        return result.ToSubscriptionDto();
+
+        return new WebHookSubscribedDto(
+            result.Id,
+            result.Name,
+            result.Url,
+            (WebHookEventType)Enum.Parse(typeof(WebHookEventType), result.EventType),
+            result.IsSignatureDefined(),
+            result.SignatureSecret,
+            result.Method.ToString(),
+            result.Headers
+        );
     }
 
     /// <summary>
@@ -89,5 +99,15 @@ public class WebHookController : Controller
     {
         _webHookManager.Unsubscribe(subscriptionId);
         return new OkResult();
+    }
+
+    /// <summary>
+    /// Rotate already generated signature secret.
+    /// </summary>
+    /// <param name="id">Subscription Id</param>
+    [HttpPost("subscriptions/{id}/rotate-secret")]
+    public async Task<string> RotateSecret(Guid id)
+    {
+        return await _webHookManager.RotateSecret(id);
     }
 }
