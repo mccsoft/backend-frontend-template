@@ -11,6 +11,7 @@ This library provides everything you need to publish and reliably deliver WebHoo
 -  Integration via interceptors for pre/post execution and failure handling
 -  Integration with [Hangfire](https://www.hangfire.io/) for background processing
 -  Minimal configuration required — works out of the box 📦
+-  Signing webgook payload
 
 ---
 
@@ -139,6 +140,25 @@ public class TemplateWebHookSubscription : WebHookSubscription
 {
     public string? TenantName { get; set; }
 }
+```
+
+---
+## 🔐 Signing & Secrets
+
+Details about **SignatureSecret** and configuration of **EncryptionKey** using `WebhookOptionBuilder`
+
+Step-by-step guide:
+1.	Add `EncryptionKey` into `appsettings.json`
+2.	`Startup.cs/Program.cs` configure `IWebHookSignatureService`, enable option `UseSigning = true`
+3.	`WebHookSubscription` now generates signing secret, encrypted with AES, for further signing outgoing webhooks payload.
+4.	Example:
+
+```csharp
+builder.Services.AddWebHooks<MySubscription>(options =>
+{
+    options.UseSigning = true;
+    options.EncryptionKey = configuration["WebHooks:EncryptionKey"];
+});
 ```
 
 ---
