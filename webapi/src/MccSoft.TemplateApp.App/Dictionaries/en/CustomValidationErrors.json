@@ -1,0 +1,380 @@
+{
+  "general": {
+    "required_field_is_empty": "Required field is empty.",
+    "maximum_length": "Maximum length should be {{value}}.",
+    "date_in_future": "Date cannot be in the future.",
+    "min_date": "Must be later than {{date}}.",
+    "invalid": "Invalid.",
+    "duplicate_name": "Duplicate name.",
+    "duplicate_name_with_value": "Duplicate name '{{name}}'."
+  },
+  "patient": {
+    "patient_not_found": "Patient with ID '{{patientId}}' wasn't found.",
+    "patient_number_already_exists": "Patient number already exists.",
+    "cant_restore_anonymized_patient": "You cannot restore an anonymized patient.",
+    "invalid_sql_query": "Invalid user-defined SQL query: '{{message}}'. {{hint}}",
+    "no_permission_set_patient_number": "You don't have permission to set patient number.",
+    "insurance_company_not_found": "Insurance company with ID '{{id}}' wasn't found.",
+    "title_not_found": "Title with ID '{{id}}' wasn't found.",
+    "doctor_not_found": "Doctor with ID '{{id}}' wasn't found."
+  },
+  "doctor": {
+    "cis_is_unique": "Is unique value."
+  },
+  "merge_field": {
+    "cant_delete_default_merge_field": "Can't delete default merge field.",
+    "cant_edit_default_merge_field": "Can't edit default merge field.",
+    "merge_field_with_name_already_exists": "Merge field with passed name already exists.",
+    "merge_field_with_code_already_exists": "Merge field with the same prefix and code already exists.",
+    "cant_import_with_x_prefix": "Unable to import Merge Field with 'X' prefix.",
+    "cant_create_prefix_with_country_name": "Unable to create prefix with country name.",
+    "cant_create_reserved_prefix": "Unable to create a reserved prefix.",
+    "cant_create_prefix_with_space": "Spaces are not allowed",
+    "interpretation_range_values_required": "The min and max values are required for range conditions.",
+    "interpretation_value_required": "The value is required for simple condition",
+    "interpretation_invalid_range_values": "The max value must be greater than min value in the range conditions.",
+    "max_prefix_length": "The prefix can have maximum of 3 characters.",
+    "invalid_prefix": "Only letters are allowed for prefix."
+  },
+  "calendar": {
+    "no_permission_to_delete_shared_configurations": "You don't have permission to delete a shared configuration.",
+    "no_permission_to_edit_shared_configurations": "You don't have permission to edit a shared configuration.",
+    "no_permission_to_share_configurations": "You don't have permission to share configurations between users.",
+    "cant_delete_default_configurations": "You cannot delete default configurations.",
+    "cant_delete_system_configurations": "You cannot delete system configurations.",
+    "cant_delete_single_shared_configurations": "You cannot delete a single shared configuration.",
+    "system_configurations_only_shared": "The system configurations are always shared.",
+    "duplicate_configuration_name": "Duplicate name '{{name}}'."
+  },
+  "case": {
+    "start_date_must_be_earlier": "The start date must be earlier than the end date.",
+    "no_permission_to_set_case_number": "You don't have permission to set case number.",
+    "patch_closed_case_is_not_permitted": "The case is closed, reopen it before changing.",
+    "case_number_already_exists": "Case number already exists.",
+    "cant_change_completed_case": "Case {{number}} of {{date}} is completed or cancelled. You can't do any changes for it.",
+    "case_not_found": "Case with ID '{{caseId}}' wasn't found.",
+    "cant_delete_case_with_datablocks": "You cannot delete a case while it has nested visits or data blocks."
+  },
+  "visit": {
+    "start_date_must_be_earlier": "The start date must be earlier than the end date.",
+    "no_permission_to_delete_visit": "You don't have permission to delete visit.",
+    "cant_delete_visit_with_datablocks": "You cannot delete visit while it has nested data blocks.",
+    "selected_interval_already_taken": "The selected time interval is already reserved for resources or participants."
+  },
+  "visit_type": {
+    "delete_error_hl7_setting_exist": "Can't remove visit type because it's used in HL7 settings",
+    "delete_error_gdt_setting_exist": "Can't remove visit type because it's used in GDT settings",
+    "delete_error_measurement_import_setting_exist": "Can't remove visit type because it's used in Measurement Import settings",
+    "delete_error_calendar_configurations_exist": "Can't remove visit type because it's used in Calendar Configurations: {{configurations}}"
+  },
+  "data_block": {
+    "mapping": {
+      "cant_ignore_errors_for_mandatory_mapping": "You cannot ignore errors for mandatory mapping."
+    },
+    "dictionary": {
+      "duplicate_name": "Duplicate name '{{title}}'.",
+      "duplicate_import_id": "Duplicate import ID '{{title}}'.",
+      "cant_delete_mandatory_dictionary": "You cannot delete the mandatory dictionary '{{title}}'.",
+      "cant_delete_dictionary_used_in_fields": "You cannot delete the dictionary '{{title}}'. It is used in data block fields.",
+      "cant_delete_dictionary_used_in_dictionaries": "You cannot delete the dictionary '{{title}}'. It is used in other dictionaries.",
+      "cant_edit_external_dictionary": "You cannot edit the external dictionary '{{title}}'.",
+      "cant_edit_uneditable_dictionary": "You cannot edit the dictionary '{{title}}'.",
+      "duplicate_column_title": "Duplicate column title '{{title}}'.",
+      "unique_column_has_duplicate_values": "Column '{{title}}' already has duplicate values. You cannot make it unique.",
+      "invalid_column_type": "Invalid dictionary column type.",
+      "cant_find_column_by_id": "Existing column with ID '{{id}}' wasn't found.",
+      "cant_change_existing_column_type": "You cannot change data type of an existing column '{{title}}'.",
+      "cant_delete_column_used_in_fields": "You cannot delete column '{{title}}'. It is used in data block fields."
+    },
+    "dictionary_item": {
+      "duplicate_name": "Duplicate name '{{title}}'.",
+      "duplicate_unique_value": "Duplicate value '{{value}}'.",
+      "cant_create_external_dictionary_item": "You cannot create an external dictionary item.",
+      "cant_create_uneditable_dictionary_item": "You cannot create item of dictionary '{{title}}'.",
+      "cant_create_item_with_empty_values_for_required_columns": "You cannot create item with empty values for the required columns.",
+      "cant_delete_external_dictionary_item": "You cannot delete an external dictionary item.",
+      "cant_delete_uneditable_dictionary_item": "You cannot delete item of dictionary '{{title}}'.",
+      "cant_edit_external_dictionary_item": "You cannot edit an external dictionary item.",
+      "cant_edit_uneditable_dictionary_item": "You cannot edit item of dictionary '{{title}}'."
+    },
+    "field": {
+      "duplicate_name": "Duplicate name.",
+      "duplicate_columns": "Duplicate column name: '{{column}}'.",
+      "table_columns_should_exist": "Table columns should exist.",
+      "table_columns_should_contain_at_least_one_column": "Table columns should contain at least one column.",
+      "cant_create_field_with_deleted_dictionary": "You cannot create field with deleted dictionary.",
+      "cant_edit_default_field": "You cannot edit the default field.",
+      "can_convert_only_text_to_dictionary": "You can convert to dictionary only text field.",
+      "not_supported_shared_type": "Shared type {{type}} is not supported yet.",
+      "data_type_is_not_supported_for_table_fields": "Data type {{type}} is not supported for table fields.",
+      "cant_create_items_for_not_dictionary_field": "Operation is only applicable to dictionary fields.",
+      "cant_remove_used_field": "You cannot delete field since it is used in mappings.",
+      "cant_remove_field_used_in_ui_configs": "You cannot delete field that is used in UI Editor data blocks: {{blocks}}.",
+      "cant_remove_default_field": "You cannot delete default field.",
+      "template_content_must_be_number": "Template content must be a number.",
+      "invalid_template_type": "Templates are used for data block fields of text and number data types.",
+      "no_columns_for_table_type": "You must specify a table column because the field '{{name}}' is a table.",
+      "invalid_search_field_operation": "Operation is not supported.",
+      "invalid_search_field_equal_operator": "'Equal' operator should be handled separately (by combining potentially multiple equal conditions).",
+      "cant_parse_value_for_search_field_operator": "Unable to parse '{{value}}' to number/datetime while evaluating '{{operation}}' operator.",
+      "input_template_field_id_required": "Field ID is required for data block field input template."
+    },
+    "miniscreen": {
+      "cant_parse_file": "Can't parse file. Error in line: '{{line}}'.",
+      "field_not_found": "Measurement field for mapping key '{{sourceName}}' was not found.",
+      "variables_not_found": "Some variables were not found.",
+      "invalid_formula": "Invalid formula.",
+      "cant_calculate_formula": "Can't calculate formula '{{sourceName}}'.",
+      "source_name_not_found": "Key '{{sourceName}}' was not found in sdbdata file.",
+      "not_found_date_value": "Key '{{sourceName}}' value '{{value}}' doesn't contain Date.",
+      "invalid_date_value": "Key '{{sourceName}}' contains invalid date value '{{value}}'.",
+      "invalid_time_value": "Key '{{sourceName}}' contains invalid time value '{{value}}'.",
+      "invalid_number_value": "Invalid number value '{{value}}' for key '{{sourceName}}'."
+    },
+    "values": {
+      "custom_fields_not_found": "Custom fields must be defined.",
+      "mandatory_field_value_not_found": "Value for mandatory field '{{field}}' was not found.",
+      "cant_parse_value_to_type": "Can't parse value '{{value}}' for field '{{field}}' to type '{{dataType}}'. {{error}}",
+      "table_field_value_should_be_array": "Value of a table field '{{field}}' should be array.",
+      "failed_column_processing": "Failed to process column '{{column}}', value '{{value}}'. Error: {{error}}",
+      "invalid_data_type": "Data type '{{dataType}}' can't be processed.",
+      "unknown_data_type": "Unknown measurement mapping type '{{dataType}}'.",
+      "dictionary_not_found": "No dictionary or dictionary items found.",
+      "dictionary_value_deleted": "Dictionary value '{{value}}' was deleted.",
+      "dictionary_value_not_found": "'{{dictionary}}' dictionary value for the key '{{value}}' wasn't found.",
+      "custom_values_not_allowed": "Custom values are not allowed.",
+      "not_supported_value_type": "Value type '{{type}}' is not supported."
+    },
+    "ui_configuration": {
+      "processing_error": "Error processing data block type. Value:{{value}}, Variant: {{variant}}.",
+      "reset_error_field_not_found": "Can't reset UI configs, field with name '{{name}}' and type '{{type}}' was found in default config, but not found in DB.",
+      "reset_error_data_key_not_found": "Can't reset UI configs, field with dataKey '{{dataKey}}' and type '{{type}}' was found in default config, but not found in DB",
+      "error_in_field_editing": "Error in ui config field editing. Field: {{field}}, Property: {{key}}."
+    },
+    "only_one_per_case_exists": "The data block of type '{{value}}' already exists. You can't create another one because it might be the only one per case.",
+    "only_one_per_visit_exists": "The data block of type '{{value}}' already exists. You can't create another one because it might be the only one per visit.",
+    "patient_not_specified": "Patient should be specified.",
+    "case_not_specified": "You should select case.",
+    "visit_not_specified": "You should select visit.",
+    "case_or_visit_not_specified": "You should select case or visit for the measurement.",
+    "invalid_create_datablock_type": "You cannot create data block with this type.",
+    "invalid_edit_datablock_type": "You cannot edit data block with this type.",
+    "start_and_end_should_be_specified": "You should specify the start and end time of the measurement.",
+    "import_only_device_measurement": "You can import only 'Device measurement' data block.",
+    "reimport_file_not_found": "Sdbdata file is not found.",
+    "no_permission_measurement_mappings": "The user does not have permission to get measurement mappings",
+    "cant_delete_visit_information_block": "You cannot delete visit information data block.",
+    "cant_delete_case_information_block": "You cannot delete case information data block.",
+    "cant_delete_patient_information_block": "You cannot delete patient information data block."
+  },
+  "data_block_type": {
+    "cant_edit_file_shared_fields": "You cannot create, edit or delete file shared fields.",
+    "duplicate_name": "Block with the same name already exists.",
+    "type_is_used_by_data_blocks_cant_delete": "Data block type is used in data blocks. Can't delete.",
+    "cant_edit_data_block_type_value": "Data block type value cannot be changed.",
+    "cant_delete_data_block_type": "You cannot delete this data block type.",
+    "data_block_type_is_deleted": "You cannot create or edit entity with deleted or non-existent data block type.",
+    "data_block_type_is_deactivated": "You cannot create or edit entity with deactivated data block type.",
+    "invalid_data_block_variant": "Invalid data block type variant.",
+    "type_is_used_by_template_rules_cant_delete": "Data block type is used in HL7 template rules. Can't delete."
+  },
+  "tag": {
+    "spaces_in_tag": "There must be no spaces in the tag.",
+    "duplicate_name": "Duplicate name"
+  },
+  "hl7": {
+    "outgoing": {
+      "error_while_sending_data_block": "The data block {{datablock}} could not be send using template {{template}}. Please contact your system administrator to adjust template",
+      "error_while_sending_document": "The document {{document}} could not be send using template {{template}}. Please contact your system administrator to adjust template",
+      "not_supported_data_block_variant": "Invalid data block variant.",
+      "not_supported_file_type": "You can send only .PDF files via HL7.",
+      "cant_parse_template": "Error parsing HL7 template. Error: {{error}}",
+      "cant_parse_message": "Outgoing message doesn't conform to HL7 format. You probably need to adjust template.",
+      "not_supported_direction": "Only 'Outgoing' messages could be sent.",
+      "files_directory_not_selected": "Files directory is not selected in settings.",
+      "files_directory_not_exist": "Files directory does not exist.",
+      "invalid_retry_delays": "Incorrect format. Should be space separated numerics.",
+      "error_receiving_acknowledgement": "Error receiving acknowledgement, {{error}}",
+      "acknowledged_message": "Message wasn't acknowledged, code: '{{code}}'.",
+      "cant_parse_response": "Failed to parse response to HL7 message: '{{message}}'.",
+      "invalid_template_type": "Invalid template type.",
+      "template_rule_message_type_is_required": "HL7 message type is required for template rule.",
+      "not_supported_message_group_type": "Invalid HL7 message group type.",
+      "merge_field": {
+        "not_found": "Merge field with code '{{code}}' was not found in DB.",
+        "cant_use_deleted_merge_field": "Merge field with code '{{code}}' was deleted. Please correct the template."
+      }
+    },
+    "incoming": {
+      "cant_parse_message": "Failed to parse HL7 message.",
+      "cant_parse_existing_message": "Failed to parse message with ID '{{id}}'.",
+      "mapping_not_found": "No mapping found for message type '{{messageType}}'.",
+      "mapping_not_enabled": "Mapping found for message type '{{messageType}}' exists, but is not enabled.",
+      "no_visit_rules_in_mapping": "No visit rules defined in mapping.",
+      "no_case_rules_in_mapping": "No case rules defined in mapping.",
+      "no_patient_rules_in_mapping": "No patient rules defined in mapping.",
+      "patient_number_required": "Patient number was not found. This field is mandatory.",
+      "found_patient_not_single": "More than one patient with number '{{patientNumber}}' in subtenant with ID '{{subtenantId}}' found.",
+      "patient_not_found": "According to Settings we only process messages for existing patients. Patient with number '{{patientNumber}}' wasn't found in the system.",
+      "insurance_company_name_required": "Insurance company short name was not found. This field is mandatory.",
+      "insurance_company_number_required": "Insurance company number was not found. This field is mandatory.",
+      "found_insurance_company_not_single": "More than one insurance company with number '{{number}}' found.",
+      "found_doctor_not_single": "More than one doctor with CIS ID '{{cisId}}' found.",
+      "mandatory_field_empty": "Empty value for mandatory field '{{field}}'.",
+      "case_number_required": "Required field case number is empty",
+      "cant_parse_field_value": "Error when getting field '{{field}}' from message: {{error}}",
+      "dictionary_required": "Mapping rule for field '{{field}}' has no matching with dictionary.",
+      "mapping_rule_not_found": "No rule for '{{field}}' was found. The field is mandatory.",
+      "cant_convert_null_value": "Cannot convert empty/null value to type '{{type}}'.",
+      "cant_parse_date": "Unable to parse '{{value}}' as date.",
+      "cant_parse_sex": "Cannot parse value '{{value}}' into Sex.",
+      "not_supported_type": "Type '{{type}}' isn't supported.",
+      "unexpected_type": "Unexpected type '{{type}}'.",
+      "subtenant_not_found": "Subtenant with value '{{value}}' was not found."
+    },
+    "filter": {
+      "cant_delete_default_filter": "You cannot delete the default filter."
+    },
+    "message": {
+      "reparse_maximum_error": "We can re-parse maximum of {{maxMessages}} messages at a time. Please, use filter to reduce the number of messages."
+    },
+    "mapping": {
+      "validation": {
+        "linked_mapping_exists": "The mapping cannot be deleted because it is used to process some HL7 message types. Please first delete such rules in \"Settings\\HL7 message types\" and then try to delete the mapping again.",
+        "field_not_found": "Field wasn't found.",
+        "mapping_for_that_type_already_exists": "Mapping for the same message type already exists.",
+        "cant_change_type_for_default_mapping": "You cannot change message type for default mapping.",
+        "cant_parse_expression": "Error parsing expression '{{expression}}'.",
+        "duplicate_rules": "There are several mapping rules for the same field, please correct."
+      },
+      "rename": {
+        "another_configuration_with_same_name_exists": "Another configuration with same name already exists.",
+        "cant_rename_default_mapping": "You cannot rename default mapping."
+      }
+    },
+    "connection": {
+      "error_connecting_to_remote_host": "Error connecting to remote host '{{serverAddress}}:{{serverPort}}'.",
+      "error_writing_message_to_socket": "Error writing message to socket."
+    },
+    "processing_is_disabled": "HL7 processing is disabled.",
+    "incoming_processing_is_disabled": "HL7 incoming processing is disabled.",
+    "outgoing_processing_is_disabled": "HL7 outgoing processing is disabled.",
+    "settings_not_found": "Settings for HL7 were not found."
+  },
+  "gdt": {
+    "outgoing": {
+      "error_while_sending_data_block": "The data block {{datablock}} could not be send using template {{template}}. Please contact your system administrator to adjust template",
+      "error_while_sending_document": "The document {{document}} could not be send using template {{template}}. Please contact your system administrator to adjust template",
+      "not_supported_data_block_variant": "Invalid data block variant.",
+      "not_supported_file_type": "You can send only .PDF files via GDT.",
+      "cant_use_disabled_template": "Template is disabled for sending messages.",
+      "undefined_object_type": "Undefined GDT object type.",
+      "unknown_object_type": "Unknown GDT object type.",
+      "invalid_template_type": "Invalid template type.",
+      "template_rule_data_block_type_is_required": "Data block type is required for data block GDT message group."
+    },
+    "incoming": {
+      "mapping_rule_not_found": "No rule for '{{field}}' was found. The field is mandatory.",
+      "patient_not_found": "According to Settings we only process messages for existing patients. Patient with number '{{patientNumber}}' wasn't found in the system.",
+      "invalid_subtenant_value": "Subtenant field has invalid value '{{value}}'.",
+      "dictionary_required": "Mapping rule for field '{{field}}' has no matching with dictionary.",
+      "missing_field": "Cannot get value of field '{{field}}'. Field is missing.",
+      "not_supported_type": "Type '{{type}}' isn't supported.",
+      "invalid_dictionary_mapping": "Mapping for property '{{field}}' of entity '{{type}}' is invalid. Property must be an integer for valid mapping with dictionary item ID.",
+      "property_not_exist": "Property '{{field}}' doesnt exist on type '{{type}}'.",
+      "no_patient_rules_in_mapping": "No patient rules defined in mapping.",
+      "insurance_company_name_required": "Insurance company short name was not found. This field is mandatory.",
+      "insurance_company_number_required": "Insurance company number was not found. This field is mandatory."
+    },
+    "mapping": {
+      "cant_parse_expression": "Error parsing expression '{{expression}}'.",
+      "rename": {
+        "another_configuration_with_same_name_exists": "Another configuration with same name already exists.",
+        "duplicate_rules": "There are several mapping rules for the same field, please correct."
+      }
+    },
+    "processing_is_disabled": "GDT processing is disabled."
+  },
+  "role": {
+    "cant_update_tenant_administrator": "Tenant Administrator role can not be updated.",
+    "cant_remove_tenant_administrator": "Tenant Administrator role can not be removed.",
+    "cant_update_default_role": "The default role can not be updated.",
+    "cant_remove_default_role": "The default role can not be removed.",
+    "cant_remove_used_role": "Role is assigned to some users, please remove the role from them first."
+  },
+  "documents": {
+    "template_with_same_name_already_exists": "Template with the same name already exists.",
+    "rule_for_the_same_template_already_exists": "Rule for the same template with the same subtenant already exists.",
+    "cant_delete_default_template": "You cannot delete the default document template.",
+    "cant_create_template_wih_type": "You cannot create template with type '{{type}}'.",
+    "header_and_footer_not_found": "Header and footer are not found.",
+    "not_draft_file_type": "File isn't a Draft.",
+    "cant_publish_not_draft_file": "You cannot publish non-draft version.",
+    "cant_add_new_version_for_internal_document": "Internal documents must be updated via publishing their draft.",
+    "file_not_found_on_disk": "File with ID '{{id}}' was not found on disk. Please contact your Administrator.",
+    "file_not_found": "File with ID '{{id}}' was not found in the database. Please contact your Administrator.",
+    "cant_save_document_with_duplicated_name": "Can't save document with ID '{{id}}'. The document named '{{name}}' already exists.",
+    "cant_save_document_with_incorrect_name": "Can't save document. The document named '{{name}}' is incorrect",
+    "cant_save_document_with_invalid_extension": "Can't save document named '{{name}}'. The document extension '*{{extension}}' is invalid.",
+    "cant_save_document": "Can't save document with ID '{{id}}'. Error message: '{{error}}'",
+    "cant_rename_published_document": "You cannot rename already published version.",
+    "cant_delete_not_latest_version": "You can delete only the latest version. Do you want to delete the whole file group?",
+    "cant_delete_hl7_template_with_rules": "You cannot delete this template. It used in HL7 template rules.",
+    "cant_delete_gdt_template_with_rules": "You cannot delete this template. It used in GDT template rules.",
+    "query": {
+      "required": "'{{name}}' is required for '{{query}}' function.",
+      "limit_not_specified": "Limit should be defined.",
+      "required_for_limit": "'{{name}}' is required for Limit '{{limit}}'.",
+      "unknown_limit_type": "Unknown limit type: '{{limit}}'.",
+      "unknown_query_type": "Query type '{{type}}' can't be processed."
+    }
+  },
+  "resource": {
+    "duplicate_name_and_type": "Duplicate name '{{name}}', type '{{type}}'.",
+    "resource_used_by_active_appointments": "The resource is used by active appointments.",
+    "doctor_not_selected": "You must select a doctor to create this resource.",
+    "doctor_not_exist": "The doctor doesn't exist."
+  },
+  "tenant": {
+    "domain_exists": "Tenant with the same Domain already exists.",
+    "name_exists": "Tenant with the same Name already exists.",
+    "subtenant_name_exists": "Subtenant with the same Name already exists.",
+    "subtenant_code_exists": "Subtenant with the same Code already exists.",
+    "subtenant_start_time_must_be_earlier": "The start time must be earlier than the end time.",
+    "no_access_to_subtenant": "User has no access to subtenant '{{subtenant}}'.",
+    "domain_not_found": "Tenant with domain '{{domain}}' not found.",
+    "invalid_tenant_domain": "Only lowercase letters, digits and hyphens allowed. Domain must start and end with letter or number."
+  },
+  "user": {
+    "cant_lock_administrator": "You can't lock user with Tenant Administrator role.",
+    "cant_delete_administrator": "You can't delete user with Tenant Administrator role.",
+    "same_username_already_exists": "User with the same username already exists.",
+    "cant_remove_administrator_from_yourself": "You can't delete TenantAdministrator role from yourself.",
+    "super_user_already_exists": "Super user already exists.",
+    "user_not_found": "User with ID '{{id}}' wasn't found.",
+    "user_not_found_by_login": "User with login '{{login}}' wasn't found.",
+    "cant_grant_roles": "You cannot grant roles that you do not have.",
+    "user_not_have_permission": "User doesn't have '{permission}' permission.",
+    "user_not_authenticated": "User is not authenticated.",
+    "password_reuse_forbidden": "New password cannot match the old password",
+    "password_settings_options_error": "At least two options of password complexity must be chosen."
+  },
+  "ui_configuration": {
+    "no_permission_create_shared_configurations": "You don't have permission to create shared configurations.",
+    "no_permission_edit_shared_configurations": "You don't have permission to edit shared configurations.",
+    "no_permission_delete_shared_configurations": "You don't have permission to delete shared configurations.",
+    "cant_edit_another_user_configurations": "You cannot edit personal configurations of another user.",
+    "cant_delete_default_configurations": "You cannot delete default configurations.",
+    "cant_delete_another_user_configurations": "You cannot delete personal configurations of another user.",
+    "cant_get_another_user_configurations": "You cannot get personal configurations of another user.",
+    "configuration_file_not_found": "UI configuration file was not found."
+  },
+  "mail": {
+    "document_settings_disabled": "You cannot send documents by email, because these settings are disabled.",
+    "document_password_required": "Password for document encryption should not be empty.",
+    "document_password_invalid": "The calculated PDF password is empty. Please correct it so that the recipient can open the PDF file successfully.",
+    "file_without_patient": "The file does not belong to a patient.",
+    "email_notification_disabled": "Email notifications have been disabled for this patient.",
+    "smtp_settings_required": "All SMTP settings should be filled in."
+  }
+}

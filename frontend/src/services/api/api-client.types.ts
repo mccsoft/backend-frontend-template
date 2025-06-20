@@ -48,7 +48,9 @@ export function prepareSerializeHttpValidationProblemDetails(_data: HttpValidati
   const data = prepareSerializeProblemDetails(_data as HttpValidationProblemDetails) as Record<string, any>;
   return data as HttpValidationProblemDetails;
 }
+/** A ProblemDetails for validation errors. */
 export interface ValidationProblemDetails extends HttpValidationProblemDetails  {
+  /** Gets or sets the validation errors associated with this instance of ValidationProblemDetails. */
   errors: { [key: string]: string[]; };
   [key: string]: any;
 }
@@ -70,6 +72,177 @@ export function serializeValidationProblemDetails(_data: ValidationProblemDetail
 export function prepareSerializeValidationProblemDetails(_data: ValidationProblemDetails): ValidationProblemDetails {
   const data = prepareSerializeHttpValidationProblemDetails(_data as ValidationProblemDetails) as Record<string, any>;
   return data as ValidationProblemDetails;
+}
+/** Webhook subscription DTO */
+export interface WebhookSubscriptionDto  {
+  id: string;
+  /** Human-readable name of integration */
+  name: string;
+  /** URL for integration */
+  url: string;
+  eventType: WebHookEventType;
+  method: string | null;
+  headers: { [key: string]: string; } | null;
+}
+export function deserializeWebhookSubscriptionDto(json: string): WebhookSubscriptionDto {
+  const data = JSON.parse(json) as WebhookSubscriptionDto;
+  initWebhookSubscriptionDto(data);
+  return data;
+}
+export function initWebhookSubscriptionDto(_data: WebhookSubscriptionDto) {
+  if (_data) {
+    _data.eventType = _data["eventType"];
+  }
+  return _data;
+}
+export function serializeWebhookSubscriptionDto(_data: WebhookSubscriptionDto | undefined) {
+  if (_data) {
+    _data = prepareSerializeWebhookSubscriptionDto(_data as WebhookSubscriptionDto);
+  }
+  return JSON.stringify(_data);
+}
+export function prepareSerializeWebhookSubscriptionDto(_data: WebhookSubscriptionDto): WebhookSubscriptionDto {
+  const data: Record<string, any> = { ..._data };
+  return data as WebhookSubscriptionDto;
+}
+export enum WebHookEventType {
+    NewProduct = "NewProduct",
+    ProductDeleted = "ProductDeleted",
+}
+/** Webhook subscription DTO */
+export interface CreateWebHookDto  {
+  /** Human-readable name of integration */
+  name: string;
+  /** URL for integration */
+  url: string;
+  eventType: WebHookEventType;
+  method: string | null;
+  headers: { [key: string]: string; } | null;
+}
+export function deserializeCreateWebHookDto(json: string): CreateWebHookDto {
+  const data = JSON.parse(json) as CreateWebHookDto;
+  initCreateWebHookDto(data);
+  return data;
+}
+export function initCreateWebHookDto(_data: CreateWebHookDto) {
+  if (_data) {
+    _data.eventType = _data["eventType"];
+  }
+  return _data;
+}
+export function serializeCreateWebHookDto(_data: CreateWebHookDto | undefined) {
+  if (_data) {
+    _data = prepareSerializeCreateWebHookDto(_data as CreateWebHookDto);
+  }
+  return JSON.stringify(_data);
+}
+export function prepareSerializeCreateWebHookDto(_data: CreateWebHookDto): CreateWebHookDto {
+  const data: Record<string, any> = { ..._data };
+  return data as CreateWebHookDto;
+}
+/** Webhook subscription DTO */
+export interface UpdateWebHookSubscriptionDto  {
+  /** Webhook name (Human readable name of integration). */
+  name?: string;
+  /** Webhook URL for integration. */
+  url?: string;
+  /** HTTP method for accessing URL via specified http method. */
+  method?: string;
+  eventType?: WebHookEventType;
+  headers?: { [key: string]: string; };
+}
+export function deserializeUpdateWebHookSubscriptionDto(json: string): UpdateWebHookSubscriptionDto {
+  const data = JSON.parse(json) as UpdateWebHookSubscriptionDto;
+  initUpdateWebHookSubscriptionDto(data);
+  return data;
+}
+export function initUpdateWebHookSubscriptionDto(_data: UpdateWebHookSubscriptionDto) {
+  if (_data) {
+    _data.eventType = _data["eventType"];
+  }
+  return _data;
+}
+export function serializeUpdateWebHookSubscriptionDto(_data: UpdateWebHookSubscriptionDto | undefined) {
+  if (_data) {
+    _data = prepareSerializeUpdateWebHookSubscriptionDto(_data as UpdateWebHookSubscriptionDto);
+  }
+  return JSON.stringify(_data);
+}
+export function prepareSerializeUpdateWebHookSubscriptionDto(_data: UpdateWebHookSubscriptionDto): UpdateWebHookSubscriptionDto {
+  const data: Record<string, any> = { ..._data };
+  return data as UpdateWebHookSubscriptionDto;
+}
+export interface CurrentUserDto  {
+  id: string;
+  username: string;
+  nickname: string;
+  permissions: string[];
+}
+export function deserializeCurrentUserDto(json: string): CurrentUserDto {
+  const data = JSON.parse(json) as CurrentUserDto;
+  initCurrentUserDto(data);
+  return data;
+}
+export function initCurrentUserDto(_data: CurrentUserDto) {
+  if (_data) {
+    _data.permissions = _data["permissions"];
+  }
+  return _data;
+}
+export function serializeCurrentUserDto(_data: CurrentUserDto | undefined) {
+  if (_data) {
+    _data = prepareSerializeCurrentUserDto(_data as CurrentUserDto);
+  }
+  return JSON.stringify(_data);
+}
+export function prepareSerializeCurrentUserDto(_data: CurrentUserDto): CurrentUserDto {
+  const data: Record<string, any> = { ..._data };
+  return data as CurrentUserDto;
+}
+export interface ResetPasswordDto  {
+  username: string;
+  token: string;
+  newPassword: string;
+}
+export function deserializeResetPasswordDto(json: string): ResetPasswordDto {
+  const data = JSON.parse(json) as ResetPasswordDto;
+  initResetPasswordDto(data);
+  return data;
+}
+export function initResetPasswordDto(_data: ResetPasswordDto) {
+    return _data;
+}
+export function serializeResetPasswordDto(_data: ResetPasswordDto | undefined) {
+  if (_data) {
+    _data = prepareSerializeResetPasswordDto(_data as ResetPasswordDto);
+  }
+  return JSON.stringify(_data);
+}
+export function prepareSerializeResetPasswordDto(_data: ResetPasswordDto): ResetPasswordDto {
+  const data: Record<string, any> = { ..._data };
+  return data as ResetPasswordDto;
+}
+export interface ChangePasswordDto  {
+  oldPassword: string;
+  newPassword: string;
+}
+export function deserializeChangePasswordDto(json: string): ChangePasswordDto {
+  const data = JSON.parse(json) as ChangePasswordDto;
+  initChangePasswordDto(data);
+  return data;
+}
+export function initChangePasswordDto(_data: ChangePasswordDto) {
+    return _data;
+}
+export function serializeChangePasswordDto(_data: ChangePasswordDto | undefined) {
+  if (_data) {
+    _data = prepareSerializeChangePasswordDto(_data as ChangePasswordDto);
+  }
+  return JSON.stringify(_data);
+}
+export function prepareSerializeChangePasswordDto(_data: ChangePasswordDto): ChangePasswordDto {
+  const data: Record<string, any> = { ..._data };
+  return data as ChangePasswordDto;
 }
 export interface CreateTestTenantDto  {
   userEmail: string;
@@ -251,6 +424,29 @@ export enum SortOrder {
     Asc = "Asc",
     Desc = "Desc",
 }
+export interface FileInfoDto  {
+  id: string;
+  fileName: string;
+  size: number;
+}
+export function deserializeFileInfoDto(json: string): FileInfoDto {
+  const data = JSON.parse(json) as FileInfoDto;
+  initFileInfoDto(data);
+  return data;
+}
+export function initFileInfoDto(_data: FileInfoDto) {
+    return _data;
+}
+export function serializeFileInfoDto(_data: FileInfoDto | undefined) {
+  if (_data) {
+    _data = prepareSerializeFileInfoDto(_data as FileInfoDto);
+  }
+  return JSON.stringify(_data);
+}
+export function prepareSerializeFileInfoDto(_data: FileInfoDto): FileInfoDto {
+  const data: Record<string, any> = { ..._data };
+  return data as FileInfoDto;
+}
 export function formatDate(d: Date) {
     return d.getFullYear() + '-' + 
         (d.getMonth() < 9 ? ('0' + (d.getMonth()+1)) : (d.getMonth()+1)) + '-' +
@@ -262,6 +458,10 @@ export function parseDateOnly(s: string) {
         date.getTimezoneOffset() * 60000);
 }
 import type { AxiosError } from 'axios'
+export interface FileParameter {
+    data: any;
+    fileName: string;
+}
 export class ApiException extends Error {
     message: string;
     status: number;
