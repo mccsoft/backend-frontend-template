@@ -145,20 +145,48 @@ public class TemplateWebHookSubscription : WebHookSubscription
 ---
 ## 🔐 Signing & Secrets
 
-Details about **SignatureSecret** and configuration of **EncryptionKey** using `WebhookOptionBuilder`
+You can enable automatic signing of WebHook payloads using a shared secret, signed with HMAC SHA-256.
 
-Step-by-step guide:
-1.	Add `EncryptionKey` into `appsettings.json`
-2.	`Startup.cs/Program.cs` configure `IWebHookSignatureService`, enable option `UseSigning = true`
-3.	`WebHookSubscription` now generates signing secret, encrypted with AES, for further signing outgoing webhooks payload.
-4.	Example:
+When `UseSigning = true`, the system:
+- Generates a secret for every subscription (`SignatureSecret`)
+- Encrypts it using AES (via `IWebHookSignatureService`)
+- Automatically adds an `X-Signature` (or configured name) header to outgoing WebHook requests
 
+### Setup
+
+1. Add a strong encryption key in `appsettings.json`:
+```json
+"WebHooks": {
+  "EncryptionKey": "base64-encoded-32-byte-key"
+}
+```
+
+2. Register services in `Program.cs`:
+```csharp
+builder.Services.AddSingleton<ISecretEncryptor>(
+  new AesSecretEncryptor(keyBase64: config["WebHooks:EncryptionKey"], ivBase64: "..."));
+
+builder.Services.AddSingleton<IWebHookSignatureService, WebHookSignatureService>();
+```
+
+3. Enable signing in options:
 ```csharp
 builder.Services.AddWebHooks<MySubscription>(options =>
 {
     options.UseSigning = true;
     options.EncryptionKey = configuration["WebHooks:EncryptionKey"];
+    options.WebhookSignatureHeaderName = "X-Signature"; // optional
 });
+```
+
+### Rotation
+
+To rotate a secret:
+```csharp
+var newSecret = await webHookService.RotateSecret(subscriptionId);
+```
+
+The new secret will be encrypted and stored, and used for signing from now on.
 ```
 
 ---
