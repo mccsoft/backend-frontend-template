@@ -10,7 +10,7 @@ export interface FetchLoginResponse {
   //   claims: UserClaims;
 }
 
-const clientId = 'web_client';
+const clientId = 'uitests';
 const clientSecret = '';
 
 export const sendLoginRequest = async (

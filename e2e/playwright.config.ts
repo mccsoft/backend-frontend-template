@@ -5,6 +5,10 @@ import { devices } from '@playwright/test';
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
+// 'uitests/e2e/' paths are required, because when you run ui tests from vscode,
+// it runs them from the root folder of the repository
+require('dotenv').config({ path: 'e2e/.env.local' });
+require('dotenv').config({ path: 'e2e/.env' });
 require('dotenv').config({ path: '.env.local' });
 require('dotenv').config();
 
