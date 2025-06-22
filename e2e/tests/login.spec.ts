@@ -11,7 +11,7 @@ authenticatedTest.describe('login', () => {
         backendInfo.password + '1',
       );
       await expect(anotherUserPageWorker.region).toContainText(
-        'Invalid login attempt',
+        'Invalid login or password',
       );
     },
   );
