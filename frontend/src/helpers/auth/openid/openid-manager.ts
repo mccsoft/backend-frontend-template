@@ -45,6 +45,16 @@ export async function openExternalLoginPopup(provider: string) {
     Logger.error('Error during external authentication', e);
   }
 }
+export async function openExternalLoginRedirect(provider: string) {
+  try {
+    const user = await getManager().signinRedirect({
+      extraQueryParams: { provider: provider, popup: true },
+    } as any);
+    return user;
+  } catch (e) {
+    Logger.error('Error during external authentication', e);
+  }
+}
 
 export async function redirectToLoginPage() {
   try {

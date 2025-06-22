@@ -11,6 +11,10 @@ import ImportmapPlugin from 'importmap-plugin';
 
 var proxyTarget = process.env.BACKEND_URI ?? 'https://localhost:5001';
 var frontendPort = process.env.PORT ?? 5003;
+// we need it to be false for external auth (Google / AAD) to work.
+// because OpenIdManager reads the token endpoint from .well-known/openid-configuration,
+// and with `changeOrigin=true` token endpoint is Backend endpoint, and so Cookies are not set for Frontend
+const changeOrigin = false;
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
@@ -43,32 +47,30 @@ export default defineConfig(({ command, mode }) => {
         '/api': {
           target: proxyTarget,
           secure: false,
-          changeOrigin: true,
         },
         '/connect': {
           target: proxyTarget,
           secure: false,
-          changeOrigin: true,
         },
         '/swagger': {
           target: proxyTarget,
           secure: false,
-          changeOrigin: true,
         },
         '/Identity': {
           target: proxyTarget,
           secure: false,
-          changeOrigin: true,
         },
         '/.well-known': {
           target: proxyTarget,
           secure: false,
-          changeOrigin: true,
+        },
+        '/signin-google': {
+          target: proxyTarget,
+          secure: false,
         },
         '/css': {
           target: proxyTarget,
           secure: false,
-          changeOrigin: true,
         },
       },
     },

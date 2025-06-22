@@ -77,7 +77,10 @@ public static partial class SetupAuth
             })
             .AddDefaultAuthorizationController(options =>
             {
-                options.SetPublicUrl(siteUrl).SetConfiguration(configuration.GetSection("OpenId"));
+                options
+                    .SetPublicUrl(siteUrl)
+                    .SetConfiguration(configuration.GetSection("OpenId"))
+                    .DisableSetIssuerToPublicUrl();
 
                 ConfigureDefaultAuthorizationController(options);
             })

@@ -11,6 +11,7 @@ import { Loading } from './components/uikit/suspense/Loading';
 import { LoginErrorPage } from 'pages/unauthorized/LoginErrorPage';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from 'helpers/queryClientHelper';
+import { UseCookieAuth } from 'helpers/auth/auth-settings';
 
 //to send dates to backend in local timezone (not in UTC)
 Date.prototype.toISOString = function () {
@@ -26,10 +27,12 @@ root.render(
     <QueryClientProvider client={queryClient}>
       <OpenIdCallback
         signInRedirectHandler={(user) => {
-          setAuthData({
-            access_token: user.access_token,
-            refresh_token: user.refresh_token!,
-          });
+          if (!UseCookieAuth)
+            setAuthData({
+              access_token: user.access_token,
+              refresh_token: user.refresh_token!,
+            });
+
           window.history.pushState(null, '', backendUri);
         }}
         signOutRedirectHandler={() => {

@@ -13,7 +13,7 @@ import { FormError } from 'components/uikit/FormError';
 import { Loading } from 'components/uikit/suspense/Loading';
 import { handleLoginErrors, sendLoginRequest } from 'helpers/auth/auth-client';
 import { queryClient } from 'helpers/queryClientHelper';
-import { openExternalLoginPopup } from 'helpers/auth/openid/openid-manager';
+import { openExternalLoginRedirect } from 'helpers/auth/openid/openid-manager';
 
 type Form = {
   login: string;
@@ -90,7 +90,7 @@ export const LoginPage: React.FC = (props) => {
                   onClick={async () => {
                     try {
                       setIsLoading(true);
-                      await openExternalLoginPopup('Google');
+                      await openExternalLoginRedirect('Google');
                     } catch (e) {
                     } finally {
                       setIsLoading(false);
