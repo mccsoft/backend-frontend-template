@@ -196,7 +196,6 @@ function useCookieAuth(): AuthData | null | 'loading' {
     retryOnMount: false,
     retry: false,
   });
-  console.log('useCookieAuth', data);
   return data.isError || !data.data?.id
     ? null
     : data.isLoading
