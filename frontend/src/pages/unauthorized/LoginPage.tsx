@@ -53,7 +53,7 @@ export const LoginPage: React.FC = (props) => {
             </span>
           </div>
         </div>
-        <div className={styles.loginContainer}>
+        <div className={styles.loginContainer} data-test-id={'login-container'}>
           <Loading loading={isLoading}>
             <form onSubmit={form.handleSubmitDefault}>
               <Field

@@ -3,7 +3,7 @@ import { PageObjectBase } from 'infrastructure/LocatorWithRootBase';
 
 export class LoginPageObject extends PageObjectBase {
   constructor(page: Page) {
-    super(page.locator('.login-container'));
+    super(page.locator('[testId="login-container"]'));
   }
 
   loginField = () => this.findField('Login');
