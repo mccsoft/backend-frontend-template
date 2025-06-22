@@ -55,6 +55,7 @@ export const OpenIdCallback: React.FC<
           rerenderWhenRedirectCompletes();
         },
         (e: any) => {
+          debugger;
           let error_description = e?.error_description;
           if (!error_description && !e.error) {
             error_description = JSON.stringify(e);

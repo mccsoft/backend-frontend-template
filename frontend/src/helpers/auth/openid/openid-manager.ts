@@ -48,7 +48,7 @@ export async function openExternalLoginPopup(provider: string) {
 export async function openExternalLoginRedirect(provider: string) {
   try {
     const user = await getManager().signinRedirect({
-      extraQueryParams: { provider: provider, popup: true },
+      extraQueryParams: { provider: provider },
     } as any);
     return user;
   } catch (e) {
