@@ -59,6 +59,7 @@ export const LoginPage: React.FC = (props) => {
               <Field
                 title={i18n.t('login_field')}
                 className={styles.inputField}
+                testId="Login"
               >
                 <Input
                   {...form.register('login', { ...requiredRule() })}
@@ -69,6 +70,7 @@ export const LoginPage: React.FC = (props) => {
               <Field
                 title={i18n.t('password_field')}
                 className={styles.inputField}
+                testId="Password"
               >
                 <Input
                   {...form.register('password', { ...requiredRule() })}
