@@ -11,7 +11,9 @@ This library provides everything you need to publish and reliably deliver WebHoo
 -  Integration via interceptors for pre/post execution and failure handling
 -  Integration with [Hangfire](https://www.hangfire.io/) for background processing
 -  Minimal configuration required — works out of the box 📦
--  Signing webgook payload
+-  Signing (sent webhooks payload) support with secret encryption
+-  Custom HTTP headers
+-  Fluent and strongly typed configuration
 
 ---
 
@@ -178,6 +180,7 @@ builder.Services.AddWebHooks<MySubscription>(options =>
     options.WebhookSignatureHeaderName = "X-Signature"; // optional
 });
 ```
+⚠️ If signing is enabled but the encryption key is missing, the application will throw during startup.
 
 ### Rotation
 
@@ -187,6 +190,17 @@ var newSecret = await webHookService.RotateSecret(subscriptionId);
 ```
 
 The new secret will be encrypted and stored, and used for signing from now on.
+
+## Fluent Configuration API
+
+All configuration is done via the `IWebHookOptionBuilder<TSub>` interface with a fluent API:
+
+```csharp
+services.AddWebHooks<CustomSubscription>(opt => opt
+    .WithInterceptors(new MyInterceptors())
+    .WithHangfireDelays([10, 30])
+    .WithSigning(encryptionKey: "base64-key")
+);
 ```
 
 ---
