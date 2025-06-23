@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using MccSoft.WebHooks.Configuration;
 using MccSoft.WebHooks.Domain;
 using MccSoft.WebHooks.Interceptors;
 using MccSoft.WebHooks.Publisher;
@@ -20,7 +21,7 @@ public class WebHookProcessor<TSub>
     private readonly ILogger<WebHookEventPublisher<TSub>> _logger;
     private readonly ResiliencePipelineProvider<string> _pipelineProvider;
     private readonly IWebHookInterceptors<TSub> _webHookInterceptors;
-    private readonly WebHookOptionBuilder<TSub> _configuration;
+    private readonly IWebHookOptionBuilder<TSub> _configuration;
     private readonly IWebHookSignatureService<TSub> _webHookSignatureService;
 
     public WebHookProcessor(
@@ -28,7 +29,7 @@ public class WebHookProcessor<TSub>
         ResiliencePipelineProvider<string> pipelineProvider,
         ILogger<WebHookEventPublisher<TSub>> logger,
         IWebHookInterceptors<TSub> webHookInterceptors,
-        WebHookOptionBuilder<TSub> configuration,
+        IWebHookOptionBuilder<TSub> configuration,
         IWebHookSignatureService<TSub> webHookSignatureService
     )
     {

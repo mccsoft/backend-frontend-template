@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Common;
+using MccSoft.WebHooks.Configuration;
 using MccSoft.WebHooks.Domain;
 using MccSoft.WebHooks.Processing;
 using MccSoft.WebHooks.Signing;
@@ -124,7 +125,7 @@ public class WebHookManager<TSub> : IWebHookManager<TSub>
         var secret = _signatureService.GenerateEncryptedSecret(webHookSubscription);
         if (string.IsNullOrWhiteSpace(secret))
             throw new InvalidOperationException(
-                $"{nameof(WebHookOptionBuilder<TSub>.UseSigning)} is disabled or EncryptionKey is missing."
+                $"{nameof(IWebHookOptionBuilder<TSub>.UseSigning)} is disabled or EncryptionKey is missing."
             );
 
         _dbContext.Update(webHookSubscription);

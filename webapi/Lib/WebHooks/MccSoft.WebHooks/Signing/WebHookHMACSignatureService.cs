@@ -1,6 +1,7 @@
 using System;
 using System.Security.Cryptography;
 using System.Text;
+using MccSoft.WebHooks.Configuration;
 using MccSoft.WebHooks.Domain;
 
 namespace MccSoft.WebHooks.Signing;
@@ -12,9 +13,9 @@ public class WebHookHMACSignatureService<TSub> : IWebHookSignatureService<TSub>
     where TSub : WebHookSubscription
 {
     private readonly byte[] _key;
-    private readonly WebHookOptionBuilder<TSub> _configuration;
+    private readonly IWebHookOptionBuilder<TSub> _configuration;
 
-    public WebHookHMACSignatureService(WebHookOptionBuilder<TSub> configuration)
+    public WebHookHMACSignatureService(IWebHookOptionBuilder<TSub> configuration)
     {
         _configuration = configuration;
 

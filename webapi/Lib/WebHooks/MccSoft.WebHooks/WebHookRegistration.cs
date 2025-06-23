@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text.Json;
 using Hangfire;
+using MccSoft.WebHooks.Configuration;
 using MccSoft.WebHooks.Domain;
 using MccSoft.WebHooks.Interceptors;
 using MccSoft.WebHooks.Manager;
@@ -75,7 +76,7 @@ public static class WebHookRegistration
     /// <returns>The modified service collection.</returns>
     public static IServiceCollection AddWebHooks<TSub>(
         this IServiceCollection serviceCollection,
-        Action<WebHookOptionBuilder<TSub>>? builder = null
+        Action<IWebHookOptionBuilder<TSub>>? builder = null
     )
         where TSub : WebHookSubscription
     {
@@ -117,54 +118,4 @@ public static class WebHookRegistration
 
         return serviceCollection;
     }
-}
-
-/// <summary>
-/// Provides configuration options for WebHook processing,
-/// including retry policies, interceptors, and Hangfire-specific settings.
-/// </summary>
-public class WebHookOptionBuilder<TSub>
-    where TSub : WebHookSubscription
-{
-    /// <summary>
-    /// Options for configuring Polly-based retry and timeout resilience policies.
-    /// </summary>
-    public ResiliencePipelineOptions ResilienceOptions { get; set; } =
-        new()
-        {
-            Delay = TimeSpan.FromSeconds(1),
-            BackoffType = DelayBackoffType.Exponential,
-            UseJitter = true,
-            MaxRetryAttempts = 5,
-            Timeout = TimeSpan.FromSeconds(30),
-        };
-
-    /// <summary>
-    /// Optional custom interceptors to handle WebHook execution lifecycle events.
-    /// </summary>
-    public IWebHookInterceptors<TSub>? WebHookInterceptors { get; set; } =
-        new WebHookInterceptors<TSub>();
-
-    /// <summary>
-    /// Defines delay intervals (in minutes) used by Hangfire retry policies for failed jobs.
-    /// </summary>
-    public IEnumerable<int> HangfireDelayInMinutes = [60];
-
-    /// <summary>
-    /// The name of the HTTP header used to transmit the WebHook signature.
-    /// Default is <c>X-Signature</c>.
-    /// Change this if your receivers expect a custom header name.
-    /// </summary>
-    public string WebhookSignatureHeaderName { get; set; } = "X-Signature";
-
-    /// <summary>
-    /// Base64-string Key for storing encrypted signature secret in DB.
-    /// </summary>
-    public string SignatureEncryptionKey { get; set; } =
-        Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
-
-    /// <summary>
-    /// Enables/disable webhook signing feature.
-    /// </summary>
-    public bool UseSigning { get; set; } = true;
 }
