@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Security.Cryptography;
 using System.Text.Json;
 using Hangfire;
 using MccSoft.WebHooks.Configuration;
 using MccSoft.WebHooks.Domain;
-using MccSoft.WebHooks.Interceptors;
 using MccSoft.WebHooks.Manager;
 using MccSoft.WebHooks.Processing;
 using MccSoft.WebHooks.Publisher;
@@ -54,7 +52,11 @@ public static class WebHookRegistration
             e.ToTable("WebHookSubscriptions");
             e.Property(x => x.Headers)
                 .HasConversion(
-                    v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
+                    v =>
+                        JsonSerializer.Serialize<Dictionary<string, string>>(
+                            v,
+                            (JsonSerializerOptions?)null
+                        ),
                     v =>
                         JsonSerializer.Deserialize<Dictionary<string, string>>(
                             v,
@@ -82,20 +84,39 @@ public static class WebHookRegistration
     {
         var configuration = new WebHookOptionBuilder<TSub>();
         builder?.Invoke(configuration);
-        serviceCollection.AddSingleton(configuration);
+
+        ValidateConfiguration(configuration);
+        RegisterServices(serviceCollection, configuration);
+        ConfigurePolly(serviceCollection, configuration);
+        ConfigureHangfire(serviceCollection, configuration);
+
+        return serviceCollection;
+    }
+
+    private static void RegisterServices<TSub>(
+        IServiceCollection services,
+        WebHookOptionBuilder<TSub> configuration
+    )
+        where TSub : WebHookSubscription
+    {
+        services.AddSingleton<IWebHookOptionBuilder<TSub>>(configuration);
 
         if (configuration.WebHookInterceptors is { })
-            serviceCollection.AddSingleton(configuration.WebHookInterceptors);
+            services.AddSingleton(configuration.WebHookInterceptors);
 
-        serviceCollection.AddTransient<IWebHookManager<TSub>, WebHookManager<TSub>>();
-        serviceCollection.AddTransient<IWebHookEventPublisher, WebHookEventPublisher<TSub>>();
-        serviceCollection.AddTransient<WebHookProcessor<TSub>>();
-        serviceCollection.AddSingleton<
-            IWebHookSignatureService<TSub>,
-            WebHookHMACSignatureService<TSub>
-        >();
+        services.AddTransient<IWebHookManager<TSub>, WebHookManager<TSub>>();
+        services.AddTransient<IWebHookEventPublisher, WebHookEventPublisher<TSub>>();
+        services.AddTransient<WebHookProcessor<TSub>>();
+        services.AddSingleton<IWebHookSignatureService<TSub>, WebHookHMACSignatureService<TSub>>();
+    }
 
-        serviceCollection.AddResiliencePipeline(
+    private static void ConfigurePolly<TSub>(
+        IServiceCollection services,
+        WebHookOptionBuilder<TSub> configuration
+    )
+        where TSub : WebHookSubscription
+    {
+        services.AddResiliencePipeline(
             "default",
             b =>
             {
@@ -112,10 +133,29 @@ public static class WebHookRegistration
                     .AddTimeout(configuration.ResilienceOptions.Timeout);
             }
         );
+    }
 
-        GlobalJobFilters.Filters.Add(new WebHookDeliveryJobFailureFilter<TSub>(serviceCollection));
+    private static void ConfigureHangfire<TSub>(
+        IServiceCollection services,
+        WebHookOptionBuilder<TSub> configuration
+    )
+        where TSub : WebHookSubscription
+    {
+        GlobalJobFilters.Filters.Add(new WebHookDeliveryJobFailureFilter<TSub>(services));
         CustomRetryAttribute.SetDelayIntervals(configuration.HangfireDelayInMinutes);
+    }
 
-        return serviceCollection;
+    private static void ValidateConfiguration<TSub>(WebHookOptionBuilder<TSub> configuration)
+        where TSub : WebHookSubscription
+    {
+        if (
+            configuration.UseSigning
+            && string.IsNullOrWhiteSpace(configuration.SignatureEncryptionKey)
+        )
+        {
+            throw new InvalidOperationException(
+                "Signature encryption key must be provided when signing is enabled."
+            );
+        }
     }
 }
