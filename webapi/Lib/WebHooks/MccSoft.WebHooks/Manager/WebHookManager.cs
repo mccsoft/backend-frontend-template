@@ -126,7 +126,8 @@ public class WebHookManager<TSub> : IWebHookManager<TSub>
                 $"{nameof(WebHookOptionBuilder<TSub>.UseSigning)} is disabled or EncryptionKey is missing."
             );
 
-        await UpdateSubscriptionAsync(webHookSubscription);
+        _dbContext.Update(webHookSubscription);
+        await _dbContext.SaveChangesAsync();
 
         return secret;
     }

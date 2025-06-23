@@ -12,14 +12,14 @@ public class WebHookHMACSignatureService<TSub> : IWebHookSignatureService<TSub>
     where TSub : WebHookSubscription
 {
     private readonly byte[] _key;
-    private WebHookOptionBuilder<TSub> _configeartion;
+    private readonly WebHookOptionBuilder<TSub> _configuration;
 
     public WebHookHMACSignatureService(WebHookOptionBuilder<TSub> configuration)
     {
-        _configeartion = configuration;
+        _configuration = configuration;
 
-        var base64Key = _configeartion.SignatureEncryptionKey;
-        if (string.IsNullOrWhiteSpace(base64Key) && _configeartion.UseSigning)
+        var base64Key = _configuration.SignatureEncryptionKey;
+        if (string.IsNullOrWhiteSpace(base64Key) && _configuration.UseSigning)
             throw new InvalidOperationException("Missing encryption key in webhook configuration");
         _key = Convert.FromBase64String(base64Key);
     }
@@ -37,7 +37,7 @@ public class WebHookHMACSignatureService<TSub> : IWebHookSignatureService<TSub>
     /// <inheritdoc />
     public string GenerateEncryptedSecret(TSub subscription)
     {
-        if (!_configeartion.UseSigning)
+        if (!_configuration.UseSigning)
             return "";
 
         var rawSecret = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
@@ -51,7 +51,7 @@ public class WebHookHMACSignatureService<TSub> : IWebHookSignatureService<TSub>
     /// <inheritdoc />
     public string DecryptSecret(string cipherText)
     {
-        if (!_configeartion.UseSigning)
+        if (!_configuration.UseSigning)
             return "";
 
         var fullCipher = Convert.FromBase64String(cipherText);
