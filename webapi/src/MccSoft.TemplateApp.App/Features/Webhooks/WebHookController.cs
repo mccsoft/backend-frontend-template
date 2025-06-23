@@ -4,7 +4,6 @@ using MccSoft.WebApi.Patching;
 using MccSoft.WebHooks.Manager;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace MccSoft.TemplateApp.App.Features.Webhooks;
 
@@ -49,14 +48,14 @@ public class WebHookController : Controller
         );
 
         return new WebHookSubscribedDto(
-            result.Id,
-            result.Name,
-            result.Url,
-            (WebHookEventType)Enum.Parse(typeof(WebHookEventType), result.EventType),
-            result.IsSignatureDefined(),
-            result.SignatureSecret,
-            result.Method.ToString(),
-            result.Headers
+            result.Subscription.Id,
+            result.Subscription.Name,
+            result.Subscription.Url,
+            (WebHookEventType)Enum.Parse(typeof(WebHookEventType), result.Subscription.EventType),
+            result.Subscription.IsSignatureDefined(),
+            result.Secret,
+            result.Subscription.Method.ToString(),
+            result.Subscription.Headers
         );
     }
 

@@ -57,7 +57,7 @@ public class WebHookManager<TSub> : IWebHookManager<TSub>
     }
 
     /// <inheritdoc />
-    public async Task<TSub> Subscribe(
+    public async Task<SubscriptionResult<TSub>> Subscribe(
         string name,
         string url,
         string eventType,
@@ -80,7 +80,8 @@ public class WebHookManager<TSub> : IWebHookManager<TSub>
             subscription.UpdateSignatureSecret(secret);
         }
 
-        return subscription;
+        return new SubscriptionResult<TSub>(subscription, secret);
+        ;
     }
 
     /// <inheritdoc />
