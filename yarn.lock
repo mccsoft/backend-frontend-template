@@ -3878,7 +3878,7 @@ __metadata:
     lottie-web: 5.12.2
     material-ui-popup-state: 5.0.4
     nock: 13.3.0
-    oidc-client-ts: 2.4.1
+    oidc-client-ts: 3.2.1
     prettier: 3.5.3
     query-string: 7.1.1
     react: 19.1.0
@@ -6387,13 +6387,6 @@ __metadata:
     shebang-command: ^2.0.0
     which: ^2.0.1
   checksum: 671cc7c7288c3a8406f3c69a3ae2fc85555c04169e9d611def9a675635472614f1c0ed0ef80955d5b6d4e724f6ced67f0ad1bb006c2ea643488fcfef994d7f52
-  languageName: node
-  linkType: hard
-
-"crypto-js@npm:^4.2.0":
-  version: 4.2.0
-  resolution: "crypto-js@npm:4.2.0"
-  checksum: f051666dbc077c8324777f44fbd3aaea2986f198fe85092535130d17026c7c2ccf2d23ee5b29b36f7a4a07312db2fae23c9094b644cc35f7858b1b4fcaf27774
   languageName: node
   linkType: hard
 
@@ -9908,17 +9901,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jwt-decode@npm:4.0.0":
+"jwt-decode@npm:4.0.0, jwt-decode@npm:^4.0.0":
   version: 4.0.0
   resolution: "jwt-decode@npm:4.0.0"
   checksum: 390e2edcb31a92e86c8cbdd1edeea4c0d62acd371f8a8f0a8878e499390c0ecf4c658b365c4e941e4ef37d0170e4ca650aaa49f99a45c0b9695a235b210154b0
-  languageName: node
-  linkType: hard
-
-"jwt-decode@npm:^3.1.2":
-  version: 3.1.2
-  resolution: "jwt-decode@npm:3.1.2"
-  checksum: 20a4b072d44ce3479f42d0d2c8d3dabeb353081ba4982e40b83a779f2459a70be26441be6c160bfc8c3c6eadf9f6380a036fbb06ac5406b5674e35d8c4205eeb
   languageName: node
   linkType: hard
 
@@ -10947,13 +10933,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"oidc-client-ts@npm:2.4.1":
-  version: 2.4.1
-  resolution: "oidc-client-ts@npm:2.4.1"
+"oidc-client-ts@npm:3.2.1":
+  version: 3.2.1
+  resolution: "oidc-client-ts@npm:3.2.1"
   dependencies:
-    crypto-js: ^4.2.0
-    jwt-decode: ^3.1.2
-  checksum: 1da7de123d259b28e97af7090695319137430d9c6648f510a6da63ce5157ac0a857bb13c7471e664d6455bb09067dfc5c27f8fac5b1aa8f172e25a5c477e1826
+    jwt-decode: ^4.0.0
+  checksum: 057b113c09478ab5d081d78fda147f0eb7ed532af4cdb8c218ab5efaa393d1c6a1fda7a233572c489d633d9f392df244ca4cd22fbcc815807c3ec66ae83ec0cd
   languageName: node
   linkType: hard
 
