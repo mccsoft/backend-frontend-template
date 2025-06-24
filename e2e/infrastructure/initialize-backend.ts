@@ -41,6 +41,9 @@ export async function initializeBackendForFirstTest(backendInfo: BackendInfo) {
     });
   } catch (e: any) {
     if (e instanceof ApiException) {
+      console.log(
+        `ApiException when creating tenant ${e.message}, ${e.response}`,
+      );
       if (e.status === 504) {
         //504 Gateway Time-out
       }
