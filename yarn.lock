@@ -3878,7 +3878,7 @@ __metadata:
     lottie-web: 5.12.2
     material-ui-popup-state: 5.0.4
     nock: 13.3.0
-    oidc-client-ts: 2.2.0
+    oidc-client-ts: 2.4.1
     prettier: 3.5.3
     query-string: 7.1.1
     react: 19.1.0
@@ -6390,10 +6390,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"crypto-js@npm:^4.1.1":
-  version: 4.1.1
-  resolution: "crypto-js@npm:4.1.1"
-  checksum: b3747c12ee3a7632fab3b3e171ea50f78b182545f0714f6d3e7e2858385f0f4101a15f2517e033802ce9d12ba50a391575ff4638c9de3dd9b2c4bc47768d5425
+"crypto-js@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "crypto-js@npm:4.2.0"
+  checksum: f051666dbc077c8324777f44fbd3aaea2986f198fe85092535130d17026c7c2ccf2d23ee5b29b36f7a4a07312db2fae23c9094b644cc35f7858b1b4fcaf27774
   languageName: node
   linkType: hard
 
@@ -10947,13 +10947,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"oidc-client-ts@npm:2.2.0":
-  version: 2.2.0
-  resolution: "oidc-client-ts@npm:2.2.0"
+"oidc-client-ts@npm:2.4.1":
+  version: 2.4.1
+  resolution: "oidc-client-ts@npm:2.4.1"
   dependencies:
-    crypto-js: ^4.1.1
+    crypto-js: ^4.2.0
     jwt-decode: ^3.1.2
-  checksum: 59e87381b099c4106e9741c1f9113d8b39023990c097c86e58b3cc61acccedea8567315bc31b180159ef7714d8daf9185b1d203595074089453d87a57a34b3d0
+  checksum: 1da7de123d259b28e97af7090695319137430d9c6648f510a6da63ce5157ac0a857bb13c7471e664d6455bb09067dfc5c27f8fac5b1aa8f172e25a5c477e1826
   languageName: node
   linkType: hard
 

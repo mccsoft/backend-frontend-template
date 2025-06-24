@@ -1,4 +1,4 @@
-import { matchQuery, QueryClient } from '@tanstack/react-query';
+import { QueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { addLogoutHandler } from './auth/auth-interceptor';
 import { QueryFactory } from 'services/api';
@@ -26,3 +26,9 @@ addLogoutHandler(() => {
     null,
   );
 });
+
+export async function invlidateAuthQuery() {
+  await queryClient.invalidateQueries({
+    queryKey: QueryFactory.UserQuery.getCurrentUserInfoQueryKey(),
+  });
+}

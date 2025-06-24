@@ -8,6 +8,8 @@ import {
   signOutRedirectUriPopup,
 } from './openid-settings';
 import Logger from 'js-logger';
+import { UseCookieAuth } from '../auth-settings';
+import { invlidateAuthQuery } from 'helpers/queryClientHelper';
 
 export type SignInRedirectHandler = (user: User) => void;
 export type SignOutRedirectHandler = () => void;
@@ -40,6 +42,9 @@ export async function openExternalLoginPopup(provider: string) {
     const user = await getManager().signinPopup({
       extraQueryParams: { provider: provider, popup: true },
     } as any);
+    if (UseCookieAuth) {
+      await invlidateAuthQuery();
+    }
     return user;
   } catch (e) {
     Logger.error('Error during external authentication', e);
