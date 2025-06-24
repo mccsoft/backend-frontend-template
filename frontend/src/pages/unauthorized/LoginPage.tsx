@@ -12,7 +12,7 @@ import { requiredRule } from 'helpers/form/react-hook-form-helper';
 import { FormError } from 'components/uikit/FormError';
 import { Loading } from 'components/uikit/suspense/Loading';
 import { handleLoginErrors, sendLoginRequest } from 'helpers/auth/auth-client';
-import { queryClient } from 'helpers/queryClientHelper';
+import { queryClient } from 'services/api/query-client-helper';
 import {
   openExternalLoginPopup,
   openExternalLoginRedirect,

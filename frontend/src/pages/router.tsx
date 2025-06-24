@@ -42,7 +42,7 @@ export const authorizedRoutes = () =>
 export const anonymousRoutes = () =>
   createBrowserRouter([
     {
-      path: '/',
+      path: '/*',
       element: UseCookieAuth ? <LoginPage /> : <ServerSideLoginPage />,
       ErrorBoundary: ReactRouterErrorBoundary,
     },

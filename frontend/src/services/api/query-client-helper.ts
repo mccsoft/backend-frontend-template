@@ -1,11 +1,14 @@
 import { QueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import { addLogoutHandler } from './auth/auth-interceptor';
+import { addLogoutHandler } from '../../helpers/auth/auth-interceptor';
 import { QueryFactory } from 'services/api';
+import equal from 'fast-deep-equal';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      structuralSharing: (oldData: any, newData) =>
+        equal(oldData, newData) ? oldData : newData,
       refetchOnWindowFocus: false,
       throwOnError: true,
       retry(failureCount, error) {

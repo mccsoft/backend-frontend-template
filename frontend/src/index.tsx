@@ -10,7 +10,7 @@ import { backendUri } from 'helpers/auth/openid/openid-settings';
 import { Loading } from './components/uikit/suspense/Loading';
 import { LoginErrorPage } from 'pages/unauthorized/LoginErrorPage';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { queryClient } from 'helpers/queryClientHelper';
+import { queryClient } from 'services/api/query-client-helper';
 import { UseCookieAuth } from 'helpers/auth/auth-settings';
 
 //to send dates to backend in local timezone (not in UTC)

@@ -9,7 +9,7 @@ import {
 } from './openid-settings';
 import Logger from 'js-logger';
 import { UseCookieAuth } from '../auth-settings';
-import { invlidateAuthQuery } from 'helpers/queryClientHelper';
+import { invlidateAuthQuery } from 'services/api/query-client-helper';
 
 export type SignInRedirectHandler = (user: User) => void;
 export type SignOutRedirectHandler = () => void;
