@@ -63,7 +63,7 @@ export default defineConfig(({ command, mode }) => {
           target: proxyTarget,
           secure: false,
         },
-        '/signin-google': {
+        '/signin-': {
           target: proxyTarget,
           secure: false,
         },

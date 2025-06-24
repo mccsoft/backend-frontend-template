@@ -190,6 +190,14 @@ export function useAuth(): AuthData | null | 'loading' {
   }
 }
 
+export function useAuthData(): AuthData {
+  const data = useAuth();
+  if (data === null || data === 'loading')
+    throw new Error(`User not authenticated`);
+
+  return data;
+}
+
 function useCookieAuth(): AuthData | null | 'loading' {
   const data = QueryFactory.UserQuery.useGetCurrentUserInfoQuery({
     throwOnError: false,

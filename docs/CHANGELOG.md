@@ -20,7 +20,7 @@ import $1 from '$2.svg?react';
 
 If you get infinite loading on startup, consider copying `LanguageProvider.tsx` from template.
 
-
+Also if you migrate to cookie authentication check the changes in MiniProfiler.tsx line 12 (the `?` mark)
 
 ### 2025-05-20 .NET 9
 
