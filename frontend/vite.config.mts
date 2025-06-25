@@ -1,4 +1,4 @@
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig, HttpProxy, loadEnv, ProxyOptions } from 'vite';
 import autoprefixer from 'autoprefixer';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import react from '@vitejs/plugin-react';
@@ -7,13 +7,17 @@ import svgrPlugin from 'vite-plugin-svgr';
 import ImportMetaEnvPlugin from '@import-meta-env/unplugin';
 import { visualizer } from 'rollup-plugin-visualizer';
 import mkcert from 'vite-plugin-mkcert';
+import * as zlib from 'zlib';
 
 var proxyTarget = process.env.BACKEND_URI ?? 'https://localhost:5001';
 var frontendPort = process.env.PORT ?? 5003;
-// we need it to be false for external auth (Google / AAD) to work.
-// because OpenIdManager reads the token endpoint from .well-known/openid-configuration,
-// and with `changeOrigin=true` token endpoint is Backend endpoint, and so Cookies are not set for Frontend
-const changeOrigin = false;
+
+const proxyOptions: ProxyOptions = {
+  target: proxyTarget,
+  secure: false,
+  // changeOrigin needs to be `true` to support start-remote scenario
+  changeOrigin: true,
+};
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
@@ -43,34 +47,17 @@ export default defineConfig(({ command, mode }) => {
       port: frontendPort as number,
       https: true,
       proxy: {
-        '/api': {
-          target: proxyTarget,
-          secure: false,
-        },
-        '/connect': {
-          target: proxyTarget,
-          secure: false,
-        },
-        '/swagger': {
-          target: proxyTarget,
-          secure: false,
-        },
-        '/Identity': {
-          target: proxyTarget,
-          secure: false,
-        },
+        '/api': proxyOptions,
+        '/connect': proxyOptions,
+        '/swagger': proxyOptions,
+        '/Identity': proxyOptions,
         '/.well-known': {
-          target: proxyTarget,
-          secure: false,
+          ...proxyOptions,
+          selfHandleResponse: true,
+          configure: rewriteUrlInOpenIdConfigurationDocument,
         },
-        '/signin-': {
-          target: proxyTarget,
-          secure: false,
-        },
-        '/css': {
-          target: proxyTarget,
-          secure: false,
-        },
+        '/signin-': proxyOptions,
+        '/css': proxyOptions,
       },
     },
     preview: {
@@ -119,3 +106,37 @@ export default defineConfig(({ command, mode }) => {
     },
   };
 });
+
+/*
+ * We rewrite urls in open id configuration so it works in start-remote cases (with http only cookies authentication)
+ */
+function rewriteUrlInOpenIdConfigurationDocument(proxy: HttpProxy.Server) {
+  proxy.on('proxyRes', (proxyRes, req, res) => {
+    const chunks = [];
+    proxyRes.on('data', (chunk) => chunks.push(chunk));
+    proxyRes.on('end', () => {
+      const buffer = Buffer.concat(chunks);
+      const encoding = proxyRes.headers['content-encoding'];
+      if (encoding === 'gzip' || encoding === 'deflate') {
+        zlib.unzip(buffer, (err, buffer) => {
+          if (!err) {
+            const remoteBody = buffer.toString();
+            const modifiedBody = remoteBody
+              .replace(
+                /"issuer": "https:\/\/(.*?)\/"/,
+                `"issuer": "https://${req.headers.host}/"`,
+              )
+              .replace(
+                /"token_endpoint": "https:\/\/(.*?)\//,
+                `"token_endpoint": "https://${req.headers.host}/`,
+              ); // do some string manipulation on remoteBody
+            res.write(modifiedBody);
+            res.end();
+          } else {
+            console.error(err);
+          }
+        });
+      }
+    });
+  });
+}
