@@ -89,6 +89,7 @@ public static partial class SetupAuth
             {
                 options
                     .DisableAccessTokenEncryption()
+                    .UseReferenceRefreshTokens()
                     .AddSigningCertificateFromConfiguration(
                         configuration.GetSection("OpenId:SigningCertificate")
                     )
