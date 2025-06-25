@@ -1,8 +1,8 @@
 import { QueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import { addLogoutHandler } from '../../helpers/auth/auth-interceptor';
 import { QueryFactory } from 'services/api';
 import equal from 'fast-deep-equal';
+import { addLogoutHandler } from 'helpers/auth/auth-handlers';
 
 export const queryClient = new QueryClient({
   defaultOptions: {

@@ -24,6 +24,7 @@ import { UseCookieAuth } from './auth-settings';
 import { QueryFactory } from 'services/api';
 import { createId } from 'components/uikit/type-utils';
 import { sendLogoutRequest } from './auth-client';
+import { executeLogoutHandler } from './auth-handlers';
 
 /*
  * this is a local storage key that will store the AuthData structure (containing access_token and refresh_token)
@@ -63,7 +64,7 @@ export async function logOut() {
  */
 export function postServerLogOut() {
   setAuthDataVariable(null);
-  _logoutHandler();
+  executeLogoutHandler();
 }
 
 export function setAuthData(data: Omit<AuthData, 'claims'>) {
@@ -224,20 +225,4 @@ function useOAuthAuth(): AuthData | null {
     };
   }, []);
   return auth;
-}
-const _logoutHandlers: Record<string, () => void> = {};
-const _logoutHandler = () => {
-  try {
-    Object.values(_logoutHandlers).forEach((x) => x());
-  } catch (e) {
-    Logger.error(e);
-  }
-};
-
-export function addLogoutHandler(handler: () => void) {
-  const id = createId();
-  _logoutHandlers[id] = handler;
-  return () => {
-    delete _logoutHandlers[id];
-  };
 }

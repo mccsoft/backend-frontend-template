@@ -18,6 +18,8 @@ import \{ ReactComponent as (.*?) \} from '(.*?)\.svg';
 import $1 from '$2.svg?react';
 ```
 
+Also, consider copying frontend/types/custom.d.ts (for SVG types)
+
 If you get infinite loading on startup, consider copying `LanguageProvider.tsx` from template.
 
 Also if you migrate to cookie authentication check the changes in MiniProfiler.tsx line 12 (the `?` mark)
