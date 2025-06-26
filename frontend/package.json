@@ -93,7 +93,7 @@
     "eslint-plugin-prettier": "4.2.1",
     "eslint-plugin-react": "7.31.10",
     "eslint-plugin-react-hooks": "4.6.0",
-    "eslint-plugin-storybook": "0.6.10",
+    "eslint-plugin-storybook": "9.0.12",
     "importmap-plugin": "0.8.0",
     "nock": "13.3.0",
     "prettier": "3.5.3",
@@ -126,7 +126,7 @@
     "generate-api-client-remote": "react-query-swagger openapi2tsclient /tanstack /input:https://template.mcc-soft.de/swagger/v1/swagger.json /output:src/services/api/api-client.ts /template:Axios /serviceHost:. /minimal",
     "generate-api-client-dotnet": "react-query-swagger openapi2csclient /nswag /input:https://localhost:5001/swagger/csharp/swagger.json /output:../webapi/src/MccSoft.TemplateApp.Http/GeneratedClient.cs /templateDirectory:../webapi/src/MccSoft.TemplateApp.Http/template /namespace:MccSoft.TemplateApp.Http.Generated /generateClientInterfaces:true /clientBaseClass:BaseClient /exposeJsonSerializerSettings:true /generateUpdateJsonSerializerSettingsMethod:false /clientBaseInterface:IBaseClient /jsonLibrary:SystemTextJson && yarn replace \", NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore\" \" \" ../webapi/src/MccSoft.TemplateApp.Http/GeneratedClient.cs",
     "npm-start": "yarn start",
-    "storybook": "storybook dev -p 6006",
+    "storybook": "storybook dev -p 6006 --no-open",
     "build-storybook": "storybook build"
   },
   "eslintConfig": {
