@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/react-vite';
 import { DropDownInput } from 'components/uikit/inputs/dropdown/DropDownInput';
 import { defaultExclude } from '../../.storybook/preview';
 import { sleep } from './utils';

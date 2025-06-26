@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/react-vite';
 import { ComboBoxInput } from 'components/uikit/inputs/dropdown/ComboBoxInput';
 import { defaultExclude } from '../../.storybook/preview';
 const StoryComponent = ComboBoxInput;

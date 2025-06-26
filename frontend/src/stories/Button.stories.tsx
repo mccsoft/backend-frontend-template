@@ -1,5 +1,5 @@
 import React from 'react';
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/react-vite';
 import { Button, ButtonColor } from '../components/uikit/buttons/Button';
 import { defaultExclude } from '../../.storybook/preview';
 

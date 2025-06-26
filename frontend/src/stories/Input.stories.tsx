@@ -1,5 +1,5 @@
 import React from 'react';
-import { StoryFn, Meta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/react-vite';
 import { defaultExclude } from '../../.storybook/preview';
 import { Input } from 'components/uikit/inputs/Input';
 const StoryComponent = Input;

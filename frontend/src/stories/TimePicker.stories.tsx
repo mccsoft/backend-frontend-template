@@ -1,5 +1,5 @@
 import React from 'react';
-import { StoryFn, Meta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/react-vite';
 import { TimePicker } from 'components/uikit/inputs/date-time/TimePicker';
 import { defaultExclude } from '../../.storybook/preview';
 const StoryComponent = TimePicker;
