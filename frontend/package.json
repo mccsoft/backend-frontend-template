@@ -93,7 +93,7 @@
     "eslint-plugin-prettier": "4.2.1",
     "eslint-plugin-react": "7.31.10",
     "eslint-plugin-react-hooks": "4.6.0",
-    "eslint-plugin-storybook": "9.0.12",
+    "eslint-plugin-storybook": "0.6.10",
     "importmap-plugin": "0.8.0",
     "nock": "13.3.0",
     "prettier": "3.5.3",
