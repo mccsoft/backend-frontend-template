@@ -58,9 +58,10 @@ export const App = () => {
   const fallback = useMemo(() => {
     return <Loading loading={true} />;
   }, []);
-  const isAuth = useIsAuthorized();
 
+  const isAuth = useIsAuthorized();
   if (isAuth === 'loading') return <Loading loading={true} />;
+
   return (
     <Suspense fallback={fallback}>
       <ThemeProvider theme={theme}>
