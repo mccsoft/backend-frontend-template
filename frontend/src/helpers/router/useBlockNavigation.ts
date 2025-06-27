@@ -1,13 +1,8 @@
 import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
-import { useConfirm } from './useBlocker';
-import { Action as HistoryAction, Location } from '@remix-run/router';
-import type { unstable_BlockerFunction as BlockerFunction } from 'react-router';
 
-type ArgsType = {
-  currentLocation: Location;
-  nextLocation: Location;
-  historyAction: HistoryAction;
-};
+import { BlockerFunction } from 'react-router';
+import { useConfirm } from 'react-router-prompt';
+type ArgsType = Parameters<BlockerFunction>[0];
 /*
  * Hook to conditionally block user from navigating away from the page.
  * - shouldBlockNavigation: called when user tries to leave the current page.
@@ -24,7 +19,7 @@ export function useBlockNavigation(
 
   // save args passed to `when` to later pass them to `shouldBlockNavigation`
   const whenArgsRef = useRef<ArgsType>(null!);
-  const whenCallback: BlockerFunction = useCallback((args: ArgsType) => {
+  const whenCallback: BlockerFunction = useCallback((args) => {
     whenArgsRef.current = args;
     return true;
   }, []);
@@ -42,6 +37,7 @@ export function useBlockNavigation(
         else confirm();
       } else {
         void shouldBlockNavigation(whenArgsRef.current).then((result) => {
+          console.log('result', result);
           if (result) resetConfirmation();
           else onConfirm();
         });

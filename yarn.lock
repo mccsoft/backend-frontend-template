@@ -3035,13 +3035,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@remix-run/router@npm:1.6.2":
-  version: 1.6.2
-  resolution: "@remix-run/router@npm:1.6.2"
-  checksum: 10/c261c3b52f08d7fcacce9c66d68dba3b6f0c8263ea15f69f9f1c89734685cdfe4f383c879324acade68cb331d48e3deca9ec00734abe08d9694e529096907f40
-  languageName: node
-  linkType: hard
-
 "@rolldown/pluginutils@npm:1.0.0-beta.9":
   version: 1.0.0-beta.9
   resolution: "@rolldown/pluginutils@npm:1.0.0-beta.9"
@@ -4012,10 +4005,10 @@ __metadata:
     react-paginate: "npm:8.2.0"
     react-query-swagger: "npm:15.10.4"
     react-redux: "npm:9.0.2"
-    react-router: "npm:6.11.2"
-    react-router-dom: "npm:6.11.2"
-    react-router-prompt: "npm:0.5.3"
-    react-router-url-params: "npm:0.8.5"
+    react-router: "npm:7.6.2"
+    react-router-dom: "npm:7.6.2"
+    react-router-prompt: "npm:0.8.0"
+    react-router-url-params: "npm:0.9.0"
     react-textarea-autosize: "npm:8.3.4"
     react-use: "npm:17.4.0"
     react-window: "npm:1.8.11"
@@ -6444,6 +6437,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cookie@npm:^1.0.1":
+  version: 1.0.2
+  resolution: "cookie@npm:1.0.2"
+  checksum: 10/f5817cdc84d8977761b12549eba29435e675e65c7fef172bc31737788cd8adc83796bf8abe6d950554e7987325ad2d9ac2971c5bd8ff0c4f81c145f82e4ab1be
+  languageName: node
+  linkType: hard
+
 "copy-anything@npm:^3.0.2":
   version: 3.0.3
   resolution: "copy-anything@npm:3.0.3"
@@ -6833,7 +6833,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"decode-uri-component@npm:^0.2.0":
+"decode-uri-component@npm:^0.2.0, decode-uri-component@npm:^0.2.2":
   version: 0.2.2
   resolution: "decode-uri-component@npm:0.2.2"
   checksum: 10/17a0e5fa400bf9ea84432226e252aa7b5e72793e16bf80b907c99b46a799aeacc139ec20ea57121e50c7bd875a1a4365928f884e92abf02e21a5a13790a0f33e
@@ -12005,6 +12005,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"query-string@npm:^7.1.3":
+  version: 7.1.3
+  resolution: "query-string@npm:7.1.3"
+  dependencies:
+    decode-uri-component: "npm:^0.2.2"
+    filter-obj: "npm:^1.1.0"
+    split-on-first: "npm:^1.0.0"
+    strict-uri-encode: "npm:^2.0.0"
+  checksum: 10/3b6f2c167e76ca4094c5f1a9eb276efcbb9ebfd8b1a28c413f3c4e4e7d6428c8187bf46c8cbc9f92a229369dd0015de10a7fd712c8cee98d5d84c2ac6140357e
+  languageName: node
+  linkType: hard
+
 "queue-microtask@npm:^1.2.2":
   version: 1.2.3
   resolution: "queue-microtask@npm:1.2.3"
@@ -12280,52 +12292,57 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:6.11.2":
-  version: 6.11.2
-  resolution: "react-router-dom@npm:6.11.2"
+"react-router-dom@npm:7.6.2":
+  version: 7.6.2
+  resolution: "react-router-dom@npm:7.6.2"
   dependencies:
-    "@remix-run/router": "npm:1.6.2"
-    react-router: "npm:6.11.2"
+    react-router: "npm:7.6.2"
   peerDependencies:
-    react: ">=16.8"
-    react-dom: ">=16.8"
-  checksum: 10/85575793cbdb84b05e9c33fef6f81e6b09e9f2606d2ba03392f83689dbb240212e5b22634b95049fc19364e9b44d45a519387d1bff4eba8a163548aa3376bc0f
+    react: ">=18"
+    react-dom: ">=18"
+  checksum: 10/e793578cced33fce83ed8341a70e2238bd247cdc648a105d600e53551ad56fddab8c186d3711c1c46203f77ec6c3f9617a57465494597eadc165c55ef573ab51
   languageName: node
   linkType: hard
 
-"react-router-prompt@npm:0.5.3":
-  version: 0.5.3
-  resolution: "react-router-prompt@npm:0.5.3"
+"react-router-prompt@npm:0.8.0":
+  version: 0.8.0
+  resolution: "react-router-prompt@npm:0.8.0"
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-    react-router-dom: ">=6.7"
-  checksum: 10/61aadce2440246f0c882b8401db285f79ebd1ad79b910a1c50c27a39182d4226483db3497b041ca83923e9d70668b53b54833f50a59a1dd3c45131e8006bdf8c
+    react-router: ">=7"
+  checksum: 10/03c1d4ef9d9ec902ff11c57f51c9621cbce7ed3b832730d8da740d22583caa26b9461d74bf2f2da5fc0005f2f16e23e2cefb2bbbb69f6ee641aba248ac85ab18
   languageName: node
   linkType: hard
 
-"react-router-url-params@npm:0.8.5":
-  version: 0.8.5
-  resolution: "react-router-url-params@npm:0.8.5"
+"react-router-url-params@npm:0.9.0":
+  version: 0.9.0
+  resolution: "react-router-url-params@npm:0.9.0"
   dependencies:
+    query-string: "npm:^7.1.3"
     serialize-query-params: "npm:^2.0.1"
   peerDependencies:
     react: ">=16"
     react-dom: ">=16.8.0"
     react-router: ">=6.3.0"
     react-router-dom: ">=6.3.0"
-  checksum: 10/1e7dbe0c8ae241009dcf126c892e9b399fbb9ffe6d599ed321aac49e14f73459d2662e54f19f9e824921ac251034eb4ae102a36429dab7dd680b86964f6c78d9
+  checksum: 10/fd73c40d45d222f33e6ad0701d8489c9362d7a0606dfc7cf31d1adf075c22d851dd00dd1e9e83fae9f6c684d569ec3a2935991bb122b2e2312f3ac2e28a77e3b
   languageName: node
   linkType: hard
 
-"react-router@npm:6.11.2":
-  version: 6.11.2
-  resolution: "react-router@npm:6.11.2"
+"react-router@npm:7.6.2":
+  version: 7.6.2
+  resolution: "react-router@npm:7.6.2"
   dependencies:
-    "@remix-run/router": "npm:1.6.2"
+    cookie: "npm:^1.0.1"
+    set-cookie-parser: "npm:^2.6.0"
   peerDependencies:
-    react: ">=16.8"
-  checksum: 10/a40d1ea78e3b5b3167ed6cbaf74b2e60592fd1822b9f94a2499933bf699130a81f669bc06bdf34f38489a96d31510848c21254a48e49038b18ecbf42993eaa34
+    react: ">=18"
+    react-dom: ">=18"
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+  checksum: 10/38a8473c7358d873eb60cc6660deae16a629701b8867ee00e67871ff61009b90f73853235ef3b0f2e43ebedee697389afc7bf170df069823dc872be79798965b
   languageName: node
   linkType: hard
 
@@ -13215,6 +13232,13 @@ __metadata:
   version: 2.0.0
   resolution: "set-blocking@npm:2.0.0"
   checksum: 10/8980ebf7ae9eb945bb036b6e283c547ee783a1ad557a82babf758a065e2fb6ea337fd82cac30dd565c1e606e423f30024a19fff7afbf4977d784720c4026a8ef
+  languageName: node
+  linkType: hard
+
+"set-cookie-parser@npm:^2.6.0":
+  version: 2.7.1
+  resolution: "set-cookie-parser@npm:2.7.1"
+  checksum: 10/c92b1130032693342bca13ea1b1bc93967ab37deec4387fcd8c2a843c0ef2fd9a9f3df25aea5bb3976cd05a91c2cf4632dd6164d6e1814208fb7d7e14edd42b4
   languageName: node
   linkType: hard
 

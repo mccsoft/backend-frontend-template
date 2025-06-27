@@ -26,7 +26,11 @@
         "save_button": "Save",
         "title": "Title",
         "product_type": "Product Type",
-        "lastStockUpdatedAt": "Last Stock Update"
+        "lastStockUpdatedAt": "Last Stock Update",
+        "unsaved_changes_prompt": {
+          "title": "Unsaved changes",
+          "text": "You have unsaved changes. Are you sure you want to leave?"
+        }
       },
       "list": {
         "column_title": "Title"

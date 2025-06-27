@@ -13,7 +13,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { QueryFactory } from 'services/api';
 import { CreateProductDto, ProductType } from 'services/api/api-client';
 import { HookFormDropDownInput } from 'components/uikit/inputs/dropdown/HookFormDropDownInput';
-import { useNavigate } from 'react-router';
+import { Location, useNavigate } from 'react-router';
 import { HookFormDatePicker } from 'components/uikit/inputs/date-time/HookFormDatePicker';
 import { Grid } from '@mui/material';
 import { useModal } from 'components/uikit/modal/useModal';
@@ -28,16 +28,19 @@ export const CreateProductPage: React.FC = () => {
     await queryClient.invalidateQueries({
       queryKey: QueryFactory.ProductQuery.searchQueryKey(),
     });
-    navigate(Links.Authorized.Products.link());
+    void navigate(Links.Authorized.Products.link());
   });
   const modals = useModal();
+
+  // we need to access `isDirty` during rendering, otherwise the value inside useBlockNavigation won't be updated
+  const isDirty = form.formState.isDirty;
   useBlockNavigation(async () => {
-    if (!form.formState.isDirty) return false;
+    if (!isDirty) return false;
     const confirmResult = await modals.showConfirm({
       title: i18n.t('unsaved_changes_prompt.title'),
       text: i18n.t('unsaved_changes_prompt.text'),
     });
-    return confirmResult;
+    return !confirmResult;
   });
   return (
     <Loading loading={form.formState.isSubmitting}>

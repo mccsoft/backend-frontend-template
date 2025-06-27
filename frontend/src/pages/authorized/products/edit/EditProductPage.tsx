@@ -16,6 +16,8 @@ import { HookFormDropDownInput } from 'components/uikit/inputs/dropdown/HookForm
 import { useNavigate } from 'react-router';
 import { Grid } from '@mui/material';
 import { HookFormDatePicker } from 'components/uikit/inputs/date-time/HookFormDatePicker';
+import { useBlockNavigation } from 'helpers/router/useBlockNavigation';
+import { useModal } from 'components/uikit/modal/useModal';
 
 export const EditProductPage: React.FC = () => {
   const { id: productId } = Links.Authorized.EditProduct.useParams();
@@ -32,12 +34,24 @@ export const EditProductPage: React.FC = () => {
       // await queryClient.invalidateQueries(
       //   QueryFactory.ProductQuery.getQueryKey(productId),
       // );
-      navigate(Links.Authorized.Products.link());
+      void navigate(Links.Authorized.Products.link());
     },
     {
       defaultValues: productQuery.data,
     },
   );
+
+  const modals = useModal();
+  // we need to access `isDirty` during rendering, otherwise the value inside useBlockNavigation won't be updated
+  const isDirty = form.formState.isDirty;
+  useBlockNavigation(async () => {
+    if (!isDirty) return false;
+    const confirmResult = await modals.showConfirm({
+      title: i18n.t('unsaved_changes_prompt.title'),
+      text: i18n.t('unsaved_changes_prompt.text'),
+    });
+    return !confirmResult;
+  });
 
   return (
     <Loading loading={form.formState.isSubmitting || productQuery.isLoading}>
