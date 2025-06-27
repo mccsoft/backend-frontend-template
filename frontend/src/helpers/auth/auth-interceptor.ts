@@ -205,10 +205,10 @@ function useCookieAuth(): AuthData | null | 'loading' {
     retryOnMount: false,
     retry: false,
   });
-  return data.isError || !data.data?.id
-    ? null
-    : data.isLoading
-      ? 'loading'
+  return data.isLoading
+    ? 'loading'
+    : data.isError || !data.data?.id
+      ? null
       : {
           access_token: '',
           refresh_token: '',
