@@ -34,6 +34,9 @@ export const EditProductPage: React.FC = () => {
       // await queryClient.invalidateQueries(
       //   QueryFactory.ProductQuery.getQueryKey(productId),
       // );
+
+      // we need to `.reset` to prevent blocking the navigation (otherwise the form would think it's dirty)
+      form.reset();
       void navigate(Links.Authorized.Products.link());
     },
     {

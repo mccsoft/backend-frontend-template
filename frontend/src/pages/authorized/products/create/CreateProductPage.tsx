@@ -28,6 +28,9 @@ export const CreateProductPage: React.FC = () => {
     await queryClient.invalidateQueries({
       queryKey: QueryFactory.ProductQuery.searchQueryKey(),
     });
+
+    // we need to `.reset` to prevent blocking the navigation (otherwise the form would think it's dirty)
+    form.reset();
     void navigate(Links.Authorized.Products.link());
   });
   const modals = useModal();
