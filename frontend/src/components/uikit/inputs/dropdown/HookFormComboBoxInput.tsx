@@ -1,11 +1,9 @@
 import * as React from 'react';
 import {
-  Control,
   Controller,
   FieldValues,
-  Path,
-  RegisterOptions,
   FieldPath,
+  UseControllerProps,
 } from 'react-hook-form';
 import { ComboBoxInput } from './ComboBoxInput';
 
@@ -19,8 +17,8 @@ type HookFormProps<
   'onValueChanged'
 > & {
   name: TName;
-  control: Control<TFieldValues>;
-  rules?: Exclude<RegisterOptions, 'valueAsDate' | 'setValueAs'>;
+  control: UseControllerProps<TFieldValues>['control'];
+  rules?: UseControllerProps<TFieldValues>['rules'];
   onFocus?: () => void;
 };
 

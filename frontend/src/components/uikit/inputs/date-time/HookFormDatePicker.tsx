@@ -1,19 +1,14 @@
 import { DatePath } from '../hook-form';
 import { DatePicker, DatePickerProps } from './DatePicker';
-import {
-  Control,
-  Controller,
-  FieldValues,
-  RegisterOptions,
-} from 'react-hook-form';
+import { Controller, FieldValues, UseControllerProps } from 'react-hook-form';
 
 type HookFormDatePickerProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends DatePath<TFieldValues> = DatePath<TFieldValues>,
 > = Omit<DatePickerProps, 'onChange' | 'name'> & {
   name: TName;
-  control: Control<TFieldValues>;
-  rules?: Exclude<RegisterOptions, 'valueAsDate' | 'setValueAs'>;
+  control: UseControllerProps<TFieldValues>['control'];
+  rules?: UseControllerProps<TFieldValues>['rules'];
   onFocus?: () => void;
   defaultValue?: unknown;
 };

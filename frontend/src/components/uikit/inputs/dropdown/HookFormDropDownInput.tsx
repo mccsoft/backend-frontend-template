@@ -1,12 +1,9 @@
 import { DropDownInput } from './DropDownInput';
-import * as React from 'react';
 import {
-  Control,
   Controller,
   FieldValues,
-  Path,
-  RegisterOptions,
   FieldPath,
+  UseControllerProps,
 } from 'react-hook-form';
 import { convertPropertyAccessorToFunction } from './StyledAutocomplete';
 import { DropDownInputProps } from './types';
@@ -22,8 +19,8 @@ type HookFormProps<
   'onChange' | 'onValueChanged' | 'value'
 > & {
   name: TName;
-  control: Control<TFieldValues>;
-  rules?: Exclude<RegisterOptions, 'valueAsDate' | 'setValueAs'>;
+  control: UseControllerProps<TFieldValues>['control'];
+  rules?: UseControllerProps<TFieldValues>['rules'];
   onFocus?: () => void;
   defaultValue?: unknown;
 };

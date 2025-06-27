@@ -1,12 +1,9 @@
 import {
-  Control,
   Controller,
   FieldValues,
-  Path,
-  RegisterOptions,
   FieldPath,
+  UseControllerProps,
 } from 'react-hook-form';
-import React from 'react';
 import { TimePicker, TimePickerProps } from './TimePicker';
 
 type HookFormTimePickerProps<
@@ -14,8 +11,8 @@ type HookFormTimePickerProps<
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = Omit<TimePickerProps, 'onTimeChanged' | 'timeInMills'> & {
   name: TName;
-  control: Control<TFieldValues>;
-  rules?: Exclude<RegisterOptions, 'valueAsDate' | 'setValueAs'>;
+  control: UseControllerProps<TFieldValues>['control'];
+  rules?: UseControllerProps<TFieldValues>['rules'];
   onFocus?: () => void;
   defaultValue?: unknown;
 };

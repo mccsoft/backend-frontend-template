@@ -34,6 +34,7 @@ export const CreateProductPage: React.FC = () => {
 
   // we need to access `isDirty` during rendering, otherwise the value inside useBlockNavigation won't be updated
   const isDirty = form.formState.isDirty;
+  console.log('qweqwe', form.formState.dirtyFields);
   useBlockNavigation(async () => {
     if (!isDirty) return false;
     const confirmResult = await modals.showConfirm({

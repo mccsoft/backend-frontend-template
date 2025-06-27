@@ -7,6 +7,7 @@ import {
   Path,
   RegisterOptions,
   FieldPath,
+  UseControllerProps,
 } from 'react-hook-form';
 import { StyledAutocompleteProps } from './types';
 
@@ -17,8 +18,8 @@ type HookFormProps<
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = Omit<StyledAutocompleteProps<T, true, Required, false>, 'onChange'> & {
   name: TName;
-  control: Control<TFieldValues>;
-  rules?: Exclude<RegisterOptions, 'valueAsDate' | 'setValueAs'>;
+  control: UseControllerProps<TFieldValues>['control'];
+  rules?: UseControllerProps<TFieldValues>['rules'];
   onFocus?: () => void;
   defaultValue?: T | null;
 
@@ -40,7 +41,7 @@ export function HookFormMultiSelectDropDownInput<
 >(props: HookFormProps<D, Required, TFieldValues>) {
   const { control, name, rules, ...rest } = props;
   return (
-    <Controller
+    <Controller<TFieldValues>
       control={control}
       name={name}
       rules={rules}
