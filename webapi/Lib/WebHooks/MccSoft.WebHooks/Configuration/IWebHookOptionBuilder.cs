@@ -21,7 +21,7 @@ public interface IWebHookOptionBuilder<TSub>
     IEnumerable<int> HangfireDelayInMinutes { get; set; }
 
     /// <summary>Name of the HTTP header for the signature.</summary>
-    string WebhookSignatureHeaderName { get; set; }
+    string WebHookSignatureHeaderName { get; set; }
 
     /// <summary>Base64 key used for encrypting secrets in DB.</summary>
     string SignatureEncryptionKey { get; set; }

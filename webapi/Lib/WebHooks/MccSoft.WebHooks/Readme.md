@@ -177,7 +177,7 @@ builder.Services.AddWebHooks<MySubscription>(options =>
 {
     options.UseSigning = true;
     options.EncryptionKey = configuration["WebHooks:EncryptionKey"];
-    options.WebhookSignatureHeaderName = "X-Signature"; // optional
+    options.WebHookSignatureHeaderName = "X-Signature"; // optional
 });
 ```
 ⚠️ If signing is enabled but the encryption key is missing, the application will throw during startup.

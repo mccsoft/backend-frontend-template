@@ -166,6 +166,6 @@ public class WebHookProcessor<TSub>
         var secret = _webHookSignatureService.DecryptSecret(webHook.Subscription.SignatureSecret);
         var signature = _webHookSignatureService.ComputeSignature(webHook.Data, secret);
 
-        message.Headers.Add(_configuration.WebhookSignatureHeaderName, signature);
+        message.Headers.Add(_configuration.WebHookSignatureHeaderName, signature);
     }
 }

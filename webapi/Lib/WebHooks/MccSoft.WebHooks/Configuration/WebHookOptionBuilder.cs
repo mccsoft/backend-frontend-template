@@ -29,7 +29,7 @@ public class WebHookOptionBuilder<TSub> : IWebHookOptionBuilder<TSub>
     public IEnumerable<int> HangfireDelayInMinutes { get; set; } = [60];
 
     /// <inheritdoc />
-    public string WebhookSignatureHeaderName { get; set; } = "X-Signature";
+    public string WebHookSignatureHeaderName { get; set; } = "X-Signature";
 
     /// <inheritdoc />
     public string SignatureEncryptionKey { get; set; } =
@@ -49,7 +49,7 @@ public class WebHookOptionBuilder<TSub> : IWebHookOptionBuilder<TSub>
         UseSigning = true;
         SignatureEncryptionKey = encryptionKey;
         if (!string.IsNullOrWhiteSpace(signatureHeader))
-            WebhookSignatureHeaderName = signatureHeader;
+            WebHookSignatureHeaderName = signatureHeader;
 
         return this;
     }
