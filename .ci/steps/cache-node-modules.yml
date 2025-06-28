@@ -14,13 +14,6 @@ steps:
 
   - task: Cache@2
     inputs:
-      key: 'yarn-cache|$(Agent.OS)|./yarn.lock'
-      path: $(Build.SourcesDirectory)/.yarn/cache
-    displayName: Cache yarn cache
-    continueOnError: true
-
-  - task: Cache@2
-    inputs:
       key: 'node_modules|root|$(Agent.OS)|./yarn.lock'
       path: $(Build.SourcesDirectory)/node_modules
       cacheHitVar: NODE_MODULES_CACHE_RESTORED
