@@ -1,5 +1,6 @@
+using System.Security.Cryptography;
 using MccSoft.TemplateApp.Domain.WebHook;
-using MccSoft.WebHooks;
+using MccSoft.WebHooks.Configuration;
 using Polly;
 
 namespace MccSoft.TemplateApp.App.Setup;
@@ -8,7 +9,7 @@ public partial class SetupWebhooks
 {
     static partial void AddProjectSpecifics(
         WebApplicationBuilder builder,
-        WebHookOptionBuilder<TemplateWebHookSubscription> optionsBuilder
+        IWebHookOptionBuilder<TemplateWebHookSubscription> optionsBuilder
     )
     {
         ConfigureResilienceOptions(optionsBuilder);
@@ -16,7 +17,7 @@ public partial class SetupWebhooks
     }
 
     private static void ConfigureResilienceOptions(
-        WebHookOptionBuilder<TemplateWebHookSubscription> optionsBuilder
+        IWebHookOptionBuilder<TemplateWebHookSubscription> optionsBuilder
     )
     {
         optionsBuilder.ResilienceOptions.Delay = TimeSpan.FromSeconds(2);
@@ -24,11 +25,14 @@ public partial class SetupWebhooks
         optionsBuilder.ResilienceOptions.UseJitter = true;
         optionsBuilder.ResilienceOptions.MaxRetryAttempts = 5;
         optionsBuilder.ResilienceOptions.Timeout = TimeSpan.FromSeconds(30);
+
+        // take key from appsettings.
+        optionsBuilder.WithSigning(Convert.ToBase64String(RandomNumberGenerator.GetBytes(32)));
     }
 
     private static void ConfigureInterceptors(
         WebApplicationBuilder builder,
-        WebHookOptionBuilder<TemplateWebHookSubscription> optionsBuilder
+        IWebHookOptionBuilder<TemplateWebHookSubscription> optionsBuilder
     )
     {
         using ServiceProvider serviceProvider = builder.Services.BuildServiceProvider();

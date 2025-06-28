@@ -2,9 +2,11 @@ using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using MccSoft.WebHooks.Configuration;
 using MccSoft.WebHooks.Domain;
 using MccSoft.WebHooks.Interceptors;
 using MccSoft.WebHooks.Publisher;
+using MccSoft.WebHooks.Signing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -19,14 +21,16 @@ public class WebHookProcessor<TSub>
     private readonly ILogger<WebHookEventPublisher<TSub>> _logger;
     private readonly ResiliencePipelineProvider<string> _pipelineProvider;
     private readonly IWebHookInterceptors<TSub> _webHookInterceptors;
-    private readonly WebHookOptionBuilder<TSub> _configuration;
+    private readonly IWebHookOptionBuilder<TSub> _configuration;
+    private readonly IWebHookSignatureService<TSub> _webHookSignatureService;
 
     public WebHookProcessor(
         IServiceProvider serviceProvider,
         ResiliencePipelineProvider<string> pipelineProvider,
         ILogger<WebHookEventPublisher<TSub>> logger,
         IWebHookInterceptors<TSub> webHookInterceptors,
-        WebHookOptionBuilder<TSub> configuration
+        IWebHookOptionBuilder<TSub> configuration,
+        IWebHookSignatureService<TSub> webHookSignatureService
     )
     {
         if (WebHookRegistration.DbContextType == null)
@@ -42,6 +46,7 @@ public class WebHookProcessor<TSub>
         _logger = logger;
         _pipelineProvider = pipelineProvider;
         _configuration = configuration;
+        _webHookSignatureService = webHookSignatureService;
     }
 
     [CustomRetry]
@@ -106,6 +111,11 @@ public class WebHookProcessor<TSub>
             RequestUri = new Uri(webHook.Subscription.Url),
         };
 
+        if (_configuration.UseSigning && webHook.Subscription.IsSignatureDefined())
+        {
+            SignHttpMessage(webHook, message);
+        }
+
         foreach (var item in webHook.Subscription.Headers)
         {
             message.Headers.Add(item.Key, item.Value);
@@ -144,5 +154,18 @@ public class WebHookProcessor<TSub>
             _dbContext.Update(webHook);
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
+    }
+
+    /// <summary>
+    /// Adds signature header into request with sent webhook data
+    /// </summary>
+    /// <param name="webHook">Sent webhook event</param>
+    /// <param name="message">Http request message that will be enriched with signature</param>
+    private void SignHttpMessage(WebHook<TSub> webHook, HttpRequestMessage message)
+    {
+        var secret = _webHookSignatureService.DecryptSecret(webHook.Subscription.SignatureSecret);
+        var signature = _webHookSignatureService.ComputeSignature(webHook.Data, secret);
+
+        message.Headers.Add(_configuration.WebHookSignatureHeaderName, signature);
     }
 }

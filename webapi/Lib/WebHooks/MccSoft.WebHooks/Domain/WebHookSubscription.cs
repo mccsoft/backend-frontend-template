@@ -45,6 +45,11 @@ public class WebHookSubscription
     public DateTime SubscribedAt { get; init; }
 
     /// <summary>
+    /// Encrypted secret is used to sign outgoing WebHooks.
+    /// </summary>
+    public string SignatureSecret { get; private set; } = "";
+
+    /// <summary>
     /// Default constructor required by EF Core.
     /// </summary>
     protected WebHookSubscription() { }
@@ -73,6 +78,21 @@ public class WebHookSubscription
 
         SubscribedAt = DateTime.UtcNow;
     }
+
+    /// <summary>
+    /// Sets new secret.
+    /// </summary>
+    /// <remarks>You must care about passing encrypted instance of secret by your self.</remarks>
+    /// <param name="encryptedSecret"></param>
+    public void UpdateSignatureSecret(string encryptedSecret)
+    {
+        SignatureSecret = encryptedSecret;
+    }
+
+    /// <summary>
+    /// Returns boolean flag do we have signing secret or not for further using in outgoing webhook.
+    /// </summary>
+    public bool IsSignatureDefined() => !string.IsNullOrEmpty(SignatureSecret.Trim());
 
     /// <summary>
     /// Creates a new <see cref="WebHook{TSub}"/> instance using the current subscription.

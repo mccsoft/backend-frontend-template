@@ -25,6 +25,7 @@ public static class WebHookExtensions
                 record.Name,
                 record.Url,
                 (WebHookEventType)Enum.Parse(typeof(WebHookEventType), record.EventType),
+                record.IsSignatureDefined(),
                 record.Method.ToString(),
                 record.Headers
             );
