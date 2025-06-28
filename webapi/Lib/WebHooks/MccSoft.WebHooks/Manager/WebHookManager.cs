@@ -114,16 +114,14 @@ public class WebHookManager<TSub> : IWebHookManager<TSub>
             .WebHookSubscriptions<TSub>()
             .FirstAsync(webhook => webhook.Id == subscriptionId);
 
-        var secret = _signatureService.GenerateEncryptedSecret(webHookSubscription);
-        if (string.IsNullOrWhiteSpace(secret))
+        var decryptedSecret = _signatureService.GenerateEncryptedSecret(webHookSubscription);
+        if (string.IsNullOrWhiteSpace(decryptedSecret))
             throw new InvalidOperationException(
                 $"{nameof(IWebHookOptionBuilder<TSub>.UseSigning)} is disabled or EncryptionKey is missing."
             );
 
-        _dbContext.Update(webHookSubscription);
         await _dbContext.SaveChangesAsync();
-
-        return secret;
+        return decryptedSecret;
     }
 
     /// <inheritdoc />
