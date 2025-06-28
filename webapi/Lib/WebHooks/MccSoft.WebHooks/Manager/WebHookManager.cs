@@ -69,20 +69,12 @@ public class WebHookManager<TSub> : IWebHookManager<TSub>
         var subscription = (TSub)
             Activator.CreateInstance(typeof(TSub), [name, url, eventType, method, headers]);
 
-        // TODO: think how to expose it from here
-        var secret = _signatureService.GenerateEncryptedSecret(subscription);
+        var decryptedSecret = _signatureService.GenerateEncryptedSecret(subscription);
 
         _dbContext.WebHookSubscriptions<TSub>().Add(subscription);
         await _dbContext.SaveChangesAsync();
 
-        // temporary solution for providing insecure secret to user just after sub creation.
-        if (!string.IsNullOrWhiteSpace(secret))
-        {
-            subscription.UpdateSignatureSecret(secret);
-        }
-
-        return new SubscriptionResult<TSub>(subscription, secret);
-        ;
+        return new SubscriptionResult<TSub>(subscription, decryptedSecret);
     }
 
     /// <inheritdoc />
