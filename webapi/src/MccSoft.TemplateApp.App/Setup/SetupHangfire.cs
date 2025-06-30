@@ -113,13 +113,15 @@ public static partial class SetupHangfire
         var jobSettings = Activator.CreateInstance<TOptions>();
         appConfiguration.GetSection(jobSettings.GetType().Name).Bind(jobSettings);
 
-        recurringJobManager.AddOrUpdate<TJob>(jobSettings.CronExpression);
+        if (jobSettings.IsEnabled != false)
+            recurringJobManager.AddOrUpdate<TJob>(jobSettings.CronExpression);
     }
 
     public static void AddOrUpdate<TJob>(
         this IRecurringJobManager recurringJobManager,
         string cronExpression
-    ) where TJob : JobBase
+    )
+        where TJob : JobBase
     {
         recurringJobManager.AddOrUpdate<TJob>(
             typeof(TJob).Name,
