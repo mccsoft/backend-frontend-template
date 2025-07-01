@@ -73,11 +73,10 @@ export default defineConfig(({ command, mode }) => {
 
       preprocessorOptions: {
         scss: {
-          api: 'legacy',
+          loadPaths: ['./'],
         },
       },
     },
-
     build: {
       outDir: 'build',
       sourcemap: process.env.SOURCEMAP === 'false' ? false : true,
