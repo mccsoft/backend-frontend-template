@@ -32,6 +32,7 @@ export type CustomModalProps<T = string> = {
     }
   | {
       buttons: { id: T; text: string; color?: ButtonColor }[];
+      onButtonClick?: (buttonId: T) => void;
     }
 );
 
@@ -69,7 +70,7 @@ export const CustomModal: React.FC<CustomModalProps> = (props) => {
                 type={'submit'}
                 title={props.okButtonText ?? i18n.t('ok_button')}
                 onClick={async () => {
-                  props.onButtonClick?.('ok');
+                  props.onButtonClick?.();
                 }}
               />
             ) : props.buttons === 'ok-cancel' ? (
