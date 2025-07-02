@@ -25,7 +25,6 @@ steps:
 
   - script: |
       yarn frontend build-scss-for-razor
-      SOURCEMAP=false yarn build-frontend
       yarn build-frontend
     displayName: 'build frontend'
 
