@@ -15,8 +15,6 @@ import { NavigateFunction } from 'react-router';
 
 export type AdvancedFormReturnType<
   TFieldValues extends FieldValues = FieldValues,
-  // ignored because it's used in react-hook-form as well
-  // eslint-disable-next-line @typescript-eslint/ban-types
   TContext extends object = object,
 > = UseFormReturn<TFieldValues, TContext> & {
   overallError: string;
@@ -33,8 +31,6 @@ export type AdvancedFormReturnType<
  */
 export function useAdvancedForm<
   TFieldValues extends FieldValues = FieldValues,
-  // ignored because it's used in react-hook-form as well
-  // eslint-disable-next-line @typescript-eslint/ban-types
   TContext extends object = object,
 >(
   submitHandler: (
