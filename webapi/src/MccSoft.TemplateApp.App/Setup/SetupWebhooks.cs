@@ -1,5 +1,6 @@
 using MccSoft.TemplateApp.Domain.WebHook;
 using MccSoft.WebHooks;
+using MccSoft.WebHooks.Configuration;
 
 namespace MccSoft.TemplateApp.App.Setup;
 
@@ -22,6 +23,6 @@ public partial class SetupWebhooks
 
     static partial void AddProjectSpecifics(
         WebApplicationBuilder builder,
-        WebHookOptionBuilder<TemplateWebHookSubscription> optionsBuilder
+        IWebHookOptionBuilder<TemplateWebHookSubscription> optionsBuilder
     );
 }

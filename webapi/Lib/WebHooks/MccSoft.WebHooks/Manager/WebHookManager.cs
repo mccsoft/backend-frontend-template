@@ -5,8 +5,10 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Common;
+using MccSoft.WebHooks.Configuration;
 using MccSoft.WebHooks.Domain;
 using MccSoft.WebHooks.Processing;
+using MccSoft.WebHooks.Signing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -19,11 +21,13 @@ public class WebHookManager<TSub> : IWebHookManager<TSub>
     private readonly ILogger<WebHookManager<TSub>> _logger;
     private readonly DbContext _dbContext;
     private readonly IServiceScopeFactory _serviceScopeFactory;
+    private readonly IWebHookSignatureService<TSub> _signatureService;
 
     public WebHookManager(
         IServiceScopeFactory serviceScopeFactory,
         IServiceProvider serviceProvider,
-        ILogger<WebHookManager<TSub>> logger
+        ILogger<WebHookManager<TSub>> logger,
+        IWebHookSignatureService<TSub> signatureService
     )
     {
         if (WebHookRegistration.DbContextType == null)
@@ -36,6 +40,7 @@ public class WebHookManager<TSub> : IWebHookManager<TSub>
             serviceProvider.GetRequiredService(WebHookRegistration.DbContextType);
 
         _logger = logger;
+        _signatureService = signatureService;
     }
 
     /// <inheritdoc />
@@ -53,7 +58,7 @@ public class WebHookManager<TSub> : IWebHookManager<TSub>
     }
 
     /// <inheritdoc />
-    public async Task<TSub> Subscribe(
+    public async Task<SubscriptionResult<TSub>> Subscribe(
         string name,
         string url,
         string eventType,
@@ -64,10 +69,12 @@ public class WebHookManager<TSub> : IWebHookManager<TSub>
         var subscription = (TSub)
             Activator.CreateInstance(typeof(TSub), [name, url, eventType, method, headers]);
 
+        var decryptedSecret = _signatureService.GenerateEncryptedSecret(subscription);
+
         _dbContext.WebHookSubscriptions<TSub>().Add(subscription);
         await _dbContext.SaveChangesAsync();
 
-        return subscription;
+        return new SubscriptionResult<TSub>(subscription, decryptedSecret);
     }
 
     /// <inheritdoc />
@@ -98,6 +105,23 @@ public class WebHookManager<TSub> : IWebHookManager<TSub>
 
         localDbContext.Remove(sub);
         await localDbContext.SaveChangesAsync();
+    }
+
+    /// <inheritdoc />
+    public async Task<string> RotateSecret(Guid subscriptionId)
+    {
+        var webHookSubscription = await _dbContext
+            .WebHookSubscriptions<TSub>()
+            .FirstAsync(webhook => webhook.Id == subscriptionId);
+
+        var decryptedSecret = _signatureService.GenerateEncryptedSecret(webHookSubscription);
+        if (string.IsNullOrWhiteSpace(decryptedSecret))
+            throw new InvalidOperationException(
+                $"{nameof(IWebHookOptionBuilder<TSub>.UseSigning)} is disabled or EncryptionKey is missing."
+            );
+
+        await _dbContext.SaveChangesAsync();
+        return decryptedSecret;
     }
 
     /// <inheritdoc />
