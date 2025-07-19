@@ -16,10 +16,15 @@ type HookFormProps<
   Required extends boolean | undefined,
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+  TTransformedValues = TFieldValues,
 > = Omit<StyledAutocompleteProps<T, true, Required, false>, 'onChange'> & {
   name: TName;
-  control: UseControllerProps<TFieldValues>['control'];
-  rules?: UseControllerProps<TFieldValues>['rules'];
+  control: UseControllerProps<
+    TFieldValues,
+    TName,
+    TTransformedValues
+  >['control'];
+  rules?: UseControllerProps<TFieldValues, TName, TTransformedValues>['rules'];
   onFocus?: () => void;
   defaultValue?: T | null;
 
@@ -38,10 +43,12 @@ export function HookFormMultiSelectDropDownInput<
   D,
   Required extends boolean,
   TFieldValues extends FieldValues = FieldValues,
->(props: HookFormProps<D, Required, TFieldValues>) {
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+  TTransformedValues = TFieldValues,
+>(props: HookFormProps<D, Required, TFieldValues, TName, TTransformedValues>) {
   const { control, name, rules, ...rest } = props;
   return (
-    <Controller<TFieldValues>
+    <Controller
       control={control}
       name={name}
       rules={rules}

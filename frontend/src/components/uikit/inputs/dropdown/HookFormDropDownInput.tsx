@@ -19,8 +19,8 @@ type HookFormProps<
   'onChange' | 'onValueChanged' | 'value'
 > & {
   name: TName;
-  control: UseControllerProps<TFieldValues>['control'];
-  rules?: UseControllerProps<TFieldValues>['rules'];
+  control: UseControllerProps<TFieldValues, TName, TFieldValues>['control'];
+  rules?: UseControllerProps<TFieldValues, TName, TFieldValues>['rules'];
   onFocus?: () => void;
   defaultValue?: unknown;
 };
@@ -30,7 +30,8 @@ export function HookFormDropDownInput<
   TFieldValues extends FieldValues = FieldValues,
   Required extends boolean | undefined = undefined,
   UseIdAsValue extends boolean | undefined = undefined,
->(props: HookFormProps<T, TFieldValues, Required, UseIdAsValue>) {
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+>(props: HookFormProps<T, TFieldValues, Required, UseIdAsValue, TName>) {
   const { control, name, rules, useIdFunctionAsValue = true, ...rest } = props;
   const idFunction = props.idFunction
     ? convertPropertyAccessorToFunction<T, false, Required, false>(

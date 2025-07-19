@@ -12,7 +12,7 @@ import {
 } from '@tanstack/react-query';
 
 type ErrorBoundaryFallbackProps = {
-  error: Error;
+  error: unknown;
   componentStack: string | null;
   eventId: string | null;
   resetError(): void;

@@ -1,10 +1,16 @@
 import { DatePath } from '../hook-form';
 import { DatePicker, DatePickerProps } from './DatePicker';
-import { Controller, FieldValues, UseControllerProps } from 'react-hook-form';
+import {
+  Controller,
+  FieldPath,
+  FieldValues,
+  UseControllerProps,
+} from 'react-hook-form';
 
 type HookFormDatePickerProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends DatePath<TFieldValues> = DatePath<TFieldValues>,
+  TTransformedValues = TFieldValues,
 > = Omit<DatePickerProps, 'onChange' | 'name'> & {
   name: TName;
   control: UseControllerProps<TFieldValues>['control'];
@@ -20,7 +26,9 @@ supply them with Date object.
  */
 export function HookFormDatePicker<
   TFieldValues extends FieldValues = FieldValues,
->(props: HookFormDatePickerProps<TFieldValues>) {
+  TName extends DatePath<TFieldValues> = DatePath<TFieldValues>,
+  TTransformedValues = TFieldValues,
+>(props: HookFormDatePickerProps<TFieldValues, TName, TTransformedValues>) {
   const { name, rules, control, ...rest } = props;
   return (
     <Controller

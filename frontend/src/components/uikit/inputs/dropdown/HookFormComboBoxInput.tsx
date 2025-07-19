@@ -25,7 +25,8 @@ type HookFormProps<
 export function HookFormComboBoxInput<
   T,
   TFieldValues extends FieldValues = FieldValues,
->(props: HookFormProps<T, TFieldValues>) {
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+>(props: HookFormProps<T, TFieldValues, undefined, TName>) {
   const { control, name, rules, ...rest } = props;
 
   return (
