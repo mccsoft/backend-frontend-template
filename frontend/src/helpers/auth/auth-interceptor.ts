@@ -205,15 +205,15 @@ function useCookieAuth(): AuthData | null | 'loading' {
     retryOnMount: false,
     retry: false,
   });
-  return data.isLoading
-    ? 'loading'
-    : data.isError || !data.data?.id
-      ? null
-      : {
-          access_token: '',
-          refresh_token: '',
-          claims: { id: data.data.id, name: data.data.username },
-        };
+
+  if (data.data?.id)
+    return {
+      access_token: '',
+      refresh_token: '',
+      claims: { id: data.data.id, name: data.data.username },
+    };
+
+  return data.isLoading ? 'loading' : null;
 }
 
 function useOAuthAuth(): AuthData | null {
