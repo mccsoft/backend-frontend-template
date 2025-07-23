@@ -35,7 +35,7 @@ public class JsonQueryBinder : IModelBinder
             var parsed = JsonSerializer.Deserialize(
                 value,
                 bindingContext.ModelType,
-                new JsonSerializerOptions(JsonSerializerDefaults.Web)
+                DefaultJsonSerializer.DeserializationOptions
             );
             bindingContext.Result = ModelBindingResult.Success(parsed);
 
