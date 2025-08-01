@@ -30,8 +30,6 @@ public static partial class SetupDatabase
 
         await serviceProvider.SeedOpenIdClientsAsync();
 
-        context.ReloadTypesForEnumSupport();
-
         // If you'd like to modify this class, consider adding your custom code in the SetupDatabase.partial.cs
         // This will make it easier to pull changes from Template when Template is updated
         // (actually this file will be overwritten by a file from template, which will make your changes disappear)
