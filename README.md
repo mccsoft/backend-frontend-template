@@ -73,6 +73,17 @@ Create a new git repository and copy everything (except `.git` folder) to it. Do
 6. Disable Pipeline notifications in Azure (i.e. 'Run stage waiting for approval' and 'Manual validation Pending') https://dev.azure.com/mccsoft/TemplateApp/_settings/notifications. Also disable them in your personal profile: https://dev.azure.com/mccsoft/_usersSettings/notifications
 7. Pipeline contains 2 stages for deploying to DEV and PROD. You could add new deployment stages by copying existing once.
 
+### Setup pipeline for Pull Requests
+1. Go to Azure and create Pipeline. Specify `.ci/azure-pipelines-pr-tests.yml` as the source of pipeline, name it like 'PROJECT_NAME PR'.
+2. Add your pipeline as policy to the `master` branch, to do that:
+   1. Go to project Settings, then to Repositories (https://dev.azure.com/mcctomsk/Backend-Frontend-Template/_settings/repositories)
+   2. Click on the repository you've pushed your code to
+   3. Switch to `Policies` tab, scroll below, scroll to `Branch Policies` section, click on the `master` branch
+      1. In `Build Validation` section add the PR pipeline that you previously created
+      2. In `Branch Policies` enable `Check for linked work items` and `Check for comment resolution`, but make them both Optional (otherwise, direct commits to `master` branch will be rejected)
+
+
+
 ## Deploy
 
 Here are the possible ways to deploy your app:
