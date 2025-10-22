@@ -4,8 +4,11 @@
 # Change 'base.partial.yml' instead
 # ------------------------------------
 variables:
-  BUILD_NUMBER: 0.1.$(Build.BuildId)
-  REACT_APP_BUILD_NUMBER: 0.1.$(Build.BuildId)
+  MAJOR_VERSION: 0
+  MINOR_VERSION: 1
+  PATCH_VERSION: $[ counter(format('{0}.{1}', variables['MAJOR_VERSION'], variables['MINOR_VERSION']), 1) ]
+  BUILD_NUMBER: $(MAJOR_VERSION).$(MINOR_VERSION).$(PATCH_VERSION)
+  REACT_APP_BUILD_NUMBER: $(BUILD_NUMBER)
   solution: 'webapi/MccSoft.TemplateApp.sln'
   project: 'webapi/src/MccSoft.TemplateApp.App/MccSoft.TemplateApp.App.csproj'
 
