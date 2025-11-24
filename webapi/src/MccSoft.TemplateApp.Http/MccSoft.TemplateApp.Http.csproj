@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-  <TargetFramework>net9.0</TargetFramework>
+  <TargetFramework>net10.0</TargetFramework>
     <Description>
       Provides access to the web API of the ServiceTemplate microservice.
     </Description>
@@ -12,9 +12,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JsonKnownTypes" Version="0.7.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.DataAnnotations" Version="2.3.0" />
-    <PackageReference Include="NJsonSchema" Version="11.3.2" />
+    <PackageReference Include="JsonKnownTypes" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.DataAnnotations" />
+    <PackageReference Include="NJsonSchema" />
   </ItemGroup>
 
 
