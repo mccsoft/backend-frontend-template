@@ -4,6 +4,7 @@ using MccSoft.TemplateApp.ComponentTests.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -29,6 +30,13 @@ public partial class ComponentTestFixture : WebApplicationFactory<Program>
             loggingBuilder => loggingBuilder.ClearProviders().AddXUnit(OutputHelper)
         );
         builder.UseEnvironment("Test");
+        builder.ConfigureAppConfiguration(configure =>
+        {
+            configure
+                .AddJsonFile("appsettings.Development.json", true)
+                .AddJsonFile("appsettings.Test.json", true)
+                .AddEnvironmentVariables();
+        });
 
         builder.UseSolutionRelativeContentRoot(
             solutionRelativePath: "src/MccSoft.TemplateApp.App",
