@@ -24,5 +24,6 @@ services:
       - branch.env
     volumes:
       - ./files:/files:rw
+      - ../../../webapi/src/MccSoft.TemplateApp.App/appsettings.Development.json:/webapi/appsettings.Production.json
     expose:
       - 5000

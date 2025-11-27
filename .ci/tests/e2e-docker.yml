@@ -65,6 +65,17 @@ steps:
     workingDirectory: e2e
     displayName: 'run tests'
 
+
+  - task: Bash@3
+    displayName: '[bash]: get docker logs'
+    condition: failed()
+    inputs:
+      targetType: 'inline'
+      script: |
+        docker ps
+        docker logs e2e-branch-backend-1
+      workingDirectory: .ci/tests/e2e-branch
+
   - script: |
       mkdir -p test-results
     workingDirectory: e2e
