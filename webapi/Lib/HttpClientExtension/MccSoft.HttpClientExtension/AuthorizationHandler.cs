@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 namespace MccSoft.HttpClientExtension;
 
 /// <summary>
-/// Handler to add the Bearer Token into a Http-Request and perform refresh token operation if needed
+/// Handler to add the Bearer Token into a Http-Request and perform refresh token operation if needed.
+/// Should be passed to HttpClient upon it's creation:
+///   e.g. new HttpClient(new AuthenticationHandler(...))
+///   or services.AddHttpClient<IMyApiService, MyApiService>().AddHttpMessageHandler<AuthenticationHandler>();
 /// </summary>
 public class AuthenticationHandler : DelegatingHandler
 {
