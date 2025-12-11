@@ -7,4 +7,6 @@ public class FileInfoDto
     public long Size { get; set; }
 
     public FileMetadataDto Metadata { get; set; }
+
+    public DateTime CreatedAt { get; set; }
 }

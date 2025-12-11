@@ -28,14 +28,21 @@ public class FilesController
 
     [HttpGet("{id}")]
     [AllowAnonymous]
+    [ProducesResponseType(typeof(FileStreamResult), 200)]
     // [ValidateSignedUrl]
     public async Task<FileStreamResult> DownloadFile(Guid id)
     {
         return await _fileService.Download(id);
     }
 
+    [HttpGet("{id}")]
+    public async Task<FileInfoDto> Get(Guid id)
+    {
+        return await _fileService.Get(id);
+    }
+
     [HttpGet]
-    public async Task<PagedResult<FileInfoDto>> Get(SearchFileDto searchDto)
+    public async Task<PagedResult<FileInfoDto>> Get([FromQuery] SearchFileDto searchDto)
     {
         return await _fileService.Get(searchDto);
     }
