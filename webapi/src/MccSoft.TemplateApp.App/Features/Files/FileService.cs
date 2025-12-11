@@ -4,6 +4,7 @@ using MccSoft.PersistenceHelpers;
 using MccSoft.TemplateApp.App.Features.Files.Dto;
 using MccSoft.TemplateApp.Domain;
 using MccSoft.TemplateApp.Persistence;
+using MccSoft.WebApi.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MccSoft.TemplateApp.App.Features.Files;
@@ -36,6 +37,26 @@ public class FileService
         await _dbContext.SaveChangesAsync();
 
         return await Get(dbFile.Id);
+    }
+
+    public async Task<PagedResult<FileInfoDto>> Get(SearchFileDto searchDto)
+    {
+        IQueryable<DbFile> dbFiles = _dbContext.Files;
+
+        if (!string.IsNullOrEmpty(searchDto.FileName))
+            dbFiles = dbFiles.Where(
+                x => x.FileName.ToLower().Contains(searchDto.FileName.ToLower())
+            );
+
+        if (!string.IsNullOrEmpty(searchDto.Id))
+            dbFiles = dbFiles.Where(x => x.Id.ToString() == searchDto.Id);
+
+        if (!string.IsNullOrEmpty(searchDto.Metadata?.ExternalId))
+            dbFiles = dbFiles.Where(x => x.Metadata.ExternalId == searchDto.Metadata.ExternalId);
+
+        return await dbFiles
+            .Select(x => x.ToFileInfoDto())
+            .ToPagingListAsync(searchDto, nameof(DbFile.CreatedAt));
     }
 
     public async Task<FileInfoDto> Get(Guid id)

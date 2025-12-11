@@ -37,5 +37,10 @@ public class DbFile
 
     public DateTime CreatedAt { get; set; }
 
+    /// <summary>
+    /// Could be used to store some arbitrary metadata regarding the file
+    /// </summary>
+    public DbFileMetadata? Metadata { get; set; }
+
     public static Specification<DbFile> HasId(Guid id) => new(nameof(HasId), p => p.Id == id, id);
 }
