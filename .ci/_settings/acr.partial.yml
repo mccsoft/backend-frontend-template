@@ -1,0 +1,14 @@
+# ------------------------------------
+# This file that is used in all pipelines
+# Here you can override values defined in 'acr.yml'.
+# ------------------------------------
+
+# ACR
+variables:
+- name: ACR_REPOSITORY
+  value: 'mcctemplateapp1/main'
+- name: ACR_REGISTRY
+  value: 'registry.gitlab.com'
+- name: connectorACR
+  value: 'GitLab-Docker-Registry'
+# -----------

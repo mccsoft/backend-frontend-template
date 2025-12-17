@@ -17,6 +17,8 @@ trigger:
     include:
       - master
       - main
+      - release/
+      - releases/
       - feature/ci-*
   paths:
     exclude:

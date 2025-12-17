@@ -1,8 +1,8 @@
 # Shared steps to test everything within repository.
 steps:
   - script: |
-      yarn typecheck
-    displayName: 'yarn typecheck'
+      yarn frontend typecheck
+    displayName: 'yarn frontend typecheck'
 
   - script: |
       cd scripts/integresql

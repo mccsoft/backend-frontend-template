@@ -1,0 +1,40 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${project}-ingress
+  namespace: ${namespace}
+  annotations:
+    traefik.ingress.kubernetes.io/router.tls: 'true'
+    cert-manager.io/cluster-issuer: 'letsencrypt'
+    certmanager.k8s.io/acme-challenge-type: dns01
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.middlewares: ${namespace}-custom-headers@kubernetescrd
+spec:
+  tls:
+    - hosts:
+        - '${hostname}'
+      secretName: ${namespace}-cert
+  rules:
+    - host: ${hostname}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ${project}-svc
+                port:
+                  name: http
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: custom-headers
+  namespace: ${namespace}
+spec:
+  headers:
+    customRequestHeaders:
+      # this is required for WebSockets to work (otherwise the passed protocol is wss and JWT Issuer verification fails
+      # since wss://HOST.DOMAIN !== https://HOST.DOMAIN
+      X-Forwarded-Proto: 'https'

@@ -1,0 +1,14 @@
+# ------------------------------------
+# This file contains Azure Container Registry refrencese used in main pipeline
+#
+# This is the default file that will be overwritten during update.
+# Please, DO NOT CHANGE it
+# Change 'acr.partial.yml' instead
+# ------------------------------------
+variables:
+- name: ACR_REPOSITORY
+  value: 'main'
+- name: ACR_REGISTRY
+  value: 'templateproject.azurecr.io'
+- name: connectorACR
+  value: 'TemplateACRConnector'

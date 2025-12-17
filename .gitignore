@@ -371,3 +371,8 @@ frontend/storybook-static
 e2e/.env.local
 scripts/.env
 scripts/1.ts
+
+kubeconfig.config
+k8s/aks-rancher/deploy_*
+k8s/aks-env/deploy_*
+

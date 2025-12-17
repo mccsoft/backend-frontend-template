@@ -1,0 +1,46 @@
+parameters:
+  - name: Environment
+    displayName: Select Environment to deploy
+    type: string
+    default: dev
+    values: [dev, green, prod]
+
+  - name: BuildNumber
+    displayName: Set a build number
+    type: string
+    default: latest
+
+  - name: restartDeployment
+    type: boolean
+    default: false
+
+trigger: none
+
+variables:
+  - template: ./_settings/base.yml
+  - template: ./_settings/base.partial.yml
+  - template: ./_settings/acr.yml
+  - template: ./_settings/acr.partial.yml
+  - template: ./_settings/ci.yml
+  - template: ./_settings/ci.partial.yml
+
+  - name: BUILD_NUMBER_APP
+    value: ${{ parameters.BuildNumber }}
+
+stages:
+  - stage: Deployment
+    displayName: Deploy to ${{ variables.serviceName }} ${{ parameters.Environment }} k8s cluster
+    jobs:
+      - deployment:
+        environment:
+          name: ${{ parameters.Environment }}
+          resourceType: Kubernetes
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: ./azure-deploy-kubernetes.yml
+                  parameters:
+                    Environment: ${{ parameters.Environment }}
+                    restartDeployment: ${{ parameters.restartDeployment }}
+                    BuildAppNumber: $(BUILD_NUMBER_APP)

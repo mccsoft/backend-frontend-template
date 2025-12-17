@@ -20,8 +20,8 @@ steps:
   - task: Bash@3
     displayName: '[bash] Prepare versions and environment variables'
     inputs:
-      filePath: '$(Build.SourcesDirectory)/k8s/aks-env/prepare-k8s-templates.sh'
-      workingDirectory: $(Build.SourcesDirectory)/k8s/aks-env
+      filePath: '$(Build.SourcesDirectory)/k8s/aks-rancher/prepare-k8s-templates.sh'
+      workingDirectory: $(Build.SourcesDirectory)/k8s/aks-rancher
       arguments: '${{ parameters.Environment }}'
 
   - ${{ if eq(parameters.Environment, 'prod') }}:
@@ -56,22 +56,21 @@ steps:
 
   - task: PublishBuildArtifacts@1
     inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/k8s/aks-env/deploy_${{ parameters.Environment }}'
+      PathtoPublish: '$(Build.SourcesDirectory)/k8s/aks-rancher/deploy_${{ parameters.Environment }}'
       ArtifactName: 'deploy_${{ parameters.Environment }}'
       publishLocation: 'Container'
 
   - task: KubernetesManifest@1
-    displayName: '[k8s]: applying 02,03,12-deployment.yaml'
+    displayName: '[k8s]: applying *.yaml'
     inputs:
       action: 'deploy'
       connectionType: 'kubernetesServiceConnection'
       namespace: '$(appName)-${{ parameters.Environment }}'
       manifests: |
-        $(Build.SourcesDirectory)/k8s/aks-env/deploy_${{ parameters.Environment }}/02-configMaps.yaml
-        $(Build.SourcesDirectory)/k8s/aks-env/deploy_${{ parameters.Environment }}/03-secretProviderClass.yaml
-        $(Build.SourcesDirectory)/k8s/aks-env/deploy_${{ parameters.Environment }}/12-deployment.yaml
+        $(Build.SourcesDirectory)/k8s/aks-rancher/deploy_${{ parameters.Environment }}/*.yaml
       containers: |
         $(ACR_REGISTRY)/$(ACR_REPOSITORY):${{ parameters.BuildAppNumber }}
+      rolloutStatusTimeout: 120
 
   - ${{ if eq(parameters.restartDeployment, true) }}:
       - task: Kubernetes@1
