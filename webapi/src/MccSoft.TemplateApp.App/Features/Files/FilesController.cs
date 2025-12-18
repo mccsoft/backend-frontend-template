@@ -35,7 +35,7 @@ public class FilesController
         return await _fileService.Download(id);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id}/info")]
     public async Task<FileInfoDto> Get(Guid id)
     {
         return await _fileService.Get(id);
