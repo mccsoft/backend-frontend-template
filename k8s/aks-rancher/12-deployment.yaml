@@ -46,6 +46,13 @@ spec:
             periodSeconds: 30
             successThreshold: 1
             timeoutSeconds: 2
+          readinessProbe:
+            httpGet:
+              path: /api
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 2
       volumes:
         - name: files
           persistentVolumeClaim:
