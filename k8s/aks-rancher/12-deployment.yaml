@@ -27,7 +27,7 @@ spec:
             - configMapRef:
                 name: ${project}-configs
             - secretRef:
-                name: ${secretName}
+                name: ${project}-secrets
           env:
             - name: ConnectionStrings__DefaultConnection
               value: 'Server=postgres;Database=${project};Port=5432;Username=postgres;Password=$(superUserPassword);Pooling=true;Keepalive=5;Command Timeout=60;Include Error Detail=true;'
