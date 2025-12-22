@@ -31,5 +31,6 @@ extends:
   template: azure-pipelines-template.yml
   parameters:
     name: ci
+    deploy_template: ${{ parameters.deploy_template }}
     sb_test_shards: ${{ parameters.sb_test_shards }}
     e2e_test_shards: ${{ parameters.e2e_test_shards }}
