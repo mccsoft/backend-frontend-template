@@ -15,6 +15,5 @@ data:
   REACT_APP_SENTRY_DSN: '${REACT_APP_SENTRY_DSN}'
   Serilog__Elastic__Url: '${Serilog__Elastic__Url}'
   Serilog__Elastic__User: '${Serilog__Elastic__User}'
-  Serilog__EnableConsoleOutput: '${Serilog__EnableConsoleOutput}'
   Serilog__Remote__InstanceName: '${Serilog__Remote__InstanceName}'
   TestApiEnabled: '${TestApiEnabled}'

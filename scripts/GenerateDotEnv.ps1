@@ -57,8 +57,8 @@ Serilog__Elastic__Password:
 
 
 $newContent	= $template + @"
-OpenId__SigningCertificate__Base64Certificate=$SigningCertificate_Base64Certificate
-OpenId__EncryptionCertificate__Base64Certificate=$EncryptionCertificate_Base64Certificate
+export OpenId__SigningCertificate__Base64Certificate=$SigningCertificate_Base64Certificate
+export OpenId__EncryptionCertificate__Base64Certificate=$EncryptionCertificate_Base64Certificate
 "@
 
 $secrets | Set-Content -Path "./$Stage.secrets.env"
