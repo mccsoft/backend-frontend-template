@@ -44,14 +44,14 @@ Serilog__Elastic__Password=''
 "@
 
 $secretsRancher = $secretsRancher + @"
-OpenId__SigningCertificate__Password:$([Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($SigningCertificate_Password)))
-OpenId__EncryptionCertificate__Password:$([Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($EncryptionCertificate_Password)))
-superUserPassword:$([Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($postgresPassword)))
-replicationUserPassword:$([Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($replicationPostgresPassword)))
-Hangfire__DashboardPassword:$([Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($Hangfire__DashboardPassword)))
-DefaultUser__Password:$([Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($DefaultUser__Password)))
-SignUrl__Secret:$([Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($SignUrl__Secret)))
-Serilog__Elastic__Password:''
+OpenId__SigningCertificate__Password: $([Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($SigningCertificate_Password)))
+OpenId__EncryptionCertificate__Password: $([Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($EncryptionCertificate_Password)))
+superUserPassword: $([Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($postgresPassword)))
+replicationUserPassword: $([Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($replicationPostgresPassword)))
+Hangfire__DashboardPassword: $([Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($Hangfire__DashboardPassword)))
+DefaultUser__Password: $([Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($DefaultUser__Password)))
+SignUrl__Secret: $([Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($SignUrl__Secret)))
+Serilog__Elastic__Password: 
 "@
 
 
