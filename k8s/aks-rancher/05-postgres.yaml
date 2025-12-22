@@ -5,7 +5,7 @@ metadata:
   name: postgres
   namespace: ${namespace}
 spec:
-  replicas: 1
+  replicas: 2
   image: postgres:18
   database:
     size: 1Gi
