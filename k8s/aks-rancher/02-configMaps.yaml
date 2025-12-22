@@ -6,11 +6,6 @@ metadata:
   name: ${project}-configs
   namespace: ${namespace}
 data:
-  DefaultTenantId: '${DefaultTenantId}'
-  ExternalAuthentication__AzureAd__Authority: '${ExternalAuthentication__AzureAd__Authority}'
-  ExternalAuthentication__AzureAd__ClientId: '${ExternalAuthentication__AzureAd__ClientId}'
-  ExternalAuthentication__AzureAd__Instance: '${ExternalAuthentication__AzureAd__Instance}'
-  ExternalAuthentication__AzureAd__TenantId: '${ExternalAuthentication__AzureAd__TenantId}'
   General__SiteUrl: '${General__SiteUrl}'
   Email__SiteUrl: '${General__SiteUrl}'
   Hangfire__EnableDashboard: '${Hangfire__EnableDashboard}'

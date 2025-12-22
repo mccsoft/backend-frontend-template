@@ -122,7 +122,7 @@ stages:
       - stage: DeployToDev
         dependsOn:
           - BeforeDeploy
-        condition: and(succeeded(), not(startsWith(variables['Build.SourceBranch'], 'refs/heads/release')), not(startsWith(variables['Build.SourceBranch'], 'refs/heads/feature')))
+        condition: and(succeeded(), not(startsWith(variables['Build.SourceBranch'], 'refs/heads/release')), not(startsWith(variables['Build.SourceBranch'], 'refs/heads/feature2')))
         jobs:
           - deployment: k8sDevDeployment
             environment:
