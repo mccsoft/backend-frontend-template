@@ -4,6 +4,8 @@
 # Change 'base.partial.yml' instead
 # ------------------------------------
 variables:
+  projectName: TemplateApp
+  appName: templateapp
   MAJOR_VERSION: 0
   MINOR_VERSION: 1
   PATCH_VERSION: $[ counter(format('{0}.{1}', variables['MAJOR_VERSION'], variables['MINOR_VERSION']), 1) ]
