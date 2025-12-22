@@ -12,6 +12,10 @@ parameters:
     type: number
     default: 0
 
+variables:
+  - name: deploy_template
+    value: 'azure-deploy-kubernetes-rancher.yml'
+
 trigger:
   branches:
     include:

@@ -132,7 +132,7 @@ stages:
               runOnce:
                 deploy:
                   steps:
-                    - template: ./azure-deploy-kubernetes.yml
+                    - template: ./$(deploy_template)
                       parameters:
                         Environment: 'dev'
                         restartDeployment: true
@@ -152,7 +152,7 @@ stages:
               runOnce:
                 deploy:
                   steps:
-                    - template: ./azure-deploy-kubernetes.yml
+                    - template: ./$(deploy_template)
                       parameters:
                         Environment: 'green'
                         restartDeployment: true
@@ -172,7 +172,7 @@ stages:
               runOnce:
                 deploy:
                   steps:
-                    - template: ./azure-deploy-kubernetes.yml
+                    - template: ./$(deploy_template)
                       parameters:
                         Environment: 'prod'
                         restartDeployment: true
