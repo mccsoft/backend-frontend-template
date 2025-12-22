@@ -7,6 +7,9 @@ parameters:
   - name: e2e_test_shards
     type: number
     default: 0
+  - name: deploy_template
+    type: string
+    default: ''
 
 variables:
   - template: ./_settings/base.yml
@@ -132,7 +135,7 @@ stages:
               runOnce:
                 deploy:
                   steps:
-                    - template: ./${{ variables.deploy_template }}
+                    - template: ./${{ parameters.deploy_template }}
                       parameters:
                         Environment: 'dev'
                         restartDeployment: true
@@ -152,7 +155,7 @@ stages:
               runOnce:
                 deploy:
                   steps:
-                    - template: ./${{ variables.deploy_template }}
+                    - template: ./${{ parameters.deploy_template }}
                       parameters:
                         Environment: 'green'
                         restartDeployment: true
@@ -172,7 +175,7 @@ stages:
               runOnce:
                 deploy:
                   steps:
-                    - template: ./${{ variables.deploy_template }}
+                    - template: ./${{ parameters.deploy_template }}
                       parameters:
                         Environment: 'prod'
                         restartDeployment: true

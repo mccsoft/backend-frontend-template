@@ -11,10 +11,9 @@ parameters:
   - name: e2e_test_shards
     type: number
     default: 0
-
-variables:
   - name: deploy_template
-    value: 'azure-deploy-kubernetes-rancher.yml'
+    type: string
+    default: 'azure-deploy-kubernetes-rancher.yml'
 
 trigger:
   branches:
