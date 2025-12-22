@@ -134,7 +134,7 @@ stages:
                   steps:
                     - template: ./azure-deploy-kubernetes.yml
                       parameters:
-                        Environment: 'today'
+                        Environment: 'dev'
                         restartDeployment: true
                         BuildAppNumber: $(BUILD_NUMBER)
 
