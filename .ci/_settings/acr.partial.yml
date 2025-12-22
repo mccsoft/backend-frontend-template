@@ -9,13 +9,13 @@ parameters:
 
 # ACR
 variables:
-# PR and Build pipelines use different version numbers ($BUILD_NUMBER), so we need to push images to different registries
-# to avoid images interfering with each other.
-# Also, this makes it easy to clean up PR images, since we don't need them to live for a long time
-- name: ACR_REPOSITORY
-  value: 'main/${{ parameters.name }}'
-- name: ACR_REGISTRY
-  value: 'registry.gitlab.com'
-- name: connectorACR
-  value: 'GitLab-Docker-Registry'
+  # PR and Build pipelines use different version numbers ($BUILD_NUMBER), so we need to push images to different registries
+  # to avoid images interfering with each other.
+  # Also, this makes it easy to clean up PR images, since we don't need them to live for a long time
+  - name: ACR_REPOSITORY
+    value: 'mcctemplateapp1/main/${{ parameters.name }}'
+  - name: ACR_REGISTRY
+    value: 'registry.gitlab.com'
+  - name: connectorACR
+    value: 'GitLab-Docker-Registry'
 # -----------
