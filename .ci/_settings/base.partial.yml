@@ -4,7 +4,7 @@
 # ------------------------------------
 variables:
   DUMMY: 1
-  ENABLE_PROD_DEPLOY: true
+  ENABLE_DEPLOY_PROD: true
   # # General
   # DISABLE_BUILD: false
   # DISABLE_TESTS: false
