@@ -4,7 +4,9 @@
 # ------------------------------------
 variables:
   DUMMY: 1
-
+  projectName: TemplateApp
+  appName: templateapp
+  ENABLE_DEPLOY_PROD: true
   # # General
   # DISABLE_BUILD: false
   # DISABLE_TESTS: false
@@ -27,7 +29,7 @@ variables:
   # # Deployment
   # DOCKER_TAG: latest
   # ENABLE_DEPLOY: true
-  # TAG_SOURCES_DEV: dev
-  # TAG_SOURCES_PROD: prod
+  # ENABLE_DEPLOY_GREEN: false
+  # ENABLE_DEPLOY_PROD: false
   # DEPLOY_IF_STORYBOOK_FAILS: false
   # # -----------

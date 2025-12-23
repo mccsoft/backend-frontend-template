@@ -1,0 +1,26 @@
+---
+apiVersion: kubegres.reactive-tech.io/v1
+kind: Kubegres
+metadata:
+  name: postgres
+  namespace: ${namespace}
+spec:
+  replicas: 1
+  image: postgres:18
+  database:
+    size: 1Gi
+  backup:
+    schedule: '0 1 * * *'
+    pvcName: backups
+    volumeMount: /var/lib/backup
+  env:
+    - name: POSTGRES_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: ${project}-secrets
+          key: superUserPassword
+    - name: POSTGRES_REPLICATION_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: ${project}-secrets
+          key: replicationUserPassword

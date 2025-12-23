@@ -64,8 +64,6 @@ Create a new git repository and copy everything (except `.git` folder) to it. Do
    1. You could use GitLab Container Registry (since it's private and free)
       1. Register a user in GitLab (using project email)
       1. Create a personal access token with read/write access to container registry at https://gitlab.com/-/profile/personal_access_tokens
-      1. Add secret variable `DOCKER_TOKEN` to a pipeline (with value generated on previous step)
-      1. Adjust `DOCKER_REGISTRY` (e.g. `registry.gitlab.com/mcctemplateapp1/main`) and `DOCKER_USER` (e.g. `mcc.template.app@gmail.com`) variables in pipeline.
 4. (optional) If you want to add git Tags to your sourcecode when deploying to DEV/PROD, you need to do the following:
    1. Give access for WRITING to Repo for your Pipeline. Instructions: https://elanderson.net/2020/04/azure-devops-pipelines-manual-tagging/
    2. Set TAG_SOURCES_DEV and TAG_SOURCES_PROD variables in [base.partial.yml](.ci/_settings/base.partial.yml).
@@ -74,6 +72,7 @@ Create a new git repository and copy everything (except `.git` folder) to it. Do
 7. Pipeline contains 2 stages for deploying to DEV and PROD. You could add new deployment stages by copying existing once.
 
 ### Setup pipeline for Pull Requests
+
 1. Go to Azure and create Pipeline. Specify `.ci/azure-pipelines-pr-tests.yml` as the source of pipeline, name it like 'PROJECT_NAME PR'.
 2. Add your pipeline as policy to the `master` branch, to do that:
    1. Go to project Settings, then to Repositories (https://dev.azure.com/mcctomsk/Backend-Frontend-Template/_settings/repositories)
@@ -81,8 +80,6 @@ Create a new git repository and copy everything (except `.git` folder) to it. Do
    3. Switch to `Policies` tab, scroll below, scroll to `Branch Policies` section, click on the `master` branch
       1. In `Build Validation` section add the PR pipeline that you previously created
       2. In `Branch Policies` enable `Check for linked work items` and `Check for comment resolution`, but make them both Optional (otherwise, direct commits to `master` branch will be rejected)
-
-
 
 ## Deploy
 

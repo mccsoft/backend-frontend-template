@@ -11,22 +11,32 @@ steps:
   - publish: './scripts/deploy'
     artifact: 'scripts'
 
-  - script: |
-      docker login $(DOCKER_REGISTRY) -u $(DOCKER_USER) -p $(DOCKER_TOKEN)
-    displayName: 'Authenticate at Container Registry'
+  - task: Docker@2
+    displayName: '[Docker]: login'
+    inputs:
+      containerRegistry: $(connectorACR)
+      command: 'login'
+
+  - task: Bash@3
+    displayName: '[debug]: ACR variables'
+    inputs:
+      targetType: 'inline'
+      script: |
+        echo "ACR_REGISTRY/ACR_REPOSITORY: $(ACR_REGISTRY)/$(ACR_REPOSITORY)"
+        echo "BUILD_NUMBER: $(BUILD_NUMBER)"
 
   - task: Docker@2
+    displayName: '[Docker]: build and push docker image'
     condition: succeeded()
     inputs:
-      repository: $(DOCKER_REGISTRY)
+      repository: $(ACR_REPOSITORY)
       command: 'buildAndPush'
       Dockerfile: 'publish/Dockerfile'
       buildContext: '$(Build.SourcesDirectory)/publish'
-      ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
-        tags: |
-          $(BUILD_NUMBER)
-          latest
-      ${{ else }}:
-        tags: |
-          $(BUILD_NUMBER)
-    displayName: 'build and push docker image'
+      tags: |
+        $(BUILD_NUMBER)
+  - task: Docker@2
+    displayName: '[Docker]: logout'
+    inputs:
+      containerRegistry: $(connectorACR)
+      command: 'logout'

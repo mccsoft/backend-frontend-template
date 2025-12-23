@@ -5,10 +5,20 @@ parameters:
 
 steps:
   - checkout: none
-  - script: |
-      docker login $(DOCKER_REGISTRY) -u $(DOCKER_USER) -p $(DOCKER_TOKEN)
-    displayName: 'Authenticate at Container Registry'
-
-  - script: |
-      docker buildx imagetools create $(DOCKER_REGISTRY):$(BUILD_NUMBER) --tag $(DOCKER_REGISTRY):${{ parameters.name }}
-    displayName: 'Add "${{ parameters.name }}" tag'
+  - task: Docker@2
+    displayName: '[Docker]: login'
+    inputs:
+      containerRegistry: $(connectorACR)
+      command: 'login'
+      
+  - task: Bash@3
+    displayName: '[docker]: Add "${{ parameters.name }}" tag'
+    inputs:
+      targetType: 'inline'
+      script: 'docker buildx imagetools create $(ACR_REGISTRY)/$(ACR_REPOSITORY):$(BUILD_NUMBER) --tag $(ACR_REGISTRY)/$(ACR_REPOSITORY):${{ parameters.name }}'
+      
+  - task: Docker@2
+    displayName: '[Docker]: logout'
+    inputs:
+      containerRegistry: $(connectorACR)
+      command: 'logout'

@@ -1,0 +1,17 @@
+---
+### backend
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: ${namespace}
+  name: ${project}-svc
+  labels:
+    app: ${project}
+spec:
+  ports:
+    - port: 80
+      targetPort: 5000
+      name: http
+  selector:
+    app: ${project}
+  type: ClusterIP

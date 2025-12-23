@@ -7,64 +7,94 @@ steps:
     parameters:
       ENABLE_STORYBOOK: false
 
+  - task: Bash@3
+    displayName: '[yarn]: e2e typecheck'
+    inputs:
+      targetType: 'inline'
+      script: |
+        yarn e2e typecheck
+
   - task: DockerInstaller@0
     inputs:
       dockerVersion: '20.10.23'
 
-  - script: |
-      DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
-      mkdir -p $DOCKER_CONFIG/cli-plugins
-      curl -SL https://github.com/docker/compose/releases/download/v2.16.0/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
-      chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
-      docker compose version
-    displayName: 'Install Docker Compose'
+  - task: Bash@3
+    displayName: '[bash]: Install Docker Compose'
+    inputs:
+      targetType: 'inline'
+      script: |
+        DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
+        mkdir -p $DOCKER_CONFIG/cli-plugins
+        curl -SL https://github.com/docker/compose/releases/download/v2.16.0/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
+        chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
+        docker compose version
 
-  - script: |
-      docker login $(DOCKER_REGISTRY) -u $(DOCKER_USER) -p $(DOCKER_TOKEN)
-    displayName: 'Authenticate at Container Registry'
+  - task: Docker@2
+    displayName: '[Docker]: login'
+    inputs:
+      containerRegistry: $(connectorACR)
+      command: 'login'
 
-  - script: |
-      openssl req \
-        -newkey rsa:2048 \
-        -nodes \
-        -sha256 \
-        -subj "/CN=localhost" \
-        -keyout ssl.key \
-        -x509 \
-        -days 365 \
-        -out ssl.crt
-    workingDirectory: .ci/tests/e2e-branch
-    displayName: 'Generate self signed SSL certificate'
+  - task: Bash@3
+    displayName: '[bash]: Generate self signed SSL certificate'
+    inputs:
+      targetType: 'inline'
+      script: |
+        openssl req \
+          -newkey rsa:2048 \
+          -nodes \
+          -sha256 \
+          -subj "/CN=localhost" \
+          -keyout ssl.key \
+          -x509 \
+          -days 365 \
+          -out ssl.crt
+      workingDirectory: .ci/tests/e2e-branch
 
-  - script: |
-      mkdir files
-      chmod -R a+rw files
-    workingDirectory: .ci/tests/e2e-branch
-    displayName: 'Add files directory'
+  - task: Bash@3
+    displayName: '[bash]: Add files directory'
+    inputs:
+      targetType: 'inline'
+      script: |
+        mkdir files
+        chmod -R a+rw files
+      workingDirectory: .ci/tests/e2e-branch
 
-  - script: |
-      chmod 777 nginx.conf
-      ls -la
-      export IMAGE="$(DOCKER_REGISTRY):$(BUILD_NUMBER)"
-      docker compose up -d
-    workingDirectory: .ci/tests/e2e-branch
-    displayName: 'Start App in docker'
+  - task: Bash@3
+    displayName: '[bash]: Start App in docker'
+    inputs:
+      targetType: 'inline'
+      script: |
+        chmod 777 nginx.conf
+        ls -la
+        export IMAGE="$(ACR_REGISTRY)/$(ACR_REPOSITORY):$(BUILD_NUMBER)"
+        docker compose up -d
+      workingDirectory: .ci/tests/e2e-branch
 
-  - script: npx playwright install
-    workingDirectory: e2e
-    displayName: 'npx playwright install'
+  - task: Bash@3
+    displayName: '[npx]: playwright install'
+    inputs:
+      targetType: 'inline'
+      script: 'npx playwright install'
+      workingDirectory: e2e
 
-  - script: |
-      chmod 777 ./wait-for-http.sh
-      ./wait-for-http.sh https://localhost/api/ -t 300 -r $(BUILD_NUMBER)
-    displayName: 'Waiting for web server to be up and running'
-    workingDirectory: .ci/tests
+  - task: Bash@3
+    displayName: '[bash]: Waiting for web server to be up and running'
+    inputs:
+      targetType: 'inline'
+      script: |
+        chmod 777 ./wait-for-http.sh
+        ./wait-for-http.sh https://localhost/api/ -t 30 -r $(BUILD_NUMBER)
+      workingDirectory: .ci/tests
 
-  - script: |
-      BASE_URL=https://localhost yarn test --shard ${SYSTEM_JOBPOSITIONINPHASE}/${SYSTEM_TOTALJOBSINPHASE}
-    workingDirectory: e2e
-    displayName: 'run tests'
-
+  - task: Bash@3
+    displayName: '[yarn]: run tests'
+    inputs:
+      targetType: 'inline'
+      script: 'BASE_URL=https://localhost yarn test --shard ${SYSTEM_JOBPOSITIONINPHASE}/${SYSTEM_TOTALJOBSINPHASE}'
+      workingDirectory: e2e
+    env:
+      ENTRA_ID_PASSWORD: $(ENTRA_ID_PASSWORD)
 
   - task: Bash@3
     displayName: '[bash]: get docker logs'
@@ -76,10 +106,18 @@ steps:
         docker logs e2e-branch-backend-1
       workingDirectory: .ci/tests/e2e-branch
 
-  - script: |
-      mkdir -p test-results
-    workingDirectory: e2e
-    displayName: 'mkdir -p test-results'
+  - task: Bash@3
+    displayName: '[bash]: mkdir -p test-results'
+    inputs:
+      targetType: 'inline'
+      script: 'mkdir -p test-results'
+      workingDirectory: e2e
+
+  - task: Docker@2
+    displayName: '[Docker]: logout'
+    inputs:
+      containerRegistry: $(connectorACR)
+      command: 'logout'
 
   - task: PublishTestResults@2
     condition: always()
