@@ -1,0 +1,61 @@
+---
+### main service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${project}
+  namespace: ${namespace}
+spec:
+  selector:
+    matchLabels:
+      app: ${project}
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: ${project}
+    spec:
+      containers:
+        - name: ${project}
+          image: ${containers__image}
+          envFrom:
+            - configMapRef:
+                name: ${project}-configs
+            - secretRef:
+                name: ${project}-secrets
+          env:
+            - name: ConnectionStrings__DefaultConnection
+              value: 'Server=postgres;Database=${project};Port=5432;Username=postgres;Password=$(superUserPassword);Pooling=true;Keepalive=5;Command Timeout=60;Include Error Detail=true;'
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: files
+              mountPath: '/files'
+              readOnly: false
+          ports:
+            - containerPort: 5000
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /api
+              port: 5000
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 2
+          readinessProbe:
+            httpGet:
+              path: /api
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 2
+      volumes:
+        - name: files
+          persistentVolumeClaim:
+            claimName: ${project}-files-pvc
+      imagePullSecrets:
+        - name: docker-regcred

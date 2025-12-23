@@ -1,0 +1,10 @@
+# This job requires `checkout` step to be done with `persistCredentials: true`.
+# That is, if you include this template make sure you have something like this in your Job:
+#- checkout: self
+#  persistCredentials: true
+steps:
+  - bash: |
+      git tag $(BUILD_NUMBER)
+      git push origin $(BUILD_NUMBER)
+    workingDirectory: $(Build.SourcesDirectory)
+    displayName: 'Create git tag for commit'

@@ -7,10 +7,17 @@ parameters:
   - name: e2e_test_shards
     type: number
     default: 0
+  - name: deploy_template
+    type: string
+    default: ''
 
 variables:
   - template: ./_settings/base.yml
   - template: ./_settings/base.partial.yml
+  - template: ./_settings/acr.yml
+  - template: ./_settings/acr.partial.yml
+    parameters:
+      name: ${{ parameters.name }}
   - template: ./_settings/${{ parameters.name }}.yml
   - template: ./_settings/${{ parameters.name }}.partial.yml
   - name: e2e_test_shards
@@ -28,13 +35,14 @@ stages:
       - stage: Build
         dependsOn: []
         jobs:
-          - job:
+          - job: Buildjob
             pool:
               vmImage: 'ubuntu-latest'
             steps:
               - checkout: self
                 fetchDepth: 1
                 submodules: true
+                persistCredentials: true
 
               - template: ./steps/cache-node-modules.yml
                 parameters:
@@ -43,12 +51,13 @@ stages:
                 parameters:
                   ENABLE_STORYBOOK: ${{ variables.ENABLE_STORYBOOK }}
               - template: ./steps/azure-pipelines-docker.yml
+              - template: ./steps/git-add-tag.yml
 
   - stage: Test
     dependsOn: []
     condition: ne(variables.DISABLE_TESTS, true)
     jobs:
-      - job: Test
+      - job: TestJob
         pool:
           vmImage: 'ubuntu-latest'
         steps:
@@ -67,7 +76,7 @@ stages:
           - ${{ if eq(variables.RUN_STORYBOOK_TESTS_AFTER_BUILD, true) }}:
               - Build
         jobs:
-          - job:
+          - job: StorybookTestJob
             strategy:
               parallel: ${{ variables.sb_test_shards }}
             pool:
@@ -81,7 +90,7 @@ stages:
         dependsOn:
           - Build
         jobs:
-          - job:
+          - job: e2eJob
             strategy:
               parallel: ${{ variables.e2e_test_shards }}
             pool:
@@ -89,8 +98,9 @@ stages:
             steps:
               - template: ./tests/e2e-docker.yml
 
-  - ${{ if and(ne(variables.DOCKER_TAG, ''), ne(variables.DOCKER_TAG, false)) }}:
-      - stage: DockerTag
+  # This is a fake stage which might be empty. It's used to configure which stages `deploy` depends on (e.g. whether deploy requires e2e tests to be passed or not)
+  - ${{ if eq(variables.ENABLE_DEPLOY, true) }}:
+      - stage: BeforeDeploy
         dependsOn:
           - Build
           - ${{ if ne(variables.DISABLE_TESTS, true) }}:
@@ -101,67 +111,75 @@ stages:
               - e2e
         condition: succeeded()
         jobs:
-          - job:
-            pool:
-              vmImage: 'ubuntu-latest'
-            steps:
-              - template: ./steps/docker-add-tag.yml
-                parameters:
-                  name: ${{ variables.DOCKER_TAG }}
-
-  - ${{ if and(eq(variables.ENABLE_DEPLOY, true),eq(variables.DEPLOY_KUBERNETES, true)) }}:
-      - stage: DeployToDev
-        dependsOn:
-          - Build
+          - job: DummyJob
           - ${{ if and(ne(variables.DOCKER_TAG, ''), ne(variables.DOCKER_TAG, false)) }}:
-              - DockerTag
-        variables:
-          - template: ./_stages/_default.yml
-          - template: ./_stages/dev.yml
-        condition: succeeded()
-        jobs:
-          - job:
-            pool:
-              vmImage: 'ubuntu-latest'
-            steps:
-              - template: ./azure-deploy-kubernetes.yml
-                parameters:
-                  kubeconfig: ${{ variables.KUBECONFIG }}
-                  stage: 'dev'
-  - ${{ if and(eq(variables.ENABLE_DEPLOY, true), not(eq(variables.DEPLOY_KUBERNETES, true))) }}:
+              - job: DockerTagJob
+                pool:
+                  vmImage: 'ubuntu-latest'
+                steps:
+                  - template: ./steps/docker-add-tag.yml
+                    parameters:
+                      name: ${{ variables.DOCKER_TAG }}
+
+  - ${{ if eq(variables.ENABLE_DEPLOY, true) }}:
       - stage: DeployToDev
         dependsOn:
-          - Build
-          - DockerTag
-        variables:
-          - template: ./_stages/_default.yml
-          - template: ./_stages/dev.yml
-        condition: succeeded()
+          - BeforeDeploy
+        condition: and(succeeded(), not(startsWith(variables['Build.SourceBranch'], 'refs/heads/release')), not(startsWith(variables['Build.SourceBranch'], 'refs/heads/feature2')))
         jobs:
-          - deployment:
+          - deployment: k8sDevDeployment
             environment:
-              name: 'DEV'
-              resourceType: VirtualMachine
+              name: 'dev'
+              resourceType: Kubernetes
             strategy:
               runOnce:
                 deploy:
                   steps:
-                    - template: ./azure-deploy.yml
+                    - template: ./${{ parameters.deploy_template }}
+                      parameters:
+                        Environment: 'dev'
+                        restartDeployment: true
+                        BuildAppNumber: $(BUILD_NUMBER)
 
-  - ${{ if variables.TAG_SOURCES_DEV }}:
-      - stage: TagDevSources
-        dependsOn: DeployToDev
+  - ${{ if and(eq(variables.ENABLE_DEPLOY, true), eq(variables.ENABLE_DEPLOY_GREEN, true)) }}:
+      - stage: DeployToGreen
+        dependsOn:
+          - BeforeDeploy
         condition: succeeded()
         jobs:
-          - job:
-            pool:
-              vmImage: ubuntu-latest
-            steps:
-              - checkout: self
-                persistCredentials: true
-              - script: |
-                  git tag '$(TAG_SOURCES_DEV)' -f
-                  git push origin '$(TAG_SOURCES_DEV)' -f --tags
+          - deployment: k8sGreenDeployment
+            environment:
+              name: 'green'
+              resourceType: Kubernetes
+            strategy:
+              runOnce:
+                deploy:
+                  steps:
+                    - template: ./${{ parameters.deploy_template }}
+                      parameters:
+                        Environment: 'green'
+                        restartDeployment: true
+                        BuildAppNumber: $(BUILD_NUMBER)
+
+  - ${{ if and(eq(variables.ENABLE_DEPLOY, true), eq(variables.ENABLE_DEPLOY_PROD, true)) }}:
+      - stage: DeployToProd
+        dependsOn:
+          - BeforeDeploy
+        condition: succeeded()
+        jobs:
+          - deployment: k8sProdDeployment
+            environment:
+              name: 'prod'
+              resourceType: Kubernetes
+            strategy:
+              runOnce:
+                deploy:
+                  steps:
+                    - template: ./${{ parameters.deploy_template }}
+                      parameters:
+                        Environment: 'prod'
+                        restartDeployment: true
+                        BuildAppNumber: $(BUILD_NUMBER)
 
   - ${{ if eq(variables.ENABLE_E2E_STAGE, true) }}:
       - stage: e2e
@@ -175,46 +193,3 @@ stages:
               vmImage: 'ubuntu-latest'
             steps:
               - template: ./tests/e2e-stage.yml
-
-  - ${{ if and(eq(variables.ENABLE_DEPLOY, true), eq(variables.ENABLE_PROD_DEPLOY, true)) }}:
-      - stage: DeployToProd
-        dependsOn:
-          - Build
-          - ${{ if and(ne(variables.DOCKER_TAG, ''), ne(variables.DOCKER_TAG, false)) }}:
-              - DockerTag
-        variables:
-          - template: ./_stages/_default.yml
-          - template: ./_stages/prod.yml
-        condition: succeeded()
-        jobs:
-          - deployment:
-            environment:
-              name: 'PROD'
-              ${{ if ne(variables.DEPLOY_KUBERNETES, true) }}:
-                resourceType: VirtualMachine
-            strategy:
-              runOnce:
-                deploy:
-                  steps:
-                    - ${{ if eq(variables.DEPLOY_KUBERNETES, true) }}:
-                        - template: ./azure-deploy-kubernetes.yml
-                          parameters:
-                            kubeconfig: ${{ variables.KUBECONFIG }}
-                            stage: 'prod'
-                    - ${{ if not(eq(variables.DEPLOY_KUBERNETES, true)) }}:
-                        - template: ./azure-deploy.yml
-
-  - ${{ if variables.TAG_SOURCES_PROD }}:
-      - stage: TagProdSources
-        dependsOn: DeployToProd
-        condition: succeeded()
-        jobs:
-          - job:
-            pool:
-              vmImage: ubuntu-latest
-            steps:
-              - checkout: self
-                persistCredentials: true
-              - script: |
-                  git tag '$(TAG_SOURCES_PROD)' -f
-                  git push origin '$(TAG_SOURCES_PROD)' -f --tags
