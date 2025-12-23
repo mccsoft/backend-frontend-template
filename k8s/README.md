@@ -9,8 +9,7 @@
 1. Prepare configuration
    1. Create DNS entry and point it to your Virtual Machine
    1. Run `./GenerateDotEnv.ps1 STAGE_NAME` from `scripts` folder. File `/k8s/aks-rancher/stages/STAGE_NAME.env` and `/k8s/aks-rancher/stages/secrets.rancher.STAGE_NAME.env` will be generated for you.
-      1. Adjust the variable values in `STAGE_NAME.env`. At least **hostname**need to be changed.
-      1. Adjust **containers\_\_image** in `STAGE_NAME.env`. It should end with '/ci' for develop/green environment and with '/release' for prod. E.g.: `registry.gitlab.com/mcctemplateapp1/main/ci`
+      1. Adjust the variable values in `STAGE_NAME.env`. At least **hostname** need to be changed.
    1. Run `create-namespace.sh <path_to_kubeconfig.config> <stage>` (from `k8s/aks-rancher` folder). Copy the echoed JSON and address, it will be needed later when setting up Kubernetes Service Connection in Azure DevOps
    1. Setup CI in Azure DevOps.
       1. Add Docker Service Connection (Azure -> Project Settings -> Service Connections -> New Docker Registry). Credentials could be taken:

@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: ${project}
-          image: ${containers__image}
+          image: ${ACR_REGISTRY}/${ACR_REPOSITORY}:latest
           envFrom:
             - configMapRef:
                 name: ${project}-configs
