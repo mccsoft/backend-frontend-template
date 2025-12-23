@@ -58,6 +58,8 @@ public partial class Field
     /// </summary>
     public static Field Exception = new(nameof(Exception));
 
+    public static Field UserId = new(nameof(UserId));
+
     #endregion
 
     private readonly string _nameForTemplate;
