@@ -9,12 +9,14 @@
 1. Prepare configuration
    1. Create DNS entry and point it to your Virtual Machine
    1. Run `./GenerateDotEnv.ps1 STAGE_NAME` from `scripts` folder. File `/k8s/aks-rancher/stages/STAGE_NAME.env` and `/k8s/aks-rancher/stages/secrets.rancher.STAGE_NAME.env` will be generated for you.
-      1. Adjust the variable values in `STAGE_NAME.env`. At least **hostname** and **containers\_\_image** need to be changed.
+      1. Adjust the variable values in `STAGE_NAME.env`. At least **hostname**need to be changed.
+      1. Adjust **containers\_\_image** in `STAGE_NAME.env`. It should end with '/ci' for develop/green environment and with '/release' for prod. E.g.: `registry.gitlab.com/mcctemplateapp1/main/ci`
    1. Run `create-namespace.sh <path_to_kubeconfig.config> <stage>` (from `k8s/aks-rancher` folder). Copy the echoed JSON and address, it will be needed later when setting up Kubernetes Service Connection in Azure DevOps
    1. Setup CI in Azure DevOps.
       1. Add Docker Service Connection (Azure -> Project Settings -> Service Connections -> New Docker Registry). Credentials could be taken:
-         1. GitLab: fom [Deploy Tokens](https://gitlab.com/PROJECT_NAME/main/-/settings/repository#js-deploy-tokens) with read_registry & write_registry scopes
+         1. GitLab: fom [Deploy Tokens](https://gitlab.com/PROJECT_NAME/main/-/settings/repository#js-deploy-tokens) (Settings -> Repository -> Deploy Tokens within GitLab project) with read_registry & write_registry scopes
          1. Azure Portal: Settings -> Access Keys of `Container registry`
+      1. Go to K8S and create a secret of type Registry named `docker-regcred` in the created namespace. Fill in Registry Domain Name, Username and Password
       1. Fill the NAME of this service connection in `./ci/_settings/acr.partial.yml` (connectorACR). Also fill-in `ACR_REGISTRY` and `ACR_REPOSITORY` in the same file
       1. Add Environment to deploy: Go to Pipelines -> Environments, hit "New environment", enter the name of the Stage, choose "Kubernetes", hit "Next". Choose "Generic Provider" and fill in the Secret (JSON from `create-namespace.sh` output, Server URL (URL from `create-namespace.sh` output), Namespace (`PROJECT_NAME-STAGE_NAME`, or just check created `STAGE_NAME.env` file), Cluster name could be the same as namespace). Hit "Validate and create" and ignore the 'Failed to query service connection API: An error occurred while sending the request.' error by clicking "Continue anyway".
    1. Create 2 pipelines in Azure DevOps pointing to `.ci/azure-pipelines.yml` and `.ci/azure-pipelines-pr-tests.yml`, adjust `./ci/settings` parameters if needed
