@@ -3,52 +3,82 @@ parameters:
     type: boolean
 
 steps:
-  - script: |
-      yarn json -f package.json -I -e 'this.version="$(BUILD_NUMBER)"'
-      yarn json -f frontend/package.json -I -e 'this.version="$(BUILD_NUMBER)"'
-      yarn --version
+  - task: Bash@3
+    displayName: '[pipeline] set build number'
+    inputs:
+      targetType: 'inline'
+      script: |
+        echo "##vso[build.updatebuildnumber]$(BUILD_NUMBER)"
 
-      # `set version` step should go after `yarn install`, since it uses `json` package which should be installed
-      # we do not use `yarn version` plugin, because it doesn't play well with shallow clone (https://yarnpkg.com/features/release-workflow#commit-history)
-    displayName: 'set version'
+  - task: Bash@3
+    displayName: '[yarn]: set version'
+    inputs:
+      targetType: 'inline'
+      script: |
+        yarn json -f package.json -I -e 'this.version="$(BUILD_NUMBER)"'
+        yarn json -f frontend/package.json -I -e 'this.version="$(BUILD_NUMBER)"'
+        yarn --version
 
-  - script: |
-      yarn copy-translations-to-backend
-    displayName: 'copy translations to backend'
+  # `set version` step should go after `yarn install`, since it uses `json` package which should be installed
+  # we do not use `yarn version` plugin, because it doesn't play well with shallow clone (https://yarnpkg.com/features/release-workflow#commit-history)
+  - task: Bash@3
+    displayName: '[yarn]: frontend typecheck'
+    inputs:
+      targetType: 'inline'
+      script: |
+        yarn frontend typecheck
 
-  # - task: Cache@2
-  #   inputs:
-  #     key: 'vite-cache'
-  #     path: $(Build.SourcesDirectory)/frontend/node_modules/.vite
-  #   displayName: Cache vite deps_build-build
-  #   continueOnError: true
+  - task: Bash@3
+    displayName: '[yarn]: copy translations to backend'
+    inputs:
+      targetType: 'inline'
+      script: |
+        yarn copy-translations-to-backend
 
-  - script: |
-      yarn frontend build-scss-for-razor
-      yarn build-frontend
-    displayName: 'build frontend'
+  - task: Bash@3
+    displayName: '[yarn]: build frontend'
+    inputs:
+      targetType: 'inline'
+      script: |
+        yarn frontend build-scss-for-razor
+        yarn build-frontend
+    env:
+      DEV_SENTRY_AUTH_TOKEN: $(DEV_SENTRY_AUTH_TOKEN)
+      PROD_SENTRY_AUTH_TOKEN: $(PROD_SENTRY_AUTH_TOKEN)
 
   - publish: './frontend/build'
     artifact: 'frontend'
 
-  - script: |
-      yarn build-dotnet
-    displayName: 'build backend'
+  - task: Bash@3
+    displayName: '[yarn]: build backend'
+    inputs:
+      targetType: 'inline'
+      script: |
+        yarn build-dotnet
 
-  - script: |
-      yarn copy-frontend
-    displayName: 'copy frontend to backend'
+  - task: Bash@3
+    displayName: '[yarn]: copy frontend to backend'
+    inputs:
+      targetType: 'inline'
+      script: |
+        yarn copy-frontend
 
   - ${{ if eq(parameters.ENABLE_STORYBOOK, true) }}:
-      - script: |
-          yarn frontend build-storybook
-        displayName: 'build storybook'
+      - task: Bash@3
+        displayName: '[yarn]: build storybook'
+        inputs:
+          targetType: 'inline'
+          script: |
+            yarn frontend build-storybook
 
-#      - publish: './frontend/storybook-static'
-#        artifact: 'storybook'
+      - publish: './frontend/storybook-static'
+        artifact: 'storybook'
 
-      - script: |
-          yarn copy-storybook
-        displayName: 'copy storybook to backend'
+      - task: Bash@3
+        displayName: '[yarn]: copy storybook to backend'
+        inputs:
+          targetType: 'inline'
+          script: |
+            yarn copy-storybook
 
   - template: ./build-import-meta-env.yml

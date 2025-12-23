@@ -1,4 +1,5 @@
 ﻿using MccSoft.TemplateApp.App.Features.Files.Dto;
+using MccSoft.WebApi.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,10 +28,23 @@ public class FilesController
 
     [HttpGet("{id}")]
     [AllowAnonymous]
+    [ProducesResponseType(typeof(FileStreamResult), 200)]
     // [ValidateSignedUrl]
     public async Task<FileStreamResult> DownloadFile(Guid id)
     {
         return await _fileService.Download(id);
+    }
+
+    [HttpGet("{id}/info")]
+    public async Task<FileInfoDto> Get(Guid id)
+    {
+        return await _fileService.Get(id);
+    }
+
+    [HttpGet]
+    public async Task<PagedResult<FileInfoDto>> Get([FromQuery] SearchFileDto searchDto)
+    {
+        return await _fileService.Get(searchDto);
     }
 
     [HttpDelete("{id}")]

@@ -1,0 +1,19 @@
+---
+### configs
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ${project}-configs
+  namespace: ${namespace}
+data:
+  General__SiteUrl: '${General__SiteUrl}'
+  Email__SiteUrl: '${General__SiteUrl}'
+  Hangfire__EnableDashboard: '${Hangfire__EnableDashboard}'
+  OpenId__EncryptionCertificate__Base64Certificate: '${OpenId__EncryptionCertificate__Base64Certificate}'
+  OpenId__SigningCertificate__Base64Certificate: '${OpenId__SigningCertificate__Base64Certificate}'
+  Sentry__Dsn: '${Sentry__Dsn}'
+  REACT_APP_SENTRY_DSN: '${REACT_APP_SENTRY_DSN}'
+  Serilog__Elastic__Url: '${Serilog__Elastic__Url}'
+  Serilog__Elastic__User: '${Serilog__Elastic__User}'
+  Serilog__Remote__InstanceName: '${Serilog__Remote__InstanceName}'
+  TestApiEnabled: '${TestApiEnabled}'

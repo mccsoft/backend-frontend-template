@@ -39,7 +39,7 @@
     "pull-template-changes": "npx tsx scripts/pull-template-changes.ts && yarn install && yarn typecheck",
     "frontend": "yarn workspace @templateApp/frontend",
     "e2e": "yarn workspace e2e",
-    "build-dotnet": "rimraf publish && cross-env-shell dotnet publish webapi/src/MccSoft.TemplateApp.App/MccSoft.TemplateApp.App.csproj -c Release -o publish -p:Version=$npm_package_version",
+    "build-dotnet": "rimraf publish && cross-env-shell dotnet publish webapi/src/MccSoft.TemplateApp.App/MccSoft.TemplateApp.App.csproj -c Release -o publish -p:InformationalVersion=$npm_package_version -p:FileVersion=$npm_package_version -p:Version=$npm_package_version",
     "build-frontend": "yarn frontend build",
     "copy-frontend": "yarn copyfiles -u 2 \"frontend/build/**/*\" \"publish/wwwroot\" && yarn copyfiles -u 1 frontend/.env publish/wwwroot",
     "copy-storybook": "yarn copyfiles -u 2 \"frontend/storybook-static/**/*\" \"publish/wwwroot/storybook\"",

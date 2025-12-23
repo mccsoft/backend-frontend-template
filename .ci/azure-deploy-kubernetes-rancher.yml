@@ -1,0 +1,82 @@
+parameters:
+  - name: restartDeployment
+    type: boolean
+    default: false
+  - name: Environment
+    displayName: Environment to deploy
+    type: string
+    default: dev
+    values: [dev, green, prod]
+  - name: BuildAppNumber
+    displayName: Build number to deploy
+    type: string
+    default: latest
+
+steps:
+  - checkout: self
+    fetchDepth: 1
+    submodules: true
+
+  - task: Bash@3
+    displayName: '[bash] Prepare versions and environment variables'
+    inputs:
+      filePath: '$(Build.SourcesDirectory)/k8s/aks-rancher/prepare-k8s-templates.sh'
+      workingDirectory: $(Build.SourcesDirectory)/k8s/aks-rancher
+      arguments: '${{ parameters.Environment }}'
+
+  - ${{ if eq(parameters.Environment, 'prod') }}:
+      - task: Docker@2
+        displayName: '[Docker]: login'
+        inputs:
+          containerRegistry: $(connectorACR)
+          command: 'login'
+
+      - task: Bash@3
+        displayName: '[ACR]: promote image to release/<repo>'
+        inputs:
+          targetType: 'inline'
+          script: |
+            set -e
+            TAG="${{ parameters.BuildAppNumber }}"
+
+            FROM="${ACR_REGISTRY}/${ACR_REPOSITORY}:${TAG}"
+            TO="${ACR_REGISTRY}/${ACR_REPOSITORY}/release:${TAG}"
+
+            echo "Promoting image inside ACR:"
+            echo "  ${FROM} -> ${TO}"
+
+            docker buildx imagetools create --tag "${TO}" "${FROM}"
+            echo "##vso[task.setvariable variable=ACR_REPOSITORY]${ACR_REPOSITORY}/release"
+
+      - task: Docker@2
+        displayName: '[Docker]: logout'
+        inputs:
+          containerRegistry: $(connectorACR)
+          command: 'logout'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/k8s/aks-rancher/deploy_${{ parameters.Environment }}'
+      ArtifactName: 'deploy_${{ parameters.Environment }}'
+      publishLocation: 'Container'
+
+  - task: KubernetesManifest@1
+    displayName: '[k8s]: applying *.yaml'
+    inputs:
+      action: 'deploy'
+      connectionType: 'kubernetesServiceConnection'
+      namespace: '$(appName)-${{ parameters.Environment }}'
+      manifests: |
+        $(Build.SourcesDirectory)/k8s/aks-rancher/deploy_${{ parameters.Environment }}/*.yaml
+      containers: |
+        $(ACR_REGISTRY)/$(ACR_REPOSITORY):${{ parameters.BuildAppNumber }}
+      rolloutStatusTimeout: 120
+
+  - ${{ if eq(parameters.restartDeployment, true) }}:
+      - task: Kubernetes@1
+        displayName: '[k8s]: force restart deployment $(appName)'
+        inputs:
+          connectionType: 'Kubernetes Service Connection'
+          namespace: '$(appName)-${{ parameters.Environment }}'
+          command: 'rollout'
+          arguments: 'restart deployment $(appName)'

@@ -11,12 +11,17 @@ parameters:
   - name: e2e_test_shards
     type: number
     default: 0
+  - name: deploy_template
+    type: string
+    default: 'azure-deploy-kubernetes-rancher.yml'
 
 trigger:
   branches:
     include:
       - master
       - main
+      - release/
+      - releases/
       - feature/ci-*
   paths:
     exclude:
@@ -26,5 +31,6 @@ extends:
   template: azure-pipelines-template.yml
   parameters:
     name: ci
+    deploy_template: ${{ parameters.deploy_template }}
     sb_test_shards: ${{ parameters.sb_test_shards }}
     e2e_test_shards: ${{ parameters.e2e_test_shards }}

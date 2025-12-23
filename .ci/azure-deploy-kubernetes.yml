@@ -1,54 +1,83 @@
 parameters:
-  - name: kubeconfig
+  - name: restartDeployment
+    type: boolean
+    default: false
+  - name: Environment
+    displayName: Environment to deploy
     type: string
-  - name: stage
+    default: dev
+    values: [dev, green, prod]
+  - name: BuildAppNumber
+    displayName: Build number to deploy
     type: string
+    default: latest
 
 steps:
   - checkout: self
+    fetchDepth: 1
+    submodules: true
 
-  - task: KubectlInstaller@0
-    displayName: Install kubectl
-
-  - task: DownloadSecureFile@1
-    name: kubeconfig
+  - task: Bash@3
+    displayName: '[bash] Prepare versions and environment variables'
     inputs:
-      secureFile: ${{ parameters.kubeconfig }}
+      filePath: '$(Build.SourcesDirectory)/k8s/aks-env/prepare-k8s-templates.sh'
+      workingDirectory: $(Build.SourcesDirectory)/k8s/aks-env
+      arguments: '${{ parameters.Environment }}'
 
-  - script: |
-      export KUBECONFIG=$(kubeconfig.secureFilePath)
-      cat ./.ci/_stages/${{ parameters.kubeconfig }}.env
+  - ${{ if eq(parameters.Environment, 'prod') }}:
+      - task: Docker@2
+        displayName: '[Docker]: login'
+        inputs:
+          containerRegistry: $(connectorACR)
+          command: 'login'
 
-      echo "##vso[task.setvariable variable=KUBECONFIG]$(kubeconfig.secureFilePath)"
-    displayName: export env. variables and kubeconfig
+      - task: Bash@3
+        displayName: '[ACR]: promote image to release/<repo>'
+        inputs:
+          targetType: 'inline'
+          script: |
+            set -e
+            TAG="${{ parameters.BuildAppNumber }}"
 
-  - script: |
-      kubectl create namespace templateapp || echo "continue"
-    displayName: create namespace
+            FROM="${ACR_REGISTRY}/${ACR_REPOSITORY}:${TAG}"
+            TO="${ACR_REGISTRY}/release/${ACR_REPOSITORY}:${TAG}"
 
-  - script: |
-      kubectl -n templateapp create secret docker-registry docker-registry-secret --docker-server=$(DOCKER_REGISTRY) --docker-username=$(DOCKER_USER) --docker-password=$(DOCKER_TOKEN) || \
-        (kubectl -n templateapp create secret docker-registry docker-registry-secret --docker-server=$(DOCKER_REGISTRY) --docker-username=$(DOCKER_USER) --docker-password=$(DOCKER_TOKEN) -o yaml --dry-run=client | kubectl replace -f -)
-    displayName: create docker secrets
+            echo "Promoting image inside ACR:"
+            echo "  ${FROM} -> ${TO}"
 
-  - script: |
-      cat k8s/postgres.yaml
-      kubectl apply -f k8s/postgres.yaml
-      kubectl apply -f k8s/postgres.yaml
-    displayName: deploy postgres
+            docker buildx imagetools create --tag "${TO}" "${FROM}"
+            echo "##vso[task.setvariable variable=ACR_REPOSITORY]release/${ACR_REPOSITORY}"
 
-  - script: |
-      cat ./.ci/_stages/_default.env >> ./united.env
-      cat ./.ci/_stages/${{ parameters.stage }}.env >> ./united.env
-      kubectl -n templateapp create configmap templateapp-configmap --from-env-file=./united.env || \
-        (kubectl -n templateapp create configmap templateapp-configmap --from-env-file=./united.env -o yaml --dry-run=client | kubectl replace -f -)
-    displayName: apply env variables from ${{ parameters.stage }}.env
+      - task: Docker@2
+        displayName: '[Docker]: logout'
+        inputs:
+          containerRegistry: $(connectorACR)
+          command: 'logout'
 
-  - script: |
-      export DOCKER_IMAGE="$(DOCKER_REGISTRY):$(BUILD_NUMBER)";
-      export $(cat ./united.env | xargs)
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/k8s/aks-env/deploy_${{ parameters.Environment }}'
+      ArtifactName: 'deploy_${{ parameters.Environment }}'
+      publishLocation: 'Container'
 
-      envsubst < k8s/app.yaml > k8s/app.yaml.tmp && mv k8s/app.yaml.tmp k8s/app.yaml
-      cat k8s/app.yaml
-      kubectl apply -f k8s/app.yaml
-    displayName: deploy app
+  - task: KubernetesManifest@1
+    displayName: '[k8s]: applying 02,03,12-deployment.yaml'
+    inputs:
+      action: 'deploy'
+      connectionType: 'kubernetesServiceConnection'
+      namespace: '$(appName)-${{ parameters.Environment }}'
+      manifests: |
+        $(Build.SourcesDirectory)/k8s/aks-env/deploy_${{ parameters.Environment }}/02-configMaps.yaml
+        $(Build.SourcesDirectory)/k8s/aks-env/deploy_${{ parameters.Environment }}/03-secretProviderClass.yaml
+        $(Build.SourcesDirectory)/k8s/aks-env/deploy_${{ parameters.Environment }}/12-deployment.yaml
+      containers: |
+        $(ACR_REGISTRY)/$(ACR_REPOSITORY):${{ parameters.BuildAppNumber }}
+
+  - ${{ if eq(parameters.restartDeployment, true) }}:
+      - task: Kubernetes@1
+        displayName: '[k8s]: force restart deployment $(appName)'
+        inputs:
+          connectionType: 'Kubernetes Service Connection'
+          namespace: '$(appName)-${{ parameters.Environment }}'
+          command: 'rollout'
+          arguments: 'restart deployment $(appName)'

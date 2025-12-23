@@ -70,6 +70,17 @@ public class TemplateAppDbContext
         */
         builder.Entity<WebHook<TemplateWebHookSubscription>>().Metadata.SetSchema("webhooks");
         builder.Entity<TemplateWebHookSubscription>().Metadata.SetSchema("webhooks");
+
+        builder.Entity<DbFile>(b =>
+        {
+            b.OwnsOne(
+                e => e.Metadata,
+                ownedNavigationBuilder =>
+                {
+                    ownedNavigationBuilder.ToJson();
+                }
+            );
+        });
     }
 
     private void SetupQueryFilters(ModelBuilder builder)

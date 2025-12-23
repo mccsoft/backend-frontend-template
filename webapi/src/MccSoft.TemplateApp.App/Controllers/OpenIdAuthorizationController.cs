@@ -17,10 +17,10 @@ public class OpenIdAuthorizationController : OpenIdAuthorizationControllerBase<U
     public OpenIdAuthorizationController(
         SignInManager<User> signInManager,
         UserManager<User> userManager,
-        IOpenIddictClientConfigurationProvider configurationProvider,
         TemplateAppDbContext dbContext,
         ILogger<OpenIdAuthorizationController> logger
-    ) : base(signInManager, userManager, configurationProvider, logger)
+    )
+        : base(signInManager, userManager, logger)
     {
         _dbContext = dbContext;
     }

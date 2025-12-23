@@ -13,6 +13,13 @@ steps:
       version: '10.x'
 
   - task: Cache@2
+    displayName: '[yarn]: cache'
+    inputs:
+      key: 'yarn-cache|$(Agent.OS)|./yarn.lock'
+      path: $(Build.SourcesDirectory)/.yarn/cache
+    continueOnError: true
+
+  - task: Cache@2
     inputs:
       key: 'node_modules|root|$(Agent.OS)|./yarn.lock'
       path: $(Build.SourcesDirectory)/node_modules
@@ -31,11 +38,16 @@ steps:
     inputs:
       key: 'node_modules3|e2e|$(Agent.OS)|./yarn.lock'
       path: $(Build.SourcesDirectory)/e2e/node_modules
+      cacheHitVar: E2E_NODE_MODULES_CACHE_RESTORED
     displayName: Cache npm packages
-    condition: eq(variables.ENABLE_STORYBOOK, 'true')
     continueOnError: true
 
-  - script: |
-      yarn install --immutable
-    condition: ne(variables.NODE_MODULES_CACHE_RESTORED, 'true')
-    displayName: 'yarn install'
+  - task: Bash@3
+    displayName: '[yarn]: install'
+    condition: or(ne(variables.NODE_MODULES_CACHE_RESTORED, 'true'), ne(variables.E2E_NODE_MODULES_CACHE_RESTORED, 'true'))
+    inputs:
+      targetType: 'inline'
+      script: |
+        yarn install --immutable
+
+

@@ -50,6 +50,7 @@ export default defineConfig(({ command, mode }) => {
         '/api': proxyOptions,
         '/connect': proxyOptions,
         '/swagger': proxyOptions,
+        '/hangfire': proxyOptions,
         '/Identity': proxyOptions,
         '/.well-known': {
           ...proxyOptions,

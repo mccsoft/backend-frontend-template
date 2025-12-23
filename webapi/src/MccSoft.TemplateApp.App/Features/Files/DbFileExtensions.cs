@@ -23,5 +23,7 @@ public static class DbFileExtensions
                 Id = dbFile.Id.ToString(),
                 FileName = dbFile.FileName,
                 Size = dbFile.Size,
+                CreatedAt = dbFile.CreatedAt,
+                Metadata = new FileMetadataDto() { ExternalId = dbFile.Metadata.ExternalId },
             };
 }

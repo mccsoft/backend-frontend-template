@@ -669,6 +669,29 @@ namespace MccSoft.TemplateApp.Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("MccSoft.TemplateApp.Domain.DbFile", b =>
+                {
+                    b.OwnsOne("MccSoft.TemplateApp.Domain.DbFileMetadata", "Metadata", b1 =>
+                        {
+                            b1.Property<Guid>("DbFileId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("ExternalId")
+                                .HasColumnType("text");
+
+                            b1.HasKey("DbFileId");
+
+                            b1.ToTable("Files");
+
+                            b1.ToJson("Metadata");
+
+                            b1.WithOwner()
+                                .HasForeignKey("DbFileId");
+                        });
+
+                    b.Navigation("Metadata");
+                });
+
             modelBuilder.Entity("MccSoft.TemplateApp.Domain.Product", b =>
                 {
                     b.HasOne("MccSoft.TemplateApp.Domain.User", "CreatedByUser")

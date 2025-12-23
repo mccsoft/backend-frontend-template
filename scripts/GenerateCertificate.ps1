@@ -2,7 +2,7 @@
 
 function GenerateCertificateAsByteArray($password) {
     
-    $rootCA = New-SelfSignedCertificate -CertStoreLocation Cert:\LocalMachine\My -DnsName "IdentityServerCertificate" -FriendlyName "IdentityServerCertificate" -NotAfter (Get-Date).AddYears(100)
+    $rootCA = New-SelfSignedCertificate -CertStoreLocation Cert:\LocalMachine\My -DnsName "IdentityServerCertificate" -FriendlyName "IdentityServerCertificate" -NotAfter (Get-Date).AddYears(100) -HashAlgorithm SHA256
     Move-Item (Join-Path Cert:\LocalMachine\My $rootCA.Thumbprint) -Destination Cert:\LocalMachine\Root
     
     $CertPassword = ConvertTo-SecureString -String $password -Force -AsPlainText
