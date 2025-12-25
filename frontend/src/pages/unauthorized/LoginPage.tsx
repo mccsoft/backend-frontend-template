@@ -32,7 +32,7 @@ export const LoginPage: React.FC = (props) => {
   const form = useAdvancedForm<Form>(async (data) => {
     setIsLoading(true);
     try {
-      await sendLoginRequest(data.login, data.password);
+      await sendLoginRequest(data.login, data.password.trim());
       await queryClient.resetQueries();
     } catch (e) {
       handleLoginErrors(e);

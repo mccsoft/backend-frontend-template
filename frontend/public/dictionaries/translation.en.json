@@ -70,5 +70,7 @@
   "Login_Failed": "Login failed",
   "Login_User_Locked": "User locked",
   "Login_Unknown_Failure": "Unknown error",
-  "Network Error": "No network"
+  "Network Error": "No network",
+  "password_validation_error": "Use Latin letters, numbers, or !@#$%^&*.()",
+  "password_validation_trim_error": "Spaces not allowed at start or end"
 }
