@@ -71,6 +71,9 @@
   "Login_User_Locked": "User locked",
   "Login_Unknown_Failure": "Unknown error",
   "Network Error": "No network",
+  "Error_Unauthorized": "Unauthorized",
+  "Error_AccessDenied": "Access Denied",
+  "Error_ExternalServiceUnavailable": "External service is unavailable now, please retry later.",
   "password_validation_error": "Use Latin letters, numbers, or !@#$%^&*.()",
   "password_validation_trim_error": "Spaces not allowed at start or end"
 }

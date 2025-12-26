@@ -1,3 +1,6 @@
+import i18next from 'i18next';
+import { ApiException, ProblemDetails } from 'services/api/api-client';
+
 export const NetworkError = 'Network Error';
 
 /*
@@ -18,7 +21,6 @@ export function errorToString(
   // - untyped error, in which case `error.response` will be populated with response in JSON.
   const errorResponseData = error.response?.data || error.response || error;
   const errors = errorResponseData?.errors;
-
   let overallError = convertToErrorStringInternal(error);
 
   if (errors && Object.keys(errors).length) {
@@ -58,12 +60,22 @@ export function errorToString(
 export function convertToErrorStringInternal(error: any): string {
   const errorResponseData = error.response?.data || error;
   const responseDetail = errorResponseData?.detail;
+
   if (error.status === 401) {
-    return 'Unauthorized';
+    return i18next.t('Error_Unauthorized');
   }
   if (error.status === 403) {
-    return 'Access Denied';
+    return i18next.t('Error_AccessDenied');
   }
+
+  if (ApiException.isApiException(error)) {
+    error = error.response as any as ProblemDetails;
+  }
+
+  if (error.type === 'urn:mccsoft:external-service-is-unavailable') {
+    return i18next.t('Error_ExternalServiceUnavailable');
+  }
+
   if (responseDetail) {
     // General server-side error not related to certain field (e.g. `Access Denied`)
     return responseDetail;
