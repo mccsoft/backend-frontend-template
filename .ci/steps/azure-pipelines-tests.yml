@@ -1,10 +1,14 @@
 # Shared steps to test everything within repository.
 steps:
-  - script: |
+  - bash: |
       yarn frontend typecheck
     displayName: 'yarn frontend typecheck'
 
-  - script: |
+  - bash: |
+      yarn frontend test
+    displayName: 'yarn frontend test'
+
+  - bash: |
       cd scripts/integresql
       docker compose up -d
     displayName: 'run integresql'
