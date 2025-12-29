@@ -1,5 +1,5 @@
 import i18next from 'i18next';
-import { ApiException, ProblemDetails } from 'services/api/api-client';
+import { ApiException, ProblemDetails } from 'services/api/api-client.types';
 
 export const NetworkError = 'Network Error';
 
@@ -21,13 +21,17 @@ export function errorToString(
   // - untyped error, in which case `error.response` will be populated with response in JSON.
   const errorResponseData = error.response?.data || error.response || error;
   const errors = errorResponseData?.errors;
+
   let overallError = convertToErrorStringInternal(error);
 
   if (errors && Object.keys(errors).length) {
     let formErrorsCombined = '';
     // Some field-bound error (e.g. `user with same Name already exists in DB`)
+    // (similar code exists in useErrorHanler.ts, don't forget to change it as well)
     Object.keys(errors).forEach((key) => {
-      const camelCaseName = key.charAt(0).toLowerCase() + key.slice(1);
+      const keyWithout$ = key.startsWith('$.') ? key.substring(2) : key;
+      const camelCaseName =
+        keyWithout$.charAt(0).toLowerCase() + keyWithout$.slice(1);
       const errorValue = errors[key];
       const errorString = Array.isArray(errorValue)
         ? errorValue.join('; ')
@@ -76,11 +80,6 @@ export function convertToErrorStringInternal(error: any): string {
     return i18next.t('Error_ExternalServiceUnavailable');
   }
 
-  if (responseDetail) {
-    // General server-side error not related to certain field (e.g. `Access Denied`)
-    return responseDetail;
-  }
-
   if (error.code === 'CSS_CHUNK_LOAD_FAILED') {
     return NetworkError;
   }
@@ -93,6 +92,11 @@ export function convertToErrorStringInternal(error: any): string {
   if (error.message?.includes("Cannot read property 'status' of undefined")) {
     // nswag generated client throws it when there's no response
     return NetworkError;
+  }
+
+  if (responseDetail) {
+    // General server-side error not related to certain field (e.g. `Access Denied`)
+    return responseDetail;
   }
   if (error.message) {
     // e.g. Network Error

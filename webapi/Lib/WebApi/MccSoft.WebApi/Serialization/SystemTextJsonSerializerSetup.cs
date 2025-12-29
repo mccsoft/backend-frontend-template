@@ -21,6 +21,8 @@ public static partial class SystemTextJsonSerializerSetup
         var deserializationOptions = new JsonSerializerOptions(options.JsonSerializerOptions);
         DefaultJsonSerializer.DeserializationOptions = deserializationOptions;
 
+        options.AllowInputFormatterExceptionMessages = false;
+
         return options;
     }
 
