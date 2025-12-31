@@ -81,7 +81,7 @@ stages:
               parallel: ${{ variables.sb_test_shards }}
             pool:
               vmImage: 'ubuntu-latest'
-            container: mcr.microsoft.com/playwright:v1.52.0-noble
+            container: mcr.microsoft.com/playwright:v1.55.0-noble
             steps:
               - template: ./tests/storybook-tests.yml
 
