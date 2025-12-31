@@ -8,16 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="App.Metrics.Health.Extensions.DependencyInjection" Version="3.2.0" />
-    <PackageReference Include="App.Metrics.AspNetCore" Version="4.2.0" />
-    <PackageReference Include="App.Metrics.Formatters.Prometheus" Version="4.3.0-preview.0.34" />
-    <PackageReference Include="MassTransit" Version="7.2.4" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-    <PackageReference Include="App.Metrics.AspNetCore.Endpoints" Version="4.2.0" />
-    <PackageReference Include="App.Metrics.AspNetCore.Health" Version="3.2.0" />
-    <PackageReference Include="App.Metrics.AspNetCore.Mvc" Version="4.2.0" />
-    <PackageReference Include="App.Metrics.AspNetCore.Tracking" Version="4.2.0" />
-    <PackageReference Include="App.Metrics.Health.Checks.Process" Version="3.2.0" />
+    <PackageReference Include="App.Metrics.Health.Extensions.DependencyInjection" />
+    <PackageReference Include="App.Metrics.AspNetCore" />
+    <PackageReference Include="App.Metrics.Formatters.Prometheus" />
+    <PackageReference Include="MassTransit" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="App.Metrics.AspNetCore.Endpoints" />
+    <PackageReference Include="App.Metrics.AspNetCore.Health" />
+    <PackageReference Include="App.Metrics.AspNetCore.Mvc" />
+    <PackageReference Include="App.Metrics.AspNetCore.Tracking" />
+    <PackageReference Include="App.Metrics.Health.Checks.Process" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-[![Build Status](https://dev.azure.com/mcctomsk/Backend-Frontend-Template/_apis/build/status/mccsoft.backend-frontend-template?branchName=master)](https://dev.azure.com/mcctomsk/Backend-Frontend-Template/_apis/build/status/mccsoft.backend-frontend-template?branchName=master) [![MIT](https://img.shields.io/dub/l/vibe-d.svg)](https://opensource.org/licenses/MIT) [![NET9](https://img.shields.io/badge/-.NET%209.0-blueviolet)](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+[![Build Status](https://dev.azure.com/mcctomsk/Backend-Frontend-Template/_apis/build/status/mccsoft.backend-frontend-template?branchName=master)](https://dev.azure.com/mcctomsk/Backend-Frontend-Template/_apis/build/status/mccsoft.backend-frontend-template?branchName=master) [![MIT](https://img.shields.io/dub/l/vibe-d.svg)](https://opensource.org/licenses/MIT) [![NET10](https://img.shields.io/badge/-.NET%209.0-blueviolet)](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
 
 ## What's that
 
@@ -8,7 +8,7 @@ Developers are encouraged to start with [setting up the environment](docs/Settin
 
 Template contains (you could also check [CHANGELOG](./docs/CHANGELOG.md) for latest changes):
 
-1. ASP.NET Core backend (.NET 9)
+1. ASP.NET Core backend (.NET 10)
    1. OpenIddict authentication (with support for Social Networks authentication)
    2. Guidance/example on how to structure backend
    3. Helpers for easy implementation of REST API for CRUD (with PATCH instead of UPDATE)
@@ -32,10 +32,10 @@ Template contains (you could also check [CHANGELOG](./docs/CHANGELOG.md) for lat
    1. package.json based build script (just run `yarn build` from repo root)
 1. Azure-pipelines CI script which
    1. Builds Docker Image
-   1. Uploads it to Container Registry (on Digital Ocean)
+   1. Uploads it to Container Registry (on GitLab or any other)
    1. Deploys Image to preconfigured agent
-1. Instructions about configuring an agent to deploy aforementioned Docker Image on any linux PC (Digital Ocean prefered :))
-1. Kubernetes deployment files and guidance regarding deploy to kubernetes (in progress)
+1. Instructions about configuring an agent to deploy aforementioned Docker Image on any linux PC (e.g. Hetzner VPS)
+1. Kubernetes deployment files and guidance regarding deploy to kubernetes
 
 ## Setting up new project from template
 
@@ -86,6 +86,6 @@ Create a new git repository and copy everything (except `.git` folder) to it. Do
 Here are the possible ways to deploy your app:
 
 1. [Kubernetes (k3s)](/k8s/README.md) on VM. It is the preferred and simplest deployment setup. Read the details in the [instructions](/k8s/README.md).
-   - For low workloads you could host App & Postgres together on 1CPU/2GB VPS together (~5$ on Hetzner/MVPS)
+   - For low workloads you could host App & Postgres on 1CPU/2GB VPS (~5$ on Hetzner/MVPS)
 2. [Azure Web App](/docs/Deploy-Azure-WebApp.md). It's simple, use it if you already use Azure and are ok with paying quite a bit more than for a regular VM (5x more :))
 3. [Obsolete] [Docker-compose on VM](/docs/Deploy-docker-compose.MD). This is an obsolete way, instructions are available for backwards compatibility. It's NOT recommended for new projects, and even old ones should better switch to Kubernetes (k3s) :).
