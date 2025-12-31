@@ -103,7 +103,10 @@ if (fs.existsSync('scripts/pull-template-post-processor.ts')) {
 console.log('Starting to copy files...');
 copyProjectFolder(`.ci`, { ignorePattern: ['_stages', 'partial.'] });
 copyProjectFolder(`scripts`, { ignorePattern: 'pull-template-post-processor' });
-copyProjectFolder('webapi/Lib', copyProjectFolderDefaultOptions);
+copyProjectFolder('webapi/Lib', {
+  ...copyProjectFolderDefaultOptions,
+  ignorePattern: [copyProjectFolderDefaultOptions.ignorePattern, 'TestBase'],
+});
 copyProjectFolder('docs');
 copyProjectFolder(
   `webapi/src/${prefix}.App/Setup`,

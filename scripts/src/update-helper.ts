@@ -3,7 +3,7 @@ import path from 'path';
 export function copyProjectFolder(
   relativePathInsideProject: string,
   options: {
-    ignorePattern: string | RegExp | string[] | RegExp[] | undefined;
+    ignorePattern: string | RegExp | (string | RegExp)[] | undefined;
   } = {
     ignorePattern: undefined,
   },
@@ -20,7 +20,7 @@ function copyRecursively(
   src: string,
   dest: string,
   options: {
-    ignorePattern: string | RegExp | string[] | RegExp[] | undefined;
+    ignorePattern: string | RegExp | (string | RegExp)[] | undefined;
   } = {
     ignorePattern: undefined,
   },

@@ -335,5 +335,5 @@ function updateAll(
     ),
   );
 
-  updatePlaywright('1.52.0');
+  updatePlaywright('1.55.0');
 }
