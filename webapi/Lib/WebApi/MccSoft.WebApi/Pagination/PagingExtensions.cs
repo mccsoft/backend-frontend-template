@@ -23,7 +23,8 @@ public static partial class PagingExtensions
         string defaultSortExpression,
         int defaultLimit = DefaultLimit,
         IList<string>? allowedSortFields = null /* null means all fields are allowed */
-    ) where T : class
+    )
+        where T : class
     {
         return query.ToPagingListAsync(
             pagedRequestDto.Offset ?? 0,
@@ -54,7 +55,8 @@ public static partial class PagingExtensions
         string defaultSortExpression,
         SortOrder sortOrder = SortOrder.Asc,
         IList<string>? allowedSortFields = null /* null means all fields are allowed */
-    ) where T : class
+    )
+        where T : class
     {
         var totalRecordCount = await query.CountAsync();
 
@@ -68,6 +70,30 @@ public static partial class PagingExtensions
 
         var data = await query.ToListAsync().ConfigureAwait(false);
         return new PagedResult<T>(data, totalRecordCount);
+    }
+
+    /// <summary>
+    /// Applies sorting rules to IQueryable
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="query">Entity Framework query</param>
+    /// <param name="sortExpression">Sort expression</param>
+    /// <param name="defaultSortExpression">Default sort expression</param>
+    /// <param name="sortOrder">sortOrder</param>
+    public static IQueryable<T> ApplySorting<T>(
+        this IQueryable<T> query,
+        string sortExpression,
+        string defaultSortExpression,
+        SortOrder sortOrder
+    )
+    {
+        var sort = string.IsNullOrEmpty(sortExpression) ? defaultSortExpression : sortExpression;
+
+        query =
+            sortOrder == SortOrder.Desc
+                ? query.OrderBy(sort, descending: true)
+                : query.OrderBy(sort);
+        return query;
     }
 
     /// <summary>
@@ -85,7 +111,8 @@ public static partial class PagingExtensions
         string defaultSortExpression,
         int defaultLimit = DefaultLimit,
         IList<string>? allowedSortFields = null /* null means all fields are allowed */
-    ) where T : class
+    )
+        where T : class
     {
         return query.ApplyPagingAndSorting(
             pagedRequestDto.Offset ?? 0,
@@ -105,15 +132,12 @@ public static partial class PagingExtensions
         string defaultSortExpression,
         SortOrder sortOrder,
         IList<string>? allowedSortFields = null /* null means all fields are allowed */
-    ) where T : class
+    )
+        where T : class
     {
-        var sort = string.IsNullOrEmpty(sortExpression) ? defaultSortExpression : sortExpression;
-
-        query =
-            sortOrder == SortOrder.Desc
-                ? query.OrderBy(sort, descending: true)
-                : query.OrderBy(sort);
-        query = query.Skip(offset).Take(limit);
-        return query;
+        return query
+            .ApplySorting(sortExpression, defaultSortExpression, sortOrder)
+            .Skip(offset)
+            .Take(limit);
     }
 }

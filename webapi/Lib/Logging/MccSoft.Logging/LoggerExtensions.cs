@@ -67,7 +67,7 @@ public static class LoggerExtensions
     /// <param name="operationName">Name of the operation that should be logged.</param>
     public static IDisposable LogOperation(
         this ILogger logger,
-        OperationContext context,
+        OperationContext context = null,
         [CallerMemberName] string operationName = ""
     )
     {
@@ -348,8 +348,6 @@ public static class LoggerExtensions
     #endregion
 
     #region Sync LogOperation
-
-
 
 
     /// <summary>

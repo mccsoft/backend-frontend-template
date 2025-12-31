@@ -77,6 +77,10 @@ public class ErrorHandlerMiddleware
 
     private static async Task ExecuteResult(HttpContext httpContext, IActionResult result)
     {
+        // attempt to prevent error Response Content-Length mismatch: too many bytes written (164 of 79).
+        if (httpContext.Response.HasStarted || httpContext.Response.ContentLength > 0)
+            return;
+
         RouteData routeData = httpContext.GetRouteData() ?? _emptyRouteData;
         var actionContext = new ActionContext(httpContext, routeData, _emptyAction);
         await result.ExecuteResultAsync(actionContext);
@@ -86,17 +90,19 @@ public class ErrorHandlerMiddleware
     {
         string body = await httpContext.Request.ReadAll();
         using (LogContext.PushProperty("RequestBody", body))
-
+        {
             // TODO: Replace `{ex}` in the message with just the type and message when we upgrade Elasticsearch to v7.
             // Until then we put the call stack into the message to make it searchable in Kibana.
             // See https://github.com/elastic/kibana/issues/1084#issuecomment-585178079
             _logger.LogError(ex, $"An unhandled exception has occurred: {ex}");
+        }
+
         string detail = _env.IsProduction() ? null : ex.ToString();
         var details = new ProblemDetails
         {
             Type = ErrorTypes.InternalServerError,
             Title = "A server error has occurred.",
-            Detail = detail
+            Detail = detail,
         };
         AddTraceId(httpContext, details);
         var result = new ObjectResult(details)
