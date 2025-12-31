@@ -55,11 +55,14 @@ function getPartialFileName(fileName: string) {
   );
 }
 
-export function searchAndReplaceInFiles(
-  relativePath: string,
-  search: string | RegExp,
-  replace: string,
-) {
+export function searchAndReplaceInFiles(options: {
+  relativePath: string;
+  fileNameRegex?: RegExp;
+  search: string | RegExp;
+  replace: string;
+}) {
+  const { relativePath, fileNameRegex, search, replace } = options;
+
   if (!fs.existsSync(relativePath)) {
     console.warn(
       `!!! We were about to patch the file '${relativePath}', but it doesn't exist`,
@@ -68,7 +71,9 @@ export function searchAndReplaceInFiles(
   }
   const files = readdirRecursiveSync(relativePath);
   for (const file of files) {
-    searchAndReplaceInFile(file, search, replace);
+    if (!fileNameRegex || file.match(fileNameRegex)) {
+      searchAndReplaceInFile(file, search, replace);
+    }
   }
 }
 

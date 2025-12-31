@@ -254,12 +254,11 @@ function updateFrom_1p5_to_1p6(
   copyProjectFolder(
     'frontend/src/components/uikit/inputs/dropdown/StyledAutocomplete.tsx',
   );
-  searchAndReplaceInFiles(
-    'frontend/src',
-    'helpers/interceptors/auth',
-    'helpers/auth',
-  );
-
+  searchAndReplaceInFiles({
+    relativePath: 'frontend/src',
+    search: 'helpers/interceptors/auth',
+    replace: 'helpers/auth',
+  });
   fs.moveSync(
     path.join(currentFolder, 'frontend/src/helpers/interceptors/auth'),
     path.join(currentFolder, 'frontend/src/helpers/auth'),
@@ -268,26 +267,26 @@ function updateFrom_1p5_to_1p6(
     },
   );
 
-  searchAndReplaceInFiles(
-    'frontend/src',
-    './pages/unauthorized/openid',
-    'helpers/auth/openid',
-  );
-  searchAndReplaceInFiles(
-    'frontend/src',
-    'pages/unauthorized/openid',
-    'helpers/auth/openid',
-  );
+  searchAndReplaceInFiles({
+    relativePath: 'frontend/src',
+    search: './pages/unauthorized/openid',
+    replace: 'helpers/auth/openid',
+  });
+  searchAndReplaceInFiles({
+    relativePath: 'frontend/src',
+    search: 'pages/unauthorized/openid',
+    replace: 'helpers/auth/openid',
+  });
   searchAndReplaceInFile(
     'frontend/src/pages/unauthorized/LoginPage.tsx',
     './openid/',
     'helpers/auth/openid/',
   );
-  searchAndReplaceInFiles(
-    'frontend/src',
-    'helpers/interceptors/auth',
-    'helpers/auth',
-  );
+  searchAndReplaceInFiles({
+    relativePath: 'frontend/src',
+    search: 'helpers/interceptors/auth',
+    replace: 'helpers/auth',
+  });
   fs.moveSync(
     path.join(currentFolder, 'frontend/src/pages/unauthorized/openid'),
     path.join(currentFolder, 'frontend/src/helpers/auth/openid'),
@@ -303,11 +302,12 @@ function updateFrom_1p6_to_1p7(
   templateFolder: string,
   prefix: string,
 ) {
-  searchAndReplaceInFiles(
-    'webapi',
-    /<TargetFramework>net.*<\/TargetFramework>/,
-    '<TargetFramework>net10.0</TargetFramework>',
-  );
+  searchAndReplaceInFiles({
+    relativePath: 'webapi',
+    fileNameRegex: /\.csproj$/,
+    search: /<TargetFramework>net.*<\/TargetFramework>/,
+    replace: '<TargetFramework>net10.0</TargetFramework>',
+  });
 }
 
 function updateFrom_1p7_to_1p8(
