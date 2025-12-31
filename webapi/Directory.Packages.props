@@ -12,9 +12,9 @@
     <PackageVersion Include="App.Metrics.Formatters.Prometheus" Version="4.3.0-preview.0.34" />
     <PackageVersion Include="App.Metrics.Health.Checks.Process" Version="3.2.0" />
     <PackageVersion Include="App.Metrics.Health.Extensions.DependencyInjection" Version="3.2.0" />
-    <PackageVersion Include="Audit.EntityFramework.Core" Version="27.0.2" />
-    <PackageVersion Include="Audit.NET.PostgreSql" Version="27.0.2" />
-    <PackageVersion Include="Audit.NET.Serilog" Version="27.0.2" />
+    <PackageVersion Include="Audit.EntityFramework.Core" Version="31.3.3" />
+    <PackageVersion Include="Audit.NET.PostgreSql" Version="31.3.3" />
+    <PackageVersion Include="Audit.NET.Serilog" Version="31.3.3" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
     <PackageVersion Include="Destructurama.JsonNet" Version="4.0.2" />
     <PackageVersion Include="EasyNetQ.Management.Client" Version="3.0.1" />
