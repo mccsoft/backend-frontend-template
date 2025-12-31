@@ -13,13 +13,6 @@ steps:
       version: '10.x'
 
   - task: Cache@2
-    displayName: '[yarn]: cache'
-    inputs:
-      key: 'yarn-cache|$(Agent.OS)|./yarn.lock'
-      path: $(Build.SourcesDirectory)/.yarn/cache
-    continueOnError: true
-
-  - task: Cache@2
     inputs:
       key: 'node_modules|root|$(Agent.OS)|./yarn.lock'
       path: $(Build.SourcesDirectory)/node_modules

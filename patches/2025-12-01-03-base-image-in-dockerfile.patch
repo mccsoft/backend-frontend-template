@@ -1,0 +1,14 @@
+Index: webapi/src/MccSoft.TemplateApp.App/Dockerfile
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/webapi/src/MccSoft.TemplateApp.App/Dockerfile b/webapi/src/MccSoft.TemplateApp.App/Dockerfile
+--- a/webapi/src/MccSoft.TemplateApp.App/Dockerfile	(revision a01345feb65ddb6a3cf142d38256b1b6bfa00437)
++++ b/webapi/src/MccSoft.TemplateApp.App/Dockerfile	(revision 49afc2391397b14d0f49ee3c40acc1e2c936d441)
+@@ -1,4 +1,4 @@
+-FROM mcr.microsoft.com/dotnet/aspnet:9.0-noble
++FROM mcr.microsoft.com/dotnet/aspnet:10.0
+ USER root
+ 
+ # we need gettext-base for envsubst to work

@@ -1,0 +1,21 @@
+Index: webapi/src/MccSoft.TemplateApp.App/MccSoft.TemplateApp.App.csproj
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/webapi/src/MccSoft.TemplateApp.App/MccSoft.TemplateApp.App.csproj b/webapi/src/MccSoft.TemplateApp.App/MccSoft.TemplateApp.App.csproj
+--- a/webapi/src/MccSoft.TemplateApp.App/MccSoft.TemplateApp.App.csproj	(revision 5cc9ad0fbb0e5708e64b463a28033abed794a823)
++++ b/webapi/src/MccSoft.TemplateApp.App/MccSoft.TemplateApp.App.csproj	(revision 3cd6c49100d810c9effd04f95144c67deb7e7ac2)
+@@ -105,6 +105,12 @@
+     <Content Include="..\..\..\README.md">
+       <Link>README.md</Link>
+     </Content>
++    <Content Include="..\..\Directory.Build.props">
++      <Link>Directory.Build.props</Link>
++    </Content>
++    <Content Include="..\..\Directory.Packages.props">
++      <Link>Directory.Packages.props</Link>
++    </Content>
+     <None Update="logs;idsrv4test.pfx;Dockerfile">
+       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+     </None>

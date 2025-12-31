@@ -1,0 +1,38 @@
+Index: .config/dotnet-tools.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.config/dotnet-tools.json b/.config/dotnet-tools.json
+--- a/.config/dotnet-tools.json	(revision 99177dce91103b72602a3ead6b743a453019b8a6)
++++ b/.config/dotnet-tools.json	(revision 5cc9ad0fbb0e5708e64b463a28033abed794a823)
+@@ -3,9 +3,9 @@
+   "isRoot": true,
+   "tools": {
+     "csharpier": {
+-      "version": "0.26.7",
++      "version": "1.2.4",
+       "commands": [
+-        "dotnet-csharpier"
++        "csharpier"
+       ],
+       "rollForward": false
+     },
+@@ -24,7 +24,7 @@
+       "rollForward": false
+     },
+     "dotnet-ef": {
+-      "version": "9.0.4",
++      "version": "10.0.1",
+       "commands": [
+         "dotnet-ef"
+       ],
+@@ -38,7 +38,7 @@
+       "rollForward": false
+     },
+     "husky": {
+-      "version": "0.7.2",
++      "version": "0.8.0",
+       "commands": [
+         "husky"
+       ],
