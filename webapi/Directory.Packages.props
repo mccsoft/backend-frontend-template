@@ -30,7 +30,7 @@
     <PackageVersion Include="IdentityModel" Version="7.0.0" />
     <PackageVersion Include="JsonKnownTypes" Version="0.7.0" />
     <PackageVersion Include="MailKit" Version="4.12.0" />
-    <PackageVersion Include="MartinCostello.Logging.XUnit" Version="0.5.1" />
+    <PackageVersion Include="MartinCostello.Logging.XUnit" Version="0.7.0" />
     <PackageVersion Include="MassTransit" Version="7.2.4" />
     <PackageVersion Include="MccSoft.IntegreSql.EF" Version="0.12.2" />
     <PackageVersion Include="MediatR" Version="12.5.0" />
@@ -84,12 +84,12 @@
       Version="10.0.1"
     />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
-    <PackageVersion Include="MimeKit" Version="4.12.0" />
+    <PackageVersion Include="MimeKit" Version="4.14.0" />
     <PackageVersion Include="MiniProfiler.AspNetCore.Mvc" Version="4.5.4" />
     <PackageVersion Include="MiniProfiler.EntityFrameworkCore" Version="4.5.4" />
     <PackageVersion Include="Moq" Version="4.20.72" />
-    <PackageVersion Include="NeinLinq" Version="7.3.0" />
-    <PackageVersion Include="NeinLinq.EntityFrameworkCore" Version="7.3.0" />
+    <PackageVersion Include="NeinLinq" Version="7.4.0" />
+    <PackageVersion Include="NeinLinq.EntityFrameworkCore" Version="7.4.0" />
     <PackageVersion Include="NJsonSchema" Version="11.3.2" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
     <PackageVersion Include="Npgsql.Json.NET" Version="10.0.1" />
