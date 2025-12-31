@@ -2,7 +2,6 @@
 import yargs from 'yargs';
 import fs from 'fs';
 import path from 'path';
-import { XMLParser, XMLBuilder } from 'fast-xml-parser';
 import { hideBin } from 'yargs/helpers';
 import { execSync } from 'child_process';
 import semver from 'semver';
@@ -14,6 +13,7 @@ import { updateVersion } from './src/update-version.ts';
 import {
   setTemplateFolder,
   syncReferencesInProjects,
+  syncReferencesDirectoryPackagesProps,
 } from './src/update-csproj.ts';
 
 const args = yargs(
