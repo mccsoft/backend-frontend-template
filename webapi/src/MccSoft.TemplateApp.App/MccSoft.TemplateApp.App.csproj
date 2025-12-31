@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Version>1.0.0</Version>
     <PackageId>MccSoft.TemplateApp.App</PackageId>
     <Description>
@@ -43,45 +43,45 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Roslyn.Analyzers" Version="1.0.3.4" />
-    <PackageReference Include="Vp.Roslyn.Analyzers.All" Version="1.0.0" />
-    <PackageReference Include="Metalama.Framework" Version="2025.1.5" />
-    <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="9.0.4" />
-    <PackageReference Include="Audit.NET.Serilog" Version="27.0.2" />
-    <PackageReference Include="Audit.NET.PostgreSql" Version="27.0.2" />
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.18" />
-    <PackageReference Include="Hangfire.Core" Version="1.8.18" />
-    <PackageReference Include="Hangfire.Dashboard.BasicAuthorization" Version="1.0.2" />
-    <PackageReference Include="Hangfire.PostgreSql" Version="1.20.12" />
-    <PackageReference Include="I18Next.Net" Version="1.0.0" />
-    <PackageReference Include="I18Next.Net.AspNetCore" Version="1.0.0" />
-    <PackageReference Include="I18Next.Net.Extensions" Version="1.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="9.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="9.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="9.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="6.0.36" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.4" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.9.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.4">
+    <PackageReference Include="Roslyn.Analyzers" />
+    <PackageReference Include="Vp.Roslyn.Analyzers.All" />
+    <PackageReference Include="Metalama.Framework" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaProxy" />
+    <PackageReference Include="Audit.NET.Serilog" />
+    <PackageReference Include="Audit.NET.PostgreSql" />
+    <PackageReference Include="Hangfire.AspNetCore" />
+    <PackageReference Include="Hangfire.Core" />
+    <PackageReference Include="Hangfire.Dashboard.BasicAuthorization" />
+    <PackageReference Include="Hangfire.PostgreSql" />
+    <PackageReference Include="I18Next.Net" />
+    <PackageReference Include="I18Next.Net.AspNetCore" />
+    <PackageReference Include="I18Next.Net.Extensions" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="9.0.4" />
-    <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.5.4" />
-    <PackageReference Include="MiniProfiler.EntityFrameworkCore" Version="4.5.4" />
-    <PackageReference Include="Npgsql.Json.NET" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" />
+    <PackageReference Include="MiniProfiler.AspNetCore.Mvc" />
+    <PackageReference Include="MiniProfiler.EntityFrameworkCore" />
+    <PackageReference Include="Npgsql.Json.NET" />
 
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Shaddix.OpenIddict.ExternalAuthentication" Version="2.10.5" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.2" />
+    <PackageReference Include="Shaddix.OpenIddict.ExternalAuthentication" />
+    <PackageReference Include="System.Linq.Dynamic.Core" />
   </ItemGroup>
 
 
