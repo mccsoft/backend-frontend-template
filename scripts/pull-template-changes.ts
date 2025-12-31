@@ -108,10 +108,6 @@ copyProjectFolder('webapi/Lib', {
   ignorePattern: [copyProjectFolderDefaultOptions.ignorePattern, 'TestBase'],
 });
 copyProjectFolder('docs');
-copyProjectFolder(
-  `webapi/src/${prefix}.App/Setup`,
-  copyProjectFolderDefaultOptions,
-);
 
 syncPacketsInPackageJson('package.json');
 syncPacketsInPackageJson('frontend/package.json');
