@@ -1,3 +1,6 @@
+import i18next from 'i18next';
+import { ApiException, ProblemDetails } from 'services/api/api-client.types';
+
 export const NetworkError = 'Network Error';
 
 /*
@@ -24,8 +27,11 @@ export function errorToString(
   if (errors && Object.keys(errors).length) {
     let formErrorsCombined = '';
     // Some field-bound error (e.g. `user with same Name already exists in DB`)
+    // (similar code exists in useErrorHanler.ts, don't forget to change it as well)
     Object.keys(errors).forEach((key) => {
-      const camelCaseName = key.charAt(0).toLowerCase() + key.slice(1);
+      const keyWithout$ = key.startsWith('$.') ? key.substring(2) : key;
+      const camelCaseName =
+        keyWithout$.charAt(0).toLowerCase() + keyWithout$.slice(1);
       const errorValue = errors[key];
       const errorString = Array.isArray(errorValue)
         ? errorValue.join('; ')
@@ -58,15 +64,20 @@ export function errorToString(
 export function convertToErrorStringInternal(error: any): string {
   const errorResponseData = error.response?.data || error;
   const responseDetail = errorResponseData?.detail;
+
   if (error.status === 401) {
-    return 'Unauthorized';
+    return i18next.t('Error_Unauthorized');
   }
   if (error.status === 403) {
-    return 'Access Denied';
+    return i18next.t('Error_AccessDenied');
   }
-  if (responseDetail) {
-    // General server-side error not related to certain field (e.g. `Access Denied`)
-    return responseDetail;
+
+  if (ApiException.isApiException(error)) {
+    error = error.response as any as ProblemDetails;
+  }
+
+  if (error.type === 'urn:mccsoft:external-service-is-unavailable') {
+    return i18next.t('Error_ExternalServiceUnavailable');
   }
 
   if (error.code === 'CSS_CHUNK_LOAD_FAILED') {
@@ -81,6 +92,11 @@ export function convertToErrorStringInternal(error: any): string {
   if (error.message?.includes("Cannot read property 'status' of undefined")) {
     // nswag generated client throws it when there's no response
     return NetworkError;
+  }
+
+  if (responseDetail) {
+    // General server-side error not related to certain field (e.g. `Access Denied`)
+    return responseDetail;
   }
   if (error.message) {
     // e.g. Network Error

@@ -7,6 +7,6 @@
     "typeRoots": ["types"],
     "baseUrl": "./src"
   },
-  "include": ["src", "types"],
+  "include": ["src", "types", "tests"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -104,6 +104,10 @@ export default defineConfig(({ command, mode }) => {
         },
       },
     },
+    test: {
+      environment: 'happy-dom',
+      setupFiles: ['./tests/vitest.setup.ts'], // Path to your setup file
+    },
   };
 });
 

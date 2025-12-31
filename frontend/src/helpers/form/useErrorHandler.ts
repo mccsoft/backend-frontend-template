@@ -41,8 +41,11 @@ export function handleSubmitFormError<T extends FieldValues>(
   if (errors && Object.keys(errors).length) {
     let formErrorsCombined = '';
     // Some field-bound error (e.g. `user with same Name already exists in DB`)
+    // (similar code exists in error-helper.ts, don't forget to change it as well)
     Object.keys(errors).forEach((key) => {
-      const camelCaseName = key.charAt(0).toLowerCase() + key.slice(1);
+      const keyWithout$ = key.startsWith('$.') ? key.substring(2) : key;
+      const camelCaseName =
+        keyWithout$.charAt(0).toLowerCase() + keyWithout$.slice(1);
       const errorValue = errors[key];
       const errorString = Array.isArray(errorValue)
         ? errorValue.join('; ')
@@ -112,6 +115,7 @@ export function useErrorHandler<TFieldValues extends FieldValues = FieldValues>(
   const submitForm = useEventCallback(async (data: TFieldValues) => {
     try {
       setOverallServerError('');
+      setFormErrorsCombined('');
       await submitFunction(data, navigate);
       reset?.(undefined);
     } catch (error) {

@@ -97,6 +97,7 @@
     "eslint-plugin-react": "7.37.5",
     "eslint-plugin-react-hooks": "5.2.0",
     "eslint-plugin-storybook": "9.0.13",
+    "happy-dom": "20.0.11",
     "importmap-plugin": "0.8.0",
     "nock": "13.3.0",
     "prettier": "3.5.3",

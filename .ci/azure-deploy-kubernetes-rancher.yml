@@ -17,13 +17,6 @@ steps:
     fetchDepth: 1
     submodules: true
 
-  - task: Bash@3
-    displayName: '[bash] Prepare versions and environment variables'
-    inputs:
-      filePath: '$(Build.SourcesDirectory)/k8s/aks-rancher/prepare-k8s-templates.sh'
-      workingDirectory: $(Build.SourcesDirectory)/k8s/aks-rancher
-      arguments: '${{ parameters.Environment }}'
-
   - ${{ if eq(parameters.Environment, 'prod') }}:
       - task: Docker@2
         displayName: '[Docker]: login'
@@ -53,6 +46,14 @@ steps:
         inputs:
           containerRegistry: $(connectorACR)
           command: 'logout'
+
+  - task: Bash@3
+    displayName: '[bash] Prepare versions and environment variables'
+    inputs:
+      filePath: '$(Build.SourcesDirectory)/k8s/aks-rancher/prepare-k8s-templates.sh'
+      workingDirectory: $(Build.SourcesDirectory)/k8s/aks-rancher
+      arguments: '${{ parameters.Environment }}'
+
 
   - task: PublishBuildArtifacts@1
     inputs:
