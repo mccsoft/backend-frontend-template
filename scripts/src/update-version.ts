@@ -302,7 +302,13 @@ function updateFrom_1p6_to_1p7(
   currentFolder: string,
   templateFolder: string,
   prefix: string,
-) {}
+) {
+  searchAndReplaceInFiles(
+    'webapi',
+    /<TargetFramework>net.*<\/TargetFramework>/,
+    '<TargetFramework>net10.0</TargetFramework>',
+  );
+}
 
 function updateFrom_1p7_to_1p8(
   currentFolder: string,
