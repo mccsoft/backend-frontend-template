@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using MccSoft.WebApi.Patching.Models;
@@ -52,9 +54,8 @@ public class PatchRequestConverter : JsonConverter<IPatchRequest>
                     | BindingFlags.SetProperty
                     | BindingFlags.GetProperty
             )
-            .ToDictionary(
-                p =>
-                    options.PropertyNamingPolicy?.ConvertName(p.Name)?.ToLower() ?? p.Name.ToLower()
+            .ToDictionary(p =>
+                options.PropertyNamingPolicy?.ConvertName(p.Name)?.ToLower() ?? p.Name.ToLower()
             );
 
         while (reader.Read())
@@ -74,8 +75,12 @@ public class PatchRequestConverter : JsonConverter<IPatchRequest>
                         if (reader.TokenType == JsonTokenType.Null)
                         {
                             var isPropertyNullable =
+                                // Checks value types
                                 Nullable.GetUnderlyingType(property.PropertyType) != null
-                                || !property.PropertyType.IsValueType;
+                                // Checks reference types
+                                || property.CustomAttributes.Any(attribute =>
+                                    attribute.AttributeType == typeof(NullableAttribute)
+                                );
 
                             if (!isPropertyNullable)
                             {

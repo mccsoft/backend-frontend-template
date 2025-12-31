@@ -17,13 +17,6 @@ steps:
     fetchDepth: 1
     submodules: true
 
-  - task: Bash@3
-    displayName: '[bash] Prepare versions and environment variables'
-    inputs:
-      filePath: '$(Build.SourcesDirectory)/k8s/aks-env/prepare-k8s-templates.sh'
-      workingDirectory: $(Build.SourcesDirectory)/k8s/aks-env
-      arguments: '${{ parameters.Environment }}'
-
   - ${{ if eq(parameters.Environment, 'prod') }}:
       - task: Docker@2
         displayName: '[Docker]: login'
@@ -32,7 +25,7 @@ steps:
           command: 'login'
 
       - task: Bash@3
-        displayName: '[ACR]: promote image to release/<repo>'
+        displayName: '[ACR]: promote image to <repo>/release'
         inputs:
           targetType: 'inline'
           script: |
@@ -40,19 +33,27 @@ steps:
             TAG="${{ parameters.BuildAppNumber }}"
 
             FROM="${ACR_REGISTRY}/${ACR_REPOSITORY}:${TAG}"
-            TO="${ACR_REGISTRY}/release/${ACR_REPOSITORY}:${TAG}"
+            TO="${ACR_REGISTRY}/${ACR_REPOSITORY}/release:${TAG}"
 
             echo "Promoting image inside ACR:"
             echo "  ${FROM} -> ${TO}"
 
             docker buildx imagetools create --tag "${TO}" "${FROM}"
-            echo "##vso[task.setvariable variable=ACR_REPOSITORY]release/${ACR_REPOSITORY}"
+            echo "##vso[task.setvariable variable=ACR_REPOSITORY]${ACR_REPOSITORY}/release"
 
       - task: Docker@2
         displayName: '[Docker]: logout'
         inputs:
           containerRegistry: $(connectorACR)
           command: 'logout'
+
+  - task: Bash@3
+    displayName: "[bash] Prepare versions and environment variables"
+    inputs:
+      filePath: '$(Build.SourcesDirectory)/k8s/aks-env/prepare-k8s-templates.sh'
+      workingDirectory: $(Build.SourcesDirectory)/k8s/aks-env
+      arguments: '${{ parameters.Environment }}'
+
 
   - task: PublishBuildArtifacts@1
     inputs:

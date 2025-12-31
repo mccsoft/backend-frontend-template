@@ -42,6 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="NSwag.Examples" />
     <PackageReference Include="Roslyn.Analyzers" />
     <PackageReference Include="Vp.Roslyn.Analyzers.All" />
     <PackageReference Include="Metalama.Framework" />

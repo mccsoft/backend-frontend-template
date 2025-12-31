@@ -25,10 +25,14 @@ public class PatchingTests
 
     public class NullableTestProp : PatchRequest<object>
     {
-        public int Qwe { get; set; }
-        public int? Zxc { get; set; }
+        public int NotNullableValueProperty { get; set; }
+        public int? NullableValueProperty { get; set; }
 
-        public PatchDto1 Asd { get; set; }
+        public string NotNullableStringProperty { get; set; }
+        public string? NullableStringProperty { get; set; }
+
+        public PatchDto1 NotNullableReferenceProperty { get; set; }
+        public PatchDto1? NullableReferenceProperty { get; set; }
     }
 
     public PatchingTests()
@@ -104,31 +108,34 @@ public class PatchingTests
         result.Zxc.IsFieldPresent(nameof(result.Qwe)).Should().BeFalse();
     }
 
-    [Fact]
-    public void AssignNullToNonNullableProperty()
+    [Theory]
+    [InlineData("NotNullableValueProperty")]
+    [InlineData("NotNullableStringProperty")]
+    [InlineData("NotNullableReferenceProperty")]
+    public void AssignNullToNonNullableProperty(string propName)
     {
         FluentActions
-            .Invoking(
-                () =>
-                    JsonSerializer.Deserialize<NullableTestProp>(
-                        "{\"Qwe\": null}",
-                        _deserializationOptions
-                    )
+            .Invoking(() =>
+                JsonSerializer.Deserialize<NullableTestProp>(
+                    $"{{\"{propName}\": null}}",
+                    _deserializationOptions
+                )
             )
             .Should()
             .Throw<ValidationException>()
-            .WithMessage("The Qwe field is required.");
+            .WithMessage($"The {propName} field is required.");
     }
 
     [Fact]
     public void AssignNullToNullableProperty()
     {
         var result = JsonSerializer.Deserialize<NullableTestProp>(
-            "{\"Zxc\": null, \"Asd\": null}",
+            "{\"NullableValueProperty\": null, \"Asd\": null, \"NullableStringProperty\": null}",
             _deserializationOptions
         );
 
-        result.Zxc.Should().BeNull();
-        result.Asd.Should().BeNull();
+        result.NullableValueProperty.Should().BeNull();
+        result.NullableStringProperty.Should().BeNull();
+        result.NullableReferenceProperty.Should().BeNull();
     }
 }

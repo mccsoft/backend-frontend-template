@@ -93,6 +93,7 @@
     <PackageVersion Include="NJsonSchema" Version="11.5.2" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
     <PackageVersion Include="NSwag.AspNetCore" Version="14.6.3" />
+    <PackageVersion Include="NSwag.Examples" Version="1.0.14" />
     <PackageVersion Include="OpenIddict.AspNetCore" Version="7.2.0" />
     <PackageVersion Include="OpenIddict.EntityFrameworkCore" Version="7.2.0" />
     <PackageVersion Include="OpenIddict.EntityFrameworkCore.Models" Version="7.2.0" />

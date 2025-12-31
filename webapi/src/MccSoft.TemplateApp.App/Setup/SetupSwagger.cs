@@ -1,11 +1,13 @@
 ﻿using System.Text.Json;
 using MccSoft.TemplateApp.App.Settings;
 using MccSoft.WebApi.Patching;
+using MccSoft.WebApi.Serialization.FromQueryJson;
 using MccSoft.WebApi.Swagger;
 using NJsonSchema;
 using NJsonSchema.Generation.TypeMappers;
 using NSwag;
 using NSwag.AspNetCore;
+using NSwag.Examples;
 using NSwag.Generation.AspNetCore;
 using NSwag.Generation.Processors.Security;
 
@@ -24,16 +26,20 @@ public static partial class SetupSwagger
         var configuration = builder.Configuration;
 
         var swaggerOptions = configuration.GetSwaggerOptions();
-        services.AddOpenApiDocument(options =>
-        {
-            ConfigureOpenApiDocument(options, swaggerOptions);
-            options.SchemaSettings.SchemaProcessors.Add(
-                new RequireValueTypesSchemaProcessor(makePatchRequestFieldsNullable: false)
-            );
-            options.SchemaSettings.SchemaProcessors.Add(
-                new ValidationProblemDetailsSchemaProcessor()
-            );
-        });
+        services.AddOpenApiDocument(
+            (options, provider) =>
+            {
+                options.AddExamples(provider);
+                options.AddJsonQuerySupport();
+                ConfigureOpenApiDocument(options, swaggerOptions);
+                options.SchemaSettings.SchemaProcessors.Add(
+                    new RequireValueTypesSchemaProcessor(makePatchRequestFieldsNullable: false)
+                );
+                options.SchemaSettings.SchemaProcessors.Add(
+                    new ValidationProblemDetailsSchemaProcessor()
+                );
+            }
+        );
         services.AddOpenApiDocument(options =>
         {
             ConfigureOpenApiDocument(options, swaggerOptions);
@@ -73,7 +79,7 @@ public static partial class SetupSwagger
                 Type = OpenApiSecuritySchemeType.ApiKey,
                 Name = "Authorization",
                 Description = "Copy 'Bearer ' + valid JWT token into field",
-                In = OpenApiSecurityApiKeyLocation.Header
+                In = OpenApiSecurityApiKeyLocation.Header,
             }
         );
 

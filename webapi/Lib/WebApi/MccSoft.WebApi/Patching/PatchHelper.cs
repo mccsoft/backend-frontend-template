@@ -17,7 +17,7 @@ public static class PatchHelper
             var value = propertyInfo.GetValue(patchRequest);
 
 #pragma warning disable EF1001
-            if (!value?.GetType()?.IsDefaultValue(value) == true)
+            if (!propertyInfo.PropertyType.IsDefaultValue(value))
 #pragma warning restore EF1001
 
             {
