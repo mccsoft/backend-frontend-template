@@ -2,7 +2,8 @@
   "compilerOptions": {
     "composite": true,
     "module": "esnext",
-    "moduleResolution": "node"
+    "moduleResolution": "nodenext",
+    "types": ["node"]
   },
   "include": ["vite.config.mts"]
 }

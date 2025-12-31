@@ -1,14 +1,8 @@
 // Adapter for react-window
-import React, { ComponentType, useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import styles from './StyledAutocomplete.module.scss';
-import {
-  FixedSizeList as _VirtualList,
-  FixedSizeListProps,
-  ListChildComponentProps,
-} from 'react-window';
+import { List } from 'react-window';
 import { AutocompleteRenderOptionState } from '@mui/material';
-
-const VirtualList = _VirtualList as ComponentType<FixedSizeListProps>;
 
 export type VirtualizedListboxComponentProps = {
   itemSize: number;
@@ -43,7 +37,7 @@ export const VirtualizedListboxComponent = React.forwardRef<
   }, []);
 
   const renderRow = useCallback(
-    function (props: ListChildComponentProps) {
+    function (props) {
       const { data, index, style } = props;
       const dataSet = data[index];
       const [liProps, option, state] = dataSet;
@@ -59,18 +53,16 @@ export const VirtualizedListboxComponent = React.forwardRef<
 
   return (
     <div ref={ref} className={styles.virtualizedList}>
-      <VirtualList
-        itemData={items}
-        height={getHeight()}
-        width="100%"
+      <List
+        rowComponent={renderRow}
+        rowProps={items}
+        style={{ width: '100%' }}
         outerElementType={outerElementType}
         innerElementType="ul"
         itemSize={props.itemSize}
         overscanCount={5}
         itemCount={itemCount}
-      >
-        {renderRow}
-      </VirtualList>
+      />
     </div>
   );
 });

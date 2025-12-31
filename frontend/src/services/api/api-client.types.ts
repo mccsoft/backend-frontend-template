@@ -1,5 +1,5 @@
 //-----Types.File-----
-export interface ProblemDetails  {
+export interface ProblemDetails {
   type?: string | null;
   title?: string | null;
   status?: number | null;
@@ -13,7 +13,7 @@ export function deserializeProblemDetails(json: string): ProblemDetails {
   return data;
 }
 export function initProblemDetails(_data: ProblemDetails) {
-    return _data;
+  return _data;
 }
 export function serializeProblemDetails(_data: ProblemDetails | undefined) {
   if (_data) {
@@ -21,60 +21,84 @@ export function serializeProblemDetails(_data: ProblemDetails | undefined) {
   }
   return JSON.stringify(_data);
 }
-export function prepareSerializeProblemDetails(_data: ProblemDetails): ProblemDetails {
+export function prepareSerializeProblemDetails(
+  _data: ProblemDetails,
+): ProblemDetails {
   const data: Record<string, any> = { ..._data };
   return data as ProblemDetails;
 }
-export interface HttpValidationProblemDetails extends ProblemDetails  {
-  errors: { [key: string]: string[]; };
+export interface HttpValidationProblemDetails extends ProblemDetails {
+  errors: { [key: string]: string[] };
   [key: string]: any;
 }
-export function deserializeHttpValidationProblemDetails(json: string): HttpValidationProblemDetails {
+export function deserializeHttpValidationProblemDetails(
+  json: string,
+): HttpValidationProblemDetails {
   const data = JSON.parse(json) as HttpValidationProblemDetails;
   initHttpValidationProblemDetails(data);
   return data;
 }
-export function initHttpValidationProblemDetails(_data: HttpValidationProblemDetails) {
+export function initHttpValidationProblemDetails(
+  _data: HttpValidationProblemDetails,
+) {
   initProblemDetails(_data);
-    return _data;
+  return _data;
 }
-export function serializeHttpValidationProblemDetails(_data: HttpValidationProblemDetails | undefined) {
+export function serializeHttpValidationProblemDetails(
+  _data: HttpValidationProblemDetails | undefined,
+) {
   if (_data) {
-    _data = prepareSerializeHttpValidationProblemDetails(_data as HttpValidationProblemDetails);
+    _data = prepareSerializeHttpValidationProblemDetails(
+      _data as HttpValidationProblemDetails,
+    );
   }
   return JSON.stringify(_data);
 }
-export function prepareSerializeHttpValidationProblemDetails(_data: HttpValidationProblemDetails): HttpValidationProblemDetails {
-  const data = prepareSerializeProblemDetails(_data as HttpValidationProblemDetails) as Record<string, any>;
+export function prepareSerializeHttpValidationProblemDetails(
+  _data: HttpValidationProblemDetails,
+): HttpValidationProblemDetails {
+  const data = prepareSerializeProblemDetails(
+    _data as HttpValidationProblemDetails,
+  ) as Record<string, any>;
   return data as HttpValidationProblemDetails;
 }
 /** A ProblemDetails for validation errors. */
-export interface ValidationProblemDetails extends HttpValidationProblemDetails  {
+export interface ValidationProblemDetails extends HttpValidationProblemDetails {
   /** Gets or sets the validation errors associated with this instance of ValidationProblemDetails. */
-  errors: { [key: string]: string[]; };
+  errors: { [key: string]: string[] };
   [key: string]: any;
 }
-export function deserializeValidationProblemDetails(json: string): ValidationProblemDetails {
+export function deserializeValidationProblemDetails(
+  json: string,
+): ValidationProblemDetails {
   const data = JSON.parse(json) as ValidationProblemDetails;
   initValidationProblemDetails(data);
   return data;
 }
 export function initValidationProblemDetails(_data: ValidationProblemDetails) {
   initHttpValidationProblemDetails(_data);
-    return _data;
+  return _data;
 }
-export function serializeValidationProblemDetails(_data: ValidationProblemDetails | undefined) {
+export function serializeValidationProblemDetails(
+  _data: ValidationProblemDetails | undefined,
+) {
   if (_data) {
-    _data = prepareSerializeValidationProblemDetails(_data as ValidationProblemDetails);
+    _data = prepareSerializeValidationProblemDetails(
+      _data as ValidationProblemDetails,
+    );
   }
   return JSON.stringify(_data);
 }
-export function prepareSerializeValidationProblemDetails(_data: ValidationProblemDetails): ValidationProblemDetails {
-  const data = prepareSerializeHttpValidationProblemDetails(_data as ValidationProblemDetails) as Record<string, any>;
+export function prepareSerializeValidationProblemDetails(
+  _data: ValidationProblemDetails,
+): ValidationProblemDetails {
+  const data = prepareSerializeHttpValidationProblemDetails(
+    _data as ValidationProblemDetails,
+  ) as Record<string, any>;
   return data as ValidationProblemDetails;
 }
 /** Webhook subscription DTO */
-export interface WebhookSubscriptionDto  {
+export interface WebhookSubscriptionDto {
   id: string;
   /** Human-readable name of integration */
   name: string;
@@ -82,42 +106,50 @@ export interface WebhookSubscriptionDto  {
   url: string;
   eventType: WebHookEventType;
   method: string | null;
-  headers: { [key: string]: string; } | null;
+  headers: { [key: string]: string } | null;
 }
-export function deserializeWebhookSubscriptionDto(json: string): WebhookSubscriptionDto {
+export function deserializeWebhookSubscriptionDto(
+  json: string,
+): WebhookSubscriptionDto {
   const data = JSON.parse(json) as WebhookSubscriptionDto;
   initWebhookSubscriptionDto(data);
   return data;
 }
 export function initWebhookSubscriptionDto(_data: WebhookSubscriptionDto) {
   if (_data) {
-    _data.eventType = _data["eventType"];
+    _data.eventType = _data['eventType'];
   }
   return _data;
 }
-export function serializeWebhookSubscriptionDto(_data: WebhookSubscriptionDto | undefined) {
+export function serializeWebhookSubscriptionDto(
+  _data: WebhookSubscriptionDto | undefined,
+) {
   if (_data) {
-    _data = prepareSerializeWebhookSubscriptionDto(_data as WebhookSubscriptionDto);
+    _data = prepareSerializeWebhookSubscriptionDto(
+      _data as WebhookSubscriptionDto,
+    );
   }
   return JSON.stringify(_data);
 }
-export function prepareSerializeWebhookSubscriptionDto(_data: WebhookSubscriptionDto): WebhookSubscriptionDto {
+export function prepareSerializeWebhookSubscriptionDto(
+  _data: WebhookSubscriptionDto,
+): WebhookSubscriptionDto {
   const data: Record<string, any> = { ..._data };
   return data as WebhookSubscriptionDto;
 }
 export enum WebHookEventType {
-    NewProduct = "NewProduct",
-    ProductDeleted = "ProductDeleted",
+  NewProduct = 'NewProduct',
+  ProductDeleted = 'ProductDeleted',
 }
 /** Webhook subscription DTO */
-export interface CreateWebHookDto  {
+export interface CreateWebHookDto {
   /** Human-readable name of integration */
   name: string;
   /** URL for integration */
   url: string;
   eventType: WebHookEventType;
   method: string | null;
-  headers: { [key: string]: string; } | null;
+  headers: { [key: string]: string } | null;
 }
 export function deserializeCreateWebHookDto(json: string): CreateWebHookDto {
   const data = JSON.parse(json) as CreateWebHookDto;
@@ -126,7 +158,7 @@ export function deserializeCreateWebHookDto(json: string): CreateWebHookDto {
 }
 export function initCreateWebHookDto(_data: CreateWebHookDto) {
   if (_data) {
-    _data.eventType = _data["eventType"];
+    _data.eventType = _data['eventType'];
   }
   return _data;
 }
@@ -136,12 +168,14 @@ export function serializeCreateWebHookDto(_data: CreateWebHookDto | undefined) {
   }
   return JSON.stringify(_data);
 }
-export function prepareSerializeCreateWebHookDto(_data: CreateWebHookDto): CreateWebHookDto {
+export function prepareSerializeCreateWebHookDto(
+  _data: CreateWebHookDto,
+): CreateWebHookDto {
   const data: Record<string, any> = { ..._data };
   return data as CreateWebHookDto;
 }
 /** Webhook subscription DTO */
-export interface UpdateWebHookSubscriptionDto  {
+export interface UpdateWebHookSubscriptionDto {
   /** Webhook name (Human readable name of integration). */
   name?: string;
   /** Webhook URL for integration. */
@@ -149,30 +183,40 @@ export interface UpdateWebHookSubscriptionDto  {
   /** HTTP method for accessing URL via specified http method. */
   method?: string;
   eventType?: WebHookEventType;
-  headers?: { [key: string]: string; };
+  headers?: { [key: string]: string };
 }
-export function deserializeUpdateWebHookSubscriptionDto(json: string): UpdateWebHookSubscriptionDto {
+export function deserializeUpdateWebHookSubscriptionDto(
+  json: string,
+): UpdateWebHookSubscriptionDto {
   const data = JSON.parse(json) as UpdateWebHookSubscriptionDto;
   initUpdateWebHookSubscriptionDto(data);
   return data;
 }
-export function initUpdateWebHookSubscriptionDto(_data: UpdateWebHookSubscriptionDto) {
+export function initUpdateWebHookSubscriptionDto(
+  _data: UpdateWebHookSubscriptionDto,
+) {
   if (_data) {
-    _data.eventType = _data["eventType"];
+    _data.eventType = _data['eventType'];
   }
   return _data;
 }
-export function serializeUpdateWebHookSubscriptionDto(_data: UpdateWebHookSubscriptionDto | undefined) {
+export function serializeUpdateWebHookSubscriptionDto(
+  _data: UpdateWebHookSubscriptionDto | undefined,
+) {
   if (_data) {
-    _data = prepareSerializeUpdateWebHookSubscriptionDto(_data as UpdateWebHookSubscriptionDto);
+    _data = prepareSerializeUpdateWebHookSubscriptionDto(
+      _data as UpdateWebHookSubscriptionDto,
+    );
   }
   return JSON.stringify(_data);
 }
-export function prepareSerializeUpdateWebHookSubscriptionDto(_data: UpdateWebHookSubscriptionDto): UpdateWebHookSubscriptionDto {
+export function prepareSerializeUpdateWebHookSubscriptionDto(
+  _data: UpdateWebHookSubscriptionDto,
+): UpdateWebHookSubscriptionDto {
   const data: Record<string, any> = { ..._data };
   return data as UpdateWebHookSubscriptionDto;
 }
-export interface CurrentUserDto  {
+export interface CurrentUserDto {
   id: string;
   username: string;
   nickname: string;
@@ -185,7 +229,7 @@ export function deserializeCurrentUserDto(json: string): CurrentUserDto {
 }
 export function initCurrentUserDto(_data: CurrentUserDto) {
   if (_data) {
-    _data.permissions = _data["permissions"];
+    _data.permissions = _data['permissions'];
   }
   return _data;
 }
@@ -195,11 +239,13 @@ export function serializeCurrentUserDto(_data: CurrentUserDto | undefined) {
   }
   return JSON.stringify(_data);
 }
-export function prepareSerializeCurrentUserDto(_data: CurrentUserDto): CurrentUserDto {
+export function prepareSerializeCurrentUserDto(
+  _data: CurrentUserDto,
+): CurrentUserDto {
   const data: Record<string, any> = { ..._data };
   return data as CurrentUserDto;
 }
-export interface ResetPasswordDto  {
+export interface ResetPasswordDto {
   username: string;
   token: string;
   newPassword: string;
@@ -210,7 +256,7 @@ export function deserializeResetPasswordDto(json: string): ResetPasswordDto {
   return data;
 }
 export function initResetPasswordDto(_data: ResetPasswordDto) {
-    return _data;
+  return _data;
 }
 export function serializeResetPasswordDto(_data: ResetPasswordDto | undefined) {
   if (_data) {
@@ -218,11 +264,13 @@ export function serializeResetPasswordDto(_data: ResetPasswordDto | undefined) {
   }
   return JSON.stringify(_data);
 }
-export function prepareSerializeResetPasswordDto(_data: ResetPasswordDto): ResetPasswordDto {
+export function prepareSerializeResetPasswordDto(
+  _data: ResetPasswordDto,
+): ResetPasswordDto {
   const data: Record<string, any> = { ..._data };
   return data as ResetPasswordDto;
 }
-export interface ChangePasswordDto  {
+export interface ChangePasswordDto {
   oldPassword: string;
   newPassword: string;
 }
@@ -232,41 +280,51 @@ export function deserializeChangePasswordDto(json: string): ChangePasswordDto {
   return data;
 }
 export function initChangePasswordDto(_data: ChangePasswordDto) {
-    return _data;
+  return _data;
 }
-export function serializeChangePasswordDto(_data: ChangePasswordDto | undefined) {
+export function serializeChangePasswordDto(
+  _data: ChangePasswordDto | undefined,
+) {
   if (_data) {
     _data = prepareSerializeChangePasswordDto(_data as ChangePasswordDto);
   }
   return JSON.stringify(_data);
 }
-export function prepareSerializeChangePasswordDto(_data: ChangePasswordDto): ChangePasswordDto {
+export function prepareSerializeChangePasswordDto(
+  _data: ChangePasswordDto,
+): ChangePasswordDto {
   const data: Record<string, any> = { ..._data };
   return data as ChangePasswordDto;
 }
-export interface CreateTestTenantDto  {
+export interface CreateTestTenantDto {
   userEmail: string;
   userPassword: string;
 }
-export function deserializeCreateTestTenantDto(json: string): CreateTestTenantDto {
+export function deserializeCreateTestTenantDto(
+  json: string,
+): CreateTestTenantDto {
   const data = JSON.parse(json) as CreateTestTenantDto;
   initCreateTestTenantDto(data);
   return data;
 }
 export function initCreateTestTenantDto(_data: CreateTestTenantDto) {
-    return _data;
+  return _data;
 }
-export function serializeCreateTestTenantDto(_data: CreateTestTenantDto | undefined) {
+export function serializeCreateTestTenantDto(
+  _data: CreateTestTenantDto | undefined,
+) {
   if (_data) {
     _data = prepareSerializeCreateTestTenantDto(_data as CreateTestTenantDto);
   }
   return JSON.stringify(_data);
 }
-export function prepareSerializeCreateTestTenantDto(_data: CreateTestTenantDto): CreateTestTenantDto {
+export function prepareSerializeCreateTestTenantDto(
+  _data: CreateTestTenantDto,
+): CreateTestTenantDto {
   const data: Record<string, any> = { ..._data };
   return data as CreateTestTenantDto;
 }
-export interface ProductDto  {
+export interface ProductDto {
   id: number;
   title: string;
   productType: ProductType;
@@ -279,8 +337,10 @@ export function deserializeProductDto(json: string): ProductDto {
 }
 export function initProductDto(_data: ProductDto) {
   if (_data) {
-    _data.productType = _data["productType"];
-    _data.lastStockUpdatedAt = _data["lastStockUpdatedAt"] ? parseDateOnly(_data["lastStockUpdatedAt"].toString()) : <any>null;
+    _data.productType = _data['productType'];
+    _data.lastStockUpdatedAt = _data['lastStockUpdatedAt']
+      ? parseDateOnly(_data['lastStockUpdatedAt'].toString())
+      : <any>null;
   }
   return _data;
 }
@@ -292,16 +352,17 @@ export function serializeProductDto(_data: ProductDto | undefined) {
 }
 export function prepareSerializeProductDto(_data: ProductDto): ProductDto {
   const data: Record<string, any> = { ..._data };
-  data["lastStockUpdatedAt"] = _data.lastStockUpdatedAt && formatDate(_data.lastStockUpdatedAt);
+  data['lastStockUpdatedAt'] =
+    _data.lastStockUpdatedAt && formatDate(_data.lastStockUpdatedAt);
   return data as ProductDto;
 }
 export enum ProductType {
-    Undefined = "Undefined",
-    Auto = "Auto",
-    Electronic = "Electronic",
-    Other = "Other",
+  Undefined = 'Undefined',
+  Auto = 'Auto',
+  Electronic = 'Electronic',
+  Other = 'Other',
 }
-export interface CreateProductDto  {
+export interface CreateProductDto {
   title: string;
   productType: ProductType;
   lastStockUpdatedAt: Date;
@@ -313,8 +374,10 @@ export function deserializeCreateProductDto(json: string): CreateProductDto {
 }
 export function initCreateProductDto(_data: CreateProductDto) {
   if (_data) {
-    _data.productType = _data["productType"];
-    _data.lastStockUpdatedAt = _data["lastStockUpdatedAt"] ? parseDateOnly(_data["lastStockUpdatedAt"].toString()) : <any>null;
+    _data.productType = _data['productType'];
+    _data.lastStockUpdatedAt = _data['lastStockUpdatedAt']
+      ? parseDateOnly(_data['lastStockUpdatedAt'].toString())
+      : <any>null;
   }
   return _data;
 }
@@ -324,12 +387,15 @@ export function serializeCreateProductDto(_data: CreateProductDto | undefined) {
   }
   return JSON.stringify(_data);
 }
-export function prepareSerializeCreateProductDto(_data: CreateProductDto): CreateProductDto {
+export function prepareSerializeCreateProductDto(
+  _data: CreateProductDto,
+): CreateProductDto {
   const data: Record<string, any> = { ..._data };
-  data["lastStockUpdatedAt"] = _data.lastStockUpdatedAt && formatDate(_data.lastStockUpdatedAt);
+  data['lastStockUpdatedAt'] =
+    _data.lastStockUpdatedAt && formatDate(_data.lastStockUpdatedAt);
   return data as CreateProductDto;
 }
-export interface PatchProductDto  {
+export interface PatchProductDto {
   title?: string;
   productType?: ProductType;
   lastStockUpdatedAt?: Date;
@@ -341,8 +407,10 @@ export function deserializePatchProductDto(json: string): PatchProductDto {
 }
 export function initPatchProductDto(_data: PatchProductDto) {
   if (_data) {
-    _data.productType = _data["productType"];
-    _data.lastStockUpdatedAt = _data["lastStockUpdatedAt"] ? parseDateOnly(_data["lastStockUpdatedAt"].toString()) : <any>null;
+    _data.productType = _data['productType'];
+    _data.lastStockUpdatedAt = _data['lastStockUpdatedAt']
+      ? parseDateOnly(_data['lastStockUpdatedAt'].toString())
+      : <any>null;
   }
   return _data;
 }
@@ -352,79 +420,99 @@ export function serializePatchProductDto(_data: PatchProductDto | undefined) {
   }
   return JSON.stringify(_data);
 }
-export function prepareSerializePatchProductDto(_data: PatchProductDto): PatchProductDto {
+export function prepareSerializePatchProductDto(
+  _data: PatchProductDto,
+): PatchProductDto {
   const data: Record<string, any> = { ..._data };
-  data["lastStockUpdatedAt"] = _data.lastStockUpdatedAt && formatDate(_data.lastStockUpdatedAt);
+  data['lastStockUpdatedAt'] =
+    _data.lastStockUpdatedAt && formatDate(_data.lastStockUpdatedAt);
   return data as PatchProductDto;
 }
-export interface PagedResultOfProductListItemDto  {
+export interface PagedResultOfProductListItemDto {
   data: ProductListItemDto[];
   totalCount: number;
 }
-export function deserializePagedResultOfProductListItemDto(json: string): PagedResultOfProductListItemDto {
+export function deserializePagedResultOfProductListItemDto(
+  json: string,
+): PagedResultOfProductListItemDto {
   const data = JSON.parse(json) as PagedResultOfProductListItemDto;
   initPagedResultOfProductListItemDto(data);
   return data;
 }
-export function initPagedResultOfProductListItemDto(_data: PagedResultOfProductListItemDto) {
+export function initPagedResultOfProductListItemDto(
+  _data: PagedResultOfProductListItemDto,
+) {
   if (_data) {
-    if (Array.isArray(_data["data"])) {
-      _data.data = _data["data"].map(item => 
-        initProductListItemDto(item)
-      );
+    if (Array.isArray(_data['data'])) {
+      _data.data = _data['data'].map((item) => initProductListItemDto(item));
     }
   }
   return _data;
 }
-export function serializePagedResultOfProductListItemDto(_data: PagedResultOfProductListItemDto | undefined) {
+export function serializePagedResultOfProductListItemDto(
+  _data: PagedResultOfProductListItemDto | undefined,
+) {
   if (_data) {
-    _data = prepareSerializePagedResultOfProductListItemDto(_data as PagedResultOfProductListItemDto);
+    _data = prepareSerializePagedResultOfProductListItemDto(
+      _data as PagedResultOfProductListItemDto,
+    );
   }
   return JSON.stringify(_data);
 }
-export function prepareSerializePagedResultOfProductListItemDto(_data: PagedResultOfProductListItemDto): PagedResultOfProductListItemDto {
+export function prepareSerializePagedResultOfProductListItemDto(
+  _data: PagedResultOfProductListItemDto,
+): PagedResultOfProductListItemDto {
   const data: Record<string, any> = { ..._data };
   if (Array.isArray(_data.data)) {
-    data["data"] = _data.data.map(item => 
-        prepareSerializeProductListItemDto(item)
+    data['data'] = _data.data.map((item) =>
+      prepareSerializeProductListItemDto(item),
     );
   }
   return data as PagedResultOfProductListItemDto;
 }
-export interface ProductListItemDto  {
+export interface ProductListItemDto {
   id: number;
   title: string;
   productType: ProductType;
   lastStockUpdatedAt: Date;
 }
-export function deserializeProductListItemDto(json: string): ProductListItemDto {
+export function deserializeProductListItemDto(
+  json: string,
+): ProductListItemDto {
   const data = JSON.parse(json) as ProductListItemDto;
   initProductListItemDto(data);
   return data;
 }
 export function initProductListItemDto(_data: ProductListItemDto) {
   if (_data) {
-    _data.productType = _data["productType"];
-    _data.lastStockUpdatedAt = _data["lastStockUpdatedAt"] ? parseDateOnly(_data["lastStockUpdatedAt"].toString()) : <any>null;
+    _data.productType = _data['productType'];
+    _data.lastStockUpdatedAt = _data['lastStockUpdatedAt']
+      ? parseDateOnly(_data['lastStockUpdatedAt'].toString())
+      : <any>null;
   }
   return _data;
 }
-export function serializeProductListItemDto(_data: ProductListItemDto | undefined) {
+export function serializeProductListItemDto(
+  _data: ProductListItemDto | undefined,
+) {
   if (_data) {
     _data = prepareSerializeProductListItemDto(_data as ProductListItemDto);
   }
   return JSON.stringify(_data);
 }
-export function prepareSerializeProductListItemDto(_data: ProductListItemDto): ProductListItemDto {
+export function prepareSerializeProductListItemDto(
+  _data: ProductListItemDto,
+): ProductListItemDto {
   const data: Record<string, any> = { ..._data };
-  data["lastStockUpdatedAt"] = _data.lastStockUpdatedAt && formatDate(_data.lastStockUpdatedAt);
+  data['lastStockUpdatedAt'] =
+    _data.lastStockUpdatedAt && formatDate(_data.lastStockUpdatedAt);
   return data as ProductListItemDto;
 }
 export enum SortOrder {
-    Asc = "Asc",
-    Desc = "Desc",
+  Asc = 'Asc',
+  Desc = 'Desc',
 }
-export interface FileInfoDto  {
+export interface FileInfoDto {
   id: string;
   fileName: string;
   size: number;
@@ -435,7 +523,7 @@ export function deserializeFileInfoDto(json: string): FileInfoDto {
   return data;
 }
 export function initFileInfoDto(_data: FileInfoDto) {
-    return _data;
+  return _data;
 }
 export function serializeFileInfoDto(_data: FileInfoDto | undefined) {
   if (_data) {
@@ -448,46 +536,59 @@ export function prepareSerializeFileInfoDto(_data: FileInfoDto): FileInfoDto {
   return data as FileInfoDto;
 }
 export function formatDate(d: Date) {
-    return d.getFullYear() + '-' + 
-        (d.getMonth() < 9 ? ('0' + (d.getMonth()+1)) : (d.getMonth()+1)) + '-' +
-        (d.getDate() < 10 ? ('0' + d.getDate()) : d.getDate());
+  return (
+    d.getFullYear() +
+    '-' +
+    (d.getMonth() < 9 ? '0' + (d.getMonth() + 1) : d.getMonth() + 1) +
+    '-' +
+    (d.getDate() < 10 ? '0' + d.getDate() : d.getDate())
+  );
 }
 export function parseDateOnly(s: string) {
-    const date = new Date(s);
-    return new Date(date.getTime() + 
-        date.getTimezoneOffset() * 60000);
+  const date = new Date(s);
+  return new Date(date.getTime() + date.getTimezoneOffset() * 60000);
 }
-import type { AxiosError } from 'axios'
+import type { AxiosError } from 'axios';
 export interface FileParameter {
-    data: any;
-    fileName: string;
+  data: any;
+  fileName: string;
 }
 export class ApiException extends Error {
-    message: string;
-    status: number;
-    response: string;
-    headers: { [key: string]: any; };
-    result: any;
-    constructor(message: string, status: number, response: string, headers: { [key: string]: any; }, result: any) {
-        super();
-        this.message = message;
-        this.status = status;
-        this.response = response;
-        this.headers = headers;
-        this.result = result;
-    }
-    protected isApiException = true;
-    static isApiException(obj: any): obj is ApiException {
-        return obj.isApiException === true;
-    }
+  message: string;
+  status: number;
+  response: string;
+  headers: { [key: string]: any };
+  result: any;
+  constructor(
+    message: string,
+    status: number,
+    response: string,
+    headers: { [key: string]: any },
+    result: any,
+  ) {
+    super();
+    this.message = message;
+    this.status = status;
+    this.response = response;
+    this.headers = headers;
+    this.result = result;
+  }
+  protected isApiException = true;
+  static isApiException(obj: any): obj is ApiException {
+    return obj.isApiException === true;
+  }
 }
-export function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): any {
-    if (result !== null && result !== undefined)
-        throw result;
-    else
-        throw new ApiException(message, status, response, headers, null);
+export function throwException(
+  message: string,
+  status: number,
+  response: string,
+  headers: { [key: string]: any },
+  result?: any,
+): any {
+  if (result !== null && result !== undefined) throw result;
+  else throw new ApiException(message, status, response, headers, null);
 }
 export function isAxiosError(obj: any | undefined): obj is AxiosError {
-    return obj && obj.isAxiosError === true;
+  return obj && obj.isAxiosError === true;
 }
 //-----/Types.File-----
