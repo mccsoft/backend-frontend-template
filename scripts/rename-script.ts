@@ -139,7 +139,7 @@ function changeFrontendPortNumber(port: string | number) {
   replace({
     regex: /var frontendPort = process.env.PORT \?\? \d+;/g,
     replacement: `var frontendPort = process.env.PORT ?? ${port};`,
-    paths: ['./frontend/vite.config.ts'],
+    paths: ['./frontend/vite.config.mts'],
     silent: true,
     recursive: true,
   });
