@@ -98,7 +98,7 @@
     <PackageVersion Include="OpenIddict.EntityFrameworkCore" Version="6.2.1" />
     <PackageVersion Include="OpenIddict.EntityFrameworkCore.Models" Version="6.2.1" />
     <PackageVersion Include="OpenIddict.Server" Version="6.2.1" />
-    <PackageVersion Include="Polly.Core" Version="8.6.0" />
+    <PackageVersion Include="Polly.Core" Version="8.6.5" />
     <PackageVersion Include="Polly.Extensions" Version="8.6.5" />
     <PackageVersion Include="Roslyn.Analyzers" Version="1.0.3.4" />
     <PackageVersion Include="Sentry.AspNetCore" Version="6.0.0" />
