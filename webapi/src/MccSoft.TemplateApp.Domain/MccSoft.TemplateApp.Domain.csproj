@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-  <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Version>1.0.0</Version>
     <PackageId>MccSoft.TemplateApp.Domain</PackageId>
     <Description>
@@ -20,7 +19,6 @@
     <PackageReference Include="JsonKnownTypes" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
-    <PackageReference Include="Npgsql.Json.NET" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,5 +26,4 @@
     <ProjectReference Include="..\..\Lib\WebHooks\MccSoft.WebHooks\MccSoft.WebHooks.csproj" />
     <ProjectReference Include="..\MccSoft.TemplateApp.Common\MccSoft.TemplateApp.Common.csproj" />
   </ItemGroup>
-
 </Project>
