@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Reflection;
+using System.Text.Json;
 using MccSoft.TemplateApp.App.Settings;
 using MccSoft.WebApi.Patching;
 using MccSoft.WebApi.Serialization.FromQueryJson;
@@ -26,6 +27,7 @@ public static partial class SetupSwagger
         var configuration = builder.Configuration;
 
         var swaggerOptions = configuration.GetSwaggerOptions();
+        services.AddExampleProviders(Assembly.GetEntryAssembly());
         services.AddOpenApiDocument(
             (options, provider) =>
             {
