@@ -1,4 +1,4 @@
-[![Build Status](https://dev.azure.com/mcctomsk/Backend-Frontend-Template/_apis/build/status%2FBuild?branchName=master)](https://dev.azure.com/mcctomsk/Backend-Frontend-Template/_apis/build/status/mccsoft.backend-frontend-template?branchName=master) [![MIT](https://img.shields.io/dub/l/vibe-d.svg)](https://opensource.org/licenses/MIT) [![NET10](https://img.shields.io/badge/-.NET%210.0-blueviolet)](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+[![Build Status](https://dev.azure.com/mcctomsk/Backend-Frontend-Template/_apis/build/status%2FBuild?branchName=master)](https://dev.azure.com/mcctomsk/Backend-Frontend-Template/_apis/build/status/mccsoft.backend-frontend-template?branchName=master) [![MIT](https://img.shields.io/dub/l/vibe-d.svg)](https://opensource.org/licenses/MIT) [![NET10](https://img.shields.io/badge/-.NET%2010.0-blueviolet)](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
 
 ## What's that
 
