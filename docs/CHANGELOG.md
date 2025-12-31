@@ -10,7 +10,9 @@ dotnet tool install CentralisedPackageConverter --global
 # Convert your solution to use Central Package Management
 central-pkg-converter PATH_TO_YOUR_SOLUTION_FOLDER
 ```
-After that you could run the template update script as usual
+After that you could run the template update script as usual.
+
+After updating don't forget to generate new migrations: `dotnet ef migrations add OpenIdDict_V7`
 
 ### 2025-06-16 update frontend dependencies
 
