@@ -105,6 +105,12 @@
     <Content Include="..\..\..\README.md">
       <Link>README.md</Link>
     </Content>
+    <Content Include="..\..\Directory.Build.props">
+      <Link>Directory.Build.props</Link>
+    </Content>
+    <Content Include="..\..\Directory.Packages.props">
+      <Link>Directory.Packages.props</Link>
+    </Content>
     <None Update="logs;idsrv4test.pfx;Dockerfile">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>
