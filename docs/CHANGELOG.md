@@ -1,7 +1,7 @@
 ﻿# Changelog
 
 ### 2026-01-01 Update to .NET 10
-During update we moved to Central Package Management (i.e. all nuget package versions are now specified in [Directory.Packages.props](../webapi/Directory.Packages.props)).
+During update, we moved to Central Package Management (i.e. all nuget package versions are now specified in [Directory.Packages.props](../webapi/Directory.Packages.props)).
 To move to it in your own project consider reading the [article](https://www.milanjovanovic.tech/blog/central-package-management-in-net-simplify-nuget-dependencies) and running:
 ```bash
 # Install the tool globally

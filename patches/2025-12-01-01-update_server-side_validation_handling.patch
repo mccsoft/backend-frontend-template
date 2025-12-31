@@ -1,0 +1,178 @@
+Subject: [PATCH] update server-side validation handling
+---
+Index: frontend/src/helpers/error-helpers.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/helpers/error-helpers.ts b/frontend/src/helpers/error-helpers.ts
+--- a/frontend/src/helpers/error-helpers.ts	(revision e479ebf137780edf8801c8c1f3198c7facbd20fe)
++++ b/frontend/src/helpers/error-helpers.ts	(revision 1a20958c9294bc0256153dad3e37bb2407a2651c)
+@@ -1,5 +1,5 @@
+ import i18next from 'i18next';
+-import { ApiException, ProblemDetails } from 'services/api/api-client';
++import { ApiException, ProblemDetails } from 'services/api/api-client.types';
+ 
+ export const NetworkError = 'Network Error';
+ 
+@@ -21,13 +21,17 @@
+   // - untyped error, in which case `error.response` will be populated with response in JSON.
+   const errorResponseData = error.response?.data || error.response || error;
+   const errors = errorResponseData?.errors;
++
+   let overallError = convertToErrorStringInternal(error);
+ 
+   if (errors && Object.keys(errors).length) {
+     let formErrorsCombined = '';
+     // Some field-bound error (e.g. `user with same Name already exists in DB`)
++    // (similar code exists in useErrorHanler.ts, don't forget to change it as well)
+     Object.keys(errors).forEach((key) => {
+-      const camelCaseName = key.charAt(0).toLowerCase() + key.slice(1);
++      const keyWithout$ = key.startsWith('$.') ? key.substring(2) : key;
++      const camelCaseName =
++        keyWithout$.charAt(0).toLowerCase() + keyWithout$.slice(1);
+       const errorValue = errors[key];
+       const errorString = Array.isArray(errorValue)
+         ? errorValue.join('; ')
+@@ -76,11 +80,6 @@
+     return i18next.t('Error_ExternalServiceUnavailable');
+   }
+ 
+-  if (responseDetail) {
+-    // General server-side error not related to certain field (e.g. `Access Denied`)
+-    return responseDetail;
+-  }
+-
+   if (error.code === 'CSS_CHUNK_LOAD_FAILED') {
+     return NetworkError;
+   }
+@@ -94,6 +93,11 @@
+     // nswag generated client throws it when there's no response
+     return NetworkError;
+   }
++
++  if (responseDetail) {
++    // General server-side error not related to certain field (e.g. `Access Denied`)
++    return responseDetail;
++  }
+   if (error.message) {
+     // e.g. Network Error
+     console.log('Error:', error, JSON.stringify(error));
+Index: frontend/src/helpers/form/useErrorHandler.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/helpers/form/useErrorHandler.ts b/frontend/src/helpers/form/useErrorHandler.ts
+--- a/frontend/src/helpers/form/useErrorHandler.ts	(revision e479ebf137780edf8801c8c1f3198c7facbd20fe)
++++ b/frontend/src/helpers/form/useErrorHandler.ts	(revision 1a20958c9294bc0256153dad3e37bb2407a2651c)
+@@ -41,8 +41,11 @@
+   if (errors && Object.keys(errors).length) {
+     let formErrorsCombined = '';
+     // Some field-bound error (e.g. `user with same Name already exists in DB`)
++    // (similar code exists in error-helper.ts, don't forget to change it as well)
+     Object.keys(errors).forEach((key) => {
+-      const camelCaseName = key.charAt(0).toLowerCase() + key.slice(1);
++      const keyWithout$ = key.startsWith('$.') ? key.substring(2) : key;
++      const camelCaseName =
++        keyWithout$.charAt(0).toLowerCase() + keyWithout$.slice(1);
+       const errorValue = errors[key];
+       const errorString = Array.isArray(errorValue)
+         ? errorValue.join('; ')
+@@ -112,6 +115,7 @@
+   const submitForm = useEventCallback(async (data: TFieldValues) => {
+     try {
+       setOverallServerError('');
++      setFormErrorsCombined('');
+       await submitFunction(data, navigate);
+       reset?.(undefined);
+     } catch (error) {
+Index: frontend/tests/helpers/error-helper.test.ts
+===================================================================
+diff --git a/frontend/tests/helpers/error-helper.test.ts b/frontend/tests/helpers/error-helper.test.ts
+--- a/frontend/tests/helpers/error-helper.test.ts	(revision e479ebf137780edf8801c8c1f3198c7facbd20fe)
++++ b/frontend/tests/helpers/error-helper.test.ts	(revision 1a20958c9294bc0256153dad3e37bb2407a2651c)
+@@ -1,6 +1,7 @@
+-import { expect, test } from 'vitest';
++import { expect, test, vi } from 'vitest';
+ import { errorToString } from 'helpers/error-helpers';
+ import { ApiException } from 'services/api/api-client.types';
++import { handleSubmitFormError } from 'helpers/form/useErrorHandler';
+ 
+ // this is what is passed when useQuery hook fails
+ test('ApiException with urn', () => {
+@@ -61,3 +62,57 @@
+ test('Submit form error', () => {
+   expect(errorToString(new Error('blablabla'))).toBe('blablabla');
+ });
++
++
++test('Form validation error', () => {
++  expect(
++    errorToString({
++      type: 'https://tools.ietf.org/html/rfc9110#section-15.5.1',
++      title: 'One or more validation errors occurred.',
++      status: 400,
++      errors: {
++        '$.i': ['The input was not valid.'],
++      },
++      traceId: '00-95ac9db204f93c0b78ac769c23ff7876-034bbfc5b9a25b1c-00',
++    }),
++  ).toBe('i: The input was not valid.');
++});
++
++test('handleSubmitFormError. field-bound validation errors (system.text.json style)', () => {
++  const setFormError = vi.fn();
++  handleSubmitFormError(
++    {
++      type: 'https://tools.ietf.org/html/rfc9110#section-15.5.1',
++      title: 'One or more validation errors occurred.',
++      status: 400,
++      errors: {
++        '$.i': ['The input was not valid.'],
++      },
++      traceId: '00-95ac9db204f93c0b78ac769c23ff7876-034bbfc5b9a25b1c-00',
++    },
++    setFormError,
++  );
++  expect(setFormError).toHaveBeenCalledWith('i', {
++    message: 'The input was not valid.',
++    type: 'validate',
++  });
++});
++test('handleSubmitFormError. field-bound validation errors (old style)', () => {
++  const setFormError = vi.fn();
++  handleSubmitFormError(
++    {
++      type: 'https://tools.ietf.org/html/rfc9110#section-15.5.1',
++      title: 'One or more validation errors occurred.',
++      status: 400,
++      errors: {
++        i: ['The input was not valid.'],
++      },
++      traceId: '00-95ac9db204f93c0b78ac769c23ff7876-034bbfc5b9a25b1c-00',
++    },
++    setFormError,
++  );
++  expect(setFormError).toHaveBeenCalledWith('i', {
++    message: 'The input was not valid.',
++    type: 'validate',
++  });
++});
+Index: webapi/Lib/WebApi/MccSoft.WebApi/Serialization/SystemTextJsonSerializerSetup.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/webapi/Lib/WebApi/MccSoft.WebApi/Serialization/SystemTextJsonSerializerSetup.cs b/webapi/Lib/WebApi/MccSoft.WebApi/Serialization/SystemTextJsonSerializerSetup.cs
+--- a/webapi/Lib/WebApi/MccSoft.WebApi/Serialization/SystemTextJsonSerializerSetup.cs	(revision e479ebf137780edf8801c8c1f3198c7facbd20fe)
++++ b/webapi/Lib/WebApi/MccSoft.WebApi/Serialization/SystemTextJsonSerializerSetup.cs	(revision 1a20958c9294bc0256153dad3e37bb2407a2651c)
+@@ -21,6 +21,8 @@
+         var deserializationOptions = new JsonSerializerOptions(options.JsonSerializerOptions);
+         DefaultJsonSerializer.DeserializationOptions = deserializationOptions;
+ 
++        options.AllowInputFormatterExceptionMessages = false;
++
+         return options;
+     }
+ 

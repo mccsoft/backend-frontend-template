@@ -4,8 +4,8 @@ import semver from 'semver';
 import {
   copyProjectFolder,
   copyProjectFolderDefaultOptions,
-  patchFile,
-  patchFiles,
+  searchAndReplaceInFile,
+  searchAndReplaceInFiles,
   removePackageReference,
   updatePlaywright,
 } from './update-helper.ts';
@@ -20,6 +20,7 @@ const updateList = [
   { from: '1.4.0', update: updateFrom_1p4_to_1p5 },
   { from: '1.5.0', update: updateFrom_1p5_to_1p6 },
   { from: '1.6.0', update: updateFrom_1p6_to_1p7 },
+  { from: '1.7.0', update: updateFrom_1p7_to_1p8 },
 ];
 
 export function updateVersion(prefix: string) {
@@ -135,10 +136,13 @@ export function updateVersion(prefix: string) {
     return filesToApply;
   }
 }
-function patchPackageJson(regExp: RegExp | string, replacement: string) {
-  patchFile('package.json', regExp, replacement);
-  patchFile('frontend/package.json', regExp, replacement);
-  patchFile('e2e/package.json', regExp, replacement);
+function searchAndReplaceInPackageJson(
+  regExp: RegExp | string,
+  replacement: string,
+) {
+  searchAndReplaceInFile('package.json', regExp, replacement);
+  searchAndReplaceInFile('frontend/package.json', regExp, replacement);
+  searchAndReplaceInFile('e2e/package.json', regExp, replacement);
 }
 
 function updateFrom_1p3_to_1p4(
@@ -161,20 +165,24 @@ function updateFrom_1p4_to_1p5(
   templateFolder: string,
   prefix: string,
 ) {
-  patchPackageJson(/\"nswag\": \".*?\",/, '');
-  patchPackageJson(
+  searchAndReplaceInPackageJson(/\"nswag\": \".*?\",/, '');
+  searchAndReplaceInPackageJson(
     'nswag openapi2csclient',
     'react-query-swagger openapi2csclient /nswag',
   );
 
   // required for openiddict 4
-  patchFile(
+  searchAndReplaceInFile(
     'frontend/src/pages/unauthorized/openid/openid-manager.ts',
     'extraTokenParams: { scope: scopes },',
     '',
   );
 
-  patchFile('webapi/Directory.Build.props', '</noWarn>', ';1570;1998</noWarn>');
+  searchAndReplaceInFile(
+    'webapi/Directory.Build.props',
+    '</noWarn>',
+    ';1570;1998</noWarn>',
+  );
   updatePlaywright('1.33.0');
 }
 
@@ -246,7 +254,11 @@ function updateFrom_1p5_to_1p6(
   copyProjectFolder(
     'frontend/src/components/uikit/inputs/dropdown/StyledAutocomplete.tsx',
   );
-  patchFiles('frontend/src', 'helpers/interceptors/auth', 'helpers/auth');
+  searchAndReplaceInFiles(
+    'frontend/src',
+    'helpers/interceptors/auth',
+    'helpers/auth',
+  );
 
   fs.moveSync(
     path.join(currentFolder, 'frontend/src/helpers/interceptors/auth'),
@@ -256,22 +268,26 @@ function updateFrom_1p5_to_1p6(
     },
   );
 
-  patchFiles(
+  searchAndReplaceInFiles(
     'frontend/src',
     './pages/unauthorized/openid',
     'helpers/auth/openid',
   );
-  patchFiles(
+  searchAndReplaceInFiles(
     'frontend/src',
     'pages/unauthorized/openid',
     'helpers/auth/openid',
   );
-  patchFile(
+  searchAndReplaceInFile(
     'frontend/src/pages/unauthorized/LoginPage.tsx',
     './openid/',
     'helpers/auth/openid/',
   );
-  patchFiles('frontend/src', 'helpers/interceptors/auth', 'helpers/auth');
+  searchAndReplaceInFiles(
+    'frontend/src',
+    'helpers/interceptors/auth',
+    'helpers/auth',
+  );
   fs.moveSync(
     path.join(currentFolder, 'frontend/src/pages/unauthorized/openid'),
     path.join(currentFolder, 'frontend/src/helpers/auth/openid'),
@@ -283,6 +299,12 @@ function updateFrom_1p5_to_1p6(
 }
 
 function updateFrom_1p6_to_1p7(
+  currentFolder: string,
+  templateFolder: string,
+  prefix: string,
+) {}
+
+function updateFrom_1p7_to_1p8(
   currentFolder: string,
   templateFolder: string,
   prefix: string,

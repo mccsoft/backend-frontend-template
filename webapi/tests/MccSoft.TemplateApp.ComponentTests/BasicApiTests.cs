@@ -19,7 +19,8 @@ namespace MccSoft.TemplateApp.ComponentTests;
 
 public partial class BasicApiTests : ComponentTestBase
 {
-    public BasicApiTests(ITestOutputHelper outputHelper) : base(outputHelper) { }
+    public BasicApiTests(ITestOutputHelper outputHelper)
+        : base(outputHelper) { }
 
     [Fact]
     public async Task GetApiVersion_ReturnsVersionString()
@@ -35,14 +36,13 @@ public partial class BasicApiTests : ComponentTestBase
     [Fact]
     public void AllControllersAreResolvable()
     {
-        var controllerTypes = typeof(Program).Assembly
-            .GetTypes()
-            .Where(
-                x =>
-                    (
-                        typeof(Controller).IsAssignableFrom(x)
-                        || typeof(ControllerBase).IsAssignableFrom(x)
-                    ) && !x.IsAbstract
+        var controllerTypes = typeof(Program)
+            .Assembly.GetTypes()
+            .Where(x =>
+                (
+                    typeof(Controller).IsAssignableFrom(x)
+                    || typeof(ControllerBase).IsAssignableFrom(x)
+                ) && !x.IsAbstract
             );
 
         using var scope = TestServer.Services.CreateScope();
@@ -168,7 +168,7 @@ public partial class BasicApiTests : ComponentTestBase
             RedirectStandardError = true,
             RedirectStandardOutput = true,
         };
-        var process = new Process { StartInfo = startInfo, EnableRaisingEvents = true, };
+        var process = new Process { StartInfo = startInfo, EnableRaisingEvents = true };
 
         process.OutputDataReceived += (_, args) =>
         {
@@ -219,8 +219,8 @@ public partial class BasicApiTests : ComponentTestBase
     [Fact]
     public void PatchRequest_AllFieldsMatch()
     {
-        var dtoTypes = typeof(Program).Assembly
-            .GetTypes()
+        var dtoTypes = typeof(Program)
+            .Assembly.GetTypes()
             .Where(x => IsSubclassOfRawGeneric(typeof(PatchRequest<>), x))
             .ToList();
 
