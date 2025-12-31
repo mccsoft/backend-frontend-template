@@ -1,0 +1,119 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>false</CentralPackageTransitivePinningEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="App.Metrics.AspNetCore" Version="4.2.0" />
+    <PackageVersion Include="App.Metrics.AspNetCore.Endpoints" Version="4.2.0" />
+    <PackageVersion Include="App.Metrics.AspNetCore.Health" Version="3.2.0" />
+    <PackageVersion Include="App.Metrics.AspNetCore.Mvc" Version="4.2.0" />
+    <PackageVersion Include="App.Metrics.AspNetCore.Tracking" Version="4.2.0" />
+    <PackageVersion Include="App.Metrics.Formatters.Prometheus" Version="4.3.0-preview.0.34" />
+    <PackageVersion Include="App.Metrics.Health.Checks.Process" Version="3.2.0" />
+    <PackageVersion Include="App.Metrics.Health.Extensions.DependencyInjection" Version="3.2.0" />
+    <PackageVersion Include="Audit.EntityFramework.Core" Version="31.3.3" />
+    <PackageVersion Include="Audit.NET.PostgreSql" Version="31.3.3" />
+    <PackageVersion Include="Audit.NET.Serilog" Version="31.3.3" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.4" />
+    <PackageVersion Include="Destructurama.JsonNet" Version="4.0.2" />
+    <PackageVersion Include="EasyNetQ.Management.Client" Version="3.0.1" />
+    <PackageVersion Include="ErikEJ.EntityFrameworkCore.DgmlBuilder" Version="6.0.0" />
+    <PackageVersion Include="FluentAssertions" Version="6.12.1" />
+    <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.22" />
+    <PackageVersion Include="Hangfire.Core" Version="1.8.22" />
+    <PackageVersion Include="Hangfire.Dashboard.BasicAuthorization" Version="1.0.2" />
+    <PackageVersion Include="Hangfire.PostgreSql" Version="1.20.13" />
+    <PackageVersion Include="I18Next.Net" Version="1.0.0" />
+    <PackageVersion Include="I18Next.Net.AspNetCore" Version="1.0.0" />
+    <PackageVersion Include="I18Next.Net.Extensions" Version="1.0.0" />
+    <PackageVersion Include="IdentityModel" Version="7.0.0" />
+    <PackageVersion Include="JsonKnownTypes" Version="0.7.0" />
+    <PackageVersion Include="MailKit" Version="4.14.1" />
+    <PackageVersion Include="MartinCostello.Logging.XUnit" Version="0.7.0" />
+    <PackageVersion Include="MassTransit" Version="7.2.4" />
+    <PackageVersion Include="MccSoft.IntegreSql.EF" Version="0.12.2" />
+    <PackageVersion Include="MediatR" Version="14.0.0" />
+    <PackageVersion Include="Metalama.Framework" Version="2025.1.17" />
+    <PackageVersion Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="6.0.36" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.Facebook" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.1" />
+    <PackageVersion
+      Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount"
+      Version="10.0.1"
+    />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.1" />
+    <PackageVersion
+      Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore"
+      Version="10.0.1"
+    />
+    <PackageVersion Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.3.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.3.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.DataAnnotations" Version="2.3.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.3.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Routing.Abstractions" Version="2.3.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.SpaProxy" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="10.0.1" />
+    <PackageVersion
+      Include="Microsoft.Extensions.DependencyInjection.Abstractions"
+      Version="10.0.1"
+    />
+    <PackageVersion Include="Microsoft.Extensions.FileProviders.Abstractions" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Identity.Stores" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.1" />
+    <PackageVersion
+      Include="Microsoft.Extensions.Options.ConfigurationExtensions"
+      Version="10.0.1"
+    />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageVersion Include="MimeKit" Version="4.14.0" />
+    <PackageVersion Include="MiniProfiler.AspNetCore.Mvc" Version="4.5.4" />
+    <PackageVersion Include="MiniProfiler.EntityFrameworkCore" Version="4.5.4" />
+    <PackageVersion Include="Moq" Version="4.20.72" />
+    <PackageVersion Include="NeinLinq" Version="7.4.0" />
+    <PackageVersion Include="NeinLinq.EntityFrameworkCore" Version="7.4.0" />
+    <PackageVersion Include="NJsonSchema" Version="11.5.2" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+    <PackageVersion Include="Npgsql.Json.NET" Version="10.0.1" />
+    <PackageVersion Include="NSwag.AspNetCore" Version="14.6.3" />
+    <PackageVersion Include="OpenIddict.AspNetCore" Version="7.2.0" />
+    <PackageVersion Include="OpenIddict.EntityFrameworkCore" Version="7.2.0" />
+    <PackageVersion Include="OpenIddict.EntityFrameworkCore.Models" Version="7.2.0" />
+    <PackageVersion Include="OpenIddict.Server" Version="7.2.0" />
+    <PackageVersion Include="Polly.Core" Version="8.6.5" />
+    <PackageVersion Include="Polly.Extensions" Version="8.6.5" />
+    <PackageVersion Include="Roslyn.Analyzers" Version="1.0.3.4" />
+    <PackageVersion Include="Sentry.AspNetCore" Version="6.0.0" />
+    <PackageVersion Include="Sentry.Serilog" Version="6.0.0" />
+    <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
+    <PackageVersion Include="Serilog.Sinks.Loggly" Version="5.4.0" />
+    <PackageVersion Include="Serilog.Sinks.OpenSearch" Version="1.3.0" />
+    <PackageVersion Include="Shaddix.OpenIddict.ExternalAuthentication" Version="2.10.6" />
+    <PackageVersion Include="System.Dynamic.Runtime" Version="4.3.0" />
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
+    <PackageVersion Include="System.IO.Pipelines" Version="10.0.1" />
+    <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.7.1" />
+    <PackageVersion Include="Vp.Roslyn.Analyzers.All" Version="1.0.0" />
+    <PackageVersion Include="xunit" Version="2.9.3" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
+    <PackageVersion Include="Xunit.SkippableFact" Version="1.5.61" />
+  </ItemGroup>
+</Project>

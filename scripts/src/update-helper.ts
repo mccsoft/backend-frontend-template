@@ -55,7 +55,7 @@ function getPartialFileName(fileName: string) {
   );
 }
 
-export function patchFiles(
+export function searchAndReplaceInFiles(
   relativePath: string,
   search: string | RegExp,
   replace: string,
@@ -68,11 +68,11 @@ export function patchFiles(
   }
   const files = readdirRecursiveSync(relativePath);
   for (const file of files) {
-    patchFile(file, search, replace);
+    searchAndReplaceInFile(file, search, replace);
   }
 }
 
-export function patchFile(
+export function searchAndReplaceInFile(
   relativePath: string,
   search: string | RegExp,
   replace: string,
@@ -95,7 +95,7 @@ export function removePackageReference(
   packageName: string,
 ) {
   // <PackageReference Include="OpenIddict.AspNetCore" Version="4.2.0" />
-  patchFile(
+  searchAndReplaceInFile(
     relativePath,
     new RegExp(`<PackageReference\s+Include="${packageName}".*?/>`),
     '',
@@ -103,8 +103,12 @@ export function removePackageReference(
 }
 
 export function updatePlaywright(version: string) {
-  patchFile('e2e/package.json', /playwright:v.*-/, `playwright:v${version}-`);
-  patchFile(
+  searchAndReplaceInFile(
+    'e2e/package.json',
+    /playwright:v.*-/,
+    `playwright:v${version}-`,
+  );
+  searchAndReplaceInFile(
     '.ci/azure-pipelines-template.yml',
     /playwright:v.*-/,
     `playwright:v${version}-`,

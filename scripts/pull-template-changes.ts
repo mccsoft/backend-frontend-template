@@ -9,8 +9,12 @@ import semver from 'semver';
 import {
   copyProjectFolder,
   copyProjectFolderDefaultOptions,
-} from './updates/update-helper.ts';
-import { updateVersion } from './updates/update-version.ts';
+} from './src/update-helper.ts';
+import { updateVersion } from './src/update-version.ts';
+import {
+  setTemplateFolder,
+  syncReferencesInProjects,
+} from './src/update-csproj.ts';
 
 const args = yargs(
   hideBin(process.argv).filter(
@@ -109,6 +113,8 @@ copyProjectFolder(
 syncPacketsInPackageJson('package.json');
 syncPacketsInPackageJson('frontend/package.json');
 syncPacketsInPackageJson('e2e/package.json');
+
+setTemplateFolder(templateFolder);
 syncReferencesInProjects(`webapi/src/${prefix}.App/${prefix}.App.csproj`);
 syncReferencesInProjects(`webapi/src/${prefix}.Common/${prefix}.Common.csproj`);
 syncReferencesInProjects(`webapi/src/${prefix}.Domain/${prefix}.Domain.csproj`);
@@ -128,6 +134,8 @@ syncReferencesInProjects(
 syncReferencesInProjects(
   `webapi/tests/${prefix}.TestUtils/${prefix}.TestUtils.csproj`,
 );
+syncReferencesDirectoryPackagesProps(`webapi/Directory.Packages.props`);
+
 console.log(`folder syncing is finished`);
 
 updateVersion(prefix);
@@ -188,66 +196,6 @@ function findFileMatching(dir: string, regex: RegExp) {
   return null;
 }
 
-export function syncReferencesInProjects(relativePathInsideProject: string) {
-  console.log(`syncReferencesInProjects '${relativePathInsideProject}'`);
-  const copyFrom = path.join(templateFolder, relativePathInsideProject);
-  const copyTo = path.join(process.cwd(), relativePathInsideProject);
-  doSyncReferencesInProjects(copyFrom, copyTo);
-}
-
-export function doSyncReferencesInProjects(src: string, dest: string) {
-  if (!fs.existsSync(src) || !fs.existsSync(dest)) return;
-  const sourceFileContent = fs.readFileSync(src).toString('utf8');
-  let destinationFileContent = fs.readFileSync(dest).toString('utf8');
-
-  const parser = new XMLParser({ ignoreAttributes: false });
-  const sourceXml = parser.parse(sourceFileContent);
-  const destinationXml = parser.parse(destinationFileContent);
-  const sourcePackageReferences = getPackageReferences(sourceXml);
-  const destinationPackageReferences = getPackageReferences(destinationXml);
-
-  let firstItemDestinationGroup = destinationXml.Project?.ItemGroup;
-  if (Array.isArray(firstItemDestinationGroup))
-    firstItemDestinationGroup = firstItemDestinationGroup[0];
-
-  for (const sourcePackageReference of sourcePackageReferences) {
-    const sourceVersion = sourcePackageReference['@_Version'];
-    if (!semver.valid(sourceVersion)) continue;
-    const found = destinationPackageReferences.find(
-      (x) => x['@_Include'] === sourcePackageReference['@_Include'],
-    );
-
-    if (found) {
-      const destinationVersion = found['@_Version'];
-      if (
-        semver.valid(destinationVersion) &&
-        semver.gt(sourceVersion, destinationVersion)
-      ) {
-        found['@_Version'] = sourceVersion;
-      }
-    } else {
-      // add package to file
-      if (!firstItemDestinationGroup.PackageReference)
-        firstItemDestinationGroup.PackageReference = [];
-      if (!Array.isArray(firstItemDestinationGroup.PackageReference))
-        firstItemDestinationGroup.PackageReference = [
-          firstItemDestinationGroup.PackageReference,
-        ];
-
-      firstItemDestinationGroup.PackageReference.push(sourcePackageReference);
-    }
-  }
-
-  const builder = new XMLBuilder({
-    ignoreAttributes: false,
-    format: true,
-    suppressEmptyNode: true,
-  });
-  destinationFileContent = builder.build(destinationXml);
-
-  fs.writeFileSync(dest, destinationFileContent.replaceAll('&apos;', "'"));
-}
-
 function syncPacketsInPackageJson(relativePathInsideProject: string) {
   console.log(`syncPacketsInPackageJson '${relativePathInsideProject}'`);
   const copyFrom = path.join(templateFolder, relativePathInsideProject);
@@ -303,19 +251,4 @@ function doSyncPacketsInPackageJson(src: string, dest: string) {
   }
 
   fs.writeFileSync(dest, JSON.stringify(destJson, undefined, 2));
-}
-
-function getPackageReferences(root: any /* csproj parsed as XML*/) {
-  const packageReferences: any[] = [];
-  let itemGroups = root.Project?.ItemGroup;
-  if (!itemGroups) return [];
-  if (!Array.isArray(itemGroups)) itemGroups = [itemGroups];
-  itemGroups.forEach((x: any) => {
-    let groupPackageReferences = x.PackageReference;
-    if (!groupPackageReferences) return;
-    if (!Array.isArray(groupPackageReferences))
-      groupPackageReferences = [groupPackageReferences];
-    packageReferences.push(...groupPackageReferences);
-  });
-  return packageReferences;
 }

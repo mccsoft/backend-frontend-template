@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/aspnet:9.0-noble
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
 USER root
 
 # we need gettext-base for envsubst to work
