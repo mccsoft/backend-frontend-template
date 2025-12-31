@@ -183,7 +183,7 @@ function changeBackendPortNumber(httpsPort: number) {
   replace({
     regex: /https:\/\/localhost:(\d+)/g,
     replacement: `https://localhost:${httpsPort}`,
-    paths: ['./frontend/vite.config.ts'],
+    paths: ['./frontend/vite.config.mts'],
     silent: true,
   });
   replace({
