@@ -26,7 +26,7 @@ trigger:
   paths:
     exclude:
       - docs/*
-  pr: none
+pr: none
 
 extends:
   template: azure-pipelines-template.yml
