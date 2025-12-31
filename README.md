@@ -1,4 +1,4 @@
-[![Build Status](https://dev.azure.com/mcctomsk/Backend-Frontend-Template/_apis/build/status/mccsoft.backend-frontend-template?branchName=master)](https://dev.azure.com/mcctomsk/Backend-Frontend-Template/_apis/build/status/mccsoft.backend-frontend-template?branchName=master) [![MIT](https://img.shields.io/dub/l/vibe-d.svg)](https://opensource.org/licenses/MIT) [![NET10](https://img.shields.io/badge/-.NET%209.0-blueviolet)](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+[![Build Status](https://dev.azure.com/mcctomsk/Backend-Frontend-Template/_apis/build/status/mccsoft.backend-frontend-template?branchName=master)](https://dev.azure.com/mcctomsk/Backend-Frontend-Template/_apis/build/status/mccsoft.backend-frontend-template?branchName=master) [![MIT](https://img.shields.io/dub/l/vibe-d.svg)](https://opensource.org/licenses/MIT) [![NET10](https://img.shields.io/badge/-.NET%210.0-blueviolet)](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
 
 ## What's that
 
@@ -89,3 +89,8 @@ Here are the possible ways to deploy your app:
    - For low workloads you could host App & Postgres on 1CPU/2GB VPS (~5$ on Hetzner/MVPS)
 2. [Azure Web App](/docs/Deploy-Azure-WebApp.md). It's simple, use it if you already use Azure and are ok with paying quite a bit more than for a regular VM (5x more :))
 3. [Obsolete] [Docker-compose on VM](/docs/Deploy-docker-compose.MD). This is an obsolete way, instructions are available for backwards compatibility. It's NOT recommended for new projects, and even old ones should better switch to Kubernetes (k3s) :).
+
+## Update project to the newest version
+Check [docs](/docs/details/PullFromTemplate.md) regarding how to update your project (that was previously created from Template) to newer version.
+
+Also consider reading [Changelog](/docs/CHANGELOG.md) for some manual steps that might be needed (e.g. create database migration)
