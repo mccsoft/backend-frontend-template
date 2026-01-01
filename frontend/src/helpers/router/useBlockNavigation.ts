@@ -37,7 +37,6 @@ export function useBlockNavigation(
         else confirm();
       } else {
         void shouldBlockNavigation(whenArgsRef.current).then((result) => {
-          console.log('result', result);
           if (result) resetConfirmation();
           else onConfirm();
         });

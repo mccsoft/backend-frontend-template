@@ -14,9 +14,12 @@ namespace MccSoft.LowLevelPrimitives.Exceptions;
 public class ValidationException : ApplicationException, IWebApiException, INoSentryException
 {
     private readonly ValidationProblemDetails _details;
+    public int StatusCode { get; set; } = StatusCodes.Status400BadRequest;
 
-    public ValidationException(string message) : base(message)
+    public ValidationException(string message, int statusCode = StatusCodes.Status400BadRequest)
+        : base(message)
     {
+        StatusCode = statusCode;
         _details = new ValidationProblemDetails
         {
             Type = ErrorTypes.ValidationError,
@@ -25,7 +28,8 @@ public class ValidationException : ApplicationException, IWebApiException, INoSe
         };
     }
 
-    public ValidationException(IDictionary<string, string[]> errors) : base(ErrorsToString(errors))
+    public ValidationException(IDictionary<string, string[]> errors)
+        : base(ErrorsToString(errors))
     {
         _details = new ValidationProblemDetails
         {
@@ -47,8 +51,8 @@ public class ValidationException : ApplicationException, IWebApiException, INoSe
     public IActionResult Result =>
         new ObjectResult(_details)
         {
-            StatusCode = StatusCodes.Status400BadRequest,
-            ContentTypes = { "application/problem+json" }
+            StatusCode = StatusCode,
+            ContentTypes = { "application/problem+json" },
         };
 
     private static string ErrorsToString(IDictionary<string, string[]> errors)

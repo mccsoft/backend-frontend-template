@@ -33,7 +33,7 @@ public static class ElasticLoggerExtensions
     {
         type = "keyword",
         ignore_above = 256,
-        fields = new { num = new { type = "long", ignore_malformed = true } }
+        fields = new { num = new { type = "long", ignore_malformed = true } },
     };
 
     private static object _long = new { type = "long" };
@@ -113,9 +113,10 @@ public static class ElasticLoggerExtensions
                 x.BasicAuthentication(options.User, options.Password)
                     // TODO: add a config flag to skip server certificate check
                     // and a proper server certificate check.
-                    .ServerCertificateValidationCallback((o, certificate, chain, errors) => true)
+                    .ServerCertificateValidationCallback((o, certificate, chain, errors) => true),
         };
 
+        elasticSearchSinkOptions.AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.OSv1;
         // The implementation of the file buffer is buggy in the Elasticsearch sink, it loses messages,
         // see https://github.com/serilog/serilog-sinks-elasticsearch/issues/382
         // albeit not too often, about 1 in 100k, so for low-load services
@@ -163,15 +164,14 @@ public static class ElasticLoggerExtensions
         );
 #pragma warning restore CS0618 // Type or member is obsolete
 
-        loggerConfiguration.WriteTo.Logger(
-            lc =>
-                lc
+        loggerConfiguration.WriteTo.Logger(lc =>
+            lc
                 // Workaround for Override not working in sub-loggers,
                 // see https://github.com/serilog/serilog/issues/1346
                 // and https://github.com/serilog/serilog/issues/1453#issuecomment-654254454
                 .MinimumLevel.Verbose()
-                    .ExcludeEfInformation()
-                    .WriteTo.OpenSearch(elasticSearchSinkOptions)
+                .ExcludeEfInformation()
+                .WriteTo.OpenSearch(elasticSearchSinkOptions)
         );
     }
 
@@ -220,8 +220,8 @@ public static class ElasticLoggerExtensions
                     {
                         match_mapping_type = "object",
                         path_match = Field.FieldPrefix + ".*",
-                        mapping = new { type = "object" }
-                    }
+                        mapping = new { type = "object" },
+                    },
                 },
                 new
                 {
@@ -229,9 +229,9 @@ public static class ElasticLoggerExtensions
                     {
                         path_match = Field.FieldPrefix + ".*",
                         match_mapping_type = "*",
-                        mapping = _keyword
-                    }
-                }
+                        mapping = _keyword,
+                    },
+                },
             },
             properties = new Dictionary<string, object>
             {
@@ -285,8 +285,8 @@ public static class ElasticLoggerExtensions
                             { "StackTraceString", _text },
                             { "RemoteStackTraceString", _text },
                             { "Message", _text },
-                            { "HelpURL", _keyword }
-                        }
+                            { "HelpURL", _keyword },
+                        },
                     }
                 },
                 // In RequestPath we want to find words separated by slashes, so use a custom analyzer.
@@ -301,16 +301,19 @@ public static class ElasticLoggerExtensions
                         analyzer = "non_word_char_splits_analyzer",
                         // Also store as a keyword to allow exact matches on values like "/".
                         // See https://www.elastic.co/guide/en/elasticsearch/reference/current/multi-fields.html
-                        fields = new { raw = _keyword }
+                        fields = new { raw = _keyword },
                     }
                 },
                 // MS logs sometimes 200, sometimes "OK".
                 { "StatusCode", _keyword },
-            }
+            },
         };
 
         object settings = new
         {
+            // These settings are default in OpenSearch v2. In v1 it's 5/1, so we override.
+            number_of_shards = "1",
+            number_of_replicas = "0",
             // Default is 1s, i.e. refresh indices each second, which we don't need so often.
             // We refresh each more seldom to speed up indexing.
             refresh_interval = "10s",
@@ -324,12 +327,12 @@ public static class ElasticLoggerExtensions
                     {
                         type = "pattern",
                         pattern = "\\W+",
-                        lowercase = true
-                    }
-                }
+                        lowercase = true,
+                    },
+                },
             },
             // Default is *, i.e. search in all fields (hundreds of them), which is too slow.
-            query = new { default_field = new[] { "message" } }
+            query = new { default_field = new[] { "message" } },
         };
         var aliases = new Dictionary<string, object>();
         return new
@@ -367,7 +370,7 @@ public static class ElasticLoggerExtensions
                 FieldType.Date => _date,
                 FieldType.KeywordNumeric => _keywordNumeric,
                 FieldType.Boolean => _boolean,
-                _ => throw new ArgumentOutOfRangeException(nameof(t), t, null)
+                _ => throw new ArgumentOutOfRangeException(nameof(t), t, null),
             };
 
         IEnumerable<KeyValuePair<string, object>> fieldConfigs =

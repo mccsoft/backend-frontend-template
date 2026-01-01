@@ -47,3 +47,10 @@ You could notice, that to send an email we just supplied a Model. However, we al
 1. Adjust your templates.
 
 That's it!
+
+## Testing senders locally
+
+You can use **smtp4dev** to view and test your emails before actually integrating them.
+Just execute the `Tokyo/scripts/smtp4dev/start_smtp4dev.bat` script, and set the **host** and **port** in the `appsettings.Development.json` to `localhost` and `2525` respectively.
+
+You can access **Web UI** by opening http://localhost:3000
