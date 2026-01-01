@@ -1,0 +1,70 @@
+Index: .husky/task-runner.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.husky/task-runner.json b/.husky/task-runner.json
+--- a/.husky/task-runner.json	(revision a0fb32374d448a8147d30342cf55f34115d5e345)
++++ b/.husky/task-runner.json	(revision 55ae1b03e164ef0741810de4395b2d65ccc7ee05)
+@@ -1,15 +1,18 @@
+ {
+    "tasks": [
+       {
+-         "name": "Run csharpier",
+-         "command": "dotnet",
+-         "args": [
+-            "csharpier",
+-            "${staged}"
+-         ],
+-         "include": [
+-            "**/*.cs"
+-         ]
++        "name": "Run csharpier",
++        "command": "dotnet",
++        "args": [ "csharpier", "format", "${staged}" ],
++        "include": [
++            "**/*.cs",
++            "**/*.csx",
++            "**/*.csproj",
++            "**/*.props",
++            "**/*.targets",
++            "**/*.xml",
++            "**/*.config"
++        ]
+       }
+    ]
+ }
+\ No newline at end of file
+Index: .ci/azure-pipelines.yml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.ci/azure-pipelines.yml b/.ci/azure-pipelines.yml
+--- a/.ci/azure-pipelines.yml	(revision a0fb32374d448a8147d30342cf55f34115d5e345)
++++ b/.ci/azure-pipelines.yml	(revision 55ae1b03e164ef0741810de4395b2d65ccc7ee05)
+@@ -26,6 +26,7 @@
+   paths:
+     exclude:
+       - docs/*
++pr: none
+ 
+ extends:
+   template: azure-pipelines-template.yml
+Index: .ci/steps/cache-node-modules.yml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.ci/steps/cache-node-modules.yml b/.ci/steps/cache-node-modules.yml
+--- a/.ci/steps/cache-node-modules.yml	(revision a0fb32374d448a8147d30342cf55f34115d5e345)
++++ b/.ci/steps/cache-node-modules.yml	(revision 55ae1b03e164ef0741810de4395b2d65ccc7ee05)
+@@ -10,7 +10,7 @@
+   - task: UseDotNet@2
+     inputs:
+       packageType: 'sdk'
+-      version: '9.x'
++      version: '10.x'
+ 
+   - task: Cache@2
+     inputs:
