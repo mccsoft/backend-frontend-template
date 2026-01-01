@@ -44,7 +44,15 @@ export function doSyncReferencesDirectoryPackagesProps(
       (x) => x['@_Include'] === sourcePackageVersion['@_Include'],
     );
 
-    if (!found) {
+    if (found) {
+      const destinationVersion = found['@_Version'];
+      if (
+        semver.valid(destinationVersion) &&
+        semver.gt(sourceVersion, destinationVersion)
+      ) {
+        found['@_Version'] = sourceVersion;
+      }
+    } else {
       // add package to file
       if (!firstItemDestinationGroup.PackageVersion)
         firstItemDestinationGroup.PackageVersion = [];

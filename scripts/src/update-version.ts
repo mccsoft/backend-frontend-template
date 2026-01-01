@@ -41,23 +41,16 @@ export function updateVersion(prefix: string) {
     fs.readFileSync(path.join(templateFolder, templateJsonFileName)).toString(),
   );
 
-  process.chdir(templateFolder.replace('_template', ''));
+  applyUpdates();
+  currentTemplateSettings.version = newTemplateSettings.version;
+  saveTemplateJson();
 
-  try {
-    applyUpdates();
-    currentTemplateSettings.version = newTemplateSettings.version;
-    saveTemplateJson();
-
-    const lastPatch = applyPatches();
-    if (lastPatch) {
-      currentTemplateSettings.lastPatch =
-        lastPatch.match(patchVersionRegex)![0];
-      console.log(`Last applied patch: ${currentTemplateSettings.lastPatch}`);
-    }
-    saveTemplateJson();
-  } finally {
-    process.chdir(currentFolder);
+  const lastPatch = applyPatches();
+  if (lastPatch) {
+    currentTemplateSettings.lastPatch = lastPatch.match(patchVersionRegex)![0];
+    console.log(`Last applied patch: ${currentTemplateSettings.lastPatch}`);
   }
+  saveTemplateJson();
 
   function saveTemplateJson() {
     fs.writeFileSync(
@@ -307,6 +300,11 @@ function updateFrom_1p6_to_1p7(
     fileNameRegex: /\.csproj$/,
     search: /<TargetFramework>net.*<\/TargetFramework>/,
     replace: '<TargetFramework>net10.0</TargetFramework>',
+  });
+  searchAndReplaceInFiles({
+    relativePath: 'webapi/Directory.Packages.props',
+    search: /<PackageVersion Include="(Microsoft.*)" Version="9.0.4"\/>/,
+    replace: '<PackageVersion Include="$1" Version="10.0.1"/>',
   });
 }
 
