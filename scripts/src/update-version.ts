@@ -21,6 +21,7 @@ const updateList = [
   { from: '1.5.0', update: updateFrom_1p5_to_1p6 },
   { from: '1.6.0', update: updateFrom_1p6_to_1p7 },
   { from: '1.7.0', update: updateFrom_1p7_to_1p8 },
+  { from: '1.8.0', update: updateFrom_1p8_to_1p9 },
 ];
 
 export function updateVersion(prefix: string) {
@@ -349,8 +350,32 @@ function updateFrom_1p7_to_1p8(
   currentFolder: string,
   templateFolder: string,
   prefix: string,
-) {}
+) {
+  searchAndReplaceInFiles({
+    relativePath: 'webapi/Directory.Packages.props',
+    search: /<PackageVersion Include="FluentAssertions" Version=".*"\/>/,
+    replace: '<PackageVersion Include="AwesomeAssertions" Version="9.3.0"/>',
+  });
+  searchAndReplaceInFiles({
+    relativePath: 'webapi/',
+    fileNameRegex: /\.cs$/,
+    search: /using FluentAssertions/,
+    replace: 'using AwesomeAssertions',
+  });
+  searchAndReplaceInFiles({
+    relativePath: 'webapi/',
+    fileNameRegex: /\.csproj$/,
+    search: /Include="FluentAssertions"/,
+    replace: 'Include="AwesomeAssertions"',
+  });
+  copyProjectFolder(`webapi/tests/${prefix}.TestUtils/ExceptionHelper.cs`);
+}
 
+function updateFrom_1p8_to_1p9(
+  currentFolder: string,
+  templateFolder: string,
+  prefix: string,
+) {}
 /*
  * This function is run for every `pull-template-changes`.
  * It makes sense to put all modifications here, and once there's a good number of them,

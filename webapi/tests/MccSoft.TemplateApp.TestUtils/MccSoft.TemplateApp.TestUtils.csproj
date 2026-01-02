@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-  <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -9,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="AwesomeAssertions" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,5 +18,4 @@
     <ProjectReference Include="..\..\src\MccSoft.TemplateApp.Domain\MccSoft.TemplateApp.Domain.csproj" />
     <ProjectReference Include="..\..\src\MccSoft.TemplateApp.Http\MccSoft.TemplateApp.Http.csproj" />
   </ItemGroup>
-
 </Project>

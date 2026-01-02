@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using FluentAssertions;
-using FluentAssertions.Execution;
-using FluentAssertions.Specialized;
+using AwesomeAssertions;
+using AwesomeAssertions.Specialized;
 using MccSoft.HttpClientExtension;
 using MccSoft.TemplateApp.Http.Generated;
 
@@ -20,8 +19,8 @@ public static class ExceptionHelper
         params object[] becauseArgs
     )
     {
-        Execute.Assertion
-            .BecauseOf(because, becauseArgs)
+        assertion
+            .CurrentAssertionChain.BecauseOf(because, becauseArgs)
             .UsingLineBreaks.ForCondition(assertion.Subject.Any())
             .FailWith("Expected ApiException exception {reason}, but no exception was thrown.");
 
@@ -30,8 +29,8 @@ public static class ExceptionHelper
             .Should()
             .BeOfType<ApiException<ValidationProblemDetails>>()
             .Subject;
-        typedException.Result.Detail
-            .Should()
+        typedException
+            .Result.Detail.Should()
             .MatchEquivalentOf(expectedWildcardPattern, because, becauseArgs);
         return assertion;
     }
@@ -44,8 +43,8 @@ public static class ExceptionHelper
         params object[] becauseArgs
     )
     {
-        Execute.Assertion
-            .BecauseOf(because, becauseArgs)
+        assertion
+            .CurrentAssertionChain.BecauseOf(because, becauseArgs)
             .UsingLineBreaks.ForCondition(assertion.Subject.Any())
             .FailWith(
                 "Expected FailedRequestException exception {reason}, but no exception was thrown."
@@ -84,8 +83,8 @@ public static class ExceptionHelper
         params object[] becauseArgs
     )
     {
-        Execute.Assertion
-            .BecauseOf(because, becauseArgs)
+        assertion
+            .CurrentAssertionChain.BecauseOf(because, becauseArgs)
             .UsingLineBreaks.ForCondition(assertion.Subject.Any())
             .FailWith(
                 "Expected FailedRequestException exception {reason}, but no exception was thrown."
@@ -114,8 +113,8 @@ public static class ExceptionHelper
         params object[] becauseArgs
     )
     {
-        Execute.Assertion
-            .BecauseOf(because, becauseArgs)
+        assertion
+            .CurrentAssertionChain.BecauseOf(because, becauseArgs)
             .UsingLineBreaks.ForCondition(assertion.Subject.Any())
             .FailWith(
                 "Expected FailedRequestException exception {reason}, but no exception was thrown."
@@ -142,8 +141,8 @@ public static class ExceptionHelper
         params object[] becauseArgs
     )
     {
-        Execute.Assertion
-            .BecauseOf(because, becauseArgs)
+        assertion
+            .CurrentAssertionChain.BecauseOf(because, becauseArgs)
             .UsingLineBreaks.ForCondition(assertion.Subject.Any())
             .FailWith(
                 "Expected FailedRequestException exception {reason}, but no exception was thrown."
@@ -163,8 +162,8 @@ public static class ExceptionHelper
         params object[] becauseArgs
     )
     {
-        Execute.Assertion
-            .BecauseOf(because, becauseArgs)
+        assertion
+            .CurrentAssertionChain.BecauseOf(because, becauseArgs)
             .UsingLineBreaks.ForCondition(assertion.Subject.Any())
             .FailWith("Expected ApiException exception {reason}, but no exception was thrown.");
 
@@ -183,8 +182,8 @@ public static class ExceptionHelper
         params object[] becauseArgs
     )
     {
-        Execute.Assertion
-            .BecauseOf(because, becauseArgs)
+        assertion
+            .CurrentAssertionChain.BecauseOf(because, becauseArgs)
             .UsingLineBreaks.ForCondition(assertion.Subject.Any())
             .FailWith("Expected ApiException exception {reason}, but no exception was thrown.");
 

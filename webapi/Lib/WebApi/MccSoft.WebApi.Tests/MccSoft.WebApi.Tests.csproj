@@ -1,11 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="AwesomeAssertions" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Moq" />
     <PackageReference Include="xunit" />
@@ -19,5 +18,4 @@
     <ProjectReference Include="..\..\Testing\MccSoft.Testing\MccSoft.Testing.csproj" />
     <ProjectReference Include="..\MccSoft.WebApi\MccSoft.WebApi.csproj" />
   </ItemGroup>
-
 </Project>
