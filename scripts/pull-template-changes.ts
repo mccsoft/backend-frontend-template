@@ -5,6 +5,7 @@ import path from 'path';
 import { hideBin } from 'yargs/helpers';
 import { execSync } from 'child_process';
 import semver from 'semver';
+import { simpleGit } from 'simple-git';
 import {
   copyProjectFolder,
   copyProjectFolderDefaultOptions,
@@ -58,7 +59,7 @@ if (!currentDir.endsWith('_template')) {
   // 2. Run pull-template-changes from cloned folder
   const templateFolder = process.cwd() + '_template';
 
-  cloneTemplate(templateFolder);
+  await cloneTemplate(templateFolder);
   renameFilesInTemplate(templateFolder, projectName, companyName);
 
   console.log(`Calling pull-template-changes from template`);
@@ -157,13 +158,17 @@ function renameFilesInTemplate(
   console.log('Rename finished.');
 }
 
-function cloneTemplate(folder: string) {
+async function cloneTemplate(folder: string): Promise<boolean> {
+  const git = simpleGit({ baseDir: folder });
+
   if (fs.existsSync(folder)) {
+    await git.fetch();
+    const status = await git.status();
+    if (status.behind > 0) return false;
     fs.rmdirSync(folder, { recursive: true });
   }
-  execSync(
-    `git clone --depth=1 https://github.com/mccsoft/backend-frontend-template.git \"${folder}\"`,
-  );
+  git.clone('https://github.com/mccsoft/backend-frontend-template.git');
+  return true;
 }
 
 function detectProjectAndCompanyName(): {

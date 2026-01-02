@@ -96,19 +96,23 @@ export function updateVersion(prefix: string) {
           }
         },
         patched(index, content, callback) {
-          if (!content) {
-            const patchIndex = patch.match(patchVersionRegex)![0];
-            callback(
-              new Error(
-                `Error applying patch '${patch}' to file '${index.index}'. Please check it and try to apply manually. To continue (after you manually applied it or decide to skip) set the 'lastPatch' property to '${patchIndex}' in '.template.json'`,
-              ),
-            );
-            return;
-          }
+          const templateFileName = path.join(templateFolder, index.index!);
           const fileName = path.join(currentFolder, index.index!);
+
           fs.mkdirSync(path.dirname(fileName), {
             recursive: true,
           });
+
+          if (!content) {
+            const patchIndex = patch.match(patchVersionRegex)![0];
+            console.error(
+              `Error applying patch '${patch}' to file '${index.index}'. Please check it and try to apply manually. To continue (after you manually applied it or decide to skip) set the 'lastPatch' property to '${patchIndex}' in '.template.json'`,
+            );
+            fs.copyFileSync(templateFileName, fileName + '_pached');
+            callback(null);
+            return;
+          }
+
           fs.writeFileSync(fileName, content);
           callback(null);
         },

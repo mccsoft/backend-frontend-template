@@ -20,6 +20,7 @@
     "renamer": "4.0.0",
     "rimraf": "3.0.2",
     "semver": "7.3.7",
+    "simple-git": "3.30.0",
     "ts-node": "10.9.1",
     "yargs": "17.7.2"
   },
