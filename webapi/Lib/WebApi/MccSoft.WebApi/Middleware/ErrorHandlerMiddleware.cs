@@ -137,6 +137,12 @@ public class ErrorHandlerMiddleware
             AddTraceId(httpContext, details);
         }
 
+        if (ex is TooManyRequestsException { RetryAfterSeconds: > 0 } tooManyRequestsException)
+        {
+            httpContext.Response.Headers.RetryAfter =
+                tooManyRequestsException.RetryAfterSeconds.Value.ToString();
+        }
+
         await ExecuteResult(httpContext, result);
     }
 }

@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using IdentityModel;
-using MccSoft.LowLevelPrimitives;
+using MccSoft.LowLevelPrimitives.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -61,25 +58,18 @@ public class ThrottleAttribute : ActionFilterAttribute
 
         if (_throttler.ShouldRequestBeThrottled(out Throttler.ThrottleInfo throttleInfo))
         {
-            // Unfortunately, there's no HttpStatusCode.TooManyRequests code in netstandard2.0 yet.
-            // After update to netstandard2.1, we can remove this constant.
-            const int httpStatusCodeTooManyRequests = 429;
-
-            var details = new ProblemDetails
-            {
-                Type = ErrorTypes.TooManyRequests,
-                Title = "Too many requests",
-                Detail =
-                    $"Number of requests: {throttleInfo.RequestCount}, "
-                    + $"Expires: {throttleInfo.ExpiresAt:s}. Group: {_throttler.ThrottleGroup}."
-            };
-
-            var result = new ObjectResult(details) { StatusCode = httpStatusCodeTooManyRequests };
-
             AddThrottleHeaders(httpContext.Response);
-            await ExecuteResult(httpContext, result);
             LogTooManyRequests(context.HttpContext);
-            return;
+
+            var retryAfterSeconds = (int)
+                Math.Ceiling((throttleInfo.ExpiresAt - DateTime.UtcNow).TotalSeconds);
+
+            throw new TooManyRequestsException(
+                message: $"Number of requests: {throttleInfo.RequestCount}, "
+                    + $"Expires: {throttleInfo.ExpiresAt:s}. Group: {_throttler.ThrottleGroup}.",
+                retryAfterSeconds: retryAfterSeconds,
+                lockedUntil: throttleInfo.ExpiresAt.UtcDateTime
+            );
         }
 
         _throttler.IncrementRequestCount();
@@ -87,13 +77,6 @@ public class ThrottleAttribute : ActionFilterAttribute
         await next();
 
         AddThrottleHeaders(httpContext.Response);
-    }
-
-    private static async Task ExecuteResult(HttpContext httpContext, IActionResult result)
-    {
-        RouteData routeData = httpContext.GetRouteData() ?? new RouteData();
-        var actionContext = new ActionContext(httpContext, routeData, new ActionDescriptor());
-        await result.ExecuteResultAsync(actionContext);
     }
 
     private void InitializeThrottlerIfNotYet(HttpContext httpContext)
@@ -129,8 +112,8 @@ public class ThrottleAttribute : ActionFilterAttribute
     {
         if (_throttleGroup == ThrottleGroup.Identity)
         {
-            _throttler.ThrottleGroup = context.HttpContext.User
-                .FindFirst(JwtClaimTypes.Subject)
+            _throttler.ThrottleGroup = context
+                .HttpContext.User.FindFirst(JwtClaimTypes.Subject)
                 .Value;
         }
 
