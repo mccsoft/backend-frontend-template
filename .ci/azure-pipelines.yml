@@ -22,7 +22,6 @@ trigger:
       - main
       - release/
       - releases/
-      - feature/ci-*
   paths:
     exclude:
       - docs/*

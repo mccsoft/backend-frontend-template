@@ -79,6 +79,8 @@ export function updateVersion(prefix: string) {
   function applyPatches(): string | null {
     console.log(`Applying patches...`);
     var patches = getNewPatches();
+    const filesWithErrors = new Set();
+
     for (const patch of patches) {
       console.log(`Applying patch '${patch}'`);
 
@@ -109,6 +111,7 @@ export function updateVersion(prefix: string) {
             console.error(
               `Error applying patch '${patch}' to file '${index.index}'. We have overwritten your file. Please check the cahnges carefully!`,
             );
+            filesWithErrors.add(index.index!);
             fs.copyFileSync(templateFileName, fileName);
             callback(null);
             return;
@@ -124,6 +127,13 @@ export function updateVersion(prefix: string) {
       if (_err) throw _err;
     }
     console.log(`Finished applying patches.`);
+    if (filesWithErrors.size) {
+      console.log(
+        `The following files had errors and were overwritten, PLEASE CHECK THEM:\n    `,
+        Array.from(filesWithErrors).join('\n     '),
+      );
+    }
+
     return patches.length > 0 ? patches[patches.length - 1] : null;
   }
 
@@ -319,6 +329,20 @@ function updateFrom_1p6_to_1p7(
     search: /<PackageVersion Include="(Microsoft.*)" Version="9.0.4"\/>/,
     replace: '<PackageVersion Include="$1" Version="10.0.1"/>',
   });
+
+  copyProjectFolder('frontend/src/helpers/router/useBlockNavigation.ts');
+  copyProjectFolder('frontend/src/helpers/router/useBlocker.ts');
+  fs.removeSync(
+    path.join(
+      currentFolder,
+      'frontend/src/helpers/router/useCallbackPrompt.ts',
+    ),
+  );
+
+  copyProjectFolder(`webapi/src/${prefix}.App/Setup/SetupWebhooks.cs`);
+  copyProjectFolder(`webapi/src/${prefix}.Domain/WebHook/`);
+
+  updatePlaywright('1.55.0');
 }
 
 function updateFrom_1p7_to_1p8(
@@ -336,15 +360,4 @@ function updateAll(
   currentFolder: string,
   templateFolder: string,
   prefix: string,
-) {
-  copyProjectFolder('frontend/src/helpers/router/useBlockNavigation.ts');
-  copyProjectFolder('frontend/src/helpers/router/useBlocker.ts');
-  fs.removeSync(
-    path.join(
-      currentFolder,
-      'frontend/src/helpers/router/useCallbackPrompt.ts',
-    ),
-  );
-
-  updatePlaywright('1.55.0');
-}
+) {}
