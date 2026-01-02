@@ -159,20 +159,3 @@ diff --git a/frontend/tests/helpers/error-helper.test.ts b/frontend/tests/helper
 +    type: 'validate',
 +  });
 +});
-Index: webapi/Lib/WebApi/MccSoft.WebApi/Serialization/SystemTextJsonSerializerSetup.cs
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
-diff --git a/webapi/Lib/WebApi/MccSoft.WebApi/Serialization/SystemTextJsonSerializerSetup.cs b/webapi/Lib/WebApi/MccSoft.WebApi/Serialization/SystemTextJsonSerializerSetup.cs
---- a/webapi/Lib/WebApi/MccSoft.WebApi/Serialization/SystemTextJsonSerializerSetup.cs	(revision e479ebf137780edf8801c8c1f3198c7facbd20fe)
-+++ b/webapi/Lib/WebApi/MccSoft.WebApi/Serialization/SystemTextJsonSerializerSetup.cs	(revision 1a20958c9294bc0256153dad3e37bb2407a2651c)
-@@ -21,6 +21,8 @@
-         var deserializationOptions = new JsonSerializerOptions(options.JsonSerializerOptions);
-         DefaultJsonSerializer.DeserializationOptions = deserializationOptions;
- 
-+        options.AllowInputFormatterExceptionMessages = false;
-+
-         return options;
-     }
- 

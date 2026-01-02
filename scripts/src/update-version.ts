@@ -87,6 +87,8 @@ export function updateVersion(prefix: string) {
         .toString();
       let _err: any = null;
       Diff.applyPatches(patchContents, {
+        fuzzFactor: 10,
+        autoConvertLineEndings: true,
         loadFile(index, callback) {
           const fullPath = path.join(currentFolder, index.index!);
           if (fs.existsSync(fullPath)) {
@@ -104,11 +106,10 @@ export function updateVersion(prefix: string) {
           });
 
           if (!content) {
-            const patchIndex = patch.match(patchVersionRegex)![0];
             console.error(
-              `Error applying patch '${patch}' to file '${index.index}'. Please check it and try to apply manually. To continue (after you manually applied it or decide to skip) set the 'lastPatch' property to '${patchIndex}' in '.template.json'`,
+              `Error applying patch '${patch}' to file '${index.index}'. We have overwritten your file. Please check the cahnges carefully!`,
             );
-            fs.copyFileSync(templateFileName, fileName + '_pached');
+            fs.copyFileSync(templateFileName, fileName);
             callback(null);
             return;
           }
