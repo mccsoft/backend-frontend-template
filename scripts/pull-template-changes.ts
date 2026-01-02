@@ -59,8 +59,8 @@ if (!currentDir.endsWith('_template')) {
   // 2. Run pull-template-changes from cloned folder
   const templateFolder = process.cwd() + '_template';
 
-  await cloneTemplate(templateFolder);
-  renameFilesInTemplate(templateFolder, projectName, companyName);
+  const result = await cloneTemplate(templateFolder);
+  if (result) renameFilesInTemplate(templateFolder, projectName, companyName);
 
   console.log(`Calling pull-template-changes from template`);
   execSync(`npx ts-node --esm scripts/pull-template-changes.ts`, {
