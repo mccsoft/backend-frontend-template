@@ -164,8 +164,11 @@ async function cloneTemplate(folder: string): Promise<boolean> {
   if (fs.existsSync(folder)) {
     await git.fetch();
     const status = await git.status();
-    if (status.behind > 0) return false;
-    fs.rmdirSync(folder, { recursive: true });
+    if (status.behind > 0) {
+      fs.rmdirSync(folder, { recursive: true });
+    } else {
+      return false;
+    }
   }
   git.clone('https://github.com/mccsoft/backend-frontend-template.git');
   return true;
