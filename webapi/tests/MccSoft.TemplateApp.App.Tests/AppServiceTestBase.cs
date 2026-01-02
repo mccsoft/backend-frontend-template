@@ -89,7 +89,7 @@ public class AppServiceTestBase : TestBase<TemplateAppDbContext>
     )
     {
         SetupServices.AddServices(services, configuration, environment);
-        services.AddWebHooks<TemplateWebHookSubscription>();
+        services.AddWebHooks<TemplateAppWebHookSubscription>();
 
         services
             .AddDefaultIdentity<User>()

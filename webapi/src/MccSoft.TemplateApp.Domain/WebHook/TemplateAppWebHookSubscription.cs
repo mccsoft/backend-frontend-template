@@ -9,7 +9,7 @@ namespace MccSoft.TemplateApp.Domain.WebHook;
 /// <summary>
 /// This is an example of overriden webhook (to add Tenant for example. You can use base entity from lib)
 /// </summary>
-public class TemplateWebHookSubscription : WebHookSubscription, ITenantEntity
+public class TemplateAppWebHookSubscription : WebHookSubscription, ITenantEntity
 {
     #region ITenantEntity
 
@@ -33,9 +33,9 @@ public class TemplateWebHookSubscription : WebHookSubscription, ITenantEntity
     /// <summary>
     /// Needed for Entity Framework, keep empty.
     /// </summary>
-    public TemplateWebHookSubscription() { }
+    public TemplateAppWebHookSubscription() { }
 
-    public TemplateWebHookSubscription(
+    public TemplateAppWebHookSubscription(
         string name,
         string url,
         string eventType,
@@ -51,7 +51,7 @@ public class TemplateWebHookSubscription : WebHookSubscription, ITenantEntity
     /// </summary>
     /// <param name="id">Subscription id.</param>
     /// <returns>The created specification.</returns>
-    public static Specification<TemplateWebHookSubscription> HasId(Guid id) =>
+    public static Specification<TemplateAppWebHookSubscription> HasId(Guid id) =>
         new(nameof(HasId), x => x.Id == id, id);
 
     #endregion

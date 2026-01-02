@@ -12,9 +12,9 @@ namespace MccSoft.TemplateApp.App.Features.Webhooks;
 [Route("api/webhooks")]
 public class WebHookController : Controller
 {
-    private readonly IWebHookManager<TemplateWebHookSubscription> _webHookManager;
+    private readonly IWebHookManager<TemplateAppWebHookSubscription> _webHookManager;
 
-    public WebHookController(IWebHookManager<TemplateWebHookSubscription> webHookManager)
+    public WebHookController(IWebHookManager<TemplateAppWebHookSubscription> webHookManager)
     {
         _webHookManager = webHookManager;
     }

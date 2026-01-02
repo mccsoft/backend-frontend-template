@@ -85,6 +85,7 @@ export function updateVersion(prefix: string) {
       const patchContents = fs
         .readFileSync(path.join(templateFolder, 'patches', patch))
         .toString();
+      let _err: any = null;
       Diff.applyPatches(patchContents, {
         loadFile(index, callback) {
           const fullPath = path.join(currentFolder, index.index!);
@@ -104,11 +105,18 @@ export function updateVersion(prefix: string) {
             );
             return;
           }
-          fs.writeFileSync(path.join(currentFolder, index.index!), content);
+          const fileName = path.join(currentFolder, index.index!);
+          fs.mkdirSync(path.dirname(fileName), {
+            recursive: true,
+          });
+          fs.writeFileSync(fileName, content);
           callback(null);
         },
-        complete() {},
+        complete(err) {
+          _err = err;
+        },
       });
+      if (_err) throw _err;
     }
     console.log(`Finished applying patches.`);
     return patches.length > 0 ? patches[patches.length - 1] : null;
@@ -298,7 +306,7 @@ function updateFrom_1p6_to_1p7(
   searchAndReplaceInFiles({
     relativePath: 'webapi',
     fileNameRegex: /\.csproj$/,
-    search: /<TargetFramework>net.*<\/TargetFramework>/,
+    search: /<TargetFramework>net\d.*<\/TargetFramework>/,
     replace: '<TargetFramework>net10.0</TargetFramework>',
   });
   searchAndReplaceInFiles({

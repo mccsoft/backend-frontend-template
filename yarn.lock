@@ -4079,7 +4079,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@templateApp/build@workspace:."
   dependencies:
-    "@types/diff": "npm:5.0.3"
     "@types/fs-extra": "npm:11.0.1"
     "@types/semver": "npm:7.5.0"
     "@types/yargs": "npm:17.0.24"
@@ -4087,7 +4086,7 @@ __metadata:
     copyfiles: "npm:2.3.0"
     cpy-cli: "npm:4.2.0"
     cross-env: "npm:7.0.3"
-    diff: "npm:5.1.0"
+    diff: "npm:8.0.2"
     fast-xml-parser: "npm:4.2.2"
     fs-extra: "npm:11.1.1"
     json: "npm:11.0.0"
@@ -4415,13 +4414,6 @@ __metadata:
   version: 4.0.2
   resolution: "@types/deep-eql@npm:4.0.2"
   checksum: 10/249a27b0bb22f6aa28461db56afa21ec044fa0e303221a62dff81831b20c8530502175f1a49060f7099e7be06181078548ac47c668de79ff9880241968d43d0c
-  languageName: node
-  linkType: hard
-
-"@types/diff@npm:5.0.3":
-  version: 5.0.3
-  resolution: "@types/diff@npm:5.0.3"
-  checksum: 10/87d1c8220a5d5a3347e940855f91c9fd7b6645cde5d7d603bc61741ad10de932aa0c8feb3abad7fcaf330e25505100892ab2b7f12a0a29db71571d3e38f4b9f7
   languageName: node
   linkType: hard
 
@@ -7237,10 +7229,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"diff@npm:5.1.0, diff@npm:^5.0.0":
-  version: 5.1.0
-  resolution: "diff@npm:5.1.0"
-  checksum: 10/f4557032a98b2967fe27b1a91dfcf8ebb6b9a24b1afe616b5c2312465100b861e9b8d4da374be535f2d6b967ce2f53826d7f6edc2a0d32b2ab55abc96acc2f9d
+"diff@npm:8.0.2":
+  version: 8.0.2
+  resolution: "diff@npm:8.0.2"
+  checksum: 10/82a2120d3418f97822e17a6044ccd4b99a91e26e145e8698353673d7146bd2d092bbebb79c112aae7badc7b9c526f9098cbe342f96174feb6beabdd2587b3c42
   languageName: node
   linkType: hard
 
@@ -7248,6 +7240,13 @@ __metadata:
   version: 4.0.2
   resolution: "diff@npm:4.0.2"
   checksum: 10/ec09ec2101934ca5966355a229d77afcad5911c92e2a77413efda5455636c4cf2ce84057e2d7715227a2eeeda04255b849bd3ae3a4dd22eb22e86e76456df069
+  languageName: node
+  linkType: hard
+
+"diff@npm:^5.0.0":
+  version: 5.1.0
+  resolution: "diff@npm:5.1.0"
+  checksum: 10/f4557032a98b2967fe27b1a91dfcf8ebb6b9a24b1afe616b5c2312465100b861e9b8d4da374be535f2d6b967ce2f53826d7f6edc2a0d32b2ab55abc96acc2f9d
   languageName: node
   linkType: hard
 

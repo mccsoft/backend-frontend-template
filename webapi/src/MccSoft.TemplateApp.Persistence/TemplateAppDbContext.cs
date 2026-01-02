@@ -61,15 +61,15 @@ public class TemplateAppDbContext
             Otherwise, provide your own type that inherits from WebHookSubscription,
             e.g. <see cref="TemplateWebHookSubscription"/>, to extend or override behavior.
         */
-        builder.AddWebHookEntities<TemplateWebHookSubscription>(GetType());
+        builder.AddWebHookEntities<TemplateAppWebHookSubscription>(GetType());
 
         /*
             [Optional]
             We recommend placing WebHook-related entities in a separate schema
             (e.g. "webhooks") to keep them isolated from your main business logic tables.
         */
-        builder.Entity<WebHook<TemplateWebHookSubscription>>().Metadata.SetSchema("webhooks");
-        builder.Entity<TemplateWebHookSubscription>().Metadata.SetSchema("webhooks");
+        builder.Entity<WebHook<TemplateAppWebHookSubscription>>().Metadata.SetSchema("webhooks");
+        builder.Entity<TemplateAppWebHookSubscription>().Metadata.SetSchema("webhooks");
 
         builder.Entity<DbFile>(b =>
         {
@@ -85,9 +85,8 @@ public class TemplateAppDbContext
 
     private void SetupQueryFilters(ModelBuilder builder)
     {
-        builder.SetupQueryFilter<ITenantEntity>(
-            x =>
-                CurrentTenantIdForQueryFilter == null || x.TenantId == CurrentTenantIdForQueryFilter
+        builder.SetupQueryFilter<ITenantEntity>(x =>
+            CurrentTenantIdForQueryFilter == null || x.TenantId == CurrentTenantIdForQueryFilter
         );
     }
 

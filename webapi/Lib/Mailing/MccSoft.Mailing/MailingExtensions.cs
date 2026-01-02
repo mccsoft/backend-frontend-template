@@ -34,21 +34,21 @@ public static class MailingExtensions
     /// Registers IMailSender and IRazorRenderService interfaces
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection"/> to add the services to.</param>
-    /// <param name="configuration">The configuration being bound. Should contain <see cref="MailSenderOptions"/>!</param>
+    /// <param name="emailConfigurationSection">The configuration being bound. Should contain <see cref="MailSenderOptions"/>!</param>
     /// <param name="getEmailViewPath">Function to get path to razor template for passed model</param>
     /// <returns></returns>
     public static IServiceCollection AddMailing(
         [NotNull] this IServiceCollection services,
-        IConfigurationSection configuration,
+        IConfigurationSection emailConfigurationSection,
         Func<EmailModelBase, EmailTemplateType, string> getEmailViewPath = null
     )
     {
-        services.Configure<MailSenderOptions>(configuration);
+        services.Configure<MailSenderOptions>(emailConfigurationSection);
         return services
             .AddSingleton(
                 new MailSettings()
                 {
-                    EmailViewPathProvider = getEmailViewPath ?? DefaultEmailModelPathConverter
+                    EmailViewPathProvider = getEmailViewPath ?? DefaultEmailModelPathConverter,
                 }
             )
             .AddScoped<IMailSender, MailSender>()

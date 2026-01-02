@@ -6,7 +6,7 @@ namespace MccSoft.TemplateApp.App.Features.Webhooks.Dto;
 /// <summary>
 /// Webhook subscription DTO
 /// </summary>
-public sealed class UpdateWebHookSubscriptionDto : PatchRequest<TemplateWebHookSubscription>
+public sealed class UpdateWebHookSubscriptionDto : PatchRequest<TemplateAppWebHookSubscription>
 {
     /// <summary>
     /// Webhook name (Human readable name of integration).
