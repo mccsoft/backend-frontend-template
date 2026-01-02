@@ -1,23 +1,14 @@
 ﻿# How to run Opensearch
 
-This is a small incstruction how to run Opensearch
+This is a small instruction how to run Opensearch in kubernetes
 
 ## Step 1 - Run stack
 
-1. Copy the `opensearch` folder to your VM machine.
-1. Adjust `.env` to contain yours VIRTUAL_HOST for generating certificates for your vm host.
-1. Change mod for script files: `sudo chmod 777 ./apply-internal-users.sh ./generate-password.sh ./generate-certs.sh`
-
-1. Run the stack (`docker compose up -d`). Make sure it opens in the browser and user/password `admin/admin` works.
-1. Change password for `admin` user.
-
-   1. Stop the stack (`docker-compose down`)
-   1. Edit `docker-compose.yml` and comment the following line: `- plugins.security.ssl.http.enabled=false` for `node1`
-   1. Run `./generate-password.sh`, enter new admin password, save the generated hash somewhere
-   1. Edit `internal-users.yml`, change `hash` field for admin user to the hash generated in previous step
-   1. Run `./apply-internal-users.sh`
-   1. Edit `docker-compose.yml` and uncomment the line: `- plugins.security.ssl.http.enabled=false` for `node1`
-   1. Run the stack (`docker compose up -d`). Make sure it opens in the browser and new password for `admin` user works.
+1. Adjust URL in [08-ingress.yaml](./08-ingress.yaml) (i.e. change logs.mcc-soft.de to something else)
+1. Change `OPENSEARCH_INITIAL_ADMIN_PASSWORD` in [01-stateful-set.yaml](./01-stateful-set.yaml) to something else. Do not commit to repo
+1. `Copy kubeconfig.config` from your k8s installation, run `export KUBECONFIG=./kubeconfig.config`
+1. Run `./prepare.sh`
+1. That's it. Your dashboards are exposed at https://YOUR_HOST, you can feed logs to https://YOUR_HOST/data
 
 ## Step 2 - Configure additional users
 

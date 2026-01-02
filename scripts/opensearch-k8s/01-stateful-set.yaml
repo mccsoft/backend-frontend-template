@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: opensearch
+  namespace: opensearch
+spec:
+  serviceName: opensearch
+  replicas: 1
+  selector:
+    matchLabels:
+      app: opensearch
+  template:
+    metadata:
+      labels:
+        app: opensearch
+    spec:
+      containers:
+        - name: opensearch
+          image: opensearchproject/opensearch:2.12.0
+          ports:
+            - containerPort: 9200
+              name: http
+            - containerPort: 9600
+              name: metrics
+          env:
+            - name: cluster.name
+              value: opensearch-cluster
+            - name: node.name
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: discovery.type
+              value: single-node
+            - name: bootstrap.memory_lock
+              value: 'true'
+            - name: OPENSEARCH_JAVA_OPTS
+              value: '-Xms512m -Xmx512m'
+            - name: plugins.security.disabled
+              value: 'false'
+            - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+              value: 'mLxz2RCqZ6FLtFwhcVZn'
+          resources:
+            requests:
+              cpu: '500m'
+              memory: '1Gi'
+            limits:
+              cpu: '1'
+              memory: '1Gi'
+          volumeMounts:
+            - name: data
+              mountPath: /usr/share/opensearch/data
+      volumes: []
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ['ReadWriteOnce']
+        resources:
+          requests:
+            storage: 10Gi
