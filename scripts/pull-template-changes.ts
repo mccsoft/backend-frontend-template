@@ -159,18 +159,17 @@ function renameFilesInTemplate(
 }
 
 async function cloneTemplate(folder: string): Promise<boolean> {
-  const git = simpleGit({ baseDir: folder });
-
   if (fs.existsSync(folder)) {
+    const git = simpleGit({ baseDir: folder });
     await git.fetch();
     const status = await git.status();
-    if (status.behind > 0) {
-      fs.rmdirSync(folder, { recursive: true });
-    } else {
-      return false;
-    }
+    if (status.behind > 0) return false;
+    fs.rmdirSync(folder, { recursive: true });
   }
-  git.clone('https://github.com/mccsoft/backend-frontend-template.git');
+  simpleGit().clone(
+    'https://github.com/mccsoft/backend-frontend-template.git',
+    folder,
+  );
   return true;
 }
 
