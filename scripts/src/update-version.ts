@@ -22,8 +22,22 @@ const updateList = [
   { from: '1.6.0', update: updateFrom_1p6_to_1p7 },
   { from: '1.7.0', update: updateFrom_1p7_to_1p8 },
   { from: '1.8.0', update: updateFrom_1p8_to_1p9 },
+  // always keep the last update empty, it's needed to know the current version number (which is the `from` of the last update)
 ];
 
+export function writeLatestVersionsToTemplateJsonFile() {
+  const patches = getPatchFiles('');
+
+  const currentTemplateSettings: typeof TemplateJson = {
+    version: updateList[updateList.length - 1].from,
+    lastPatch: patches[patches.length - 1],
+  };
+
+  fs.writeFileSync(
+    templateJsonFileName,
+    JSON.stringify(currentTemplateSettings),
+  );
+}
 export function updateVersion(prefix: string) {
   const currentFolder = process.cwd();
   const templateFolder = process.cwd() + '_template';
@@ -32,18 +46,14 @@ export function updateVersion(prefix: string) {
     currentFolder,
     templateJsonFileName,
   );
-  var currentTemplateSettings: typeof TemplateJson = fs.existsSync(
+  const currentTemplateSettings: typeof TemplateJson = fs.existsSync(
     currentFolderJsonFileName,
   )
     ? JSON.parse(fs.readFileSync(currentFolderJsonFileName).toString())
     : { version: '1.0.0', lastPatch: '0000-00-00-00' };
 
-  var newTemplateSettings: typeof TemplateJson = JSON.parse(
-    fs.readFileSync(path.join(templateFolder, templateJsonFileName)).toString(),
-  );
-
   applyUpdates();
-  currentTemplateSettings.version = newTemplateSettings.version;
+  currentTemplateSettings.version = updateList[updateList.length - 1].from;
   saveTemplateJson();
 
   const lastPatch = applyPatches();
@@ -139,19 +149,24 @@ export function updateVersion(prefix: string) {
   }
 
   function getNewPatches(): string[] {
-    const files = fs.readdirSync(path.join(templateFolder, 'patches'));
-    const filteredFiles = files.filter((x) => {
-      if (x.match(patchVersionRegex)) return true;
-      console.warn(
-        `File with name 'patches/${x}' doesn't match the expected pattern.`,
-      );
-    });
-    const sortedFiles = filteredFiles.sort();
+    const sortedFiles = getPatchFiles(templateFolder);
     const filesToApply = sortedFiles.filter(
       (x) => x > (currentTemplateSettings.lastPatch ?? ''),
     );
     return filesToApply;
   }
+}
+
+function getPatchFiles(templateFolder: string) {
+  const files = fs.readdirSync(path.join(templateFolder, 'patches'));
+  const filteredFiles = files.filter((x) => {
+    if (x.match(patchVersionRegex)) return true;
+    console.warn(
+      `File with name 'patches/${x}' doesn't match the expected pattern.`,
+    );
+  });
+  const sortedFiles = filteredFiles.sort();
+  return sortedFiles;
 }
 function searchAndReplaceInPackageJson(
   regExp: RegExp | string,
