@@ -12,6 +12,7 @@ import {
   pascalCase,
   snakeCase,
 } from 'change-case';
+import { writeLatestVersionsToTemplateJsonFile } from './src/update-version';
 
 const args = yargs(hideBin(process.argv))
   .version('0.1')
@@ -79,7 +80,7 @@ const replacements = [
       constantCase(projectName) /* converts 'ProjectName' to 'Project Name' */,
   },
 ];
-
+writeLatestVersionsToTemplateJsonFile();
 await changeFrontendPortNumber(frontendPortNumber);
 await changeBackendPortNumber(backendPortNumber);
 await changeStorybookPortNumber(storybookPortNumber);
