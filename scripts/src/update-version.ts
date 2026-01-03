@@ -354,7 +354,7 @@ function updateFrom_1p7_to_1p8(
   searchAndReplaceInFiles({
     relativePath: 'webapi/Directory.Packages.props',
     search: /<PackageVersion Include="FluentAssertions" Version=".*"\/>/,
-    replace: '<PackageVersion Include="AwesomeAssertions" Version="9.3.0"/>',
+    replace: '',
   });
   searchAndReplaceInFiles({
     relativePath: 'webapi/',

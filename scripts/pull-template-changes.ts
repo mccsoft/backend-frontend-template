@@ -166,7 +166,7 @@ async function cloneTemplate(folder: string): Promise<boolean> {
     if (status.behind > 0) return false;
     fs.rmdirSync(folder, { recursive: true });
   }
-  simpleGit().clone(
+  await simpleGit().clone(
     'https://github.com/mccsoft/backend-frontend-template.git',
     folder,
   );
