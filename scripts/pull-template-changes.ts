@@ -90,6 +90,13 @@ if (!projectName) {
   process.exit();
 }
 
+if (!fs.existsSync('webapi/Directory.Packages.props')) {
+  console.error(
+    'Please migrate to Central Package Management before running this script! See docs/CHANGELOG.md for details!',
+  );
+  process.exit();
+}
+
 // run post-processor, so each specific project could modify template files before they are copied over
 if (fs.existsSync('scripts/pull-template-post-processor.ts')) {
   execSync(
