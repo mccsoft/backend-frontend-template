@@ -17,20 +17,19 @@ public static partial class SetupHangfire
         if (configuration.GetSection("Hangfire").GetValue<bool>("Disable"))
             return;
 
-        services.AddHangfire(
-            config =>
-                config
-                    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                    .UseSimpleAssemblyNameTypeSerializer()
-                    .UseRecommendedSerializerSettings()
-                    .UsePostgreSqlStorage(
-                        connectionString,
-                        new PostgreSqlStorageOptions()
-                        {
-                            DistributedLockTimeout = TimeSpan.FromSeconds(20),
-                            PrepareSchemaIfNecessary = true,
-                        }
-                    )
+        services.AddHangfire(config =>
+            config
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UsePostgreSqlStorage(
+                    connectionString,
+                    new PostgreSqlStorageOptions()
+                    {
+                        DistributedLockTimeout = TimeSpan.FromSeconds(20),
+                        PrepareSchemaIfNecessary = true,
+                    }
+                )
         );
         services.AddHangfireServer(options =>
         {
@@ -72,11 +71,11 @@ public static partial class SetupHangfire
                                         PasswordClear = configurationSection.GetValue<string>(
                                             "DashboardPassword"
                                         ),
-                                    }
-                                }
+                                    },
+                                },
                             }
-                        )
-                    }
+                        ),
+                    },
                 }
             );
         }
@@ -113,7 +112,7 @@ public static partial class SetupHangfire
         var jobSettings = Activator.CreateInstance<TOptions>();
         appConfiguration.GetSection(jobSettings.GetType().Name).Bind(jobSettings);
 
-        if (jobSettings.IsEnabled != false)
+        if (jobSettings.Enabled != false)
             recurringJobManager.AddOrUpdate<TJob>(jobSettings.CronExpression);
     }
 

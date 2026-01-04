@@ -59,7 +59,8 @@ public partial class Field
     public static Field Exception = new(nameof(Exception));
 
     public static Field UserId = new(nameof(UserId));
-
+    public static Field Email = new(nameof(Email));
+    public static Field EmailSubject = new(nameof(EmailSubject));
     #endregion
 
     private readonly string _nameForTemplate;

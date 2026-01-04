@@ -384,6 +384,27 @@ function updateFrom_1p7_to_1p8(
     replace: 'Include="AwesomeAssertions"',
   });
   copyProjectFolder(`webapi/tests/${prefix}.TestUtils/ExceptionHelper.cs`);
+
+  fs.removeSync(`webapi/Lib/WebHooks/MccSoft.WebHooks/IWebHookSender.cs`);
+  fs.removeSync(`webapi/Lib/WebHooks/MccSoft.WebHooks/WebHookSender.cs`);
+  fs.removeSync(
+    `webapi/Lib/WebHooks/MccSoft.WebHooks/Interceptors/IWebHookInterceptors.cs`,
+  );
+  fs.removeSync(
+    `webapi/Lib/WebHooks/MccSoft.WebHooks/Interceptors/WebHookInterceptor.cs`,
+  );
+  fs.removeSync(
+    `webapi/Lib/WebHooks/MccSoft.WebHooks/Processing/WebHookHostedService.cs`,
+  );
+  fs.removeSync(
+    `webapi/Lib/WebHooks/MccSoft.WebHooks/Processing/WebHookConfiguration.cs`,
+  );
+  fs.removeSync(
+    `webapi/Lib/WebHooks/MccSoft.WebHooks/Domain/WebHookAdditionalData.cs`,
+  );
+  fs.removeSync(
+    `webapi/Lib/WebApi/MccSoft.WebApi/Serialization/HttpClientExtensions.cs`,
+  );
 }
 
 function updateFrom_1p8_to_1p9(

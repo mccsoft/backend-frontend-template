@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
 using MailKit.Net.Smtp;
+using MccSoft.Logging;
 using MccSoft.Mailing.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -38,6 +39,14 @@ public class MailSender : IMailSender
     public async Task Send<T>(string recipient, T model, List<string> attachments = null)
         where T : EmailModelBase
     {
+        using var _ = _logger.LogOperation(
+            new OperationContext()
+            {
+                { Field.Email, recipient },
+                { Field.EmailSubject, model.GetType() },
+            }
+        );
+
         model.SiteRootUrl = _options.Value.SiteUrl;
         model.RecipientEmail = recipient;
 
@@ -45,8 +54,8 @@ public class MailSender : IMailSender
 
         if (!string.IsNullOrEmpty(rendered.Content))
         {
-            _backgroundJobClient.Enqueue<MailSender>(
-                x => x.Send(recipient, rendered.Subject, rendered.Content, null, attachments)
+            _backgroundJobClient.Enqueue<MailSender>(x =>
+                x.Send(recipient, rendered.Subject, rendered.Content, null, attachments)
             );
         }
     }
@@ -79,7 +88,7 @@ public class MailSender : IMailSender
         }
     }
 
-    private static List<string> _globalAttachments = new() { "Views/Emails/Images/logo.png", };
+    private static List<string> _globalAttachments = new() { "Views/Emails/Images/logo.png" };
 
     [AutomaticRetry(
         Attempts = 10,
@@ -103,7 +112,11 @@ public class MailSender : IMailSender
         foreach (var attachment in _globalAttachments)
         {
             MimeEntity entity = bodyBuilder.LinkedResources.Add(attachment);
-            entity.ContentId = Path.GetFileName(attachment);
+            var fileName = Path.GetFileName(attachment);
+            entity.ContentDisposition = new ContentDisposition(ContentDisposition.Inline);
+            entity.ContentId = fileName;
+            entity.ContentType.Name = fileName;
+            entity.ContentDisposition.FileName = fileName;
         }
 
         if (attachments != null)
@@ -130,6 +143,14 @@ public class MailSender : IMailSender
 
     private async Task RawSendEmail(MimeMessage message)
     {
+        using var _ = _logger.LogOperation(
+            new OperationContext()
+            {
+                { Field.Email, message.To },
+                { Field.EmailSubject, message.Subject },
+            }
+        );
+
         using var client = new SmtpClient();
         var mailOptions = _options.Value;
         await client.ConnectAsync(

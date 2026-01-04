@@ -21,22 +21,23 @@ public class DefaultJsonSerializer
         return JsonSerializer.Serialize(obj, SerializationOptions);
     }
 
-    public static T Deserialize<T>(string json) where T : class
+    public static T Deserialize<T>(string json)
     {
         if (string.IsNullOrEmpty(json))
-            return null;
+            return default;
+
         if (typeof(T) == typeof(Dictionary<string, string>))
         {
             var result = JsonSerializer.Deserialize<Dictionary<string, object>>(
                 json,
                 DeserializationOptions
             );
-            return result.ToDictionary(x => x.Key, x => x.Value.ToString()) as T;
+            return (T)(result.ToDictionary(x => x.Key, x => x.Value.ToString()) as object);
         }
         if (typeof(T) == typeof(List<string>))
         {
             var result = JsonSerializer.Deserialize<List<object>>(json, DeserializationOptions);
-            return result.Select(x => x.ToString()).ToList() as T;
+            return (T)(result.Select(x => x.ToString()).ToList() as object);
         }
 
         return JsonSerializer.Deserialize<T>(json, DeserializationOptions);

@@ -405,7 +405,7 @@ public static class LoggerExtensions
     public static void LogOperation(
         this ILogger logger,
         OperationContext context,
-        Action action = default,
+        Action action,
         [CallerMemberName] string operationName = ""
     )
     {

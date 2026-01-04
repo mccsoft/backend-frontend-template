@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-  <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <noWarn>1591</noWarn>
     <Description>Contains classes to help with sending emails, and compiling email texts based on Razor templates.</Description>
@@ -17,4 +16,7 @@
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Logging\MccSoft.Logging\MccSoft.Logging.csproj" />
+  </ItemGroup>
 </Project>

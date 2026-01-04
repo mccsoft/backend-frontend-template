@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using MccSoft.TemplateApp.App.Settings;
 using MccSoft.WebApi.Patching;
 using MccSoft.WebApi.Serialization.FromQueryJson;
@@ -105,6 +106,24 @@ public static partial class SetupSwagger
                 {
                     s.Type = JsonObjectType.Object;
                     s.AdditionalPropertiesSchema = JsonSchema.CreateAnySchema();
+                }
+            )
+        );
+        options.SchemaSettings.TypeMappers.Add(
+            new PrimitiveTypeMapper(
+                typeof(JsonNode),
+                s =>
+                {
+                    s.Type = JsonObjectType.None;
+                }
+            )
+        );
+        options.SchemaSettings.TypeMappers.Add(
+            new PrimitiveTypeMapper(
+                typeof(JsonValue),
+                s =>
+                {
+                    s.Type = JsonObjectType.None;
                 }
             )
         );

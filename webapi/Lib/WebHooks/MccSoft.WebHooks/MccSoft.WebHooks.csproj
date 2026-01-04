@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <LangVersion>latest</LangVersion>
@@ -17,15 +16,4 @@
     <PackageReference Include="Polly.Core" />
     <PackageReference Include="Polly.Extensions" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="IWebHookSender.cs" />
-    <Compile Remove="WebHookSender.cs" />
-    <Compile Remove="Interceptors\IWebHookInterceptor.cs" />
-    <Compile Remove="Interceptors\WebHookInterceptor.cs" />
-    <Compile Remove="Processing\WebHookHostedService.cs" />
-    <Compile Remove="Processing\WebHookConfiguration.cs" />
-    <Compile Remove="Domain\WebHookAdditionalData.cs" />
-  </ItemGroup>
-
 </Project>
