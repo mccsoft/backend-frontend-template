@@ -27,4 +27,19 @@ public static class PatchHelper
 
         return patchRequest;
     }
+
+    /// <summary>
+    /// Calls <see cref="IPatchRequest.SetHasProperty"/> for all properties.
+    /// Useful in App Tests.
+    /// </summary>
+    public static T MarkAllPropertiesAsDefined<T>(this T patchRequest)
+        where T : IPatchRequest
+    {
+        foreach (var propertyInfo in patchRequest.GetType().GetProperties())
+        {
+            patchRequest.SetHasProperty(propertyInfo.Name);
+        }
+
+        return patchRequest;
+    }
 }

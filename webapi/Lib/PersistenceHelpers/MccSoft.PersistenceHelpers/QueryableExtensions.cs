@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MccSoft.DomainHelpers;
+using MccSoft.DomainHelpers.IdInterfaces;
 using MccSoft.LowLevelPrimitives.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,7 +42,7 @@ public static class QueryableExtensions
     public static async Task<T> GetOne<T>(
         this IQueryable<T> repository,
         Specification<T> spec,
-        string messageIfNotFound = null
+        string? messageIfNotFound = null
     )
         where T : class
     {
@@ -92,26 +93,137 @@ public static class QueryableExtensions
     }
 
     /// <summary>
-    /// Gets the single entity based on the specification.
+    /// Gets the single entity by id.
     /// Throws if the entity is not found.
     /// Throws if more than one entity satisfies the specification.
     /// </summary>
     /// <typeparam name="T">The entity type.</typeparam>
     /// <param name="repository">The entity repository.</param>
-    /// <param name="spec">The specification.</param>
+    /// <param name="id">id.</param>
     /// <param name="messageIfNotFound">
     /// An additional message to add to the exception in case if the requested entity
     /// is not found.
     /// </param>
-    /// <returns>The entity satisfying the specification.</returns>
     public static async Task<T> GetOneById<T>(
         this DbSet<T> repository,
-        object id,
-        string messageIfNotFound = null
+        int id,
+        string? messageIfNotFound = null
     )
-        where T : class
+        where T : class, IEntityWithIntKey
     {
         T entity = await repository.FindAsync(id);
+        if (entity != null)
+        {
+            return entity;
+        }
+
+        throw _createException(typeof(T), id.ToString(), messageIfNotFound);
+    }
+
+    /// <summary>
+    /// Gets the single entity by id.
+    /// Throws if the entity is not found.
+    /// Throws if more than one entity satisfies the specification.
+    /// </summary>
+    /// <typeparam name="T">The entity type.</typeparam>
+    /// <param name="repository">The entity repository.</param>
+    /// <param name="id">id.</param>
+    /// <param name="messageIfNotFound">
+    /// An additional message to add to the exception in case if the requested entity
+    /// is not found.
+    /// </param>
+    public static async Task<T> GetOneById<T>(
+        this DbSet<T> repository,
+        Guid id,
+        string? messageIfNotFound = null
+    )
+        where T : class, IEntityWithGuidKey
+    {
+        T entity = await repository.FindAsync(id);
+        if (entity != null)
+        {
+            return entity;
+        }
+
+        throw _createException(typeof(T), id.ToString(), messageIfNotFound);
+    }
+
+    /// <summary>
+    /// Gets the single entity by id.
+    /// Throws if the entity is not found.
+    /// Throws if more than one entity satisfies the specification.
+    /// </summary>
+    /// <typeparam name="T">The entity type.</typeparam>
+    /// <param name="repository">The entity repository.</param>
+    /// <param name="id">id.</param>
+    /// <param name="messageIfNotFound">
+    /// An additional message to add to the exception in case if the requested entity
+    /// is not found.
+    /// </param>
+    public static async Task<T> GetOneById<T>(
+        this IQueryable<T> repository,
+        Guid id,
+        string? messageIfNotFound = null
+    )
+        where T : class, IEntityWithGuidKey
+    {
+        T entity = await repository.FirstOrDefaultAsync(x => x.Id == id);
+        if (entity != null)
+        {
+            return entity;
+        }
+
+        throw _createException(typeof(T), id.ToString(), messageIfNotFound);
+    }
+
+    /// <summary>
+    /// Gets the single entity based on the id.
+    /// Throws if the entity is not found.
+    /// Throws if more than one entity has passed Id.
+    /// </summary>
+    /// <typeparam name="T">The entity type.</typeparam>
+    /// <param name="repository">The entity repository.</param>
+    /// <param name="id">The id.</param>
+    /// <param name="select">Select statement.</param>
+    /// <param name="messageIfNotFound">Message to add to exception if instance is not found</param>
+    /// <returns>The entity with id.</returns>
+    public static async Task<T2> GetOneById<T, T2>(
+        this IQueryable<T> repository,
+        int id,
+        Expression<Func<T, T2>> select,
+        string messageIfNotFound = null
+    )
+        where T : class, IEntityWithIntKey
+    {
+        T2 entity = await repository.Where(x => x.Id == id).Select(select).FirstOrDefaultAsync();
+        if (entity != null)
+        {
+            return entity;
+        }
+
+        throw _createException(typeof(T), id.ToString(), messageIfNotFound);
+    }
+
+    /// <summary>
+    /// Gets the single entity based on the id.
+    /// Throws if the entity is not found.
+    /// Throws if more than one entity has passed Id.
+    /// </summary>
+    /// <typeparam name="T">The entity type.</typeparam>
+    /// <param name="repository">The entity repository.</param>
+    /// <param name="id">The id.</param>
+    /// <param name="select">Select statement.</param>
+    /// <param name="messageIfNotFound">Message to add to exception if instance is not found</param>
+    /// <returns>The entity with id.</returns>
+    public static async Task<T2> GetOneById<T, T2>(
+        this IQueryable<T> repository,
+        Guid id,
+        Expression<Func<T, T2>> select,
+        string messageIfNotFound = null
+    )
+        where T : class, IEntityWithGuidKey
+    {
+        T2 entity = await repository.Where(x => x.Id == id).Select(select).FirstOrDefaultAsync();
         if (entity != null)
         {
             return entity;

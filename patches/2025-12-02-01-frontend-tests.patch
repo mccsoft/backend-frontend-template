@@ -1,0 +1,55 @@
+Subject: [PATCH] add frontend tests
+---
+Index: frontend/tests/vitest.setup.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/tests/vitest.setup.ts b/frontend/tests/vitest.setup.ts
+new file mode 100644
+--- /dev/null	(revision a086cc1d68d4774c0630b133299ba7e802b7fa13)
++++ b/frontend/tests/vitest.setup.ts	(revision a086cc1d68d4774c0630b133299ba7e802b7fa13)
+@@ -0,0 +1,24 @@
++import i18next from 'i18next';
++import en from '../public/dictionaries/translation.en.json';
++import { afterAll, beforeAll } from 'vitest';
++import { initializeLocalization } from 'application/localization/localization';
++import { defaultNS } from 'application/localization/locales';
++
++beforeAll(async () => {
++  await initializeLocalization();
++
++  await i18next.init({
++    lng: 'en',
++    fallbackLng: 'en',
++    resources: {
++      en: { [defaultNS]: en },
++    },
++    interpolation: {
++      escapeValue: false,
++    },
++  });
++});
++
++afterAll(() => {
++  // run some teardown code once after all tests
++});
+Index: frontend/vite.config.mts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/vite.config.mts b/frontend/vite.config.mts
+--- a/frontend/vite.config.mts	(revision a0c1dd573761e72f6039f348131b8d3674dd0ae3)
++++ b/frontend/vite.config.mts	(revision a086cc1d68d4774c0630b133299ba7e802b7fa13)
+@@ -104,6 +104,10 @@
+         },
+       },
+     },
++    test: {
++      environment: 'happy-dom',
++      setupFiles: ['./tests/vitest.setup.ts'], // Path to your setup file
++    },
+   };
+ });
+ 
