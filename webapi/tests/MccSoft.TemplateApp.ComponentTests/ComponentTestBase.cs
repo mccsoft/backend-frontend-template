@@ -65,6 +65,7 @@ public class ComponentTestBase : TestBase<TemplateAppDbContext>, IDisposable
             .ConfigureTestServices(services =>
             {
                 RegisterServices(services, null, null);
+                services.RegisterHangfireMock();
                 services.RemoveDbContextRegistration<TemplateAppDbContext>();
 
                 RegisterDbContext(services, connectionString);
@@ -119,7 +120,7 @@ public class ComponentTestBase : TestBase<TemplateAppDbContext>, IDisposable
             }
         )
         {
-            DisableEnsureCreated = true
+            DisableEnsureCreated = true,
         };
 
     /// <summary>

@@ -11,6 +11,13 @@ namespace MccSoft.Testing;
 
 public static class HangfireMock
 {
+    public static IServiceCollection RegisterHangfireMock(this IServiceCollection serviceCollection)
+    {
+        return serviceCollection.AddSingleton<IBackgroundJobClient>(s =>
+            s.CreateHangfireMock().Object
+        );
+    }
+
     /// <summary>
     /// Creates mock for IBackgroundJobClient that runs all fire-and-forget jobs synchronously
     /// (i.e. if you do
