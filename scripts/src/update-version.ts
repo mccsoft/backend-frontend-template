@@ -388,7 +388,7 @@ function updateFrom_1p7_to_1p8(
   fs.removeSync(`webapi/Lib/WebHooks/MccSoft.WebHooks/IWebHookSender.cs`);
   fs.removeSync(`webapi/Lib/WebHooks/MccSoft.WebHooks/WebHookSender.cs`);
   fs.removeSync(
-    `webapi/Lib/WebHooks/MccSoft.WebHooks/Interceptors/IWebHookInterceptors.cs`,
+    `webapi/Lib/WebHooks/MccSoft.WebHooks/Interceptors/IWebHookInterceptor.cs`,
   );
   fs.removeSync(
     `webapi/Lib/WebHooks/MccSoft.WebHooks/Interceptors/WebHookInterceptor.cs`,

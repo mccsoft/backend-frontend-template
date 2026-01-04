@@ -19,32 +19,6 @@ public static class RandomEx
     private static readonly Random _rnd = new Random(_seed);
 
     /// <summary>
-    /// Creates a copy of the specified list, where elements are shuffled in a random order.
-    /// </summary>
-    /// <remarks>
-    /// See https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
-    /// </remarks>
-    /// <typeparam name="T">The element type.</typeparam>
-    /// <param name="original">The original list.</param>
-    /// <returns>The shuffled list.</returns>
-    public static List<T> Shuffle<T>(List<T> original)
-    {
-        lock (_rnd)
-        {
-            List<T> list = original.ToList();
-            for (int i = 0; i < original.Count; i++)
-            {
-                int j = _rnd.Next(i);
-                T t = list[i];
-                list[i] = list[j];
-                list[j] = t;
-            }
-
-            return list;
-        }
-    }
-
-    /// <summary>
     /// Assigns random values to properties of types double?, int, DateTime, Enum, IList
     /// or of complex reference type of the specified object.
     /// </summary>
@@ -61,23 +35,22 @@ public static class RandomEx
             .Where(p => p.CanWrite)
             .ToArray();
 
-        var doublePropertyInfos = propertyInfos.Where(
-            p => p.PropertyType == typeof(double?) || p.PropertyType == typeof(double)
+        var doublePropertyInfos = propertyInfos.Where(p =>
+            p.PropertyType == typeof(double?) || p.PropertyType == typeof(double)
         );
-        var intPropertyInfos = propertyInfos.Where(
-            p => p.PropertyType == typeof(int) || p.PropertyType == typeof(int?)
+        var intPropertyInfos = propertyInfos.Where(p =>
+            p.PropertyType == typeof(int) || p.PropertyType == typeof(int?)
         );
-        var dateTimePropertyInfos = propertyInfos.Where(
-            p => p.PropertyType == typeof(DateTime) || p.PropertyType == typeof(DateTime?)
+        var dateTimePropertyInfos = propertyInfos.Where(p =>
+            p.PropertyType == typeof(DateTime) || p.PropertyType == typeof(DateTime?)
         );
 
         var timeSpanPropertyInfos = propertyInfos.Where(p => p.PropertyType == typeof(TimeSpan));
 
-        var objectPropertyInfos = propertyInfos.Where(
-            p =>
-                !p.PropertyType.IsValueType
-                && p.PropertyType != typeof(string)
-                && !typeof(ICollection).IsAssignableFrom(p.PropertyType)
+        var objectPropertyInfos = propertyInfos.Where(p =>
+            !p.PropertyType.IsValueType
+            && p.PropertyType != typeof(string)
+            && !typeof(ICollection).IsAssignableFrom(p.PropertyType)
         );
         var stringPropertyInfos = propertyInfos.Where(p => p.PropertyType == typeof(string));
         var enumPropertyInfos = propertyInfos.Where(p =>
@@ -86,8 +59,8 @@ public static class RandomEx
 
             return typeof(Enum).IsAssignableFrom(propertyType);
         });
-        var listPropertyInfos = propertyInfos.Where(
-            p => typeof(IList).IsAssignableFrom(p.PropertyType)
+        var listPropertyInfos = propertyInfos.Where(p =>
+            typeof(IList).IsAssignableFrom(p.PropertyType)
         );
         var boolPropertyInfos = propertyInfos.Where(p =>
         {
