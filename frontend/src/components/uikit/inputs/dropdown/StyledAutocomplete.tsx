@@ -59,6 +59,8 @@ export function StyledAutocomplete<
     InputComponent,
     renderInput,
     inputRef,
+    // we stop forwarding ref to Autocomplete, because it breaks with react-hook-form and MultiSelectDropDown (selected value becomes an empty string instead of array)
+    ref,
     ...rest
   } = {
     ...props,
