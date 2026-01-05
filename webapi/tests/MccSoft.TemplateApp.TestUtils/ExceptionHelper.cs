@@ -7,18 +7,20 @@ using AwesomeAssertions;
 using AwesomeAssertions.Specialized;
 using MccSoft.HttpClientExtension;
 using MccSoft.TemplateApp.Http.Generated;
+using MccSoft.WebApi.Serialization;
 
 namespace MccSoft.TemplateApp.TestUtils;
 
 public static class ExceptionHelper
 {
-    public static ExceptionAssertions<ApiException> WithDetail(
-        this ExceptionAssertions<ApiException> assertion,
+    public static async Task<ExceptionAssertions<ApiException>> WithDetail(
+        this Task<ExceptionAssertions<ApiException>> assertionTask,
         string expectedWildcardPattern,
         string because = "",
         params object[] becauseArgs
     )
     {
+        var assertion = await assertionTask;
         assertion
             .CurrentAssertionChain.BecauseOf(because, becauseArgs)
             .UsingLineBreaks.ForCondition(assertion.Subject.Any())
@@ -35,14 +37,15 @@ public static class ExceptionHelper
         return assertion;
     }
 
-    public static ExceptionAssertions<Exception> WithErrorForField(
-        this ExceptionAssertions<Exception> assertion,
+    public static async Task<ExceptionAssertions<Exception>> WithErrorForField(
+        this Task<ExceptionAssertions<Exception>> assertionTask,
         string fieldName,
         string error = "",
         string because = "",
         params object[] becauseArgs
     )
     {
+        var assertion = await assertionTask;
         assertion
             .CurrentAssertionChain.BecauseOf(because, becauseArgs)
             .UsingLineBreaks.ForCondition(assertion.Subject.Any())
@@ -75,14 +78,15 @@ public static class ExceptionHelper
         return assertion;
     }
 
-    public static ExceptionAssertions<ApiException> WithErrorForField(
-        this ExceptionAssertions<ApiException> assertion,
+    public static async Task<ExceptionAssertions<ApiException>> WithErrorForField(
+        this Task<ExceptionAssertions<ApiException>> assertionTask,
         string fieldName,
         string error = "",
         string because = "",
         params object[] becauseArgs
     )
     {
+        var assertion = await assertionTask;
         assertion
             .CurrentAssertionChain.BecauseOf(because, becauseArgs)
             .UsingLineBreaks.ForCondition(assertion.Subject.Any())
@@ -105,14 +109,15 @@ public static class ExceptionHelper
         return assertion;
     }
 
-    public static ExceptionAssertions<FailedRequestException> WithErrorForField(
-        this ExceptionAssertions<FailedRequestException> assertion,
+    public static async Task<ExceptionAssertions<FailedRequestException>> WithErrorForField(
+        this Task<ExceptionAssertions<FailedRequestException>> assertionTask,
         string fieldName,
         string error = "",
         string because = "",
         params object[] becauseArgs
     )
     {
+        var assertion = await assertionTask;
         assertion
             .CurrentAssertionChain.BecauseOf(because, becauseArgs)
             .UsingLineBreaks.ForCondition(assertion.Subject.Any())
@@ -121,7 +126,7 @@ public static class ExceptionHelper
             );
 
         var exception = assertion.Subject.First();
-        var validationProblemDetails = JsonSerializer.Deserialize<ValidationProblemDetails>(
+        var validationProblemDetails = DefaultJsonSerializer.Deserialize<ValidationProblemDetails>(
             exception.Content
         )!;
 
@@ -134,13 +139,14 @@ public static class ExceptionHelper
         return assertion;
     }
 
-    public static ExceptionAssertions<FailedRequestException> WithType(
-        this ExceptionAssertions<FailedRequestException> assertion,
+    public static async Task<ExceptionAssertions<FailedRequestException>> WithType(
+        this Task<ExceptionAssertions<FailedRequestException>> assertionTask,
         string type,
         string because = "",
         params object[] becauseArgs
     )
     {
+        var assertion = await assertionTask;
         assertion
             .CurrentAssertionChain.BecauseOf(because, becauseArgs)
             .UsingLineBreaks.ForCondition(assertion.Subject.Any())
@@ -149,19 +155,22 @@ public static class ExceptionHelper
             );
 
         var exception = assertion.Subject.First();
-        var errors = JsonSerializer.Deserialize<ValidationProblemDetails>(exception.Content)!;
+        var errors = DefaultJsonSerializer.Deserialize<ValidationProblemDetails>(
+            exception.Content
+        )!;
 
         errors.Type.Should().BeEquivalentTo(type);
 
         return assertion;
     }
 
-    public static ExceptionAssertions<ApiException> WithStatusCode404(
-        this ExceptionAssertions<ApiException> assertion,
+    public static async Task<ExceptionAssertions<ApiException>> WithStatusCode404(
+        this Task<ExceptionAssertions<ApiException>> assertionTask,
         string because = "",
         params object[] becauseArgs
     )
     {
+        var assertion = await assertionTask;
         assertion
             .CurrentAssertionChain.BecauseOf(because, becauseArgs)
             .UsingLineBreaks.ForCondition(assertion.Subject.Any())
@@ -170,18 +179,21 @@ public static class ExceptionHelper
         var exception = assertion.Subject.First() as ApiException;
         exception.StatusCode.Should().Be(404, because, becauseArgs);
 
-        var errors = JsonSerializer.Deserialize<ValidationProblemDetails>(exception.Response)!;
+        var errors = DefaultJsonSerializer.Deserialize<ValidationProblemDetails>(
+            exception.Response
+        )!;
         errors.Type.Should().BeEquivalentTo("urn:MccSoft.not-found");
 
         return assertion;
     }
 
-    public static ExceptionAssertions<ApiException> WithStatusCode403(
-        this ExceptionAssertions<ApiException> assertion,
+    public static async Task<ExceptionAssertions<ApiException>> WithStatusCode403(
+        this Task<ExceptionAssertions<ApiException>> assertionTask,
         string because = "",
         params object[] becauseArgs
     )
     {
+        var assertion = await assertionTask;
         assertion
             .CurrentAssertionChain.BecauseOf(because, becauseArgs)
             .UsingLineBreaks.ForCondition(assertion.Subject.Any())
@@ -189,6 +201,25 @@ public static class ExceptionHelper
 
         var exception = assertion.Subject.First() as ApiException;
         exception.StatusCode.Should().Be(403, because, becauseArgs);
+
+        return assertion;
+    }
+
+    public static async Task<ExceptionAssertions<ApiException>> WithStatusCode409(
+        this Task<ExceptionAssertions<ApiException>> assertionTask,
+        string because = "",
+        params object[] becauseArgs
+    )
+    {
+        var assertion = await assertionTask;
+
+        assertion
+            .CurrentAssertionChain.BecauseOf(because, becauseArgs)
+            .UsingLineBreaks.ForCondition(assertion.Subject.Any())
+            .FailWith("Expected ApiException exception {reason}, but no exception was thrown.");
+
+        var exception = assertion.Subject.First() as ApiException;
+        exception.StatusCode.Should().Be(409, because, becauseArgs);
 
         return assertion;
     }
