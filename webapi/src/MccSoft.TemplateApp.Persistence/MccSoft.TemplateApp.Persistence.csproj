@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-  <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Version>1.0.0</Version>
     <Description>
       Provides functionality to work with the database of the ServiceTemplate microservice.
@@ -32,18 +31,7 @@
     <ProjectReference Include="..\MccSoft.TemplateApp.Common\MccSoft.TemplateApp.Common.csproj" />
     <ProjectReference Include="..\MccSoft.TemplateApp.Domain\MccSoft.TemplateApp.Domain.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Migrations\20250506105023_EF9.cs" />
-    <Compile Remove="Migrations\20250506105023_EF9.Designer.cs" />
-    <Compile Remove="Migrations\20250506123722_Initial2.cs" />
-    <Compile Remove="Migrations\20250506123722_Initial2.Designer.cs" />
-    <Compile Remove="Migrations\20250506124130_Initial2.Designer.cs" />
-    <Compile Remove="Migrations\20250506124818_Initial3.Designer.cs" />
-    <Compile Remove="Migrations\20250506125057_Initial5.Designer.cs" />
-    <Compile Remove="Migrations\20250506125229_Initial5.Designer.cs" />
-    <Compile Remove="Migrations\20250506125744_Initial5.cs" />
-    <Compile Remove="Migrations\20250506125744_Initial5.Designer.cs" />
-  </ItemGroup>
+
   <ItemGroup>
     <Folder Include="Migrations\" />
   </ItemGroup>
