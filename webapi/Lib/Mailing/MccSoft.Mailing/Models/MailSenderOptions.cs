@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace MccSoft.Mailing.Models;
 
 /// <summary>
@@ -34,4 +36,15 @@ public class MailSenderOptions
     /// Text description of sender. E.g. 'MCC Soft' (in 'MCC Soft <info@mcc-soft.de>')
     /// </summary>
     public string FromName { get; set; }
+
+    /// <summary>
+    /// If `false` no emails are being sent
+    /// Defaults to `true`
+    /// </summary>
+    public bool? Enabled { get; set; }
+
+    /// <summary>
+    /// Ability to disable certain emails from being sent
+    /// </summary>
+    public Dictionary<string, bool> DisabledModels { get; set; }
 }

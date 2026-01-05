@@ -16,7 +16,7 @@ namespace MccSoft.Mailing;
 public class MailSender : IMailSender
 {
     private readonly ILogger _logger;
-    private readonly IOptions<MailSenderOptions> _options;
+    private readonly MailSenderOptions _options;
     private readonly MailSettings _mailSettings;
     private readonly IBackgroundJobClient _backgroundJobClient;
     private readonly IRazorRenderService _razorRenderService;
@@ -30,7 +30,7 @@ public class MailSender : IMailSender
     )
     {
         _razorRenderService = razorRenderService;
-        _options = options;
+        _options = options.Value;
         _mailSettings = mailSettings;
         _backgroundJobClient = backgroundJobClient;
         _logger = logger;
@@ -47,7 +47,23 @@ public class MailSender : IMailSender
             }
         );
 
-        model.SiteRootUrl = _options.Value.SiteUrl;
+        if (_options.Enabled == false)
+        {
+            _logger.LogInformation($"Sending email is disabled");
+        }
+
+        var sendingIsDisabled =
+            _options.DisabledModels != null
+            && _options.DisabledModels.TryGetValue(typeof(T).Name, out bool isDisabled)
+            && isDisabled;
+
+        if (sendingIsDisabled)
+        {
+            _logger.LogInformation($"Sending email for model: {model.GetType()} is disabled");
+            return;
+        }
+
+        model.SiteRootUrl = _options.SiteUrl;
         model.RecipientEmail = recipient;
 
         (string Subject, string Content) rendered = await RenderContentAndSubject(model);
@@ -104,7 +120,7 @@ public class MailSender : IMailSender
     {
         var message = new MimeMessage();
 
-        message.From.Add(new MailboxAddress(_options.Value.FromName, from ?? _options.Value.From));
+        message.From.Add(new MailboxAddress(_options.FromName, from ?? _options.From));
         message.To.Add(new MailboxAddress("", recipient));
 
         var bodyBuilder = new BodyBuilder();
@@ -152,14 +168,9 @@ public class MailSender : IMailSender
         );
 
         using var client = new SmtpClient();
-        var mailOptions = _options.Value;
-        await client.ConnectAsync(
-            mailOptions.Host,
-            mailOptions.Port,
-            mailOptions.IsSecureConnection
-        );
+        await client.ConnectAsync(_options.Host, _options.Port, _options.IsSecureConnection);
 
-        await client.AuthenticateAsync(mailOptions.Login, mailOptions.Password);
+        await client.AuthenticateAsync(_options.Login, _options.Password);
 
         await client.SendAsync(message);
         await client.DisconnectAsync(true);
