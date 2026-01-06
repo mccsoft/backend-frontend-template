@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AwesomeAssertions;
+using AwesomeAssertions.Execution;
 using AwesomeAssertions.Specialized;
 using MccSoft.HttpClientExtension;
 using MccSoft.TemplateApp.Http.Generated;
@@ -21,19 +22,24 @@ public static class ExceptionHelper
     )
     {
         var assertion = await assertionTask;
-        assertion
-            .CurrentAssertionChain.BecauseOf(because, becauseArgs)
+        var assertionChain = assertion.CurrentAssertionChain;
+        assertionChain
+            .BecauseOf(because, becauseArgs)
             .UsingLineBreaks.ForCondition(assertion.Subject.Any())
             .FailWith("Expected ApiException exception {reason}, but no exception was thrown.");
 
-        var exception = assertion.Subject.First();
-        var typedException = exception
-            .Should()
-            .BeOfType<ApiException<ValidationProblemDetails>>()
-            .Subject;
-        typedException
-            .Result.Detail.Should()
-            .MatchEquivalentOf(expectedWildcardPattern, because, becauseArgs);
+        assertionChain.PerformValidation(() =>
+        {
+            var exception = assertion.Subject.First();
+            var typedException = exception
+                .Should()
+                .BeOfType<ApiException<ValidationProblemDetails>>()
+                .Subject;
+            typedException
+                .Result.Detail.Should()
+                .MatchEquivalentOf(expectedWildcardPattern, because, becauseArgs);
+        });
+
         return assertion;
     }
 
@@ -46,34 +52,38 @@ public static class ExceptionHelper
     )
     {
         var assertion = await assertionTask;
-        assertion
-            .CurrentAssertionChain.BecauseOf(because, becauseArgs)
+        var assertionChain = assertion.CurrentAssertionChain;
+        assertionChain
+            .BecauseOf(because, becauseArgs)
             .UsingLineBreaks.ForCondition(assertion.Subject.Any())
             .FailWith(
                 "Expected FailedRequestException exception {reason}, but no exception was thrown."
             );
 
-        IDictionary<string, List<string>> errors;
-        var exception = assertion.Subject.First();
-        if (exception is ApiException<ValidationProblemDetails> apiException)
+        assertionChain.PerformValidation(() =>
         {
-            errors = apiException.Result.Errors.ToDictionary(x => x.Key, x => x.Value.ToList());
-        }
-        else
-        {
-            var serialized = JsonSerializer.SerializeToElement(exception);
-            var validationProblemDetails = serialized.Deserialize<ValidationProblemDetails>();
-            errors = validationProblemDetails.Errors.ToDictionary(
-                x => x.Key,
-                x => x.Value.ToList()
-            );
-        }
+            IDictionary<string, List<string>> errors;
+            var exception = assertion.Subject.First();
+            if (exception is ApiException<ValidationProblemDetails> apiException)
+            {
+                errors = apiException.Result.Errors.ToDictionary(x => x.Key, x => x.Value.ToList());
+            }
+            else
+            {
+                var serialized = JsonSerializer.SerializeToElement(exception);
+                var validationProblemDetails = serialized.Deserialize<ValidationProblemDetails>();
+                errors = validationProblemDetails.Errors.ToDictionary(
+                    x => x.Key,
+                    x => x.Value.ToList()
+                );
+            }
 
-        errors.Should().ContainKey(fieldName);
-        if (!string.IsNullOrEmpty(error))
-        {
-            errors[fieldName].Should().ContainEquivalentOf(error);
-        }
+            errors.Should().ContainKey(fieldName);
+            if (!string.IsNullOrEmpty(error))
+            {
+                errors[fieldName].Should().ContainMatch(error);
+            }
+        });
 
         return assertion;
     }
@@ -87,24 +97,28 @@ public static class ExceptionHelper
     )
     {
         var assertion = await assertionTask;
-        assertion
-            .CurrentAssertionChain.BecauseOf(because, becauseArgs)
+        var assertionChain = assertion.CurrentAssertionChain;
+        assertionChain
+            .BecauseOf(because, becauseArgs)
             .UsingLineBreaks.ForCondition(assertion.Subject.Any())
             .FailWith(
                 "Expected FailedRequestException exception {reason}, but no exception was thrown."
             );
 
-        var exception = assertion.Subject.First();
-        var apiException = exception
-            .Should()
-            .BeOfType<ApiException<ValidationProblemDetails>>()
-            .Subject;
-        ValidationProblemDetails validationProblemDetails = apiException.Result;
-        validationProblemDetails.Errors.Should().ContainKey(fieldName);
-        if (!string.IsNullOrEmpty(error))
+        assertionChain.PerformValidation(() =>
         {
-            validationProblemDetails.Errors[fieldName].Should().ContainEquivalentOf(error);
-        }
+            var exception = assertion.Subject.First();
+            var apiException = exception
+                .Should()
+                .BeOfType<ApiException<ValidationProblemDetails>>()
+                .Subject;
+            ValidationProblemDetails validationProblemDetails = apiException.Result;
+            validationProblemDetails.Errors.Should().ContainKey(fieldName);
+            if (!string.IsNullOrEmpty(error))
+            {
+                validationProblemDetails.Errors[fieldName].Should().ContainMatch(error);
+            }
+        });
 
         return assertion;
     }
@@ -118,23 +132,27 @@ public static class ExceptionHelper
     )
     {
         var assertion = await assertionTask;
-        assertion
-            .CurrentAssertionChain.BecauseOf(because, becauseArgs)
+        var assertionChain = assertion.CurrentAssertionChain;
+        assertionChain
+            .BecauseOf(because, becauseArgs)
             .UsingLineBreaks.ForCondition(assertion.Subject.Any())
             .FailWith(
                 "Expected FailedRequestException exception {reason}, but no exception was thrown."
             );
 
-        var exception = assertion.Subject.First();
-        var validationProblemDetails = DefaultJsonSerializer.Deserialize<ValidationProblemDetails>(
-            exception.Content
-        )!;
-
-        validationProblemDetails.Errors.Should().ContainKey(fieldName);
-        if (!string.IsNullOrEmpty(error))
+        assertionChain.PerformValidation(() =>
         {
-            validationProblemDetails.Errors[fieldName].Should().ContainEquivalentOf(error);
-        }
+            var exception = assertion.Which;
+            var validationProblemDetails =
+                DefaultJsonSerializer.Deserialize<ValidationProblemDetails>(exception.Content)!;
+
+            validationProblemDetails.Errors.Should().ContainKey(fieldName);
+            if (!string.IsNullOrEmpty(error))
+            {
+                var fieldErrors = validationProblemDetails.Errors[fieldName];
+                fieldErrors.Should().ContainMatch(error);
+            }
+        });
 
         return assertion;
     }
@@ -147,19 +165,23 @@ public static class ExceptionHelper
     )
     {
         var assertion = await assertionTask;
-        assertion
-            .CurrentAssertionChain.BecauseOf(because, becauseArgs)
+        var assertionChain = assertion.CurrentAssertionChain;
+        assertionChain
+            .BecauseOf(because, becauseArgs)
             .UsingLineBreaks.ForCondition(assertion.Subject.Any())
             .FailWith(
                 "Expected FailedRequestException exception {reason}, but no exception was thrown."
             );
 
-        var exception = assertion.Subject.First();
-        var errors = DefaultJsonSerializer.Deserialize<ValidationProblemDetails>(
-            exception.Content
-        )!;
+        assertionChain.PerformValidation(() =>
+        {
+            var exception = assertion.Subject.First();
+            var errors = DefaultJsonSerializer.Deserialize<ValidationProblemDetails>(
+                exception.Content
+            )!;
 
-        errors.Type.Should().BeEquivalentTo(type);
+            errors.Type.Should().BeEquivalentTo(type);
+        });
 
         return assertion;
     }
@@ -171,19 +193,22 @@ public static class ExceptionHelper
     )
     {
         var assertion = await assertionTask;
-        assertion
-            .CurrentAssertionChain.BecauseOf(because, becauseArgs)
+        var assertionChain = assertion.CurrentAssertionChain;
+        assertionChain
+            .BecauseOf(because, becauseArgs)
             .UsingLineBreaks.ForCondition(assertion.Subject.Any())
             .FailWith("Expected ApiException exception {reason}, but no exception was thrown.");
 
-        var exception = assertion.Subject.First() as ApiException;
-        exception.StatusCode.Should().Be(404, because, becauseArgs);
+        assertionChain.PerformValidation(() =>
+        {
+            var exception = assertion.Subject.First() as ApiException;
+            exception.StatusCode.Should().Be(404, because, becauseArgs);
 
-        var errors = DefaultJsonSerializer.Deserialize<ValidationProblemDetails>(
-            exception.Response
-        )!;
-        errors.Type.Should().BeEquivalentTo("urn:MccSoft.not-found");
-
+            var errors = DefaultJsonSerializer.Deserialize<ValidationProblemDetails>(
+                exception.Response
+            )!;
+            errors.Type.Should().BeEquivalentTo("urn:lmt:not-found");
+        });
         return assertion;
     }
 
@@ -194,14 +219,17 @@ public static class ExceptionHelper
     )
     {
         var assertion = await assertionTask;
-        assertion
-            .CurrentAssertionChain.BecauseOf(because, becauseArgs)
+        var assertionChain = assertion.CurrentAssertionChain;
+        assertionChain
+            .BecauseOf(because, becauseArgs)
             .UsingLineBreaks.ForCondition(assertion.Subject.Any())
             .FailWith("Expected ApiException exception {reason}, but no exception was thrown.");
 
-        var exception = assertion.Subject.First() as ApiException;
-        exception.StatusCode.Should().Be(403, because, becauseArgs);
-
+        assertionChain.PerformValidation(() =>
+        {
+            var exception = assertion.Subject.First() as ApiException;
+            exception.StatusCode.Should().Be(403, because, becauseArgs);
+        });
         return assertion;
     }
 
@@ -212,14 +240,17 @@ public static class ExceptionHelper
     )
     {
         var assertion = await assertionTask;
-
-        assertion
-            .CurrentAssertionChain.BecauseOf(because, becauseArgs)
+        var assertionChain = assertion.CurrentAssertionChain;
+        assertionChain
+            .BecauseOf(because, becauseArgs)
             .UsingLineBreaks.ForCondition(assertion.Subject.Any())
             .FailWith("Expected ApiException exception {reason}, but no exception was thrown.");
 
-        var exception = assertion.Subject.First() as ApiException;
-        exception.StatusCode.Should().Be(409, because, becauseArgs);
+        assertionChain.PerformValidation(() =>
+        {
+            var exception = assertion.Subject.First();
+            exception.StatusCode.Should().Be(409, because, becauseArgs);
+        });
 
         return assertion;
     }
@@ -233,5 +264,23 @@ public static class ExceptionHelper
         return assertion
             .ThrowExactlyAsync<ApiException>(because, becauseArgs)
             .WithMessage("*Status: 403*", because, becauseArgs);
+    }
+
+    public static string EscapePlaceholders(this string value) =>
+        value
+            .Replace("{", "{{", StringComparison.Ordinal)
+            .Replace("}", "}}", StringComparison.Ordinal);
+
+    public static void PerformValidation(this AssertionChain assertionChain, Action validation)
+    {
+        List<string> errors;
+        using (var scope = new AssertionScope())
+        {
+            validation();
+
+            errors = scope.Discard().ToList();
+        }
+
+        errors.ForEach(error => assertionChain.FailWith(error.EscapePlaceholders()));
     }
 }
