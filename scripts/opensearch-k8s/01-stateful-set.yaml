@@ -37,6 +37,8 @@ spec:
               value: '-Xms512m -Xmx512m'
             - name: plugins.security.disabled
               value: 'false'
+            - name: plugins.security.ssl.http.enabled
+              value: 'false'
             - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
               value: 'mLxz2RCqZ6FLtFwhcVZn'
           resources:

@@ -23,7 +23,7 @@ spec:
             - name: OPENSEARCH_HOSTS
               value: '["http://opensearch:9200"]'
             - name: DISABLE_SECURITY_DASHBOARDS_PLUGIN
-              value: 'true'
+              value: 'false'
           resources:
             requests:
               cpu: '200m'
