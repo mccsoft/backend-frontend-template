@@ -129,6 +129,7 @@ public static class WebHookRegistration
         services.AddTransient<IWebHookEventPublisher, WebHookEventPublisher<TSub>>();
         services.AddTransient<WebHookProcessor<TSub>>();
         services.AddSingleton<IWebHookSignatureService<TSub>, WebHookHMACSignatureService<TSub>>();
+        services.AddSingleton<WebHookDeliveryJobFailureAttribute>();
         services.AddSingleton<
             IWebHookDeliveryJobFailureFilter,
             WebHookDeliveryJobFailureFilter<TSub>
