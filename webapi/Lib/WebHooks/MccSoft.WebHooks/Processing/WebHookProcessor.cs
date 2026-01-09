@@ -20,7 +20,7 @@ public class WebHookProcessor<TSub>
     private readonly DbContext _dbContext;
     private readonly ILogger<WebHookEventPublisher<TSub>> _logger;
     private readonly ResiliencePipelineProvider<string> _pipelineProvider;
-    private readonly IWebHookInterceptors<TSub> _webHookInterceptors;
+    private readonly WebHookInterceptorAggregator<TSub> _webHookInterceptorAggregator;
     private readonly IWebHookOptionBuilder<TSub> _configuration;
     private readonly IWebHookSignatureService<TSub> _webHookSignatureService;
 
@@ -28,7 +28,7 @@ public class WebHookProcessor<TSub>
         IServiceProvider serviceProvider,
         ResiliencePipelineProvider<string> pipelineProvider,
         ILogger<WebHookEventPublisher<TSub>> logger,
-        IWebHookInterceptors<TSub> webHookInterceptors,
+        WebHookInterceptorAggregator<TSub> webHookInterceptorAggregator,
         IWebHookOptionBuilder<TSub> configuration,
         IWebHookSignatureService<TSub> webHookSignatureService
     )
@@ -41,7 +41,7 @@ public class WebHookProcessor<TSub>
         _dbContext = (DbContext)
             serviceProvider.GetRequiredService(WebHookRegistration.DbContextType);
 
-        _webHookInterceptors = webHookInterceptors;
+        _webHookInterceptorAggregator = webHookInterceptorAggregator;
         _pipelineProvider = pipelineProvider;
         _logger = logger;
         _pipelineProvider = pipelineProvider;
@@ -63,7 +63,7 @@ public class WebHookProcessor<TSub>
         webHook.ResetAttempts();
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        _webHookInterceptors.BeforeExecution?.Invoke(webHook);
+        _webHookInterceptorAggregator.BeforeExecution(webHook);
 
         if (webHook.AttemptsPerformed <= _configuration.ResilienceOptions.MaxRetryAttempts)
         {
@@ -74,7 +74,7 @@ public class WebHookProcessor<TSub>
             await ProcessWebHook(webHook, cancellationToken);
         }
 
-        _webHookInterceptors.ExecutionSucceeded?.Invoke(webHook);
+        _webHookInterceptorAggregator.ExecutionSucceeded(webHook);
     }
 
     public async Task TryToProcessWithPolly(

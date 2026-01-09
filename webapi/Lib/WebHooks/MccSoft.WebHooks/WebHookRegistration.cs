@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
-using Hangfire;
 using MccSoft.WebHooks.Configuration;
 using MccSoft.WebHooks.Domain;
+using MccSoft.WebHooks.Interceptors;
 using MccSoft.WebHooks.Manager;
 using MccSoft.WebHooks.Processing;
 using MccSoft.WebHooks.Publisher;
@@ -88,9 +88,28 @@ public static class WebHookRegistration
         ValidateConfiguration(configuration);
         RegisterServices(serviceCollection, configuration);
         ConfigurePolly(serviceCollection, configuration);
-        ConfigureHangfire(serviceCollection, configuration);
+        ConfigureHangfire(configuration);
+        ConfigureInterceptors(serviceCollection, configuration);
 
         return serviceCollection;
+    }
+
+    private static void ConfigureInterceptors<TSub>(
+        IServiceCollection services,
+        WebHookOptionBuilder<TSub> configuration
+    )
+        where TSub : WebHookSubscription
+    {
+        services.AddHostedService<WebHookInitializationHostedService>();
+
+        foreach (var interceptorType in configuration.Interceptors)
+        {
+            services.AddKeyedTransient(
+                typeof(IWebHookInterceptor<TSub>),
+                interceptorType.Name,
+                interceptorType
+            );
+        }
     }
 
     private static void RegisterServices<TSub>(
@@ -101,13 +120,19 @@ public static class WebHookRegistration
     {
         services.AddSingleton<IWebHookOptionBuilder<TSub>>(configuration);
 
-        if (configuration.WebHookInterceptors is { })
-            services.AddSingleton(configuration.WebHookInterceptors);
-
+        services.AddTransient<WebHookInterceptorAggregator<TSub>>();
+        services.AddTransient<
+            IAfterAllAttemptsFailedInterceptor,
+            WebHookInterceptorAggregator<TSub>
+        >();
         services.AddTransient<IWebHookManager<TSub>, WebHookManager<TSub>>();
         services.AddTransient<IWebHookEventPublisher, WebHookEventPublisher<TSub>>();
         services.AddTransient<WebHookProcessor<TSub>>();
         services.AddSingleton<IWebHookSignatureService<TSub>, WebHookHMACSignatureService<TSub>>();
+        services.AddSingleton<
+            IWebHookDeliveryJobFailureFilter,
+            WebHookDeliveryJobFailureFilter<TSub>
+        >();
     }
 
     private static void ConfigurePolly<TSub>(
@@ -135,13 +160,9 @@ public static class WebHookRegistration
         );
     }
 
-    private static void ConfigureHangfire<TSub>(
-        IServiceCollection services,
-        WebHookOptionBuilder<TSub> configuration
-    )
+    private static void ConfigureHangfire<TSub>(WebHookOptionBuilder<TSub> configuration)
         where TSub : WebHookSubscription
     {
-        GlobalJobFilters.Filters.Add(new WebHookDeliveryJobFailureFilter<TSub>(services));
         CustomRetryAttribute.SetDelayIntervals(configuration.HangfireDelayInMinutes);
     }
 

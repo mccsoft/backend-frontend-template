@@ -14,8 +14,9 @@ public interface IWebHookOptionBuilder<TSub>
     /// <summary>Polly retry and timeout options.</summary>
     ResiliencePipelineOptions ResilienceOptions { get; set; }
 
-    /// <summary>Custom logic for webhook lifecycle (e.g., logging, filtering).</summary>
-    IWebHookInterceptors<TSub>? WebHookInterceptors { get; set; }
+    /// <summary>Ability to add custom logic for webhook lifecycle (e.g., logging, filtering).</summary>
+    IWebHookOptionBuilder<TSub> AddInterceptor<TInterceptor>()
+        where TInterceptor : IWebHookInterceptor<TSub>;
 
     /// <summary>Delays for Hangfire job retries (in minutes).</summary>
     IEnumerable<int> HangfireDelayInMinutes { get; set; }

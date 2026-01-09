@@ -2,43 +2,32 @@ using System;
 using System.Linq;
 using Hangfire.States;
 using Hangfire.Storage;
-using MccSoft.WebHooks;
 using MccSoft.WebHooks.Domain;
 using MccSoft.WebHooks.Interceptors;
-using MccSoft.WebHooks.Processing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-public class WebHookDeliveryJobFailureFilter<TSub> : IApplyStateFilter
+namespace MccSoft.WebHooks.Processing;
+
+public class WebHookDeliveryJobFailureFilter<TSub> : IWebHookDeliveryJobFailureFilter
     where TSub : WebHookSubscription
 {
-    private readonly IWebHookInterceptors<TSub> _webHookInterceptors;
-    private readonly IServiceCollection _serviceCollection;
+    private readonly IServiceProvider _serviceProvider;
 
-    public WebHookDeliveryJobFailureFilter(IServiceCollection serviceCollection)
+    public WebHookDeliveryJobFailureFilter(IServiceProvider serviceProvider)
     {
-        _serviceCollection = serviceCollection;
-        var serviceProvider = serviceCollection.BuildServiceProvider();
-        _webHookInterceptors = serviceProvider.GetRequiredService<IWebHookInterceptors<TSub>>();
+        _serviceProvider = serviceProvider;
     }
 
     public void OnStateApplied(ApplyStateContext context, IWriteOnlyTransaction transaction)
     {
-        string methodName = context.BackgroundJob.Job.Method.Name;
-        if (methodName == nameof(WebHookProcessor<TSub>.RunWebHookDeliveryJob))
+        if (context.NewState is DeletedState failedState)
         {
-            if (context.NewState is DeletedState failedState)
-            {
-                var webHookId =
-                    (int?)context.BackgroundJob.Job.Args[0]
-                    ?? throw new ArgumentNullException(
-                        $"Background job argument is not a webhook id"
-                    );
+            var webHookId =
+                (int?)context.BackgroundJob.Job.Args[0]
+                ?? throw new ArgumentNullException($"Background job argument is not a webhook id");
 
-                MarkWebhookAsFinished(webHookId);
-
-                _webHookInterceptors.AfterAllAttemptsFailed?.Invoke(webHookId);
-            }
+            MarkWebhookAsFinished(webHookId);
         }
     }
 
@@ -46,19 +35,21 @@ public class WebHookDeliveryJobFailureFilter<TSub> : IApplyStateFilter
 
     private void MarkWebhookAsFinished(int webHookId)
     {
-        var serviceProvider = _serviceCollection.BuildServiceProvider();
-
         if (WebHookRegistration.DbContextType == null)
             throw new ArgumentNullException(
                 $"WebHookRegistration.DbContextType wasn't initialized. Did you call builder.AddWebHookEntities() from DbContext OnModelCreating?"
             );
-        var _dbContext = (DbContext)
-            serviceProvider.GetRequiredService(WebHookRegistration.DbContextType);
+        var dbContext = (DbContext)
+            _serviceProvider.GetRequiredService(WebHookRegistration.DbContextType);
 
-        var webHook = _dbContext.WebHooks<TSub>().First(x => x.Id == webHookId);
+        var webHook = dbContext.WebHooks<TSub>().First(x => x.Id == webHookId);
         webHook.FinishAttempts();
 
-        _dbContext.Update(webHook);
-        _dbContext.SaveChanges();
+        dbContext.Update(webHook);
+        dbContext.SaveChanges();
+
+        var afterAllAttemptsFailedInterceptor =
+            _serviceProvider.GetRequiredService<IAfterAllAttemptsFailedInterceptor>();
+        afterAllAttemptsFailedInterceptor.AfterAllAttemptsFailed(webHookId);
     }
 }

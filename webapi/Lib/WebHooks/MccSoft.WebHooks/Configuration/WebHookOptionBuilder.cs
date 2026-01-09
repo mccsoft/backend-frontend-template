@@ -21,9 +21,15 @@ public class WebHookOptionBuilder<TSub> : IWebHookOptionBuilder<TSub>
             Timeout = TimeSpan.FromSeconds(30),
         };
 
+    public List<Type> Interceptors { get; init; } = new List<Type>();
+
     /// <inheritdoc />
-    public IWebHookInterceptors<TSub>? WebHookInterceptors { get; set; } =
-        new WebHookInterceptors<TSub>();
+    public IWebHookOptionBuilder<TSub> AddInterceptor<TInterceptor>()
+        where TInterceptor : IWebHookInterceptor<TSub>
+    {
+        Interceptors.Add(typeof(TInterceptor));
+        return this;
+    }
 
     /// <inheritdoc />
     public IEnumerable<int> HangfireDelayInMinutes { get; set; } = [60];

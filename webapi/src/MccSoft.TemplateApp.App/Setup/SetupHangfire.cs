@@ -17,19 +17,20 @@ public static partial class SetupHangfire
         if (configuration.GetSection("Hangfire").GetValue<bool>("Disable"))
             return;
 
-        services.AddHangfire(config =>
-            config
-                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                .UseSimpleAssemblyNameTypeSerializer()
-                .UseRecommendedSerializerSettings()
-                .UsePostgreSqlStorage(
-                    connectionString,
-                    new PostgreSqlStorageOptions()
-                    {
-                        DistributedLockTimeout = TimeSpan.FromSeconds(20),
-                        PrepareSchemaIfNecessary = true,
-                    }
-                )
+        services.AddHangfire(
+            (provider, config) =>
+                config
+                    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                    .UseSimpleAssemblyNameTypeSerializer()
+                    .UseRecommendedSerializerSettings()
+                    .UsePostgreSqlStorage(
+                        connectionString,
+                        new PostgreSqlStorageOptions()
+                        {
+                            DistributedLockTimeout = TimeSpan.FromSeconds(20),
+                            PrepareSchemaIfNecessary = true,
+                        }
+                    )
         );
         services.AddHangfireServer(options =>
         {
