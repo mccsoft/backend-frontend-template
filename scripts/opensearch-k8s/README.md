@@ -20,27 +20,28 @@ This is a small instruction how to run Opensearch in kubernetes
 
    1. Open Security tab -> Roles
    1. Create Role with parameters:
-      - Name: writing-logs-app
-      - Cluster permissions: cluster_manage_index_templates
+      - Name: templateapp-dev-write
+      - Cluster permissions: cluster_manage_index_templates, cluster_monitor
       - Index: \*
       - Index permissions: indices_all
       - Tenant permissions: YOUR_TENANT_NAME
    1. Go to internal users tab and create a user for writing log from your service
 
-   - Username: templateapp
+   - Username: templateapp-dev
    - Password
-   - Backend-roles: writing-logs-app
+   - Backend-roles: templateapp-dev-write
 
-   1. Go back to Security tab -> Roles, find created role `writing-logs-app`. Open tab `Mapped users` and add mapping to created user `templateapp`.
+   1. Go back to Security tab -> Roles, find created role `templateapp-dev-write`. Open tab `Mapped users` and add mapping to created user `templateapp`.
 
 1. Add created user to your backend service appsettings
 1. Optionally add a user for reading logs (similar to the above)
 1. Send some logs from your app
 1. Add your logs to Discover
+   1. Make sure you switched to your tenant in Dashboard
    1. Go to Stack Management -> Index Patterns
-   2. Hit 'Create Index pattern'
-   3. Define a pattern like `templateapp-*`
-   4. It's recommended to setup Default fields for your tenant to be `message`:
+   1. Hit 'Create Index pattern'
+   1. Define a pattern like `templateapp-*`
+   1. It's recommended to setup Default fields for your tenant to be `message`:
       1. Go to Stack Management -> Advanced Settings
       2. Find `Default columns` field
       3. Change the value to `message`

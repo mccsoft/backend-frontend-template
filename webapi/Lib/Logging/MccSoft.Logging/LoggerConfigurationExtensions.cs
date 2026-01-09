@@ -25,7 +25,8 @@ public static class LoggerConfigurationExtensions
     {
         if (!hostingEnvironment.IsEnvironment("Test"))
         {
-            var excludePaths = app.ApplicationServices.GetRequiredService<IConfiguration>()
+            var excludePaths = app
+                .ApplicationServices.GetRequiredService<IConfiguration>()
                 .GetSection(SerilogRequestLoggingOptions.Position)
                 .Get<SerilogRequestLoggingOptions>()
                 ?.ExcludePaths;
@@ -107,7 +108,6 @@ public static class LoggerConfigurationExtensions
         loggerConfiguration.WriteToElasticSearch(configuration);
         if (configuration.GetValue<bool>("Serilog:EnableFileOutput"))
             loggerConfiguration.WriteToFile(fileLogDirectory);
-        loggerConfiguration.WriteToLoggly(configuration);
 
         if (
             hostingEnvironment.IsDevelopment()
@@ -121,8 +121,8 @@ public static class LoggerConfigurationExtensions
         {
             // On a stage we write only errors and warnings to the console to quickly see problems when doing
             // `docker service logs service_name`.
-            loggerConfiguration.WriteTo.Logger(
-                lc => lc.MinimumLevel.Warning().WriteTo.Console(formatProvider: GetFormatProvider())
+            loggerConfiguration.WriteTo.Logger(lc =>
+                lc.MinimumLevel.Warning().WriteTo.Console(formatProvider: GetFormatProvider())
             );
         }
     }
@@ -132,48 +132,16 @@ public static class LoggerConfigurationExtensions
         string fileLogDirectory
     )
     {
-        loggerConfiguration.WriteTo.Logger(
-            lc =>
-                lc.ExcludeEfInformation()
-                    .WriteTo.File(
-                        new CompactJsonFormatter(),
-                        $"{fileLogDirectory.TrimEnd('/')}/TemplateApp.txt",
-                        rollingInterval: RollingInterval.Day,
-                        fileSizeLimitBytes: 100 * 1000 * 1000,
-                        rollOnFileSizeLimit: true
-                    )
+        loggerConfiguration.WriteTo.Logger(lc =>
+            lc.ExcludeEfInformation()
+                .WriteTo.File(
+                    new CompactJsonFormatter(),
+                    $"{fileLogDirectory.TrimEnd('/')}/TemplateApp.txt",
+                    rollingInterval: RollingInterval.Day,
+                    fileSizeLimitBytes: 100 * 1000 * 1000,
+                    rollOnFileSizeLimit: true
+                )
         );
-    }
-
-    private static void WriteToLoggly(
-        this LoggerConfiguration loggerConfiguration,
-        IConfiguration configuration
-    )
-    {
-        LogglyOptions logglyOption =
-            configuration.GetSection("Serilog:Loggly").Get<LogglyOptions>()
-            ?? configuration.GetSection("Serilog:Remote").Get<LogglyOptions>();
-
-        // If the stage is not local development stage - push logs to Elasticsearch and loggly token is present.
-        if (
-            !string.IsNullOrEmpty(logglyOption?.Server) && !string.IsNullOrEmpty(logglyOption.Token)
-        )
-        {
-            loggerConfiguration.WriteTo.Logger(
-                lc =>
-                    lc.ExcludeEfInformation()
-                        .WriteTo.Loggly(
-                            formatProvider: GetFormatProvider(),
-                            logglyConfig: new LogglyConfiguration()
-                            {
-                                CustomerToken = logglyOption.Token,
-                                ApplicationName = logglyOption.InstanceName,
-                                EndpointPort = logglyOption.Port,
-                                EndpointHostName = logglyOption.Server,
-                            }
-                        )
-            );
-        }
     }
 
     private static void WriteToSentry(
@@ -184,17 +152,16 @@ public static class LoggerConfigurationExtensions
         string sentryDsn = configuration.GetValue<string>("Sentry:Dsn");
         if (!string.IsNullOrEmpty(sentryDsn))
         {
-            loggerConfiguration.WriteTo.Logger(
-                lc =>
-                    lc.ExcludeValidationErrors()
-                        .WriteTo.Sentry(s =>
-                        {
-                            s.MinimumBreadcrumbLevel = LogEventLevel.Debug;
-                            s.MinimumEventLevel = LogEventLevel.Error;
-                            s.Dsn = sentryDsn;
-                            s.AttachStacktrace = true;
-                            s.Environment = configuration.GetValue<string>("General:SiteUrl");
-                        })
+            loggerConfiguration.WriteTo.Logger(lc =>
+                lc.ExcludeValidationErrors()
+                    .WriteTo.Sentry(s =>
+                    {
+                        s.MinimumBreadcrumbLevel = LogEventLevel.Debug;
+                        s.MinimumEventLevel = LogEventLevel.Error;
+                        s.Dsn = sentryDsn;
+                        s.AttachStacktrace = true;
+                        s.Environment = configuration.GetValue<string>("General:SiteUrl");
+                    })
             );
         }
     }
@@ -204,10 +171,9 @@ public static class LoggerConfigurationExtensions
     )
     {
         // EF logs are too noisy even on Information level.
-        return loggerConfiguration.Filter.ByExcluding(
-            le =>
-                le.Level == LogEventLevel.Information
-                && Matching.FromSource("Microsoft.EntityFrameworkCore")(le)
+        return loggerConfiguration.Filter.ByExcluding(le =>
+            le.Level == LogEventLevel.Information
+            && Matching.FromSource("Microsoft.EntityFrameworkCore")(le)
         );
     }
 
@@ -215,8 +181,8 @@ public static class LoggerConfigurationExtensions
         this LoggerConfiguration loggerConfiguration
     )
     {
-        return loggerConfiguration.Filter.ByExcluding(
-            le => le.Exception is ValidationException || le.Exception is INoSentryException
+        return loggerConfiguration.Filter.ByExcluding(le =>
+            le.Exception is ValidationException || le.Exception is INoSentryException
         );
     }
 
@@ -227,7 +193,7 @@ public static class LoggerConfigurationExtensions
         isoCulture.DateTimeFormat = new DateTimeFormatInfo
         {
             ShortDatePattern = "yyyy-MM-dd",
-            LongTimePattern = "HH:mm:ss"
+            LongTimePattern = "HH:mm:ss",
         };
         return isoCulture;
     }
