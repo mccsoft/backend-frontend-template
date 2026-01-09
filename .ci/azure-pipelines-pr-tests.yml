@@ -10,6 +10,11 @@
 # - ./_settings/pr.yml
 # - ./_settings/pr.partial.yml --or change here
 trigger: none
+pr:
+  branches:
+    include:
+      - '*' # Trigger on PRs targeting any branch
+
 parameters:
   - name: sb_test_shards
     type: number
