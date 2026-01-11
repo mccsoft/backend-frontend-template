@@ -6,7 +6,9 @@ using MccSoft.WebApi.SignedUrl;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
+using OpenIddict.Server;
 using OpenIddict.Validation.AspNetCore;
 using Shaddix.OpenIddict.ExternalAuthentication.Cookies;
 using Shaddix.OpenIddict.ExternalAuthentication.Infrastructure;
@@ -68,6 +70,7 @@ public static partial class SetupAuth
             options.ClaimsIdentity.EmailClaimType = OpenIddictConstants.Claims.Email;
         });
         string siteUrl = configuration.GetSection("General").GetValue<string>("SiteUrl");
+        ValidateOpenIdDictCertificates(builder);
 
         services
             .AddOpenIddict()
@@ -131,6 +134,50 @@ public static partial class SetupAuth
         // This will make it easier to pull changes from Template when Template is updated
         // (actually this file will be overwritten by a file from template, which will make your changes disappear)
         AddProjectSpecifics(builder);
+    }
+
+    private static void ValidateOpenIdDictCertificates(WebApplicationBuilder builder)
+    {
+        if (builder.Environment.IsProduction())
+        {
+            builder
+                .Services.AddOptions<OpenIddictServerOptions>()
+                .Validate(
+                    options =>
+                    {
+                        if (
+                            options.EncryptionCredentials.Any(x =>
+                                (x.Key as X509SecurityKey)?.Certificate.FriendlyName
+                                == "OpenIddict Server Development Signing Certificate"
+                            )
+                        )
+                        {
+                            return false;
+                        }
+
+                        return true;
+                    },
+                    "Development Certificate isn't allowed in Production (OpenIdDict EncryptionCredentials)"
+                );
+            builder
+                .Services.AddOptions<OpenIddictServerOptions>()
+                .Validate(
+                    options =>
+                    {
+                        if (
+                            options.SigningCredentials.Any(x =>
+                                (x.Key as X509SecurityKey)?.Certificate.FriendlyName
+                                == "OpenIddict Server Development Signing Certificate"
+                            )
+                        )
+                        {
+                            return false;
+                        }
+                        return true;
+                    },
+                    "Development Certificate isn't allowed in Production (OpenIdDict SigningCredentials)"
+                );
+        }
     }
 
     static partial void ConfigureOpenIdDict(
