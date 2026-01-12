@@ -38,7 +38,7 @@ This is a small instruction how to run Opensearch in kubernetes
 1. Send some logs from your app
 1. Add your logs to Discover
    1. Make sure you switched to your tenant in Dashboard
-   1. Go to Stack Management -> Index Patterns
+   1. Go to Stack Management -> [Index Patterns](https://logs.mcc-soft.de/app/management/opensearch-dashboards/indexPatterns)
    1. Hit 'Create Index pattern'
    1. Define a pattern like `templateapp-*`
    1. It's recommended to setup Default fields for your tenant to be `message`:

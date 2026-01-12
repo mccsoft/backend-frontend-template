@@ -12,9 +12,9 @@
     <PackageVersion Include="App.Metrics.Formatters.Prometheus" Version="4.3.0-preview.0.34" />
     <PackageVersion Include="App.Metrics.Health.Checks.Process" Version="3.2.0" />
     <PackageVersion Include="App.Metrics.Health.Extensions.DependencyInjection" Version="3.2.0" />
-    <PackageVersion Include="Audit.EntityFramework.Core" Version="31.3.3" />
-    <PackageVersion Include="Audit.NET.PostgreSql" Version="31.3.3" />
-    <PackageVersion Include="Audit.NET.Serilog" Version="31.3.3" />
+    <PackageVersion Include="Audit.EntityFramework.Core" Version="32.0.0" />
+    <PackageVersion Include="Audit.NET.PostgreSql" Version="32.0.0" />
+    <PackageVersion Include="Audit.NET.Serilog" Version="32.0.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
     <PackageVersion Include="Destructurama.JsonNet" Version="4.0.2" />
     <PackageVersion Include="EasyNetQ.Management.Client" Version="3.0.1" />
@@ -48,17 +48,17 @@
       Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore"
       Version="10.0.1"
     />
-    <PackageVersion Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.3.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.3.9" />
+    <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.9" />
     <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.1" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.3.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.DataAnnotations" Version="2.3.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.3.9" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.9" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.DataAnnotations" Version="2.3.9" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.3.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="10.0.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.1" />
-    <PackageVersion Include="Microsoft.AspNetCore.Routing.Abstractions" Version="2.3.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Routing.Abstractions" Version="2.3.9" />
     <PackageVersion Include="Microsoft.AspNetCore.SpaProxy" Version="10.0.1" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.1" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.1" />
