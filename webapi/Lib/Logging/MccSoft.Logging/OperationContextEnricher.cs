@@ -13,12 +13,12 @@ public class OperationContextEnricher : ILogEventEnricher
 
     public OperationContextEnricher(OperationContext operationContext)
     {
-        _operationContext = operationContext;
+        _operationContext = operationContext ?? new OperationContext();
     }
 
     public OperationContextEnricher(OperationContext operationContext, string operationName)
     {
-        _operationContext = operationContext;
+        _operationContext = operationContext ?? new OperationContext();
         _operationContext.Add(Field.Method, operationName);
     }
 
