@@ -24,7 +24,7 @@
 
 10. Run `scripts/postgresql/start_postgres.ps1`. It will start local PostgreSQL in Docker.
 11. Run `yarn install` from root folder of the repo. It will install JS libraries. You could run `yarn start-remote` to develop frontend locally pointing to the remote backend.
-12. Try to run the backend project (`webapi/MccSoft.TemplateApp.sln`) as usual (e.g. `F5` from VSCode/Rider/VisualStudio, assuming `MccSoft.TemplateApp.App` is a startup project). Frontend should start automatically together with backend. If you run into issue, consult your teammate :)
+12. Try to run the backend project (`webapi/MccSoft.TemplateApp.slnx`) as usual (e.g. `F5` from VSCode/Rider/VisualStudio, assuming `MccSoft.TemplateApp.App` is a startup project). Frontend should start automatically together with backend. If you run into issue, consult your teammate :)
     1. You could also run frontend separately from backend:
        1. If you restart backend often, you could speed up startup by running frontend via `yarn start` from `frontend` folder (otherwise backend will start frontend on every restart);
        2. You could use remote backend (that way you don't have to start it locally). Run `yarn start-remote` from `frontend` folder.

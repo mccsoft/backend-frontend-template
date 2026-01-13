@@ -1,0 +1,27 @@
+<Solution>
+  <Folder Name="/Lib/">
+    <Project Path="Lib/DomainHelpers/MccSoft.DomainHelpers/MccSoft.DomainHelpers.csproj" />
+    <Project Path="Lib/HttpClientExtension/MccSoft.HttpClientExtension/MccSoft.HttpClientExtension.csproj" />
+    <Project Path="Lib/Logging/MccSoft.Logging.Tests/MccSoft.Logging.Tests.csproj" />
+    <Project Path="Lib/Logging/MccSoft.Logging/MccSoft.Logging.csproj" />
+    <Project Path="Lib/LowLevelPrimitives/MccSoft.LowLevelPrimitives/MccSoft.LowLevelPrimitives.csproj" />
+    <Project Path="Lib/Mailing/MccSoft.Mailing/MccSoft.Mailing.csproj" />
+    <Project Path="Lib/NpgSql/MccSoft.NpgSql/MccSoft.NpgSql.csproj" />
+    <Project Path="Lib/PersistenceHelpers/MccSoft.PersistenceHelpers/MccSoft.PersistenceHelpers.csproj" />
+    <Project Path="Lib/Testing/MccSoft.Testing/MccSoft.Testing.csproj" />
+    <Project Path="Lib/WebApi/MccSoft.WebApi.Tests/MccSoft.WebApi.Tests.csproj" />
+    <Project Path="Lib/WebApi/MccSoft.WebApi/MccSoft.WebApi.csproj" />
+    <Project Path="Lib/WebHooks/MccSoft.WebHooks/MccSoft.WebHooks.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="tests/MccSoft.TemplateApp.App.Tests/MccSoft.TemplateApp.App.Tests.csproj" />
+    <Project Path="tests/MccSoft.TemplateApp.ComponentTests/MccSoft.TemplateApp.ComponentTests.csproj" />
+    <Project Path="tests/MccSoft.TemplateApp.Domain.Tests/MccSoft.TemplateApp.Domain.Tests.csproj" />
+    <Project Path="tests/MccSoft.TemplateApp.TestUtils/MccSoft.TemplateApp.TestUtils.csproj" />
+  </Folder>
+  <Project Path="src/MccSoft.TemplateApp.App/MccSoft.TemplateApp.App.csproj" />
+  <Project Path="src/MccSoft.TemplateApp.Common/MccSoft.TemplateApp.Common.csproj" />
+  <Project Path="src/MccSoft.TemplateApp.Domain/MccSoft.TemplateApp.Domain.csproj" />
+  <Project Path="src/MccSoft.TemplateApp.Http/MccSoft.TemplateApp.Http.csproj" />
+  <Project Path="src/MccSoft.TemplateApp.Persistence/MccSoft.TemplateApp.Persistence.csproj" />
+</Solution>
