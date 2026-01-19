@@ -21,6 +21,7 @@ export const queryClient = new QueryClient({
     },
   },
 });
+configureDefaultQueryOptions();
 
 addLogoutHandler(() => {
   // this is to make `useIsAuthorized` hook rerender, return false, and log the user out
@@ -33,5 +34,11 @@ addLogoutHandler(() => {
 export async function invlidateAuthQuery() {
   await queryClient.invalidateQueries({
     queryKey: QueryFactory.UserQuery.getCurrentUserInfoQueryKey(),
+  });
+}
+
+function configureDefaultQueryOptions() {
+  QueryFactory.UserQuery.setGetCurrentUserInfoDefaultOptions({
+    staleTime: 60 * 1000, // 1 minute
   });
 }
