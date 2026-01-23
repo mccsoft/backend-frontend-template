@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using MailKit.Security;
 
 namespace MccSoft.Mailing.Models;
 
@@ -23,7 +24,8 @@ public class MailSenderOptions
     /// </summary>
     public int Port { get; set; }
 
-    public bool IsSecureConnection { get; set; }
+    public SecureSocketOptions SecureSocketOptions { get; set; } = SecureSocketOptions.Auto;
+
     public string Login { get; set; }
     public string Password { get; set; }
 

@@ -168,7 +168,7 @@ public class MailSender : IMailSender
         );
 
         using var client = new SmtpClient();
-        await client.ConnectAsync(_options.Host, _options.Port, _options.IsSecureConnection);
+        await client.ConnectAsync(_options.Host, _options.Port, _options.SecureSocketOptions);
 
         await client.AuthenticateAsync(_options.Login, _options.Password);
 
