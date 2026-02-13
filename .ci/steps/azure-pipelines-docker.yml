@@ -1,15 +1,58 @@
 steps:
-  - publish: './publish'
-    artifact: 'publish'
+  - task: ArchiveFiles@2
+    displayName: '[artifact] Archive publish'
+    inputs:
+      rootFolderOrFile: '$(Build.SourcesDirectory)/publish'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/publish.zip'
+      replaceExistingArchive: true
 
-  - publish: './docker-compose.yaml'
-    artifact: 'docker-compose'
+  - task: PublishPipelineArtifact@1
+    displayName: '[artifact] Publish zipped publish'
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)/publish.zip'
+      artifact: 'publish'
+      publishLocation: 'pipeline'
 
-  - publish: './nginx'
-    artifact: 'nginx'
+  - task: ArchiveFiles@2
+    displayName: '[artifact] Archive nginx'
+    inputs:
+      rootFolderOrFile: '$(Build.SourcesDirectory)/nginx'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/nginx.zip'
+      replaceExistingArchive: true
 
-  - publish: './scripts/deploy'
-    artifact: 'scripts'
+  - task: PublishPipelineArtifact@1
+    displayName: '[artifact] Publish zipped nginx'
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)/nginx.zip'
+      artifact: 'nginx'
+      publishLocation: 'pipeline'
+
+  - task: ArchiveFiles@2
+    displayName: '[artifact] Archive deploy'
+    inputs:
+      rootFolderOrFile: '$(Build.SourcesDirectory)/scripts/deploy'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/deploy.zip'
+      replaceExistingArchive: true
+
+  - task: PublishPipelineArtifact@1
+    displayName: '[artifact] Publish deploy'
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)/deploy.zip'
+      artifact: 'deploy'
+      publishLocation: 'pipeline'
+
+  - task: PublishPipelineArtifact@1
+    displayName: '[artifact] Publish docker-compose'
+    inputs:
+      targetPath: '$(Build.SourcesDirectory)/docker-compose.yaml'
+      artifact: 'docker-compose'
+      publishLocation: 'pipeline'
 
   - task: Docker@2
     displayName: '[Docker]: login'

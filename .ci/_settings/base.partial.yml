@@ -6,6 +6,8 @@ variables:
   DUMMY: 1
   projectName: TemplateApp
   appName: templateapp
+  ENABLE_DEPLOY: true
+  ENABLE_DEPLOY_DEV: true
   ENABLE_DEPLOY_PROD: true
   # # General
   # DISABLE_BUILD: false

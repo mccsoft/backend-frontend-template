@@ -54,3 +54,6 @@ find "$SRC_DIR" -maxdepth 1 -type f \( -name "*.yaml" -o -name "*.yml" \) | whil
 done
 
 echo -e "${BLUE}All done!${NC} Processed templates are in: ${YELLOW}$DST_DIR${NC}"
+
+echo "Setting namespace to: ${namespace}"
+echo "##vso[task.setvariable variable=K8S_NAMESPACE]${namespace}"

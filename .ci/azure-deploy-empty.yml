@@ -1,0 +1,18 @@
+parameters:
+  - name: restartDeployment
+    type: boolean
+    default: false
+  - name: Environment
+    displayName: Environment to deploy
+    type: string
+    default: dev
+  - name: BuildAppNumber
+    displayName: Build number to deploy
+    type: string
+    default: latest
+
+steps:
+  - template: ./steps/promote-docker-image.yml
+    parameters:
+      Environment: ${{ parameters.Environment }}
+      BuildAppNumber: ${{ parameters.BuildAppNumber }}

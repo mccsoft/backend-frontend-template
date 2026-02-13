@@ -6,46 +6,20 @@ parameters:
     displayName: Environment to deploy
     type: string
     default: dev
-    values: [dev, green, prod]
   - name: BuildAppNumber
     displayName: Build number to deploy
     type: string
     default: latest
 
 steps:
+  - template: ./steps/promote-docker-image.yml
+    parameters:
+      Environment: ${{ parameters.Environment }}
+      BuildAppNumber: ${{ parameters.BuildAppNumber }}
+
   - checkout: self
     fetchDepth: 1
     submodules: true
-
-  - ${{ if eq(parameters.Environment, 'prod') }}:
-      - task: Docker@2
-        displayName: '[Docker]: login'
-        inputs:
-          containerRegistry: $(connectorACR)
-          command: 'login'
-
-      - task: Bash@3
-        displayName: '[ACR]: promote image to release/<repo>'
-        inputs:
-          targetType: 'inline'
-          script: |
-            set -e
-            TAG="${{ parameters.BuildAppNumber }}"
-
-            FROM="${ACR_REGISTRY}/${ACR_REPOSITORY}:${TAG}"
-            TO="${ACR_REGISTRY}/${ACR_REPOSITORY}/release:${TAG}"
-
-            echo "Promoting image inside ACR:"
-            echo "  ${FROM} -> ${TO}"
-
-            docker buildx imagetools create --tag "${TO}" "${FROM}"
-            echo "##vso[task.setvariable variable=ACR_REPOSITORY]${ACR_REPOSITORY}/release"
-
-      - task: Docker@2
-        displayName: '[Docker]: logout'
-        inputs:
-          containerRegistry: $(connectorACR)
-          command: 'logout'
 
   - task: Bash@3
     displayName: '[bash] Prepare versions and environment variables'
@@ -66,7 +40,8 @@ steps:
     inputs:
       action: 'deploy'
       connectionType: 'kubernetesServiceConnection'
-      namespace: '$(appName)-${{ parameters.Environment }}'
+      # $K8S_NAMESPACE is exported from prepare-k8s-templates.sh
+      namespace: '$(K8S_NAMESPACE)'
       manifests: |
         $(Build.SourcesDirectory)/k8s/aks-rancher/deploy_${{ parameters.Environment }}/*.yaml
       containers: |
@@ -78,6 +53,7 @@ steps:
         displayName: '[k8s]: force restart deployment $(appName)'
         inputs:
           connectionType: 'Kubernetes Service Connection'
-          namespace: '$(appName)-${{ parameters.Environment }}'
+          # $K8S_NAMESPACE is exported from prepare-k8s-templates.sh
+          namespace: '$(K8S_NAMESPACE)'
           command: 'rollout'
           arguments: 'restart deployment $(appName)'
