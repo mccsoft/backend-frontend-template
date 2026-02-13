@@ -13,7 +13,7 @@ variables:
   # to avoid images interfering with each other.
   # Also, this makes it easy to clean up PR images, since we don't need them to live for a long time
   - name: ACR_REPOSITORY
-    value: 'mcctemplateapp1/${{ parameters.name }}'
+    value: 'mcctemplateapp1/main/${{ parameters.name }}'
   - name: ACR_REGISTRY
     value: 'registry.gitlab.com'
   - name: connectorACR
