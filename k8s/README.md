@@ -14,6 +14,7 @@
    1. Setup CI in Azure DevOps.
       1. Add Docker Service Connection (Azure -> Project Settings -> Service Connections -> New Docker Registry). Credentials could be taken:
          1. GitLab: fom [Deploy Tokens](https://gitlab.com/PROJECT_NAME/main/-/settings/repository#js-deploy-tokens) (Settings -> Repository -> Deploy Tokens within GitLab project) with read_registry & write_registry scopes
+            - When creating Service Connection please use whole Registry URL (e.g. `https://registry.gitlab.com/mcctemplateapp1/main`)
          1. Azure Portal: Settings -> Access Keys of `Container registry`
       1. Go to K8S and create a secret of type Registry named `docker-regcred` in the created namespace. Fill in Registry Domain Name, Username and Password
       1. Fill the NAME of this service connection in `./ci/_settings/acr.partial.yml` (connectorACR). Also fill-in `ACR_REGISTRY` and `ACR_REPOSITORY` in the same file

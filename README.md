@@ -1,4 +1,4 @@
-[![Build Status](https://dev.azure.com/mcctomsk/Backend-Frontend-Template/_apis/build/status%2FBuild?branchName=master)](https://dev.azure.com/mcctomsk/Backend-Frontend-Template/_apis/build/status/mccsoft.backend-frontend-template?branchName=master) [![MIT](https://img.shields.io/dub/l/vibe-d.svg)](https://opensource.org/licenses/MIT) [![NET10](https://img.shields.io/badge/-.NET%2010.0-blueviolet)](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
+[![Build Status](https://dev.azure.com/mcc-soft/Backend-Frontend-Template/_apis/build/status%2FBuild?branchName=master)](https://dev.azure.com/mcc-soft/Backend-Frontend-Template/_apis/build/status/mccsoft.backend-frontend-template?branchName=master) [![MIT](https://img.shields.io/dub/l/vibe-d.svg)](https://opensource.org/licenses/MIT) [![NET10](https://img.shields.io/badge/-.NET%2010.0-blueviolet)](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
 
 ## What's that
 
@@ -63,7 +63,7 @@ Create a new git repository and copy everything (except `.git` folder) to it. Do
 3. Set up Container Registry to push images to.
    1. You could use GitLab Container Registry (since it's private and free)
       1. Register a user in GitLab (using project email)
-      1. Create a personal access token with read/write access to container registry at https://gitlab.com/-/profile/personal_access_tokens
+      1. Create a personal access token with read/write access to container registry at https://gitlab.com/-/user_settings/personal_access_tokens
 4. (optional) If you want to add git Tags to your sourcecode when deploying to DEV/PROD, you need to do the following:
    1. Give access for WRITING to Repo for your Pipeline. Instructions: https://elanderson.net/2020/04/azure-devops-pipelines-manual-tagging/
    2. Set TAG_SOURCES_DEV and TAG_SOURCES_PROD variables in [base.partial.yml](.ci/_settings/base.partial.yml).
@@ -75,7 +75,7 @@ Create a new git repository and copy everything (except `.git` folder) to it. Do
 
 1. Go to Azure and create Pipeline. Specify `.ci/azure-pipelines-pr-tests.yml` as the source of pipeline, name it like 'PROJECT_NAME PR'.
 2. Add your pipeline as policy to the `master` branch, to do that:
-   1. Go to project Settings, then to Repositories (https://dev.azure.com/mcctomsk/Backend-Frontend-Template/_settings/repositories)
+   1. Go to project Settings, then to Repositories (https://dev.azure.com/mcc-soft/Backend-Frontend-Template/_settings/repositories)
    2. Click on the repository you've pushed your code to
    3. Switch to `Policies` tab, scroll below, scroll to `Branch Policies` section, click on the `master` branch
       1. In `Build Validation` section add the PR pipeline that you previously created
@@ -91,6 +91,7 @@ Here are the possible ways to deploy your app:
 3. [Obsolete] [Docker-compose on VM](/docs/Deploy-docker-compose.MD). This is an obsolete way, instructions are available for backwards compatibility. It's NOT recommended for new projects, and even old ones should better switch to Kubernetes (k3s) :).
 
 ## Update project to the newest version
+
 Check [docs](/docs/details/PullFromTemplate.md) regarding how to update your project (that was previously created from Template) to newer version.
 
 Also consider reading [Changelog](/docs/CHANGELOG.md) for some manual steps that might be needed (e.g. create database migration)
