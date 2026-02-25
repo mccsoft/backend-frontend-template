@@ -51,7 +51,8 @@ stages:
                 parameters:
                   ENABLE_STORYBOOK: ${{ variables.ENABLE_STORYBOOK }}
               - template: ./steps/azure-pipelines-docker.yml
-              - template: ./steps/git-add-tag.yml
+              - ${{ if eq(variables.ENABLE_DEPLOY, true) }}:
+                - template: ./steps/git-add-tag.yml
 
   - stage: Test
     dependsOn: []
