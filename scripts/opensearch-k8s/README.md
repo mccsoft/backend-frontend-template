@@ -33,15 +33,15 @@ This is a small instruction how to run Opensearch in kubernetes
 
    1. Go back to Security tab -> Roles, find created role `templateapp-dev-write`. Open tab `Mapped users` and add mapping to created user `templateapp`.
 
-1. Add created user to your backend service appsettings
+1. Add created user to your backend service k8s configs (i.e. set `Serilog__Elastic__User`, `Serilog__Elastic__Url` in `02-config-maps.yaml` and `stages/*.env`, set `Serilog__Elastic__Password` in Rancher secrets)
 1. Optionally add a user for reading logs (similar to the above)
 1. Send some logs from your app
 1. Add your logs to Discover
    1. Make sure you switched to your tenant in Dashboard
-   1. Go to Stack Management -> [Index Patterns](https://logs.mcc-soft.de/app/management/opensearch-dashboards/indexPatterns)
+   1. Go to Dashboards Management -> [Index Patterns](https://logs.mcc-soft.de/app/management/opensearch-dashboards/indexPatterns)
    1. Hit 'Create Index pattern'
    1. Define a pattern like `templateapp-*`
    1. It's recommended to setup Default fields for your tenant to be `message`:
-      1. Go to Stack Management -> Advanced Settings
+      1. Go to Dashboards Management -> Advanced Settings
       2. Find `Default columns` field
       3. Change the value to `message`
