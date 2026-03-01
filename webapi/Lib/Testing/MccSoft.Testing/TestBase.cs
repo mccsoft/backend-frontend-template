@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
+using MartinCostello.Logging.XUnit;
 using MccSoft.IntegreSql.EF;
 using MccSoft.IntegreSql.EF.DatabaseInitialization;
 using MccSoft.LowLevelPrimitives;
@@ -40,7 +41,7 @@ namespace MccSoft.Testing;
 /// (the state of objects loaded in a separate DbContext will be incorrect, if SaveChanges is
 /// forgotten).
 /// </remarks>
-public abstract class TestBase<TDbContext>
+public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor, IDisposable
     where TDbContext : DbContext
 {
     protected string ConnectionString { get; private set; }
@@ -86,13 +87,15 @@ public abstract class TestBase<TDbContext>
         _databaseInitializer = databaseType switch
         {
             null => null,
-            DatabaseType.Postgres
-                => new NpgsqlDatabaseInitializer(
-                    connectionStringOverride: new() { Host = "localhost", Port = 5434, },
-                    npgsqlOptionsAction: npgsqlOptionsAction
-                ),
+            DatabaseType.Postgres => new NpgsqlDatabaseInitializer(
+                connectionStringOverride: new() { Host = "localhost", Port = 5434 },
+                npgsqlOptionsAction: npgsqlOptionsAction
+            )
+            {
+                DropDatabaseOnRemove = true,
+            },
             DatabaseType.Sqlite => new SqliteDatabaseInitializer(),
-            _ => throw new ArgumentOutOfRangeException(nameof(databaseType), databaseType, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(databaseType), databaseType, null),
         };
 
         if (databaseType != null)
