@@ -9,7 +9,7 @@ variables:
   BASE_VERSION: 1.1
   PATCH_VERSION: $[ counter(variables['BASE_VERSION'], 1) ]
   BUILD_NUMBER: $(BASE_VERSION).$(PATCH_VERSION)
-  REACT_APP_BUILD_NUMBER: $(BUILD_NUMBER)
+  REACT_APP_VERSION: $(BUILD_NUMBER)
   solution: 'webapi/MccSoft.TemplateApp.slnx'
   project: 'webapi/src/MccSoft.TemplateApp.App/MccSoft.TemplateApp.App.csproj'
 
