@@ -17,6 +17,7 @@ import {
   openExternalLoginPopup,
   openExternalLoginRedirect,
 } from 'helpers/auth/openid/openid-manager';
+import { appVersion } from 'application/constants/env-variables';
 
 type Form = {
   login: string;
@@ -48,10 +49,11 @@ export const LoginPage: React.FC = (props) => {
           <div className={styles.appName}>TemplateApp</div>
           <div className={styles.appInfo}>
             <span>
-              © 2016—<span>{format(new Date(), 'yyyy')}</span> MCC Software Engineering UG und Co. KG
+              © 2016—<span>{format(new Date(), 'yyyy')}</span> MCC Software
+              Engineering UG und Co. KG
             </span>
             <span>
-              Server-Version: <span>{serverVersionQuery.data}</span>
+              Version: <span>{appVersion()}</span>
             </span>
           </div>
         </div>
