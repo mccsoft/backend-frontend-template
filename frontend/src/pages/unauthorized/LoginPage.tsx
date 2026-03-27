@@ -26,9 +26,7 @@ type Form = {
 
 export const LoginPage: React.FC = (props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const serverVersionQuery = QueryFactory.VersionQuery.useVersionQuery({
-    throwOnError: false,
-  });
+
   const i18n = useScopedTranslation('Page.Login');
   const form = useAdvancedForm<Form>(async (data) => {
     setIsLoading(true);
