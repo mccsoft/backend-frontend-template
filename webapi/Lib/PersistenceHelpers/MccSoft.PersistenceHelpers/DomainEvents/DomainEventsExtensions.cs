@@ -17,27 +17,9 @@ public static class DomainEventsExtensions
         );
     }
 
-    public static void AddDomainEventsWithMediatR(
-        this IServiceCollection services,
-        params Type[] handlerAssemblyMarkerTypes
-    )
-    {
-        services.AddDomainEventsWithMediatR(config =>
-        {
-            foreach (var typeToRegister in handlerAssemblyMarkerTypes)
-            {
-                config.RegisterServicesFromAssemblyContaining(typeToRegister);
-            }
-        });
-    }
-
-    public static void AddDomainEventsWithMediatR(
-        this IServiceCollection services,
-        Action<MediatRServiceConfiguration> configure
-    )
+    public static void AddDomainEventsWithMediatR(this IServiceCollection services)
     {
         services.AddTransient<DomainEventsSaveChangesInterceptor>();
         services.AddTransient<DomainEventsTransactionInterceptor>();
-        services.AddMediatR(configure);
     }
 }

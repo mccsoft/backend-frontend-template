@@ -33,7 +33,8 @@
     <PackageVersion Include="MartinCostello.Logging.XUnit" Version="0.7.0" />
     <PackageVersion Include="MassTransit" Version="7.2.4" />
     <PackageVersion Include="MccSoft.IntegreSql.EF" Version="0.12.2" />
-    <PackageVersion Include="MediatR" Version="14.0.0" />
+    <PackageVersion Include="Mediator.Abstractions" Version="3.0.2" />
+    <PackageVersion Include="Mediator.SourceGenerator" Version="3.0.2" />
     <PackageVersion Include="Metalama.Framework" Version="2025.1.17" />
     <PackageVersion Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="6.0.36" />

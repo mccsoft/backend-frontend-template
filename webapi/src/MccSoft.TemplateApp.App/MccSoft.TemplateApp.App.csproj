@@ -67,6 +67,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+    <PackageReference Include="Mediator.SourceGenerator">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -86,6 +90,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Lib\Mailing\MccSoft.Mailing\MccSoft.Mailing.csproj" />
     <ProjectReference Include="..\..\Lib\PersistenceHelpers\MccSoft.PersistenceHelpers\MccSoft.PersistenceHelpers.csproj" />
+    <ProjectReference Include="..\..\Lib\DomainHelpers\MccSoft.DomainHelpers\MccSoft.DomainHelpers.csproj" />
     <ProjectReference Include="..\..\Lib\WebApi\MccSoft.WebApi\MccSoft.WebApi.csproj" />
     <ProjectReference Include="..\MccSoft.TemplateApp.Common\MccSoft.TemplateApp.Common.csproj" />
     <ProjectReference Include="..\MccSoft.TemplateApp.Domain\MccSoft.TemplateApp.Domain.csproj" />

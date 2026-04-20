@@ -1,5 +1,5 @@
 using MccSoft.DomainHelpers.DomainEvents.Events;
-using MediatR;
+using Mediator;
 
 namespace MccSoft.TemplateApp.App.DomainEventHandlers;
 
@@ -15,9 +15,8 @@ public class LogDomainEventHandler : INotificationHandler<LogDomainEvent>
         _logger = logger;
     }
 
-    public Task Handle(LogDomainEvent notification, CancellationToken cancellationToken)
+    public async ValueTask Handle(LogDomainEvent request, CancellationToken cancellationToken)
     {
-        _logger.Log(notification.Level, notification.Message, notification.Parameters);
-        return Task.CompletedTask;
+        _logger.Log(request.Level, request.Message, request.Parameters);
     }
 }

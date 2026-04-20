@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MccSoft.DomainHelpers.DomainEvents;
-using MediatR;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -16,12 +16,11 @@ internal static class DbContextInterceptorHelpers
         bool includeUnchanged = false
     )
     {
-        return dbContext.ChangeTracker
-            .Entries<IDomainEventEntity>()
-            .Where(
-                x =>
-                    x.State != EntityState.Detached
-                    && (includeUnchanged || x.State != EntityState.Unchanged)
+        return dbContext
+            .ChangeTracker.Entries<IDomainEventEntity>()
+            .Where(x =>
+                x.State != EntityState.Detached
+                && (includeUnchanged || x.State != EntityState.Unchanged)
             )
             .Select(po => po.Entity)
             .Where(po => po.DomainEvents?.Count > 0)
@@ -67,8 +66,8 @@ internal static class DbContextInterceptorHelpers
     internal static T GetPrimaryKey<T>(DbContext context, object entity)
     {
         var entry = context.Entry(entity);
-        object keyPart = entry.Metadata
-            .FindPrimaryKey()
+        object keyPart = entry
+            .Metadata.FindPrimaryKey()
             .Properties.Select(p => entry.Property(p.Name).CurrentValue)
             .First();
 

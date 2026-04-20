@@ -13,7 +13,10 @@ public class TestApiServiceTests : AppServiceTestBase
     public TestApiServiceTests(ITestOutputHelper outputHelper)
         : base(outputHelper, DatabaseType.Postgres)
     {
-        Sut = CreateService<TestApiService>();
+        Sut = CreateService<TestApiService>(provider =>
+        {
+            Program.AddMediator(provider);
+        });
     }
 
     public TestApiService Sut { get; set; }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
@@ -377,17 +376,13 @@ public abstract class TestBase<TDbContext> : ITestOutputHelperAccessor, IDisposa
          */
     }
 
-    private static Assembly[] _assemblies = AppDomain.CurrentDomain.GetAssemblies();
-
     protected virtual void RegisterDbContext(
         IServiceCollection serviceCollection,
         string connectionString
     )
     {
-        serviceCollection.AddDomainEventsWithMediatR(config =>
-        {
-            config.RegisterServicesFromAssemblies(_assemblies);
-        });
+        serviceCollection.AddDomainEventsWithMediatR();
+        serviceCollection.AddMediator();
         serviceCollection
             .AddDbContext<TDbContext>(
                 (serviceProvider, optionsBuilder) =>

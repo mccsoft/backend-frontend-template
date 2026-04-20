@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MccSoft.DomainHelpers.DomainEvents;
 using MccSoft.DomainHelpers.DomainEvents.Events;
-using MediatR;
+using Mediator;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 

@@ -25,7 +25,8 @@ if (!builder.Environment.IsEnvironment("Test"))
 
 SetupDatabase.AddDatabase(builder);
 SetupAudit.ConfigureAudit(builder.Services, builder.Configuration);
-builder.Services.AddDomainEventsWithMediatR(typeof(Program), typeof(LogDomainEventHandler));
+builder.Services.AddDomainEventsWithMediatR();
+AddMediator(builder.Services);
 
 SetupAuth.ConfigureAuth(builder);
 SetupLocalization.AddLocalization(builder);
@@ -46,7 +47,6 @@ SetupServices.AddServices(builder.Services, builder.Configuration, builder.Envir
 var app = builder.Build();
 
 // ---------------------------------
-
 
 app.UseSerilog(app.Environment);
 app.Logger.LogSentryTestError("TemplateApp");
@@ -73,4 +73,9 @@ app.Run();
 public partial class Program
 {
     // Expose the Program class for use with WebApplicationFactory<T> in tests
+
+    public static void AddMediator(IServiceCollection services)
+    {
+        services.AddMediator();
+    }
 }

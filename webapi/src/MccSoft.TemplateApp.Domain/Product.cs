@@ -1,5 +1,6 @@
 ﻿using System;
 using MccSoft.DomainHelpers;
+using MccSoft.DomainHelpers.DomainEvents.Events;
 
 namespace MccSoft.TemplateApp.Domain;
 
@@ -31,6 +32,7 @@ public class Product : BaseTenantEntity
     public Product(string title)
     {
         Title = title;
+        AddEvent(LogDomainEvent.Info("Product with '{Title}' was created", Title));
     }
 
     /// <summary>
