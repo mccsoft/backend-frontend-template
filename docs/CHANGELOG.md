@@ -3,8 +3,9 @@
 Migration guide:
 1. Replace all `using MediatR;` with `using Mediator;`
 2. Add nuget package references (should be done automatically if you use update-script)
-3. Add call to `services.AddMediator` to your `Program.cs` (check the current version of `Program.cs` in template)
-4. Add call to `services.AddMediator` from your tests (if you are using domain events in tests)
+3. Adjust NotificationHandler signatures (`.Handle` methods should return `ValueTask` instead of `Task`)
+4. Add call to `services.AddMediator` to your `Program.cs` (check the current version of `Program.cs` in template)
+5. Add call to `services.AddMediator` from your tests (right next to `serviceCollection.AddDomainEventsWithMediatR()` or by calling `Program.AddMediator()` if you expect handlers to execute in tests)
 
 ### 2026-01-01 Update to .NET 10
 During update, we moved to Central Package Management (i.e. all nuget package versions are now specified in [Directory.Packages.props](../webapi/Directory.Packages.props)).
