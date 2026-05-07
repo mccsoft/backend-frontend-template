@@ -85,20 +85,19 @@ public static partial class SetupAuth
                     .SetConfiguration(configuration.GetSection("OpenId"))
                     .DisableSetIssuerToPublicUrl();
 
+                if (
+                    builder.Environment.IsDevelopment() || builder.Environment.IsEnvironment("Test")
+                )
+                    options
+                        .OpenIddictServerBuilder.AddDevelopmentEncryptionCertificate()
+                        .AddDevelopmentSigningCertificate();
+
                 ConfigureDefaultAuthorizationController(options);
             })
             .AddSupportForHttpOnlyCookieClients()
             .AddServer(options =>
             {
-                options
-                    .DisableAccessTokenEncryption()
-                    .UseReferenceRefreshTokens()
-                    .AddSigningCertificateFromConfiguration(
-                        configuration.GetSection("OpenId:SigningCertificate")
-                    )
-                    .AddEncryptionCertificateFromConfiguration(
-                        configuration.GetSection("OpenId:EncryptionCertificate")
-                    );
+                options.DisableAccessTokenEncryption().UseReferenceRefreshTokens();
                 if (configuration.GetValue<bool>("TestApiEnabled"))
                     options.AllowPasswordFlow();
 
