@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
@@ -7,20 +8,23 @@ using Destructurama;
 using IdentityModel;
 using MccSoft.HttpClientExtension;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Debugging;
+using Serilog.Enrichers.Span;
 using Serilog.Events;
 using Serilog.Filters;
 using Serilog.Formatting.Compact;
-using Serilog.Sinks.Loggly;
 
 namespace MccSoft.Logging;
 
 public static class LoggerConfigurationExtensions
 {
+    public class SessionDetails { }
+
     public static void UseSerilog(this IApplicationBuilder app, IHostEnvironment hostingEnvironment)
     {
         if (!hostingEnvironment.IsEnvironment("Test"))
@@ -30,6 +34,20 @@ public static class LoggerConfigurationExtensions
                 .GetSection(SerilogRequestLoggingOptions.Position)
                 .Get<SerilogRequestLoggingOptions>()
                 ?.ExcludePaths;
+
+            app.Use(
+                async (httpContext, next) =>
+                {
+                    var requestProperties = GetRequestProperties(httpContext);
+
+                    var logger =
+                        httpContext.RequestServices.GetRequiredService<Microsoft.Extensions.Logging.ILogger<SessionDetails>>();
+                    using (logger.BeginScope(requestProperties))
+                    {
+                        await next();
+                    }
+                }
+            );
 
             app.UseSerilogRequestLogging(options =>
             {
@@ -42,38 +60,28 @@ public static class LoggerConfigurationExtensions
 
                     return LogEventLevel.Information;
                 };
-
-                options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
-                {
-                    diagnosticContext.Set(
-                        "UserId",
-                        httpContext.User?.Identity?.GetClaimValueOrNull(JwtClaimTypes.Id)
-                    );
-                    diagnosticContext.Set(
-                        "ClientSession",
-                        httpContext.Request?.Headers["ClientSession"].ToString()
-                    );
-                    diagnosticContext.Set(
-                        "ClientVersion",
-                        httpContext.Request?.Headers["ClientVersion"].ToString()
-                    );
-                    diagnosticContext.Set(
-                        "ClientPlatform",
-                        httpContext.Request?.Headers["ClientPlatform"].ToString()
-                    );
-                    diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value);
-                    diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
-                    diagnosticContext.Set(
-                        "RemoteIpAddress",
-                        httpContext.Connection.RemoteIpAddress
-                    );
-                };
             });
         }
     }
 
+    private static IReadOnlyList<KeyValuePair<string, object>> GetRequestProperties(
+        HttpContext httpContext
+    )
+    {
+        return
+        [
+            new("UserId", httpContext.User?.Identity?.GetClaimValueOrNull(JwtClaimTypes.Id)),
+            new("ClientSession", httpContext.Request?.Headers["ClientSession"].ToString()),
+            new("ClientVersion", httpContext.Request?.Headers["ClientVersion"].ToString()),
+            new("ClientPlatform", httpContext.Request?.Headers["ClientPlatform"].ToString()),
+            new("RequestHost", httpContext.Request.Host.Value),
+            new("RequestScheme", httpContext.Request.Scheme),
+            new("RemoteIpAddress", httpContext.Connection.RemoteIpAddress),
+        ];
+    }
+
     /// <summary>
-    /// Configures Serilog to use Elasticsearch, and enriches with default global log context.
+    /// Configures Serilog sinks and enrichers used by the application.
     /// </summary>
     /// <param name="loggerConfiguration">Serilog default configuration.</param>
     /// <param name="hostingEnvironment">Hosting environment</param>
@@ -100,31 +108,16 @@ public static class LoggerConfigurationExtensions
         loggerConfiguration
             .Destructure.JsonNetTypes()
             .ReadFrom.Configuration(configuration)
+            .Enrich.WithSpan()
             .Enrich.FromLogContext()
+            .Enrich.WithProperty("MachineName", Environment.MachineName)
             .Enrich.WithProperty("InstanceName", Environment.MachineName)
             .Enrich.WithProperty("Version", entryAssemblyVersion);
 
         loggerConfiguration.WriteToSentry(configuration);
-        loggerConfiguration.WriteToElasticSearch(configuration);
         if (configuration.GetValue<bool>("Serilog:EnableFileOutput"))
             loggerConfiguration.WriteToFile(fileLogDirectory);
-
-        if (
-            hostingEnvironment.IsDevelopment()
-            || hostingEnvironment.IsEnvironment("Test")
-            || configuration.GetValue<bool>("Serilog:EnableConsoleOutput")
-        )
-        {
-            loggerConfiguration.WriteTo.Console(formatProvider: GetFormatProvider());
-        }
-        else
-        {
-            // On a stage we write only errors and warnings to the console to quickly see problems when doing
-            // `docker service logs service_name`.
-            loggerConfiguration.WriteTo.Logger(lc =>
-                lc.MinimumLevel.Warning().WriteTo.Console(formatProvider: GetFormatProvider())
-            );
-        }
+        loggerConfiguration.WriteToElasticSearch(configuration);
     }
 
     private static void WriteToFile(

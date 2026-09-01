@@ -129,11 +129,5 @@ public class PrefixRenameFormatter : OpenSearchJsonFormatter
         string template,
         ref string delim,
         TextWriter output
-    )
-    {
-        string escaped = template
-            .Replace("{" + _prefix, "{" + _dottedPrefix)
-            .Replace("{@" + _prefix, "{@" + _dottedPrefix);
-        base.WriteMessageTemplate(escaped, ref delim, output);
-    }
+    ) { }
 }

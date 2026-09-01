@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-  <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
@@ -12,11 +11,11 @@
     <PackageReference Include="Sentry.Serilog" />
     <PackageReference Include="Serilog.AspNetCore" />
     <PackageReference Include="Serilog.Sinks.Loggly" />
+    <PackageReference Include="Serilog.Enrichers.Span" />
     <PackageReference Include="Serilog.Sinks.OpenSearch" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\HttpClientExtension\MccSoft.HttpClientExtension\MccSoft.HttpClientExtension.csproj" />
   </ItemGroup>
-
 </Project>

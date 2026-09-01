@@ -12,7 +12,6 @@ const backendUri = `${window.location.protocol}//${window.location.hostname}:${w
 export const sendLogoutRequest = async () => {
   try {
     await axios
-      .create()
       .post(`${backendUri}/connect/logout`, queryString.stringify({}), {
         maxRedirects: 0,
         headers: {
@@ -100,7 +99,6 @@ export const fetchTokenEndpoint = async (
   };
 
   const response: AxiosResponse = await axios
-    .create()
     .post(`${backendUri}${urlPath}`, queryString.stringify(bodyToSend), {
       headers: {
         Authorization: `Basic ${Base64.btoa(`${clientId}:${clientKey}`)}`,

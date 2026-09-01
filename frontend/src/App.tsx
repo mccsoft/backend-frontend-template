@@ -29,10 +29,7 @@ import { addLogoutHandler } from 'helpers/auth/auth-handlers';
 
 QueryFactory.setAxiosFactory(() => axios);
 
-setupAuthInterceptor(axios, async (authData) => {
-  const result = await sendRefreshTokenRequest(authData.refresh_token);
-  return result;
-});
+
 addLogoutHandler(() => {
   RootStore.store.dispatch(logoutAction);
   window.history.pushState(null, '', backendUri);
@@ -43,7 +40,10 @@ axios.interceptors.response.use(null, blobResponseErrorInterceptor);
 if (FeatureFlags.isMiniProfilerEnabled()) {
   axios.interceptors.response.use(miniProfilerInterceptor, undefined);
 }
-
+setupAuthInterceptor(axios, async (authData) => {
+  const result = await sendRefreshTokenRequest(authData.refresh_token);
+  return result;
+});
 if (sentryDsn()) {
   Sentry.init({
     dsn: sentryDsn(),
