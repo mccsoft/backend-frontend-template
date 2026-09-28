@@ -60,10 +60,9 @@ export const CustomModal: React.FC<CustomModalProps> = (props) => {
       <DialogContent className={styles.content}>
         {props.children}
         {!!props.buttons && (
-          <div className={modalStyles.footer}>
+          <div className={styles.footer}>
             {props.buttons === 'ok' ? (
               <Button
-                className={modalStyles.button}
                 /* autofocus allows to close modals via Escape button if there are no inputs inside the modal */
                 autoFocus={true}
                 color={props.okButtonColor ?? ButtonColor.Default}
@@ -76,7 +75,6 @@ export const CustomModal: React.FC<CustomModalProps> = (props) => {
             ) : props.buttons === 'ok-cancel' ? (
               <>
                 <Button
-                  className={modalStyles.button}
                   color={ButtonColor.Secondary}
                   title={i18n.t('cancel_button')}
                   onClick={() => {
@@ -85,7 +83,6 @@ export const CustomModal: React.FC<CustomModalProps> = (props) => {
                   data-test-id="dialog-cancelButton"
                 />
                 <Button
-                  className={styles.button}
                   /* autofocus allows to close modals via Escape button if there are no inputs inside the modal */
                   autoFocus={true}
                   color={props.okButtonColor ?? ButtonColor.Default}
@@ -102,7 +99,6 @@ export const CustomModal: React.FC<CustomModalProps> = (props) => {
                   key={x.id}
                   autoFocus={index === props.buttons!.length - 1}
                   color={x.color ?? ButtonColor.Default}
-                  className={clsx(styles.button, styles.multibutton)}
                   title={x.text}
                   onClick={() => {
                     props.onButtonClick?.(x.id);

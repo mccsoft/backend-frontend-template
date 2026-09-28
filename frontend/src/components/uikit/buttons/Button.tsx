@@ -49,8 +49,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const buttonStyles = [
       className,
       styles.button,
-      styles[`${width}-button`],
-      styles[`${color}-button`],
+      (styles as any)[`${width}-button`],
+      (styles as any)[`${color}-button`],
     ];
     return (
       <button

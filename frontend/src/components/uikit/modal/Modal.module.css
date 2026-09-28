@@ -35,3 +35,10 @@
 .closeButton:active path {
   fill: var(--close-button-active);
 }
+.button {
+}
+
+.multibutton {
+}
+.footer {
+}

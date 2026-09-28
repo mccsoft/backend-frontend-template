@@ -38,7 +38,7 @@ export const RootPage: React.FC = () => {
               }}
             />
           </div>
-          <div className={styles.logOutWrapper}>
+          <div>
             <Button
               onClick={() => {
                 logOut().catch((e) => Logger.error(e));

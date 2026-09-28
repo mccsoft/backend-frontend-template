@@ -124,7 +124,7 @@ const PopperContent: React.FC<
 }) => {
   const arrowRef = useRef<HTMLDivElement>(null);
   const transitionClass = useTransitionClass(
-    disableTransition ? undefined : styles.popperEnterActive,
+    disableTransition ? undefined! : styles.popperEnterActive,
   );
   const ref = useRef<HTMLDivElement>(null!);
   useTriggerOnClickOutsideElement(

@@ -33,7 +33,7 @@ export const AppLink: React.FC<PropsWithChildren<LinkProps>> = (props) => {
       data-disabled={disabled}
       {...rest}
       to={props.to ?? ''}
-      className={clsx(className, styles.link, styles[`${color}-link`])}
+      className={clsx(className, styles.link, (styles as any)[`${color}-link`])}
       data-test-id={testId}
     >
       {icon && <img className={styles.icon} src={icon} />}

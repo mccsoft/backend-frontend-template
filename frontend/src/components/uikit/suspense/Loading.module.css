@@ -13,7 +13,7 @@
   max-width: 100%;
 }
 
-.loadingData[data-loaded=true] {
+.loadingData[data-loaded='true'] {
   pointer-events: none;
 }
 
@@ -60,4 +60,19 @@
 
 .centerContent {
   align-items: center;
+}
+.flex-container {
+  display: flex;
+  flex: 1 1;
+  position: relative;
+}
+
+.flex-loading-data {
+  display: flex;
+  flex: 1 1;
+  flex-direction: column;
+  min-height: 30px;
+}
+.serverUpdated {
+  padding: 10px 0;
 }

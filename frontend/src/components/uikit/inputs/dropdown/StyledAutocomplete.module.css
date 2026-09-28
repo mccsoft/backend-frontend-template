@@ -22,11 +22,11 @@
   background: var(--background-input-hover);
 }
 
-.option-value[aria-disabled=true] {
+.option-value[aria-disabled='true'] {
   opacity: 0.5;
 }
 
-.option-value[aria-disabled=true][aria-selected=true] {
+.option-value[aria-disabled='true'][aria-selected='true'] {
   opacity: 0.5;
 }
 
@@ -55,7 +55,7 @@
   opacity: 0.7;
 }
 
-input[aria-expanded=true] + div .expand-icon {
+input[aria-expanded='true'] + div .expand-icon {
   transform: rotate(180deg);
 }
 
@@ -106,4 +106,11 @@ input[aria-expanded=true] + div .expand-icon {
 .virtualized-list ul {
   padding: 0;
   margin: 0;
+}
+
+.optionValueNormal {
+}
+.optionValueFormInput {
+}
+.headerText {
 }
