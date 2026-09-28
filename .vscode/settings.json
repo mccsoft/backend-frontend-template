@@ -30,4 +30,11 @@
   "css.lint.validProperties": ["composes"],
   "scss.lint.validProperties": ["composes"],
   "less.lint.validProperties": ["composes"],
+    "chat.tools.terminal.autoApprove": {
+    "/.*/": true,
+    "pwsh": true
+  },
+  "terminal.integrated.autoApprove": {
+    "pwsh": true
+  }
 }

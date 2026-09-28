@@ -1,0 +1,134 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+@import './variables.css';
+
+
+.paragraph-p1-reg-line {
+  font-family: var(--typography-paragraph-m-line-font-family);
+  font-style: var(--typography-paragraph-m-line-font-style);
+  font-weight: 400;
+  font-size: var(--typography-paragraph-m-line-size);
+  line-height: var(--typography-paragraph-m-line-line-height);
+  letter-spacing: 0%;
+}
+
+.paragraph-p1-reg {
+  font-family: var(--typography-paragraph-m-font-family);
+  font-style: var(--typography-paragraph-m-font-style);
+  font-weight: 400;
+  font-size: var(--typography-paragraph-m-size);
+  line-height: var(--typography-paragraph-m-line-height);
+  letter-spacing: 0%;
+}
+
+.paragraph-p1-med {
+  font-family: var(--typography-paragraph-m-med-font-family);
+  font-style: var(--typography-paragraph-m-med-font-style);
+  font-weight: 500;
+  font-size: var(--typography-paragraph-m-med-size);
+  line-height: var(--typography-paragraph-m-med-line-height);
+  letter-spacing: 0%;
+}
+
+.paragraph-p1-sem-b-line {
+  font-family: var(--typography-paragraph-m-sb-line-font-family);
+  font-style: var(--typography-paragraph-m-sb-line-font-style);
+  font-weight: 600;
+  font-size: var(--typography-paragraph-m-sb-line-size);
+  line-height: var(--typography-paragraph-m-sb-line-line-height);
+  letter-spacing: 0%;
+}
+
+.paragraph-p1-sem-b {
+  font-family: var(--typography-paragraph-m-sb-font-family);
+  font-style: var(--typography-paragraph-m-sb-font-style);
+  font-weight: 600;
+  font-size: var(--typography-paragraph-m-sb-size);
+  line-height: var(--typography-paragraph-m-sb-line-height);
+  letter-spacing: 0%;
+}
+
+.paragraph-p2-reg {
+  font-family: var(--typography-paragraph-s-font-family);
+  font-style: var(--typography-paragraph-s-font-style);
+  font-weight: 400;
+  font-size: var(--typography-paragraph-s-size);
+  line-height: var(--typography-paragraph-s-line-height);
+  letter-spacing: 0%;
+}
+
+.paragraph-p2-sem-b {
+  font-family: var(--typography-paragraph-s-sb-font-family);
+  font-style: var(--typography-paragraph-s-sb-font-style);
+  font-weight: 600;
+  font-size: var(--typography-paragraph-s-sb-size);
+  line-height: var(--typography-paragraph-s-sb-line-height);
+  letter-spacing: 0%;
+}
+
+.header-h1 {
+  font-family: var(--typography-heading-xl-font-family);
+  font-style: var(--typography-heading-xl-font-style);
+  font-weight: 500;
+  font-size: var(--typography-heading-xl-size);
+  line-height: var(--typography-heading-xl-line-height);
+  letter-spacing: 0%;
+}
+
+.header-h2-caps {
+  font-family: var(--typography-heading-l-caps-font-family);
+  font-style: var(--typography-heading-l-caps-font-style);
+  font-weight: 500;
+  font-size: var(--typography-heading-l-caps-size);
+  line-height: var(--typography-heading-l-caps-line-height);
+  letter-spacing: 0%;
+  text-transform: uppercase;
+}
+
+.header-h2 {
+  font-family: var(--typography-heading-l-font-family);
+  font-style: var(--typography-heading-l-font-style);
+  font-weight: 500;
+  font-size: var(--typography-heading-l-size);
+  line-height: var(--typography-heading-l-line-height);
+  letter-spacing: 0%;
+}
+
+.header-h3 {
+  font-family: var(--typography-heading-m-font-family);
+  font-style: var(--typography-heading-m-font-style);
+  font-weight: 600;
+  font-size: var(--typography-heading-m-size);
+  line-height: var(--typography-heading-m-line-height);
+  letter-spacing: 0%;
+}
+
+.header-h4 {
+  font-family: var(--typography-heading-s-font-family);
+  font-style: var(--typography-heading-s-font-style);
+  font-weight: 600;
+  font-size: var(--typography-heading-s-size);
+  line-height: var(--typography-heading-s-line-height);
+  letter-spacing: 0%;
+}
+
+.header-h5 {
+  font-family: var(--typography-heading-xs-font-family);
+  font-style: var(--typography-heading-xs-font-style);
+  font-weight: 700;
+  font-size: var(--typography-heading-xs-size);
+  line-height: var(--typography-heading-xs-line-height);
+  letter-spacing: 0%;
+}
+
+.header-h5-caps {
+  font-family: var(--typography-heading-xs-caps-font-family);
+  font-style: var(--typography-heading-xs-caps-font-style);
+  font-weight: 700;
+  font-size: var(--typography-heading-xs-caps-size);
+  line-height: var(--typography-heading-xs-caps-line-height);
+  letter-spacing: 0%;
+  text-transform: uppercase;
+}

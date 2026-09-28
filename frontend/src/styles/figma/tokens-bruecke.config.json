@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/tokens-bruecke/figma-plugin/main/schemas/cli-options.schema.json",
+  "includedStyles": {
+    "text": {
+      "isIncluded": true,
+      "customName": "Typography-styles"
+    },
+    "colors": {
+      "isIncluded": true,
+      "customName": "Color-styles"
+    },
+    "effects": {
+      "isIncluded": true,
+      "customName": "Effect-styles"
+    },
+    "grids": {
+      "isIncluded": true,
+      "customName": "Grid-styles"
+    }
+  },
+  "storeStyleInCollection": "none",
+  "colorMode": "hex",
+  "includeScopes": false,
+  "includeValueStringKeyToAlias": false,
+  "includeFigmaMetaData": false,
+  "useDTCG": true,
+  "usePercentageOpacity": false,
+  "expandEasingPresets": true,
+  "splitByCollection": false,
+  "splitByMode": false,
+  "omitCollectionNames": false
+}

@@ -22,6 +22,7 @@ nugetpkg/
 !.vscode/extensions.json
 !.vscode/launch.json
 !.vscode/tasks.json
+!.vscode/mcp.json
 !webapi/.vscode/settings.json
 !webapi/.vscode/extensions.json
 !webapi/.vscode/launch.json

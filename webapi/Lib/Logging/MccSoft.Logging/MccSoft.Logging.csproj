@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <PackageReference Include="Destructurama.JsonNet" />
-    <PackageReference Include="Metalama.Framework" />
     <PackageReference Include="Microsoft.Extensions.Logging" />
     <PackageReference Include="Sentry.Serilog" />
     <PackageReference Include="Serilog.AspNetCore" />
