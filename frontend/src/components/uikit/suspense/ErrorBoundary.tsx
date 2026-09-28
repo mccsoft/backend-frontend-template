@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { Button } from '../buttons/Button';
 
-import styles from './Loading.module.scss';
+import styles from './Loading.module.css';
 import { QueryFactory } from 'services/api';
 import { isAxiosError } from 'axios';
 import {

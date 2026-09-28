@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './LoginErrorPage.module.scss';
+import styles from './LoginErrorPage.module.css';
 
 export const LoginErrorPage: React.FC<{
   error: string;

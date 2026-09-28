@@ -10,7 +10,7 @@
   opacity: 1;
 }
 
-.icon-button[data-disabled='true'] {
+.icon-button[data-disabled=true] {
   opacity: 0.5;
   pointer-events: none !important;
 }

@@ -4,7 +4,7 @@ import { ButtonColor } from './Button';
 import { Link } from 'react-router-dom';
 import { PropsWithChildren } from 'react';
 
-import styles from './AppLink.module.scss';
+import styles from './AppLink.module.css';
 
 export type LinkProps = {
   color?: ButtonColor;

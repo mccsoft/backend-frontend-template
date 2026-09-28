@@ -30,7 +30,7 @@ This document outlines shared coding conventions across the entire project.
 - **Components**: PascalCase (`UserProfile.tsx`, `FormInput.tsx`)
 - **Hooks**: camelCase starting with `use` (`useUserData.ts`, `useFormSubmit.ts`)
 - **Utilities**: camelCase (`helpers.ts`, `validators.ts`)
-- **Styles**: Match component name or PascalCase (`UserProfile.scss`)
+- **Styles**: Match component name or PascalCase (`UserProfile.module.css`)
 - **Types**: PascalCase or suffix with `.types.ts` (`types.ts`, `UserTypes.ts`)
 
 ### Backend
@@ -108,7 +108,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { UserService } from '../services/UserService';
 import { formatDate } from '../helpers/dateHelpers';
-import './UserCard.scss';
+import './UserCard.module.css';
 
 export const UserCard: React.FC<UserCardProps> = ({ userId }) => {
   // component

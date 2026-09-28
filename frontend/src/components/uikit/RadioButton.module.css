@@ -1,32 +1,30 @@
-@use 'src/styles/variables' as *;
-
 .radio {
   position: absolute;
   z-index: -1;
   opacity: 0;
-  border: 1px solid $border-input;
+  border: 1px solid var(--border-input);
 }
 
 .label {
   display: inline-flex;
   align-items: center;
   user-select: none;
-  font-family: $font-family;
+  font-family: var(--font-family);
   font-style: normal;
   font-weight: normal;
   font-size: 13px;
-  color: $normal;
+  color: var(--normal);
   cursor: pointer;
 }
 
 .label::before {
-  content: '';
+  content: "";
   display: inline-block;
   width: 14px;
   height: 14px;
   flex-shrink: 0;
   flex-grow: 0;
-  border: 1px solid $border-input;
+  border: 1px solid var(--border-input);
   border-radius: 22px;
   margin-right: 0.5em;
   background: #ffffff;
@@ -34,14 +32,14 @@
 }
 
 .radio:not(:disabled):not(:checked) + .label:hover::before {
-  background: $background-input-hover;
-  border: 1px solid $default-hover;
+  background: var(--background-input-hover);
+  border: 1px solid var(--default-hover);
 }
 
 .radio:checked + .label::before {
   width: 6px;
   height: 6px;
-  border: 5px solid $primary;
+  border: 5px solid var(--primary);
   background: #ffffff;
 }
 

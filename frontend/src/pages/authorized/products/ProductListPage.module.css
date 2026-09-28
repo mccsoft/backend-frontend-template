@@ -1,5 +1,3 @@
-@use 'src/styles/variables' as *;
-@use 'src/styles/base' as *;
 .navigation {
   display: flex;
   justify-content: space-between;

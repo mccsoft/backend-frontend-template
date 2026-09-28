@@ -1,6 +1,6 @@
 // Adapter for react-window
 import React, { ComponentType, useCallback, useMemo, useRef } from 'react';
-import styles from './StyledAutocomplete.module.scss';
+import styles from './StyledAutocomplete.module.css';
 import {
   FixedSizeList as _VirtualList,
   FixedSizeListProps,

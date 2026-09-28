@@ -1,6 +1,3 @@
-@use 'src/styles/variables' as *;
-@use 'src/styles/base' as *;
-
 .root-container {
   display: flex;
   flex-direction: column;
@@ -18,5 +15,5 @@
 }
 
 .errorText {
-  @extend .inputErrorText;
+  composes: inputErrorText from global;
 }

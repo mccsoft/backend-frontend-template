@@ -4,7 +4,7 @@ import React from 'react';
 import { Outlet } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { logOut } from 'helpers/auth/auth-interceptor';
-import styles from './RootPage.module.scss';
+import styles from './RootPage.module.css';
 import Logger from 'js-logger';
 import { DropDownInput } from 'components/uikit/inputs/dropdown/DropDownInput';
 import {

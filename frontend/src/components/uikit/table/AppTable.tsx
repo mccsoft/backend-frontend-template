@@ -9,7 +9,7 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
-import styles from './AppTable.module.scss';
+import styles from './AppTable.module.css';
 
 export function AppTable<D extends object = object>(props: {
   table: TanTable<D>;

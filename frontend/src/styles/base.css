@@ -1,0 +1,75 @@
+.none-select {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.base-input {
+  /* !important is needed to be applied to MaterialUI components */
+  background-color: var(--input-background) !important;
+  border: 1px solid var(--border-input) !important;
+  box-sizing: border-box !important;
+  border-radius: 2px !important;
+  width: 100%;
+  height: var(--form-input-height);
+  font-family: var(--font-family);
+  font-size: 13px;
+  font-weight: normal;
+  font-style: normal;
+  color: var(--normal);
+  caret-color: var(--caret-color);
+  padding: var(--input-padding) var(--input-padding) calc(var(--input-padding) - 1px) var(--input-padding);
+}
+
+.inputErrorBorder,
+.inputErrorBorder:hover,
+.inputErrorBorder:focus-within,
+.base-input[data-error=true],
+.base-input[data-error=true]:hover,
+.base-input[data-error=true]:focus-within {
+  border: 1px solid var(--danger) !important;
+}
+
+.base-input:hover {
+  border: 1px solid var(--default-hover) !important;
+}
+
+.base-input:focus-within {
+  border: 1px solid var(--border-focused) !important;
+}
+
+.base-input:focus {
+  border: 1px solid var(--border-focused) !important;
+}
+
+.base-input:focus-visible {
+  outline: none;
+}
+
+.base-input:active {
+  border: 1px solid var(--border-focused) !important;
+}
+
+.base-input:disabled {
+  border: 1px solid var(--border-disabled) !important;
+  color: rgba(var(--normal-rgb), 0.3) !important;
+}
+
+.base-input::placeholder {
+  color: rgba(var(--normal-rgb), 0.5);
+}
+
+.base-input:focus::placeholder {
+  color: rgba(var(--normal-rgb), 0.2);
+}
+
+.inputErrorText {
+  width: 100%;
+  margin-top: 2px;
+  font-weight: normal;
+  font-size: 10px;
+  height: 12px;
+  color: rgba(var(--danger-rgb), 0.5);
+  margin-bottom: calc(-1 * var(--error-text-margin-bottom));
+}

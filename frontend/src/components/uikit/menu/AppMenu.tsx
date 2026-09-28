@@ -2,7 +2,7 @@ import { Menu, MenuItem, MenuProps, useEventCallback } from '@mui/material';
 import * as React from 'react';
 import { Key } from 'react';
 import clsx from 'clsx';
-import styles from './AppMenu.module.scss';
+import styles from './AppMenu.module.css';
 import { anchorTransformOrigin } from './anchorTransformOrigin';
 import { MenuDirection } from './MenuDirection';
 

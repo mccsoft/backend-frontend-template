@@ -1,11 +1,11 @@
 ---
 name: figma-to-react
-description: Implement Figma designs as production-ready React and TypeScript components using the existing project architecture, components, SCSS styles, and design system. Use when implementing a UI from a Figma URL or Figma node.
+description: Implement Figma designs as production-ready React and TypeScript components using the existing project architecture, components, CSS styles, and design system. Use when implementing a UI from a Figma URL or Figma node.
 ---
 
 # Figma to React
 
-Implement Figma designs as production-ready React + TypeScript + SCSS code.
+Implement Figma designs as production-ready React + TypeScript + CSS code.
 
 The existing codebase is the primary implementation environment. The Figma design is the visual source of truth.
 
@@ -18,7 +18,7 @@ Do not blindly generate new components or styles. First understand the existing 
 1. Figma is the source of truth for visual design.
 2. The existing codebase is the source of truth for application architecture.
 3. Reuse existing React components whenever possible.
-4. Reuse existing SCSS variables, mixins, functions, utilities, and design tokens.
+4. Reuse existing CSS custom properties, utilities, and design tokens.
 5. Do not introduce a new UI library.
 6. Do not duplicate existing components.
 7. Do not replace the project's existing styling architecture.
@@ -46,7 +46,7 @@ Identify:
 - routing
 - component structure
 - styling architecture
-- SCSS structure
+- CSS structure
 - global styles
 - design tokens
 - reusable UI components
@@ -157,7 +157,7 @@ Before creating a component, search the repository for:
 - exact component names
 - similar component names
 - matching UI patterns
-- existing CSS/SCSS classes
+- existing CSS classes
 - existing design-system components
 
 Prefer extending an existing component over creating a duplicate.
@@ -171,8 +171,8 @@ Before making substantial changes, determine:
 1. Which existing components will be reused.
 2. Which new components are required.
 3. Which existing components need new props.
-4. Which SCSS files need changes.
-5. Which new SCSS files are required.
+4. Which CSS files need changes.
+5. Which new CSS files are required.
 6. Which assets are required.
 7. Which routes/pages need modification.
 8. What responsive behavior is required.
@@ -191,7 +191,7 @@ Implement the design using:
 - TypeScript
 - existing project conventions
 - existing components
-- existing SCSS architecture
+- existing CSS architecture
 
 Follow the existing folder structure.
 
@@ -199,7 +199,7 @@ Typical component structure:
 
     Component/
     ├── Component.tsx
-    ├── Component.scss
+    ├── Component.module.css
     └── index.ts
 
 Only use this structure if it matches the existing project conventions.
@@ -249,9 +249,9 @@ Do not introduce a new dependency unless absolutely necessary.
 
 ---
 
-# SCSS rules
+# CSS rules
 
-Use the project's existing SCSS architecture.
+Use the project's existing CSS architecture.
 
 Prefer existing:
 
@@ -286,7 +286,7 @@ If the project uses BEM, use BEM.
 
 If the project uses CSS Modules, use CSS Modules.
 
-If the project uses global SCSS, follow that architecture.
+If the project uses global CSS, follow that architecture.
 
 Do not introduce a different styling approach.
 
@@ -750,7 +750,7 @@ Never:
 
 - generate a completely separate UI system
 - duplicate existing components
-- replace existing SCSS architecture
+- replace existing CSS architecture
 - introduce unnecessary dependencies
 - invent APIs
 - invent design tokens

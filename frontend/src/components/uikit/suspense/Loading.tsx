@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { errorToString } from 'helpers/error-helpers';
 import React from 'react';
-import styles from './Loading.module.scss';
+import styles from './Loading.module.css';
 
 import animationData from 'assets/animations/9629-loading.json';
 import { Lottie } from '../../animations/Lottie';

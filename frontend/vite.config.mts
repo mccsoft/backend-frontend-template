@@ -71,12 +71,6 @@ export default defineConfig(({ command, mode }) => {
       postcss: {
         plugins: [autoprefixer],
       },
-
-      preprocessorOptions: {
-        scss: {
-          loadPaths: ['./'],
-        },
-      },
     },
     build: {
       outDir: 'build',

@@ -8,7 +8,7 @@
         "orta.vscode-jest",
         "ms-playwright.playwright",
         "esbenp.prettier-vscode",
-        "mrmlnc.vscode-scss",
+        "pucelle.vscode-css-navigation",
         "vitest.explorer"
     ]
 }

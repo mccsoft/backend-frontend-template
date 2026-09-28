@@ -4,7 +4,7 @@ import SearchIcon from 'assets/icons/search.svg?react';
 import CrossIcon from 'assets/icons/close-button.svg?react';
 import React, { ChangeEvent, useCallback } from 'react';
 
-import styles from '../Input.module.scss';
+import styles from '../Input.module.css';
 import { mergeRefs } from 'react-merge-refs';
 
 export const SearchInput: React.FC<Props> = React.forwardRef<

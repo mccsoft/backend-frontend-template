@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styles from './RadioButton.module.scss';
+import styles from './RadioButton.module.css';
 
 type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   title?: string;

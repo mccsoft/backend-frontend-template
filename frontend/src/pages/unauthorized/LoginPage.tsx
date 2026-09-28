@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './LoginPage.module.scss';
+import styles from './LoginPage.module.css';
 import { QueryFactory } from 'services/api';
 import { format } from 'date-fns';
 import { useScopedTranslation } from 'application/localization/useScopedTranslation';

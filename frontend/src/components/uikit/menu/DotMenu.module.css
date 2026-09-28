@@ -1,4 +1,3 @@
-@use '../../../styles/variables' as *;
 .dotMenu {
   cursor: pointer;
   top: 18px;
@@ -6,9 +5,9 @@
 }
 
 .dotMenuImage:hover path {
-  fill: $primary-light;
+  fill: var(--primary-light);
 }
 
 .dotMenuImage:active path {
-  fill: $primary;
+  fill: var(--primary);
 }

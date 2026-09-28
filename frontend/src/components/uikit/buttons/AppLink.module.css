@@ -1,0 +1,72 @@
+.link {
+  display: inline-block;
+  font-family: var(--font-family);
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 15px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.link[data-disabled=true] {
+  cursor: default;
+  pointer-events: none !important;
+}
+
+.link[data-disabled=true] .icon {
+  opacity: 0.5;
+}
+
+.default-link {
+  color: rgba(var(--normal-rgb), 0.7);
+}
+
+.default-link:hover {
+  color: var(--default-hover);
+}
+
+.default-link[data-disabled=true] {
+  color: rgba(var(--normal-rgb), 0.3);
+}
+
+.primary-link {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.primary-link:hover {
+  color: var(--primary-link-hover);
+}
+
+.primary-link[data-disabled=true] {
+  color: rgba(var(--primary-rgb), 0.5);
+}
+
+.secondary-link {
+  color: var(--secondary);
+}
+
+.secondary-link:hover {
+  color: var(--secondary-link-hover);
+}
+
+.secondary-link[data-disabled=true] {
+  color: rgba(var(--secondary-rgb), 0.5);
+}
+
+.danger-link {
+  color: var(--danger);
+}
+
+.danger-link:hover {
+  color: var(--danger-link-hover);
+}
+
+.danger-link[data-disabled=true] {
+  color: rgba(var(--danger-rgb), 0.5);
+}
+
+.icon {
+  margin-right: 6px;
+}

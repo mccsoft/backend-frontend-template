@@ -17,7 +17,7 @@ import {
 } from '@tanstack/react-table';
 import { QueryFactory } from 'services/api';
 import { ProductListItemDto } from 'services/api/api-client';
-import styles from './ProductListPage.module.scss';
+import styles from './ProductListPage.module.css';
 import { StringParam, useQueryParams } from 'react-router-url-params';
 import { DotMenu } from 'components/uikit/menu/DotMenu';
 import { useNavigate } from 'react-router';

@@ -1,0 +1,49 @@
+.root {
+  --arrow-size: 20px;
+  --arrow-offset: -10px;
+  --top-margin: 10px;
+}
+
+.arrow,
+.arrow::before {
+  position: absolute;
+  width: var(--arrow-size);
+  height: var(--arrow-size);
+  background: inherit;
+}
+
+.arrow {
+  visibility: hidden;
+}
+
+.arrow::before {
+  visibility: visible;
+  content: "";
+  transform: rotate(45deg) translateZ(-1px);
+}
+
+.popper {
+  background-color: white;
+  border-radius: 2px;
+  box-shadow: rgba(0, 0, 0, 0.13) 0px 6.4px 14.4px 0px, rgba(0, 0, 0, 0.11) 0px 1.2px 3.6px 0px;
+}
+
+.content {
+  position: relative;
+}
+
+.root[data-popper-placement^=top] .arrow {
+  bottom: var(--arrow-offset);
+}
+.root[data-popper-placement^=top] .popper-enter-active {
+  transform: translateY(calc(-1 * var(--top-margin)));
+  transition: transform 100ms;
+}
+
+.root[data-popper-placement^=bottom] .arrow {
+  top: var(--arrow-offset);
+}
+.root[data-popper-placement^=bottom] .popper-enter-active {
+  transform: translateY(var(--top-margin));
+  transition: transform 100ms;
+}

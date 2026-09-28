@@ -3,7 +3,7 @@ import ReactPaginate from 'react-paginate';
 
 import PreviousPageIcon from 'assets/icons/left.svg?react';
 import NextPageIcon from 'assets/icons/right.svg?react';
-import styles from './AppPagination.module.scss';
+import styles from './AppPagination.module.css';
 
 // const items = [10, 20, 50];
 

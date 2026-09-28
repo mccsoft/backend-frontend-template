@@ -1,5 +1,3 @@
-@use 'src/styles/variables' as *;
-
 .container {
   display: flex;
   flex: 1 1;
@@ -15,7 +13,7 @@
   max-width: 100%;
 }
 
-.loadingData[data-loaded='true'] {
+.loadingData[data-loaded=true] {
   pointer-events: none;
 }
 
@@ -32,14 +30,14 @@
 }
 
 .loading {
-  background-color: rgba(white, 0.8);
+  background-color: rgba(255, 255, 255, 0.8);
   height: 100%;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   line-height: 20px;
-  color: $primary;
+  color: var(--primary);
   flex-direction: column;
 }
 

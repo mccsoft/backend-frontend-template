@@ -1,5 +1,3 @@
-@use '../../styles/base' as *;
-
 .inputContainer {
   margin-bottom: 16px;
 }
@@ -10,7 +8,6 @@
   max-width: 320px;
   min-width: 320px;
   max-height: 312px;
-  //  min-height: 312px;
   margin-left: 135px;
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.08);
   border-radius: 4px;
@@ -20,6 +17,7 @@
 .inputField {
   padding-bottom: 15px;
 }
+
 .infoContainer {
   display: flex;
   flex-direction: column;
@@ -36,7 +34,6 @@
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
-
   /*font-family: Inter;*/
 }
 
@@ -60,7 +57,7 @@
   margin-bottom: auto;
   width: 140px;
   height: 40px;
-  background: url('../resources/manufacter_logo.svg');
+  background: url("../resources/manufacter_logo.svg");
   background-repeat: no-repeat;
   background-size: contain;
 }
@@ -84,7 +81,7 @@
 }
 
 .loginSeparator::before {
-  content: '';
+  content: "";
   width: 116px;
   height: 1px;
   background: #bfc5c5;
@@ -93,7 +90,7 @@
 }
 
 .loginSeparator::after {
-  content: '';
+  content: "";
   width: 116px;
   height: 1px;
   background: #bfc5c5;
@@ -126,7 +123,7 @@
 }
 
 .mainBackground {
-  background: url('/public/assets/login-background.jpg');
+  background: url("/public/assets/login-background.jpg");
   background-repeat: repeat;
   background-size: cover;
   position: absolute;
@@ -150,7 +147,6 @@
   flex: 1 1;
   display: flex;
   background: #1a2745 !important;
-  // z-index: -2;
 }
 
 form {

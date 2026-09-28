@@ -7,7 +7,7 @@ import { useCallback, useImperativeHandle, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import ArrowDownIcon from 'assets/icons/arrow-down.svg?react';
 
-import styles from './StyledAutocomplete.module.scss';
+import styles from './StyledAutocomplete.module.css';
 import { Autocomplete, Paper, Popper, PopperProps } from '@mui/material';
 import { Input } from '../Input';
 import { AutocompleteProps } from '@mui/material/Autocomplete/Autocomplete';

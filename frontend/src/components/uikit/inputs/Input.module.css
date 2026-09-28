@@ -1,21 +1,17 @@
-@use 'src/styles/variables' as *;
-@use 'src/styles/base' as *;
-
 .helperText {
-  @extend .inputErrorText;
-  color: rgba($normal, 0.5);
+  composes: inputErrorText from global;
+  color: rgba(var(--normal-rgb), 0.5);
 }
 
-.helperText[data-error='true'] {
-  color: rgba($danger, 0.5);
+.helperText[data-error=true] {
+  color: rgba(var(--danger-rgb), 0.5);
 }
 
 .input {
-  @extend .base-input;
+  composes: base-input from global;
 }
 
 .inputContainer {
-  // required for proper displaying of endAdornment
   position: relative;
 }
 
@@ -31,11 +27,10 @@
   display: flex;
   cursor: pointer;
   align-items: center;
-  @extend .none-select;
-
-  > svg {
-    height: 100%;
-  }
+  composes: none-select from global;
+}
+.endAdornment > svg {
+  height: 100%;
 }
 
 .passwordEye {
@@ -44,11 +39,11 @@
 }
 
 .input-with-adornment {
-  padding-right: $input-padding + 16;
+  padding-right: calc(var(--input-padding) + 16px);
 }
 
 .non-form-input {
-  height: $normal-input-height;
+  height: var(--normal-input-height);
 }
 
 .search-input-cross {

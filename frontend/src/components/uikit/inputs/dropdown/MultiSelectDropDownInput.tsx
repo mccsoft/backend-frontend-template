@@ -7,7 +7,7 @@ import {
   StyledAutocomplete,
 } from './StyledAutocomplete';
 
-import styles from './StyledAutocomplete.module.scss';
+import styles from './StyledAutocomplete.module.css';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { StyledAutocompleteProps } from './types';

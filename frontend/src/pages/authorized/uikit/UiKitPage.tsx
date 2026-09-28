@@ -13,7 +13,7 @@ import { AppLink } from 'components/uikit/buttons/AppLink';
 import { ProductType } from 'services/api/api-client';
 import { useScopedTranslation } from 'application/localization/useScopedTranslation';
 
-import styles from './UiKitPage.module.scss';
+import styles from './UiKitPage.module.css';
 import { useModal } from '../../../components/uikit/modal/useModal';
 import { PopperExample } from './components/PopperExample';
 import { MultiSelectDropDownInput } from 'components/uikit/inputs/dropdown/MultiSelectDropDownInput';

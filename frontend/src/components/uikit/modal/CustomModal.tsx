@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import CloseIcon from 'assets/icons/close-button.svg?react';
-import styles from './CustomModal.module.scss';
-import modalStyles from './Modal.module.scss';
+import styles from './CustomModal.module.css';
+import modalStyles from './Modal.module.css';
 import { Button, ButtonColor } from '../buttons/Button';
 import clsx from 'clsx';
 import { useScopedTranslation } from 'application/localization/useScopedTranslation';

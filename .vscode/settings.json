@@ -6,7 +6,7 @@
   "eslint.packageManager": "yarn",
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  
+
   "[csharp]": {
     "editor.formatOnType": true,
     "editor.formatOnSave": true,
@@ -26,5 +26,8 @@
   "git.showPushSuccessNotification": true,
   "csharp.format.enable": true,
   "files.autoSave": "onFocusChange",
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "css.lint.validProperties": ["composes"],
+  "scss.lint.validProperties": ["composes"],
+  "less.lint.validProperties": ["composes"],
 }

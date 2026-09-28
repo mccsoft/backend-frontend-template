@@ -1,0 +1,14 @@
+.area {
+  composes: base-input from global;
+  height: 121px;
+  resize: none;
+}
+
+.helperText {
+  composes: inputErrorText from global;
+  color: rgba(var(--normal-rgb), 0.5);
+}
+
+.helperText[data-error=true] {
+  color: rgba(var(--danger-rgb), 0.5);
+}

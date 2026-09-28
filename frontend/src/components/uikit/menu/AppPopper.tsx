@@ -2,7 +2,7 @@ import { Popper as PopperUnstyled } from '@mui/base/Popper/Popper';
 import clsx from 'clsx';
 import { useTriggerOnClickOutsideElement } from 'helpers/useTriggerOnClickOutsideElement';
 import React, { MouseEventHandler, useEffect, useRef, useState } from 'react';
-import styles from './AppPopper.module.scss';
+import styles from './AppPopper.module.css';
 import { useTransitionClass } from './useTransitionClass';
 import { PopperProps } from '@mui/base/Popper/Popper.types';
 // import type { PopperUnstyledOwnProps } from '@mui/base/PopperUnstyled/PopperUnstyled';

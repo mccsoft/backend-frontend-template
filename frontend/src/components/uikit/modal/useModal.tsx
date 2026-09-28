@@ -12,7 +12,7 @@ import { Input } from '../inputs/Input';
 import { Button, ButtonColor } from '../buttons/Button';
 import { useScopedTranslation } from '../../../application/localization/useScopedTranslation';
 import type { ModalContextType, UseModalOptions } from './useModal.types';
-import styles from './Modal.module.scss';
+import styles from './Modal.module.css';
 import { assertNever } from 'helpers/assert-never';
 import clsx from 'clsx';
 import { createId } from '../type-utils';

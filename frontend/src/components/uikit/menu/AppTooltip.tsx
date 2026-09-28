@@ -6,7 +6,7 @@ import {
   bindPopper,
   usePopupState,
 } from 'material-ui-popup-state/hooks';
-import styles from './AppTooltip.module.scss';
+import styles from './AppTooltip.module.css';
 
 type AppTooltipProps = {
   arrow?: boolean;

@@ -1,8 +1,6 @@
-@use 'src/styles/variables' as *;
-
 .button {
   display: inline-block;
-  font-family: $font-family;
+  font-family: var(--font-family);
   font-style: normal;
   font-weight: normal;
   font-size: 13px;
@@ -17,102 +15,102 @@
 
 .default-button {
   color: white;
-  background-color: $primary;
+  background-color: var(--primary);
   border-style: none;
 }
 
 .default-button:hover {
-  background-color: $primary-light;
+  background-color: var(--primary-light);
 }
 
 .default-button:active {
-  background-color: $primary;
-  color: rgba(white, 0.5);
+  background-color: var(--primary);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .default-button:disabled {
-  color: rgba(white, 0.5);
-  background-color: $primary-disabled;
+  color: rgba(255, 255, 255, 0.5);
+  background-color: var(--primary-disabled);
   border-style: none;
   pointer-events: none !important;
   cursor: default;
 }
 
-.default-button[data-disabled='true'] {
-  @extend .default-button, :disabled;
-  color: rgba(white, 0.5);
-  background-color: $primary-disabled;
+.default-button[data-disabled=true] {
+  color: rgba(255, 255, 255, 0.5);
+  background-color: var(--primary-disabled);
   border-style: none;
   pointer-events: none !important;
+  cursor: default;
 }
 
 .primary-button {
-  color: $primary;
+  color: var(--primary);
   background-color: white;
-  border-color: $primary;
+  border-color: var(--primary);
   line-height: 13px;
 }
 
 .primary-button:hover {
-  background-color: $primary-background;
+  background-color: var(--primary-background);
 }
 
 .primary-button:active {
   background-color: white;
-  color: $primary-light;
+  color: var(--primary-light);
 }
 
-.primary-button[data-disabled='true'] {
+.primary-button[data-disabled=true] {
   cursor: default;
-  color: $primary-disabled;
+  color: var(--primary-disabled);
   background-color: white;
-  border-color: $primary-disabled;
+  border-color: var(--primary-disabled);
   pointer-events: none !important;
 }
 
 .secondary-button {
-  color: $secondary;
+  color: var(--secondary);
   background-color: white;
-  border-color: $secondary;
+  border-color: var(--secondary);
   line-height: 13px;
 }
 
 .secondary-button:hover {
-  background-color: $secondary-background;
+  background-color: var(--secondary-background);
 }
 
 .secondary-button:active {
   background-color: white;
-  color: $secondary-light;
+  color: var(--secondary-light);
 }
 
-.secondary-button[data-disabled='true'] {
-  color: $secondary-light;
+.secondary-button[data-disabled=true] {
+  color: var(--secondary-light);
   background-color: white;
-  border-color: $secondary-light;
+  border-color: var(--secondary-light);
   pointer-events: none !important;
 }
 
 .danger-button {
-  color: $danger;
+  color: var(--danger);
   background-color: white;
-  border-color: $danger;
+  border-color: var(--danger);
   line-height: 13px;
 }
 
 .danger-button:hover {
-  background-color: $danger-background;
+  background-color: var(--danger-background);
 }
 
 .danger-button:active {
   background-color: white;
-  color: $danger-light;
+  color: var(--danger-light);
 }
 
-.danger-button[data-disabled='true'] {
-  color: $danger-light;
+.danger-button[data-disabled=true] {
+  color: var(--danger-light);
   background-color: white;
-  border-color: $danger-light;
+  border-color: var(--danger-light);
   pointer-events: none !important;
 }
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import styles from './CheckBox.module.scss';
+import styles from './CheckBox.module.css';
 
 type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   title?: string;

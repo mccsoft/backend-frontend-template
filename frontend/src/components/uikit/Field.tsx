@@ -4,7 +4,7 @@ import { ButtonColor } from './buttons/Button';
 import clsx from 'clsx';
 import HintIcon from 'assets/icons/i.svg?react';
 
-import styles from './Field.module.scss';
+import styles from './Field.module.css';
 import { AppTooltip } from './menu/AppTooltip';
 
 export type FieldLinkProps = {

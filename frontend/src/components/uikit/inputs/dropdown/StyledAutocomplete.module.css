@@ -1,0 +1,109 @@
+.root-container {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.root-container .multiselect-header {
+  height: var(--normal-input-height);
+  padding-left: 12px;
+}
+
+.option-value {
+  background-color: initial;
+  color: var(--normal) !important;
+  line-height: 16px;
+  border: none;
+  border-top: 1px var(--separator) solid;
+  padding: 0;
+  height: 100%;
+}
+
+.option-value:global(.MuiAutocomplete-option.Mui-focused) {
+  background: var(--background-input-hover);
+}
+
+.option-value[aria-disabled=true] {
+  opacity: 0.5;
+}
+
+.option-value[aria-disabled=true][aria-selected=true] {
+  opacity: 0.5;
+}
+
+.li-with-prefix {
+  justify-content: space-between !important;
+}
+
+.non-editable-input {
+  cursor: pointer;
+}
+
+.font-config {
+  font-family: var(--font-family) !important;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: normal;
+}
+
+.dropdown-callout {
+  box-shadow: 0 5px 13px rgba(0, 0, 0, 0.14);
+  border-radius: 4px;
+  -webkit-app-region: no-drag;
+}
+
+.expand-icon {
+  opacity: 0.7;
+}
+
+input[aria-expanded=true] + div .expand-icon {
+  transform: rotate(180deg);
+}
+
+.errorText {
+  composes: inputErrorText from global;
+}
+
+.listbox {
+  padding: 0 !important;
+}
+
+.checkbox {
+  margin-left: 12px;
+  pointer-events: none;
+}
+
+.multiSelectCheckbox {
+  margin-right: 8px;
+}
+
+.multiselect-header {
+  font-weight: 500;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  composes: option-value from global;
+  composes: font-config from global;
+}
+.multiselect-header .links-block {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.multiselect-header .link {
+  color: var(--secondary);
+  cursor: pointer;
+  margin-right: 5px;
+}
+.multiselect-header .link-disabled {
+  opacity: 0.3;
+}
+.multiselect-header .link-disabled:hover {
+  cursor: default;
+  opacity: 0.3;
+}
+
+.virtualized-list ul {
+  padding: 0;
+  margin: 0;
+}

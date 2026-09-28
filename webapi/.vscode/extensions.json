@@ -7,7 +7,6 @@
         "dbaeumer.vscode-eslint",
         "orta.vscode-jest",
         "ms-playwright.playwright",
-        "esbenp.prettier-vscode",
-        "mrmlnc.vscode-scss"
+        "esbenp.prettier-vscode"
     ]
 }

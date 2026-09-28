@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { AppMenu, AppMenuProps } from './AppMenu';
-import styles from './DotMenu.module.scss';
+import styles from './DotMenu.module.css';
 import Dots from 'assets/icons/dots.svg?react';
 
 export type DotMenuProps = Omit<AppMenuProps, 'anchorEl' | 'open'> & {

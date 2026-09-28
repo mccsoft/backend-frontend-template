@@ -6,7 +6,7 @@ import { RadioButton } from './RadioButton';
 import { Input } from './inputs/Input';
 import { createId } from './type-utils';
 
-import styles from './RadioButtonGroup.module.scss';
+import styles from './RadioButtonGroup.module.css';
 
 type Props<D, V extends keyof PickFieldsWithType<D, string | number | null>> = {
   options: D[];
