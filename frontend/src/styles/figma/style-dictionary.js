@@ -63,7 +63,7 @@ StyleDictionary.registerFormat({
   name: 'css/typography-classes',
   format: ({ dictionary }) =>
     [
-      "/**\n * Do not edit directly, this file was auto-generated.\n */\n\n@import './variables.css';\n",
+      '/**\n * Do not edit directly, this file was auto-generated.\n */\n\n',
       ...dictionary.allTokens
         .filter((token) => token.original.$type === 'typography')
         .map((token) => {
@@ -245,7 +245,7 @@ const styleDictionary = new StyleDictionary({
       buildPath: 'src/styles/figma/',
       files: [
         {
-          destination: 'typography.module.css',
+          destination: 'typography.css',
           format: 'css/typography-classes',
         },
       ],
