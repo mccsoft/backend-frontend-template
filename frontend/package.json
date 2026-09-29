@@ -121,7 +121,7 @@
   },
   "scripts": {
     "start": "yarn prestart && concurrently \"vite\" \"yarn css-to-types -w\"",
-    "start-remote": "yarn prestart && concurrently \"BACKEND_URI=https://template.mcc-soft.de vite\" \"yarn css-to-types -w\"",
+    "start-remote": "yarn prestart && concurrently \"yarn cross-env BACKEND_URI=https://template.mcc-soft.de vite\" \"yarn css-to-types -w\"",
     "prestart": "yarn build-css-for-razor",
     "typecheck": "yarn css-to-types && tsc && eslint \\*\\*/\\*.ts \\*\\*/\\*.tsx --quiet",
     "css-to-types": "tcm -p 'src/**/*.css' . -c dashes",

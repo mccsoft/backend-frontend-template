@@ -245,7 +245,7 @@ const styleDictionary = new StyleDictionary({
       buildPath: 'src/styles/figma/',
       files: [
         {
-          destination: 'components.module.css',
+          destination: 'typography.module.css',
           format: 'css/typography-classes',
         },
       ],
