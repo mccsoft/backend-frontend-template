@@ -109,6 +109,7 @@
     "rolldown-vite": "7.0.3",
     "rollup-plugin-visualizer": "6.0.1",
     "storybook": "9.0.12",
+    "style-contract": "0.9.2",
     "style-dictionary": "5.5.3",
     "typed-css-modules": "0.9.1",
     "typescript": "5.8.3",
@@ -120,11 +121,10 @@
     "vitest": "3.2.0"
   },
   "scripts": {
-    "start": "yarn prestart && concurrently \"vite\" \"yarn css-to-types -w\"",
-    "start-remote": "yarn prestart && concurrently \"yarn cross-env BACKEND_URI=https://template.mcc-soft.de vite\" \"yarn css-to-types -w\"",
+    "start": "yarn prestart && vite",
+    "start-remote": "yarn prestart && yarn cross-env BACKEND_URI=https://template.mcc-soft.de vite",
     "prestart": "yarn build-css-for-razor",
-    "typecheck": "yarn css-to-types && tsc && eslint \\*\\*/\\*.ts \\*\\*/\\*.tsx --quiet",
-    "css-to-types": "tcm -p 'src/**/*.css' . -c dashes",
+    "typecheck": "tsc && eslint \\*\\*/\\*.ts \\*\\*/\\*.tsx --quiet  && npx style-contract",
     "test": "vitest",
     "figma-icons": "echo 'Open AI Chat and paste the following prompt: \"Run exact instructions from `frontend/src/assets/icons-figma/PROMPT.md`\". After it completes press Enter to continue' && node -e \"process.stdin.once('data', () => process.exit(0))\" && yarn figma-snapshot-to-tokens && yarn figma-tokens-to-css",
     "figma-to-code": "echo 'Open AI Chat and paste the following prompt: \"Run exact instructions from `frontend/src/styles/figma/PROMPT.md`\". After it completes press Enter to continue' && node -e \"process.stdin.once('data', () => process.exit(0))\" && yarn figma-snapshot-to-css",

@@ -1,0 +1,16 @@
+{
+  "convention": "none",
+  "exclude": [],
+  "include": [],
+  "tsconfig": "./tsconfig.json",
+  "rules": {
+    "naming-convention-global": "off",
+    "no-dynamic-references": "off",
+    "unused-dependent-class": "off",
+    "unused-export": "off",
+    "unused-class": "off",
+    "leaked-class-usage": "off",
+    "class-leak": "off",
+    "empty-rule": "off"
+  }
+}

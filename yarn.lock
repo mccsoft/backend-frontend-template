@@ -3795,6 +3795,62 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@style-contract/binary-darwin-arm64@npm:0.9.2":
+  version: 0.9.2
+  resolution: "@style-contract/binary-darwin-arm64@npm:0.9.2"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@style-contract/binary-darwin-x64@npm:0.9.2":
+  version: 0.9.2
+  resolution: "@style-contract/binary-darwin-x64@npm:0.9.2"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@style-contract/binary-linux-arm64-gnu@npm:0.9.2":
+  version: 0.9.2
+  resolution: "@style-contract/binary-linux-arm64-gnu@npm:0.9.2"
+  conditions: os=linux & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@style-contract/binary-linux-arm64-musl@npm:0.9.2":
+  version: 0.9.2
+  resolution: "@style-contract/binary-linux-arm64-musl@npm:0.9.2"
+  conditions: os=linux & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@style-contract/binary-linux-x64-gnu@npm:0.9.2":
+  version: 0.9.2
+  resolution: "@style-contract/binary-linux-x64-gnu@npm:0.9.2"
+  conditions: os=linux & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@style-contract/binary-linux-x64-musl@npm:0.9.2":
+  version: 0.9.2
+  resolution: "@style-contract/binary-linux-x64-musl@npm:0.9.2"
+  conditions: os=linux & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@style-contract/binary-win32-arm64@npm:0.9.2":
+  version: 0.9.2
+  resolution: "@style-contract/binary-win32-arm64@npm:0.9.2"
+  conditions: os=win32 & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@style-contract/binary-win32-x64@npm:0.9.2":
+  version: 0.9.2
+  resolution: "@style-contract/binary-win32-x64@npm:0.9.2"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
 "@svgr/babel-plugin-add-jsx-attribute@npm:8.0.0":
   version: 8.0.0
   resolution: "@svgr/babel-plugin-add-jsx-attribute@npm:8.0.0"
@@ -4367,6 +4423,7 @@ __metadata:
     rolldown-vite: "npm:7.0.3"
     rollup-plugin-visualizer: "npm:6.0.1"
     storybook: "npm:9.0.12"
+    style-contract: "npm:0.9.2"
     style-dictionary: "npm:5.5.3"
     superjson: "npm:1.12.3"
     throttle-debounce: "npm:5.0.0"
@@ -15267,6 +15324,41 @@ __metadata:
   version: 1.0.5
   resolution: "strnum@npm:1.0.5"
   checksum: 10/d3117975db8372d4d7b2c07601ed2f65bf21cc48d741f37a8617b76370d228f2ec26336e53791ebc3638264d23ca54e6c241f57f8c69bd4941c63c79440525ca
+  languageName: node
+  linkType: hard
+
+"style-contract@npm:0.9.2":
+  version: 0.9.2
+  resolution: "style-contract@npm:0.9.2"
+  dependencies:
+    "@style-contract/binary-darwin-arm64": "npm:0.9.2"
+    "@style-contract/binary-darwin-x64": "npm:0.9.2"
+    "@style-contract/binary-linux-arm64-gnu": "npm:0.9.2"
+    "@style-contract/binary-linux-arm64-musl": "npm:0.9.2"
+    "@style-contract/binary-linux-x64-gnu": "npm:0.9.2"
+    "@style-contract/binary-linux-x64-musl": "npm:0.9.2"
+    "@style-contract/binary-win32-arm64": "npm:0.9.2"
+    "@style-contract/binary-win32-x64": "npm:0.9.2"
+  dependenciesMeta:
+    "@style-contract/binary-darwin-arm64":
+      optional: true
+    "@style-contract/binary-darwin-x64":
+      optional: true
+    "@style-contract/binary-linux-arm64-gnu":
+      optional: true
+    "@style-contract/binary-linux-arm64-musl":
+      optional: true
+    "@style-contract/binary-linux-x64-gnu":
+      optional: true
+    "@style-contract/binary-linux-x64-musl":
+      optional: true
+    "@style-contract/binary-win32-arm64":
+      optional: true
+    "@style-contract/binary-win32-x64":
+      optional: true
+  bin:
+    style-contract: npm/style-contract.js
+  checksum: 10/0c9f82c78c73a3acc22eeee2edc0f9a31b7f7b1963bfa1de9bce3fee71ca1669b1ac67d6bd1e38498a9f0d5666ac484cd30b7e63795e1552e254ea4c85ca2031
   languageName: node
   linkType: hard
 
