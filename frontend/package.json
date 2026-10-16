@@ -124,7 +124,7 @@
     "start": "yarn prestart && vite",
     "start-remote": "yarn prestart && yarn cross-env BACKEND_URI=https://template.mcc-soft.de vite",
     "prestart": "yarn build-css-for-razor",
-    "typecheck": "tsc && eslint \\*\\*/\\*.ts \\*\\*/\\*.tsx --quiet  && npx style-contract",
+    "typecheck": "tsc && eslint \\*\\*/\\*.ts \\*\\*/\\*.tsx --quiet && npx style-contract",
     "test": "vitest",
     "figma-icons": "echo 'Open AI Chat and paste the following prompt: \"Run exact instructions from `frontend/src/assets/icons-figma/PROMPT.md`\". After it completes press Enter to continue' && node -e \"process.stdin.once('data', () => process.exit(0))\" && yarn figma-snapshot-to-tokens && yarn figma-tokens-to-css",
     "figma-to-code": "echo 'Open AI Chat and paste the following prompt: \"Run exact instructions from `frontend/src/styles/figma/PROMPT.md`\". After it completes press Enter to continue' && node -e \"process.stdin.once('data', () => process.exit(0))\" && yarn figma-snapshot-to-css",

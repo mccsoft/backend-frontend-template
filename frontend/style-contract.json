@@ -9,8 +9,8 @@
     "unused-dependent-class": "off",
     "unused-export": "off",
     "unused-class": "off",
-    "leaked-class-usage": "off",
-    "class-leak": "off",
+    "leaked-class-usage": "warning",
+    "class-leak": "warning",
     "empty-rule": "off"
   }
 }
